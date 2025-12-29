@@ -6,8 +6,6 @@ permalink: /notes/
 
 # Notes
 
-（你之後會在這裡做分類目錄）
+## Programming
 
-- 主題 A
-- 主題 B
-- 主題 C
+- [C++ Programming / LeetCode](/notes/cpp/)
