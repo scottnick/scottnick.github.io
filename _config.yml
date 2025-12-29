@@ -1,0 +1,11 @@
+title: Scott Nick
+description: Portfolio & Notes
+theme: minima
+
+header_pages:
+  - about.md
+  - projects.md
+  - notes.md
+
+minima:
+  skin: auto
