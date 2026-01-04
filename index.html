@@ -1,0 +1,84 @@
+<!-- index.html: 首頁，展示導覽卡片、近期更新與瀏覽總計；後續可替換文字、連結與統計站名 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>scottnick 的主頁</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <nav class="navbar">
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="index.html">主頁</a>
+        <a href="tutoring.html">家教經驗</a>
+        <a href="courses.html">修課紀錄</a>
+        <a href="cpp.html">C++學習筆記</a>
+      </div>
+      <div class="nav-actions">
+        <button class="toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon">☀️</span>
+          <span id="theme-text">淺色</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <h1>scottnick 的主頁</h1>
+      <p>家教經驗、修課紀錄與 C++/LeetCode 筆記一次整理，方便追蹤成長軌跡。</p>
+    </section>
+
+    <section>
+      <div class="card-grid">
+        <a class="card" href="index.html">
+          <span class="label">主頁</span>
+          <p>快速總覽與近期更新，一鍵回到起點。</p>
+        </a>
+        <a class="card" href="tutoring.html">
+          <span class="label">家教經驗</span>
+          <p>紀錄我對教學、補習班與溝通的想法。</p>
+        </a>
+        <a class="card" href="courses.html">
+          <span class="label">修課紀錄</span>
+          <p>依學期與主題整理修課足跡，輕鬆回顧。</p>
+        </a>
+        <a class="card" href="cpp.html">
+          <span class="label">C++學習筆記</span>
+          <p>LeetCode 與 C++ 札記入口，收斂解題思路。</p>
+        </a>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="section-title">近期更新</h2>
+      <ul class="update-list">
+        <li>
+          <strong>2024-08-30</strong> — 更新：新增家教經驗目錄與初步想法。<br>
+          <small><a href="#">閱讀內容</a></small>
+        </li>
+        <li>
+          <strong>2024-08-22</strong> — 更新：修課紀錄加入「依類型」分組。<br>
+          <small><a href="#">查看整理</a></small>
+        </li>
+        <li>
+          <strong>2024-08-10</strong> — 更新：C++ 筆記新增 5 題 LeetCode 草稿。<br>
+          <small><a href="#">前往筆記</a></small>
+        </li>
+      </ul>
+    </section>
+
+    </main>
+
+    <!-- // v1.1：首頁 footer 總瀏覽次數（中文、純數字） -->
+    <footer class="site-footer" aria-live="polite">
+      <div class="footer-views">總瀏覽次數：<span id="total-views">—</span></div>
+    </footer>
+
+  <script src="script.js"></script>
+  <script data-goatcounter="https://YOUR_GOATCOUNTER_SITE.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+</body>
+</html>
