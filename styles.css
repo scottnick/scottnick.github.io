@@ -93,6 +93,28 @@ body.dark-mode header {
   gap: 10px;
 }
 
+/* // v1.0：Logo 調整 */
+.nav-links a:first-child {
+  position: relative;
+  font-weight: 700;
+  font-size: 1.05rem;
+  letter-spacing: -0.01em;
+  padding-left: 0;
+  padding-right: 6px;
+  color: transparent;
+}
+
+.nav-links a:first-child::before {
+  content: "scottnick 個人網頁";
+  color: var(--text);
+}
+
+.nav-links a:first-child:hover,
+.nav-links a:first-child.active {
+  background: transparent;
+  border-color: transparent;
+}
+
 .toggle-btn, .menu-btn {
   border: 1px solid var(--border);
   background: var(--card);
@@ -110,6 +132,22 @@ body.dark-mode header {
 .toggle-btn:hover, .menu-btn:hover {
   transform: translateY(-1px);
   box-shadow: 0 12px 22px rgba(0, 0, 0, 0.1);
+}
+
+/* // v1.0：暗色模式 icon 化 */
+.toggle-btn {
+  border: none;
+  background: transparent;
+  box-shadow: none;
+  padding: 6px;
+}
+
+.toggle-btn #theme-text {
+  display: none;
+}
+
+.toggle-btn #theme-icon {
+  font-size: 18px;
 }
 
 .menu-btn {
