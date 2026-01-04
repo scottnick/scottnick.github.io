@@ -8,4 +8,4 @@ permalink: /notes/
 
 ## Programming
 
-- [C++ Programming / LeetCode](/notes/cpp/)
+- [C++ Programming / LeetCode](/cpp/)
