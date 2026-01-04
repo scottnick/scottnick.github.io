@@ -313,6 +313,12 @@ main {
   gap: 10px;
 }
 
+/* // v1.2：cpp 筆記清單樣式 */
+.note-toc ul ul {
+  margin-left: 12px;
+  gap: 6px;
+}
+
 .note-toc a {
   display: block;
   padding: 8px 10px;
@@ -340,6 +346,20 @@ main {
   margin-top: 26px;
   padding-top: 8px;
   border-top: 1px solid var(--border);
+}
+
+.note-content h2 {
+  margin-top: 0;
+}
+
+.note-list {
+  list-style: disc;
+  padding-left: 20px;
+  margin: 12px 0 0;
+}
+
+.note-list li {
+  margin: 6px 0;
 }
 
 .toc {

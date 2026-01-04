@@ -39,9 +39,39 @@
         <nav class="note-toc" aria-label="筆記目錄">
           <ul>
             <li><a href="#preface">前言</a></li>
-            <li><a href="#grind75">Grind 75</a></li>
-            <li><a href="#neetcode150">NeetCode 150</a></li>
-            <li><a href="#others">Others</a></li>
+            <li>
+              <a href="#grind75">Grind 75</a>
+              <ul>
+                <li><a href="#grind75-two-sum">1. Two Sum</a></li>
+                <li><a href="#grind75-longest-substring">3. Longest Substring Without Repeating Characters</a></li>
+                <li><a href="#grind75-longest-palindromic-substring">5. Longest Palindromic Substring</a></li>
+                <li><a href="#grind75-ransom-note">383. Ransom Note</a></li>
+                <li><a href="#grind75-atoi">8. String to Integer (atoi)</a></li>
+                <li><a href="#grind75-container">11. Container With Most Water</a></li>
+                <li><a href="#grind75-word-break">139. Word Break</a></li>
+                <li><a href="#grind75-rotting-oranges">994. Rotting Oranges</a></li>
+                <li><a href="#grind75-longest-palindrome">409. Longest Palindrome</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="#neetcode150">NeetCode 150</a>
+              <ul>
+                <li><a href="#neetcode-two-sum">1. Two Sum</a></li>
+                <li><a href="#neetcode-longest-substring">3. Longest Substring Without Repeating Characters</a></li>
+                <li><a href="#neetcode-longest-palindromic-substring">5. Longest Palindromic Substring</a></li>
+                <li><a href="#neetcode-reverse-integer">7. Reverse Integer</a></li>
+                <li><a href="#neetcode-container">11. Container With Most Water</a></li>
+                <li><a href="#neetcode-rotting-oranges">994. Rotting Oranges</a></li>
+                <li><a href="#neetcode-word-break">139. Word Break</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="#others">Others</a>
+              <ul>
+                <li><a href="#others-binary-search">704. Binary Search</a></li>
+                <li><a href="#others-merge-strings">1768. Merge Strings Alternately</a></li>
+              </ul>
+            </li>
           </ul>
         </nav>
       </aside>
@@ -49,22 +79,60 @@
       <article class="note-content">
         <section id="preface">
           <h2>前言</h2>
-          <p>（請將 HackMD 原文貼到此處，以保持與線上版本一致。）</p>
+          <p>v1.2｜C++ / LeetCode 學習筆記內容結構建立</p>
+          <p>本次改版重點在於建立「C++ / LeetCode 學習筆記」的實際內容結構，<br>
+          並將原先整理於 HackMD 的題目清單與分類，完整對應至個人網站頁面中。</p>
+          <p>在本版本中，已依照實際學習與解題進度，建立以下筆記分類結構：<br>
+          - 前言<br>
+          - Grind 75<br>
+          - NeetCode 150<br>
+          - Others</p>
+          <p>各分類下所列題目，皆對應我實際完成並整理過的 LeetCode 題目。<br>
+          同一題目可能同時出現在不同題單（如 Grind 75 與 NeetCode 150），<br>
+          作為不同學習路線下的交叉參考。</p>
+          <p>本次改版同時調整頁面版面配置：<br>
+          - C++ 學習筆記頁面採用左側導覽欄（sidebar）作為主要瀏覽方式<br>
+          - 頁面主標題與各區塊標題皆統一靠左顯示<br>
+          - 左側導覽結構與 HackMD 筆記目錄一致，方便後續內容搬移與維護</p>
+          <p>目前此版本以「內容結構與頁面配置建立」為主，<br>
+          各題目的詳細解題內文仍暫時以 HackMD 原始筆記為主要參考來源，<br>
+          後續版本將逐步整合至個人網站中。</p>
         </section>
 
         <section id="grind75">
           <h2>Grind 75</h2>
-          <p>（請將 HackMD 原文貼到此處。）</p>
+          <ul class="note-list">
+            <li id="grind75-two-sum"><a href="https://hackmd.io/x91vDhFJQumSSdzAMScmmQ" target="_blank" rel="noopener">1. Two Sum</a></li>
+            <li id="grind75-longest-substring"><a href="https://hackmd.io/s-3RPRARTZyE1WDSCPbEow" target="_blank" rel="noopener">3. Longest Substring Without Repeating Characters</a></li>
+            <li id="grind75-longest-palindromic-substring"><a href="https://hackmd.io/WNlwh1ymR5G1-nX0nsMp-A" target="_blank" rel="noopener">5. Longest Palindromic Substring</a></li>
+            <li id="grind75-ransom-note"><a href="https://hackmd.io/EMWOgSsGTxK3WUnwa9SKSA" target="_blank" rel="noopener">383. Ransom Note</a></li>
+            <li id="grind75-atoi"><a href="https://hackmd.io/J6OnSqhNRK6zSbEq2F6NhA" target="_blank" rel="noopener">8. String to Integer (atoi)</a></li>
+            <li id="grind75-container"><a href="https://hackmd.io/trgyhkbvRGS0x8dyTfZe8g" target="_blank" rel="noopener">11. Container With Most Water</a></li>
+            <li id="grind75-word-break"><a href="https://hackmd.io/jEhdHb7CQn6LHq7q9I1lNg" target="_blank" rel="noopener">139. Word Break</a></li>
+            <li id="grind75-rotting-oranges"><a href="https://hackmd.io/Wj-7GQMXRUOTwvFsmmxmfA" target="_blank" rel="noopener">994. Rotting Oranges</a></li>
+            <li id="grind75-longest-palindrome"><a href="https://hackmd.io/3EuInRa5S32Xy0NkXkgCnA" target="_blank" rel="noopener">409. Longest Palindrome</a></li>
+          </ul>
         </section>
 
         <section id="neetcode150">
           <h2>NeetCode 150</h2>
-          <p>（請將 HackMD 原文貼到此處。）</p>
+          <ul class="note-list">
+            <li id="neetcode-two-sum"><a href="https://hackmd.io/x91vDhFJQumSSdzAMScmmQ" target="_blank" rel="noopener">1. Two Sum</a></li>
+            <li id="neetcode-longest-substring"><a href="https://hackmd.io/s-3RPRARTZyE1WDSCPbEow" target="_blank" rel="noopener">3. Longest Substring Without Repeating Characters</a></li>
+            <li id="neetcode-longest-palindromic-substring"><a href="https://hackmd.io/WNlwh1ymR5G1-nX0nsMp-A" target="_blank" rel="noopener">5. Longest Palindromic Substring</a></li>
+            <li id="neetcode-reverse-integer"><a href="https://hackmd.io/kpQ7hmY4SDasSU92andGcA" target="_blank" rel="noopener">7. Reverse Integer</a></li>
+            <li id="neetcode-container"><a href="https://hackmd.io/trgyhkbvRGS0x8dyTfZe8g" target="_blank" rel="noopener">11. Container With Most Water</a></li>
+            <li id="neetcode-rotting-oranges"><a href="https://hackmd.io/Wj-7GQMXRUOTwvFsmmxmfA" target="_blank" rel="noopener">994. Rotting Oranges</a></li>
+            <li id="neetcode-word-break"><a href="https://hackmd.io/jEhdHb7CQn6LHq7q9I1lNg" target="_blank" rel="noopener">139. Word Break</a></li>
+          </ul>
         </section>
 
         <section id="others">
           <h2>Others</h2>
-          <p>（請將 HackMD 原文貼到此處。）</p>
+          <ul class="note-list">
+            <li id="others-binary-search"><a href="https://hackmd.io/5_cRDxq6QFy5lVyi0TNvug" target="_blank" rel="noopener">704. Binary Search</a></li>
+            <li id="others-merge-strings"><a href="https://hackmd.io/S3-B0sEUTByiGEwX8xRwKg" target="_blank" rel="noopener">1768. Merge Strings Alternately</a></li>
+          </ul>
         </section>
       </article>
     </div>
