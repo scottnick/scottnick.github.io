@@ -245,21 +245,18 @@ main {
   color: var(--muted);
 }
 
-.total-views {
-  margin-top: 32px;
-  padding: 18px;
-  border: 1px solid var(--border);
-  border-radius: 14px;
+/* // v1.1：首頁 footer 總瀏覽次數（中文、純數字） */
+.site-footer {
+  margin-top: 48px;
+  padding: 16px 20px;
+  border-top: 1px solid var(--border);
+  color: var(--muted);
   background: var(--card);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  box-shadow: var(--shadow);
 }
 
-.total-views .number {
-  font-size: 24px;
-  font-weight: 700;
+.footer-views {
+  max-width: 960px;
+  margin: 0 auto;
 }
 
 .article {
@@ -268,6 +265,81 @@ main {
   border-radius: 14px;
   box-shadow: var(--shadow);
   padding: 22px;
+}
+
+/* // v1.1：cpp.html 兩欄筆記頁（左側清單 + 右側內文） */
+.note-layout {
+  max-width: 1200px;
+  margin: 0 auto 60px;
+  padding: 0 20px;
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 24px;
+}
+
+.note-sidebar {
+  position: sticky;
+  top: 90px;
+  align-self: flex-start;
+  max-height: calc(100vh - 120px);
+  overflow: auto;
+  padding: 14px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--card);
+  box-shadow: var(--shadow);
+}
+
+.toc-toggle {
+  display: none;
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--card);
+  color: var(--text);
+  cursor: pointer;
+  box-shadow: var(--shadow);
+  text-align: left;
+}
+
+.note-toc ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.note-toc a {
+  display: block;
+  padding: 8px 10px;
+  border-radius: 10px;
+  color: var(--text);
+  border: 1px solid transparent;
+}
+
+.note-toc a:hover,
+.note-toc a:focus {
+  background: var(--primary-soft);
+  border-color: var(--border);
+}
+
+.note-content {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  box-shadow: var(--shadow);
+  padding: 24px;
+  max-width: 760px;
+}
+
+.note-content section + section {
+  margin-top: 26px;
+  padding-top: 8px;
+  border-top: 1px solid var(--border);
 }
 
 .toc {
@@ -363,5 +435,38 @@ body.dark-mode .code-block {
 
   .nav-actions {
     margin-left: auto;
+  }
+
+  .note-layout {
+    grid-template-columns: 1fr;
+    padding: 0 16px;
+  }
+
+  .note-sidebar {
+    position: static;
+    max-height: none;
+    box-shadow: none;
+    border: none;
+    padding: 0;
+  }
+
+  .toc-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .note-toc {
+    display: none;
+    margin-top: 8px;
+    padding: 12px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--card);
+    box-shadow: var(--shadow);
+  }
+
+  .note-sidebar.open .note-toc {
+    display: block;
   }
 }

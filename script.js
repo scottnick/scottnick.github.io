@@ -37,7 +37,8 @@ async function updateTotalViews() {
   if (!el) return;
 
   if (!GOATCOUNTER_SITE || GOATCOUNTER_SITE === 'YOUR_GOATCOUNTER_SITE') {
-    el.textContent = '待設定';
+    // v1.1：首頁 footer 總瀏覽次數（中文、純數字）
+    el.textContent = '—';
     return;
   }
 
@@ -53,6 +54,25 @@ async function updateTotalViews() {
   }
 }
 
+// v1.1：cpp.html 兩欄筆記頁（左側清單 + 右側內文）
+function initNoteTocToggle() {
+  const tocToggle = document.getElementById('toc-toggle');
+  const sidebar = document.getElementById('note-sidebar');
+  if (!tocToggle || !sidebar) return;
+
+  tocToggle.addEventListener('click', () => {
+    sidebar.classList.toggle('open');
+    tocToggle.setAttribute('aria-expanded', sidebar.classList.contains('open'));
+  });
+
+  sidebar.querySelectorAll('a').forEach((link) => {
+    link.addEventListener('click', () => {
+      sidebar.classList.remove('open');
+      tocToggle.setAttribute('aria-expanded', 'false');
+    });
+  });
+}
+
 function setActiveNav() {
   const path = window.location.pathname.split('/').pop() || 'index.html';
   document.querySelectorAll('.nav-links a').forEach((link) => {
@@ -65,6 +85,7 @@ function setActiveNav() {
 document.addEventListener('DOMContentLoaded', () => {
   initTheme();
   initNavToggle();
+  initNoteTocToggle();
   setActiveNav();
   const themeBtn = document.getElementById('theme-toggle');
   if (themeBtn) themeBtn.addEventListener('click', toggleTheme);
