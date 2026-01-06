@@ -1,13 +1,21 @@
 // script.js: 控管導覽列、深淺色模式與筆記目錄的互動，移除統計相關邏輯
 (function () {
   const THEME_KEY = 'preferred-theme';
+  const root = document.documentElement;
+
+  function updateThemeIcon(theme) {
+    document.querySelectorAll('#theme-icon').forEach((icon) => {
+      icon.textContent = theme === 'dark' ? '🌙' : '☀️';
+    });
+  }
 
   function applyTheme(mode) {
     const theme = mode === 'dark' ? 'dark' : 'light';
-    document.body.classList.toggle('dark-mode', theme === 'dark');
+    const isDark = theme === 'dark';
+    document.body.classList.toggle('dark-mode', isDark);
+    root.setAttribute('data-theme', theme);
     localStorage.setItem(THEME_KEY, theme);
-    const icon = document.getElementById('theme-icon');
-    if (icon) icon.textContent = theme === 'dark' ? '🌙' : '☀️';
+    updateThemeIcon(theme);
   }
 
   function initTheme() {
@@ -17,11 +25,15 @@
   }
 
   function initThemeToggle() {
-    const toggleBtn = document.getElementById('theme-toggle');
-    if (!toggleBtn) return;
-    toggleBtn.addEventListener('click', () => {
-      const isDark = document.body.classList.contains('dark-mode');
-      applyTheme(isDark ? 'light' : 'dark');
+    const toggleButtons = document.querySelectorAll('#theme-toggle');
+    if (!toggleButtons.length) return;
+
+    toggleButtons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const isDark = document.body.classList.contains('dark-mode');
+        applyTheme(isDark ? 'light' : 'dark');
+        btn.setAttribute('aria-pressed', (!isDark).toString());
+      });
     });
   }
 
