@@ -1,0 +1,92 @@
+<!-- notes/note-template.html: 筆記文章示範版型；可複製成每題實際筆記並替換標題與內容 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LeetCode 0001 Two Sum | 筆記模板</title>
+  <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+  <header>
+    <nav class="navbar">
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../index.html">主頁</a>
+        <a href="../tutoring.html">家教經驗</a>
+        <a href="../courses.html">修課紀錄</a>
+        <a href="../cpp.html">C++學習筆記</a>
+      </div>
+      <div class="nav-actions">
+        <button class="toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon">☀️</span>
+          <span id="theme-text">淺色</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <h1>LeetCode 0001 Two Sum</h1>
+      <p>示範筆記版型：題目摘要、思路、程式碼與複雜度的填寫格式。</p>
+    </section>
+
+    <article class="article">
+      <div class="note-meta">
+        <div class="tag">題型：陣列 / 雜湊</div>
+        <div class="tag">難度：Easy</div>
+        <div class="tag">語言：C++</div>
+      </div>
+
+      <div class="section">
+        <h3>題目摘要</h3>
+        <p>給定整數陣列與目標值，找到兩個數使其總和等於目標並回傳索引。可置換為實際題意與限制說明。</p>
+      </div>
+
+      <div class="section">
+        <h3>解題思路</h3>
+        <p>這裡可以描述用哈希表記錄已訪元素的索引，遍歷陣列時檢查 target - nums[i] 是否存在。補充邊界條件與替代解法。</p>
+      </div>
+
+      <div class="section">
+        <h3>C++ 程式碼</h3>
+        <div class="code-block">
+<pre><code>// 以 vector 回傳索引，保持簡潔可讀
+class Solution {
+public:
+    vector<int> twoSum(vector<int>& nums, int target) {
+        unordered_map<int, int> seen; // 值 -> 索引
+        for (int i = 0; i < nums.size(); ++i) {
+            int need = target - nums[i];
+            if (seen.count(need)) {
+                return {seen[need], i};
+            }
+            seen[nums[i]] = i;
+        }
+        return {};
+    }
+};
+</code></pre>
+        </div>
+      </div>
+
+      <div class="section">
+        <h3>複雜度</h3>
+        <p>時間 O(n)，空間 O(n) 用於雜湊表。</p>
+      </div>
+
+      <div class="section">
+        <h3>易錯點</h3>
+        <ul class="list">
+          <li>避免在同一索引重複使用同一元素；需先檢查再寫入雜湊。</li>
+          <li>確認輸出順序與題目要求一致（多組解時通常可回傳任一組）。</li>
+        </ul>
+      </div>
+    </article>
+  </main>
+
+  <script src="../script.js"></script>
+  <script data-goatcounter="https://YOUR_GOATCOUNTER_SITE.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+</body>
+</html>
