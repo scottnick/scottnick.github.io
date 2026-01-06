@@ -156,6 +156,7 @@ body.dark-mode header {
 .toggle-btn #theme-icon {
   font-size: 20px;
   line-height: 1;
+  font-size: 18px;
 }
 
 .menu-btn {
@@ -312,6 +313,18 @@ main {
   .footer-right {
     text-align: left;
   }
+/* // v1.1：首頁 footer 總瀏覽次數（中文、純數字） */
+.site-footer {
+  margin-top: 48px;
+  padding: 16px 20px;
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  background: var(--card);
+}
+
+.footer-views {
+  max-width: 960px;
+  margin: 0 auto;
 }
 
 .article {

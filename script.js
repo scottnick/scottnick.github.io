@@ -1,4 +1,6 @@
 // script.js: 控管導覽列、深淺色模式及統計數的邏輯，若要更換追蹤或動畫可在此調整
+const GOATCOUNTER_SITE = 'YOUR_GOATCOUNTER_SITE'; // 替換成你的 GoatCounter site slug（例如 mysite）
+
 function setTheme(mode) {
   document.body.classList.toggle('dark-mode', mode === 'dark');
   localStorage.setItem('preferred-theme', mode);
@@ -46,6 +48,21 @@ async function updateTotalViews() {
     const data = await res.json();
     const total = data?.count ?? data?.hits ?? data?.total ?? null;
     el.textContent = total ? `${total}` : '—';
+  const el = document.getElementById('total-views');
+  if (!el) return;
+
+  if (!GOATCOUNTER_SITE || GOATCOUNTER_SITE === 'YOUR_GOATCOUNTER_SITE') {
+    // v1.1：首頁 footer 總瀏覽次數（中文、純數字）
+    el.textContent = '—';
+    return;
+  }
+
+  try {
+    const res = await fetch(`https://${GOATCOUNTER_SITE}.goatcounter.com/api/v0/stats/total`);
+    if (!res.ok) throw new Error('network');
+    const data = await res.json();
+    const total = data.hits_total ?? data.total ?? data.count ?? null;
+    el.textContent = total !== null ? total.toLocaleString() : '—';
   } catch (err) {
     console.error('GoatCounter total fetch failed', err);
     el.textContent = '—';
