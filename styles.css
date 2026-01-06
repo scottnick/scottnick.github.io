@@ -347,6 +347,18 @@ main {
   margin-top: 0;
 }
 
+.note-intro {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  color: var(--muted);
+}
+
+.note-intro ul {
+  margin: 0 0 6px 18px;
+  padding: 0;
+}
+
 .note-list {
   list-style: disc;
   padding-left: 20px;
@@ -364,6 +376,67 @@ main {
   border: 1px dashed var(--border);
   background: var(--primary-soft);
   color: var(--muted);
+}
+
+.section-hint {
+  margin: 6px 0 14px;
+  color: var(--muted);
+}
+
+.accordion {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.accordion details {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--card);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  transition: border-color var(--transition), box-shadow var(--transition), background var(--transition);
+}
+
+.accordion summary {
+  list-style: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  color: var(--text);
+}
+
+.accordion summary::-webkit-details-marker {
+  display: none;
+}
+
+.accordion-title {
+  font-weight: 700;
+}
+
+.accordion-meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--muted);
+}
+
+.accordion-caret {
+  transition: transform var(--transition);
+  display: inline-block;
+}
+
+.accordion details[open] .accordion-caret {
+  transform: rotate(180deg);
+}
+
+.accordion-content {
+  padding: 0 16px 16px;
+  color: var(--muted);
+  border-top: 1px solid var(--border);
 }
 
 .toc {
