@@ -140,6 +140,13 @@ body.dark-mode header {
   background: transparent;
   box-shadow: none;
   padding: 6px;
+  gap: 0;
+  font-size: 1.2rem;
+}
+
+.toggle-btn:hover {
+  box-shadow: none;
+  background: transparent;
 }
 
 .toggle-btn #theme-text {
@@ -147,6 +154,8 @@ body.dark-mode header {
 }
 
 .toggle-btn #theme-icon {
+  font-size: 20px;
+  line-height: 1;
   font-size: 18px;
 }
 
@@ -245,6 +254,65 @@ main {
   color: var(--muted);
 }
 
+/* // v1.3：首頁 footer 總瀏覽次數與聯絡資訊 */
+.site-footer {
+  margin-top: 48px;
+  border-top: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+}
+
+.footer-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 18px 20px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 12px;
+  align-items: center;
+}
+
+.footer-left {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  color: var(--text);
+}
+
+.footer-line {
+  color: var(--text);
+}
+
+.footer-left a {
+  color: var(--primary);
+}
+
+.footer-left a:hover {
+  text-decoration: underline;
+}
+
+.footer-right {
+  text-align: right;
+  color: var(--muted);
+}
+
+.footer-bottom {
+  border-top: 1px solid var(--border);
+  text-align: center;
+  padding: 10px 20px 14px;
+  color: var(--muted);
+  font-size: 0.9em;
+}
+
+@media (max-width: 720px) {
+  .footer-inner {
+    grid-template-columns: 1fr;
+    text-align: left;
+  }
+
+  .footer-right {
+    text-align: left;
+  }
 /* // v1.1：首頁 footer 總瀏覽次數（中文、純數字） */
 .site-footer {
   margin-top: 48px;

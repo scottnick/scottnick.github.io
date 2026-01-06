@@ -33,6 +33,21 @@ function initNavToggle() {
 }
 
 async function updateTotalViews() {
+  const el = document.getElementById('gc-total');
+  if (!el) return;
+
+  try {
+    // v1.3：首頁 footer 總瀏覽次數與聯絡資訊
+    const goatScript = document.querySelector('script[data-goatcounter]');
+    const base = goatScript?.getAttribute('data-goatcounter');
+    if (!base) throw new Error('no-goatcounter');
+
+    const apiBase = base.replace(/\/count.*$/, '').replace(/\/$/, '');
+    const res = await fetch(`${apiBase}/counter/TOTAL.json`);
+    if (!res.ok) throw new Error('network');
+    const data = await res.json();
+    const total = data?.count ?? data?.hits ?? data?.total ?? null;
+    el.textContent = total ? `${total}` : '—';
   const el = document.getElementById('total-views');
   if (!el) return;
 
@@ -52,6 +67,16 @@ async function updateTotalViews() {
     console.error('GoatCounter total fetch failed', err);
     el.textContent = '—';
   }
+}
+
+// v1.3：首頁 footer 總瀏覽次數與聯絡資訊
+function updateLastUpdated() {
+  const el = document.getElementById('last-updated');
+  if (!el) return;
+  const modified = new Date(document.lastModified);
+  const pad = (n) => String(n).padStart(2, '0');
+  const formatted = `${modified.getFullYear()}-${pad(modified.getMonth() + 1)}-${pad(modified.getDate())} ${pad(modified.getHours())}:${pad(modified.getMinutes())}`;
+  el.textContent = formatted;
 }
 
 // v1.1：cpp.html 兩欄筆記頁（左側清單 + 右側內文）
@@ -90,4 +115,5 @@ document.addEventListener('DOMContentLoaded', () => {
   const themeBtn = document.getElementById('theme-toggle');
   if (themeBtn) themeBtn.addEventListener('click', toggleTheme);
   updateTotalViews();
+  updateLastUpdated();
 });
