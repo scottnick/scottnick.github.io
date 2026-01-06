@@ -9,18 +9,18 @@
 <body>
   <header>
     <nav class="navbar">
+      <a class="brand" href="index.html">scottnick 個人網頁</a>
       <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
       <div class="nav-links" id="nav-links">
         <a href="index.html">主頁</a>
-        <a href="profile.html">個人檔案</a>
         <a href="tutoring.html">家教經驗</a>
         <a href="courses.html">修課紀錄</a>
         <a href="cpp.html">C++學習筆記</a>
+        <a href="profile.html">個人檔案</a>
       </div>
       <div class="nav-actions">
-        <button class="toggle-btn" id="theme-toggle" aria-label="切換主題">
-          <span id="theme-icon">☀️</span>
-          <span id="theme-text">淺色</span>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
         </button>
       </div>
     </nav>
@@ -125,18 +125,6 @@
     </section>
   </main>
 
-  <footer class="site-footer" aria-live="polite">
-    <div class="footer-inner">
-      <div class="footer-left">
-        <div class="footer-line">總瀏覽次數：<span id="gc-total">載入中</span></div>
-        <div class="footer-line">聯絡方式：<a href="mailto:scottnick0516@gmail.com">scottnick0516@gmail.com</a></div>
-      </div>
-      <div class="footer-right">最後修訂：<span id="last-updated">—</span></div>
-    </div>
-    <div class="footer-bottom">© scottnick</div>
-  </footer>
-
   <script src="script.js"></script>
-  <script data-goatcounter="https://YOUR_GOATCOUNTER_SITE.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
 </body>
 </html>
