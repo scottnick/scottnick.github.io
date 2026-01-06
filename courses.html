@@ -1,4 +1,4 @@
-<!-- courses.html: 修課紀錄入口，提供依學期與依類型的兩種瀏覽方式；可替換 placeholder 為實際課程 -->
+<!-- courses.html: 修課紀錄入口，提供依學期與依類型的兩種瀏覽方式；移除 footer 並修正導覽 -->
 <!doctype html>
 <html lang="zh-Hant">
 <head>
@@ -10,17 +10,18 @@
 <body>
   <header>
     <nav class="navbar">
+      <a class="brand" href="index.html">scottnick 個人網頁</a>
       <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
       <div class="nav-links" id="nav-links">
         <a href="index.html">主頁</a>
+        <a href="profile.html">個人檔案</a>
         <a href="tutoring.html">家教經驗</a>
         <a href="courses.html">修課紀錄</a>
         <a href="cpp.html">C++學習筆記</a>
       </div>
       <div class="nav-actions">
-        <button class="toggle-btn" id="theme-toggle" aria-label="切換主題">
-          <span id="theme-icon">☀️</span>
-          <span id="theme-text">淺色</span>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
         </button>
       </div>
     </nav>
@@ -81,6 +82,5 @@
   </main>
 
   <script src="script.js"></script>
-  <script data-goatcounter="https://YOUR_GOATCOUNTER_SITE.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
 </body>
 </html>
