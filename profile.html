@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>個人檔案</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="index.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="tutoring.html">家教經驗</a>
+        <a href="courses.html">修課紀錄</a>
+        <a href="cpp.html">C++學習筆記</a>
+        <a href="profile.html" class="active">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="profile-hero">
+      <img class="profile-avatar" src="assests/assets/avatar.png" alt="scottnick 的頭像">
+      <div class="profile-identity">
+        <h1>scottnick</h1>
+        <p>喜歡把學到的知識整理成可分享的筆記，也樂於陪伴學習者一起練習與迭代。</p>
+        <div class="profile-chips">
+          <span class="chip">🎯 教學 &amp; 家教</span>
+          <span class="chip">💻 C++ / 演算法</span>
+          <span class="chip">🧭 自學紀錄</span>
+        </div>
+        <div class="profile-actions">
+          <a class="btn primary" href="mailto:scottnick0516@gmail.com">聯絡我</a>
+          <a class="btn" href="cpp.html">查看筆記</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="profile-section">
+      <h2 class="section-title">個人快覽</h2>
+      <div class="profile-grid">
+        <div class="profile-card">
+          <h3>定位</h3>
+          <p>學生／工程師養成中，專注演算法練習與知識拆解。</p>
+        </div>
+        <div class="profile-card">
+          <h3>興趣</h3>
+          <p>教學設計、解題心得整理、把零散筆記做成可搜尋的內容。</p>
+        </div>
+        <div class="profile-card">
+          <h3>目前重點</h3>
+          <p>強化 C++ 筆記結構，並累積家教素材與課程規劃模板。</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="profile-section">
+      <h2 class="section-title">關於我</h2>
+      <p>我喜歡把問題拆小、把流程寫成模板，再透過教學或分享檢查自己是否真正理解。這個網站把家教心得、修課紀錄與 C++ 筆記集中起來，方便日後查詢與更新，也讓合作的學生或朋友能快速認識我的學習方式。</p>
+      <div class="info-grid">
+        <div class="info-card">
+          <strong>所在地</strong>
+          <span>台灣</span>
+        </div>
+        <div class="info-card">
+          <strong>主要語言</strong>
+          <span>中文、英文</span>
+        </div>
+        <div class="info-card">
+          <strong>聯絡信箱</strong>
+          <span><a href="mailto:scottnick0516@gmail.com">scottnick0516@gmail.com</a></span>
+        </div>
+      </div>
+    </section>
+
+    <section class="profile-section">
+      <h2 class="section-title">專長與工具</h2>
+      <div class="tag-list">
+        <span class="pill">C++ / STL</span>
+        <span class="pill">資料結構 &amp; 演算法</span>
+        <span class="pill">LeetCode 解題</span>
+        <span class="pill">課程筆記整理</span>
+        <span class="pill">教案拆解與回饋</span>
+      </div>
+    </section>
+
+    <section class="profile-section">
+      <h2 class="section-title">近期焦點</h2>
+      <div class="timeline">
+        <div class="timeline-item">
+          <strong>整理家教經驗</strong>
+          <small>梳理溝通、排課與反饋流程，累積可重複使用的教案素材。</small><br>
+          <a href="tutoring.html">查看家教頁面</a>
+        </div>
+        <div class="timeline-item">
+          <strong>維護修課紀錄</strong>
+          <small>把學期與課程類型分開整理，方便回顧學習節奏。</small><br>
+          <a href="courses.html">瀏覽修課清單</a>
+        </div>
+        <div class="timeline-item">
+          <strong>擴充 C++ 筆記</strong>
+          <small>逐步補充演算法題解與模板，讓未來的自己能快速複習。</small><br>
+          <a href="cpp.html">前往 C++ 筆記</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="profile-section">
+      <h2 class="section-title">聯絡方式</h2>
+      <div class="profile-card">
+        <p>想合作、詢問教學內容或交流筆記撰寫方式，歡迎直接寄信給我。</p>
+        <div class="profile-actions">
+          <a class="btn primary" href="mailto:scottnick0516@gmail.com">寄信給我</a>
+          <a class="btn" href="https://github.com/scottnick" target="_blank" rel="noreferrer">GitHub</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
