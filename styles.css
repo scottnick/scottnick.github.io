@@ -221,6 +221,58 @@ main {
   color: var(--muted);
 }
 
+.course-terms {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.term-block {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  box-shadow: var(--shadow);
+  padding: 20px;
+}
+
+.term-block h2 {
+  margin: 0 0 14px;
+  font-size: 20px;
+}
+
+.post-grid {
+  display: grid;
+  gap: 12px;
+}
+
+.post-card {
+  display: block;
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  text-decoration: none;
+  box-shadow: var(--shadow);
+  transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition);
+}
+
+.post-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 22px rgba(0, 0, 0, 0.12);
+  border-color: var(--primary-soft);
+}
+
+.post-card h3 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.post-card p {
+  margin: 6px 0 0;
+  color: var(--muted);
+}
+
 .section-title {
   font-size: 20px;
   margin: 0 0 10px;
