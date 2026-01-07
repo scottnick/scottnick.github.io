@@ -273,6 +273,24 @@ main {
   color: var(--muted);
 }
 
+.post-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.post-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  border: 1px solid var(--border);
+  background: var(--primary-soft);
+  color: var(--text);
+}
+
 .section-title {
   font-size: 20px;
   margin: 0 0 10px;
