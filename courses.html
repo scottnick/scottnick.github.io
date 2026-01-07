@@ -1,4 +1,4 @@
-<!-- courses.html: 修課紀錄入口，提供依學期與依類型的兩種瀏覽方式；可替換 placeholder 為實際課程 -->
+<!-- courses.html: 修課紀錄入口，提供依學期與依類型的兩種瀏覽方式；移除 footer 並修正導覽 -->
 <!doctype html>
 <html lang="zh-Hant">
 <head>
@@ -10,17 +10,16 @@
 <body>
   <header>
     <nav class="navbar">
+      <a class="brand" href="index.html">scottnick 個人網頁</a>
       <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
       <div class="nav-links" id="nav-links">
-        <a href="index.html">主頁</a>
         <a href="tutoring.html">家教經驗</a>
-        <a href="courses.html">修課紀錄</a>
+        <a href="courses.html" class="active">修課紀錄</a>
         <a href="cpp.html">C++學習筆記</a>
       </div>
       <div class="nav-actions">
-        <button class="toggle-btn" id="theme-toggle" aria-label="切換主題">
-          <span id="theme-icon">☀️</span>
-          <span id="theme-text">淺色</span>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
         </button>
       </div>
     </nav>
@@ -32,55 +31,39 @@
       <p>依學期或課程類型整理修課路線，日後可逐步填入心得、教材與成績。</p>
     </section>
 
-    <section class="anchor-btns">
-      <a class="tag" href="#by-term">依學期</a>
-      <a class="tag" href="#by-type">依類型</a>
-    </section>
+    <div class="course-terms">
+      <section class="term-block">
+        <h2>大一暑假</h2>
+        <div class="post-grid">
+          <a class="post-card" href="freshman-summer-calculus.html">
+            <h3>大一暑假微積分</h3>
+            <p>內容待補。</p>
+          </a>
+        </div>
+      </section>
 
-    <article class="article" id="by-term">
-      <h2 class="section-title">依學期</h2>
-      <div class="section" id="term-112">
-        <h3>112 學年度下學期</h3>
-        <ul class="list">
-          <li>課程 A — 以 placeholder 描述課程重點與收穫。</li>
-          <li>課程 B — 紀錄專題、作業或實驗經驗。</li>
-        </ul>
-      </div>
-      <div class="section" id="term-111">
-        <h3>111 學年度上學期</h3>
-        <ul class="list">
-          <li>課程 C — 重要觀念與修課心得。</li>
-          <li>課程 D — 可補充教材連結或筆記。</li>
-        </ul>
-      </div>
-    </article>
+      <section class="term-block">
+        <h2>大一上</h2>
+        <div class="post-grid">
+          <a class="post-card" href="freshman-fall-calculus.html">
+            <h3>大一上微積分</h3>
+            <p>內容待補。</p>
+          </a>
+        </div>
+      </section>
 
-    <article class="article" id="by-type">
-      <h2 class="section-title">依類型</h2>
-      <div class="section" id="math">
-        <h3>數學類</h3>
-        <ul class="list">
-          <li>微積分 — 以 placeholder 紀錄解題技巧與教材。</li>
-          <li>線性代數 — 收錄重點公式與習題。</li>
-        </ul>
-      </div>
-      <div class="section" id="cs">
-        <h3>資工類</h3>
-        <ul class="list">
-          <li>資料結構 — 以 placeholder 整理作業與專題。</li>
-          <li>演算法 — 記錄學習節奏與常見題型。</li>
-        </ul>
-      </div>
-      <div class="section" id="others">
-        <h3>其他</h3>
-        <ul class="list">
-          <li>通識／選修 — 可補充心得或推薦理由。</li>
-        </ul>
-      </div>
-    </article>
+      <section class="term-block">
+        <h2>大一寒假</h2>
+        <div class="post-grid">
+          <a class="post-card" href="freshman-winter-calculus.html">
+            <h3>大一寒假微積分</h3>
+            <p>內容待補。</p>
+          </a>
+        </div>
+      </section>
+    </div>
   </main>
 
   <script src="script.js"></script>
-  <script data-goatcounter="https://YOUR_GOATCOUNTER_SITE.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
 </body>
 </html>
