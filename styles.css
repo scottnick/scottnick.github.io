@@ -280,6 +280,14 @@ main {
   margin-top: 10px;
 }
 
+.post-tag-label {
+  color: var(--muted);
+  font-size: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
 .post-tag {
   display: inline-flex;
   align-items: center;
