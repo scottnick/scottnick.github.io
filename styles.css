@@ -280,7 +280,7 @@ main {
 }
 
 .category-count {
-  min-width: 20px;
+  min-width: 24px;
   text-align: right;
 }
 
@@ -289,7 +289,7 @@ main {
 }
 
 .category-item[open] .category-caret {
-  transform: rotate(180deg);
+  transform: rotate(90deg);
 }
 
 .category-content {
