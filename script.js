@@ -66,6 +66,53 @@
     });
   }
 
+  function initRecentUpdates() {
+    const list = document.getElementById('recent-updates');
+    if (!list) return;
+
+    const repo = list.dataset.repo;
+    if (!repo) return;
+
+    fetch(`https://api.github.com/repos/${repo}/commits?per_page=3`)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Failed to load updates');
+        }
+        return response.json();
+      })
+      .then((commits) => {
+        if (!Array.isArray(commits) || commits.length === 0) {
+          list.innerHTML = '<li>目前沒有可顯示的更新。</li>';
+          return;
+        }
+
+        const formatter = new Intl.DateTimeFormat('zh-TW', {
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+        });
+
+        list.innerHTML = commits
+          .map((commit) => {
+            const message = commit?.commit?.message?.split('\n')[0] || '更新內容';
+            const date = commit?.commit?.author?.date
+              ? formatter.format(new Date(commit.commit.author.date))
+              : '日期未知';
+            const url = commit?.html_url || '#';
+            return `
+              <li>
+                <strong>${date}</strong> — 更新：${message}<br>
+                <small><a href="${url}" target="_blank" rel="noopener">查看 GitHub 紀錄</a></small>
+              </li>
+            `;
+          })
+          .join('');
+      })
+      .catch(() => {
+        list.innerHTML = '<li>更新載入失敗，請稍後再試。</li>';
+      });
+  }
+
   function setActiveNav() {
     const path = window.location.pathname.split('/').pop() || 'index.html';
     document.querySelectorAll('.nav-links a').forEach((link) => {
@@ -80,6 +127,7 @@
     initThemeToggle();
     initNavToggle();
     initNoteTocToggle();
+    initRecentUpdates();
     setActiveNav();
   });
 })();
