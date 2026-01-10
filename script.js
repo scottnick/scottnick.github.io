@@ -169,6 +169,23 @@
     activateFromScroll();
   }
 
+  function initBackToTop() {
+    const button = document.querySelector('.back-to-top');
+    if (!button) return;
+
+    function toggleVisibility() {
+      const shouldShow = window.scrollY > 240;
+      button.classList.toggle('is-visible', shouldShow);
+    }
+
+    button.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    window.addEventListener('scroll', toggleVisibility, { passive: true });
+    toggleVisibility();
+  }
+
   function setActiveNav() {
     const path = window.location.pathname.split('/').pop() || 'index.html';
     document.querySelectorAll('.nav-links a').forEach((link) => {
@@ -185,6 +202,7 @@
     initNoteTocToggle();
     initRecentUpdates();
     initArticleToc();
+    initBackToTop();
     setActiveNav();
   });
 })();
