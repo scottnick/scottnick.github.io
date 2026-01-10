@@ -112,6 +112,46 @@
       });
   }
 
+  function initArticleToc() {
+    const toc = document.querySelector('.article-toc');
+    if (!toc) return;
+
+    const links = Array.from(toc.querySelectorAll('a[href^="#"]'));
+    const targets = links
+      .map((link) => document.querySelector(link.getAttribute('href')))
+      .filter(Boolean);
+
+    if (!targets.length) return;
+
+    function setActive(id) {
+      links.forEach((link) => {
+        link.classList.toggle('active', link.getAttribute('href') === `#${id}`);
+      });
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+
+        if (visible.length > 0) {
+          setActive(visible[0].target.id);
+        }
+      },
+      {
+        rootMargin: '-20% 0px -70% 0px',
+        threshold: 0,
+      }
+    );
+
+    targets.forEach((section) => observer.observe(section));
+
+    if (targets[0]) {
+      setActive(targets[0].id);
+    }
+  }
+
   function setActiveNav() {
     const path = window.location.pathname.split('/').pop() || 'index.html';
     document.querySelectorAll('.nav-links a').forEach((link) => {
@@ -127,6 +167,7 @@
     initNavToggle();
     initNoteTocToggle();
     initRecentUpdates();
+    initArticleToc();
     setActiveNav();
   });
 })();

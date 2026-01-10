@@ -436,6 +436,22 @@ main {
   color: var(--primary);
 }
 
+.article-toc a.active {
+  color: var(--primary);
+  font-weight: 600;
+}
+
+.article-toc a.active::before {
+  content: "";
+  display: inline-block;
+  width: 3px;
+  height: 1.1em;
+  margin-right: 8px;
+  background: var(--primary);
+  border-radius: 999px;
+  vertical-align: -2px;
+}
+
 .article-body {
   background: var(--card);
   border: 1px solid var(--border);
