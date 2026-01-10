@@ -499,6 +499,10 @@ main {
   color: var(--muted);
 }
 
+.article-footer {
+  margin-top: 24px;
+}
+
 @media (max-width: 900px) {
   .article-layout {
     grid-template-columns: 1fr;
