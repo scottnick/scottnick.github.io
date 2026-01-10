@@ -453,8 +453,6 @@ main {
 }
 
 .back-to-top {
-  margin-top: 16px;
-  margin-left: auto;
   width: 48px;
   height: 48px;
   border-radius: 12px;
@@ -469,7 +467,12 @@ main {
   opacity: 0;
   pointer-events: none;
   transition: opacity var(--transition), transform var(--transition), border-color var(--transition);
-  align-self: flex-end;
+}
+
+.back-to-top--floating {
+  position: fixed;
+  bottom: 24px;
+  z-index: 9;
 }
 
 .back-to-top.is-visible {
@@ -486,7 +489,7 @@ main {
 }
 
 .back-to-top:hover svg {
-  animation: arrow-float 0.8s ease-in-out infinite;
+  animation: arrow-float 0.96s ease-in-out infinite;
 }
 
 @keyframes arrow-float {
