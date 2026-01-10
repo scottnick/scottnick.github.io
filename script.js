@@ -129,27 +129,44 @@
       });
     }
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const visible = entries
-          .filter((entry) => entry.isIntersecting)
-          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+    let isClickScrolling = false;
 
-        if (visible.length > 0) {
-          setActive(visible[0].target.id);
-        }
-      },
-      {
-        rootMargin: '-20% 0px -70% 0px',
-        threshold: 0,
+    function activateFromScroll() {
+      if (isClickScrolling) return;
+      const offset = 120;
+      const current = targets
+        .map((section) => ({
+          id: section.id,
+          top: section.getBoundingClientRect().top,
+        }))
+        .filter((section) => section.top <= offset)
+        .sort((a, b) => b.top - a.top)[0];
+
+      if (current) {
+        setActive(current.id);
+      } else if (targets[0]) {
+        setActive(targets[0].id);
       }
-    );
-
-    targets.forEach((section) => observer.observe(section));
-
-    if (targets[0]) {
-      setActive(targets[0].id);
     }
+
+    links.forEach((link) => {
+      link.addEventListener('click', (event) => {
+        const target = document.querySelector(link.getAttribute('href'));
+        if (!target) return;
+        event.preventDefault();
+        isClickScrolling = true;
+        setActive(target.id);
+        const top = target.getBoundingClientRect().top + window.scrollY - 110;
+        window.scrollTo({ top, behavior: 'smooth' });
+        window.setTimeout(() => {
+          isClickScrolling = false;
+          activateFromScroll();
+        }, 400);
+      });
+    });
+
+    window.addEventListener('scroll', activateFromScroll, { passive: true });
+    activateFromScroll();
   }
 
   function setActiveNav() {
