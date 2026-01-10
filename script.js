@@ -98,11 +98,10 @@
             const date = commit?.commit?.author?.date
               ? formatter.format(new Date(commit.commit.author.date))
               : '日期未知';
-            const url = commit?.html_url || '#';
             return `
               <li>
                 <strong>${date}</strong> — 更新：${message}<br>
-                <small><a href="${url}" target="_blank" rel="noopener">查看 GitHub 紀錄</a></small>
+                <small>最新更新資訊</small>
               </li>
             `;
           })
