@@ -474,6 +474,10 @@ main {
   color: var(--muted);
 }
 
+.article-body p + p {
+  margin-top: 12px;
+}
+
 @media (max-width: 900px) {
   .article-layout {
     grid-template-columns: 1fr;
