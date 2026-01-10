@@ -98,11 +98,10 @@
             const date = commit?.commit?.author?.date
               ? formatter.format(new Date(commit.commit.author.date))
               : '日期未知';
-            const url = commit?.html_url || '#';
             return `
               <li>
                 <strong>${date}</strong> — 更新：${message}<br>
-                <small><a href="${url}" target="_blank" rel="noopener">查看 GitHub 紀錄</a></small>
+                <small>最新更新資訊</small>
               </li>
             `;
           })
@@ -111,6 +110,46 @@
       .catch(() => {
         list.innerHTML = '<li>更新載入失敗，請稍後再試。</li>';
       });
+  }
+
+  function initArticleToc() {
+    const toc = document.querySelector('.article-toc');
+    if (!toc) return;
+
+    const links = Array.from(toc.querySelectorAll('a[href^="#"]'));
+    const targets = links
+      .map((link) => document.querySelector(link.getAttribute('href')))
+      .filter(Boolean);
+
+    if (!targets.length) return;
+
+    function setActive(id) {
+      links.forEach((link) => {
+        link.classList.toggle('active', link.getAttribute('href') === `#${id}`);
+      });
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+
+        if (visible.length > 0) {
+          setActive(visible[0].target.id);
+        }
+      },
+      {
+        rootMargin: '-20% 0px -70% 0px',
+        threshold: 0,
+      }
+    );
+
+    targets.forEach((section) => observer.observe(section));
+
+    if (targets[0]) {
+      setActive(targets[0].id);
+    }
   }
 
   function setActiveNav() {
@@ -128,6 +167,7 @@
     initNavToggle();
     initNoteTocToggle();
     initRecentUpdates();
+    initArticleToc();
     setActiveNav();
   });
 })();
