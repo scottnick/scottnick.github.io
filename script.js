@@ -172,6 +172,7 @@
   function initBackToTop() {
     const button = document.querySelector('.back-to-top');
     const toc = document.querySelector('.article-toc');
+    const articleBody = document.querySelector('.article-body');
     if (!button) return;
 
     function toggleVisibility() {
@@ -180,12 +181,13 @@
     }
 
     function positionButton() {
-      if (!toc) return;
-      const rect = toc.getBoundingClientRect();
-      const left = rect.right - button.offsetWidth;
+      const rect = (articleBody || toc)?.getBoundingClientRect();
+      if (!rect) return;
+      const preferredLeft = rect.right + 16;
       const minLeft = 16;
       const maxLeft = window.innerWidth - button.offsetWidth - 16;
-      button.style.left = `${Math.min(Math.max(left, minLeft), maxLeft)}px`;
+      const clampedLeft = Math.min(Math.max(preferredLeft, minLeft), maxLeft);
+      button.style.left = `${clampedLeft}px`;
     }
 
     button.addEventListener('click', () => {
@@ -194,7 +196,6 @@
 
     window.addEventListener('resize', positionButton);
     window.addEventListener('scroll', toggleVisibility, { passive: true });
-    window.addEventListener('scroll', positionButton, { passive: true });
     toggleVisibility();
     positionButton();
   }
