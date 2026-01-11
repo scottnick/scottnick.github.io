@@ -453,6 +453,8 @@ main {
 }
 
 .back-to-top {
+  position: fixed;
+  bottom: 20px;
   width: 48px;
   height: 48px;
   border-radius: 12px;
@@ -466,14 +468,8 @@ main {
   cursor: pointer;
   opacity: 0;
   pointer-events: none;
+  z-index: 9999;
   transition: opacity var(--transition), transform var(--transition), border-color var(--transition);
-}
-
-.back-to-top--floating {
-  position: fixed;
-  bottom: 24px;
-  right: 24px;
-  z-index: 9;
 }
 
 .back-to-top.is-visible {
