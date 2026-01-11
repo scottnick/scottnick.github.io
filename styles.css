@@ -468,9 +468,11 @@ main {
 }
 
 .article-layout {
+  --article-toc-width: 220px;
+  --article-toc-gap: 20px;
   display: grid;
-  grid-template-columns: minmax(160px, 220px) minmax(0, 1fr);
-  gap: 20px;
+  grid-template-columns: minmax(160px, var(--article-toc-width)) minmax(0, 1fr);
+  gap: var(--article-toc-gap);
   align-items: start;
 }
 
@@ -484,6 +486,7 @@ main {
   padding: 16px;
   box-shadow: var(--shadow);
   font-size: 14px;
+  z-index: 1;
 }
 
 .article-toc strong {
@@ -573,9 +576,9 @@ main {
   border-radius: 14px;
   box-shadow: var(--shadow);
   padding: 22px;
-  max-width: 720px;
-  width: 100%;
-  justify-self: center;
+  width: calc(100% + var(--article-toc-width) + var(--article-toc-gap));
+  margin-left: calc(-1 * (var(--article-toc-width) + var(--article-toc-gap)));
+  padding-left: calc(22px + var(--article-toc-width) + var(--article-toc-gap));
 }
 
 .article-body section + section {
@@ -667,6 +670,12 @@ main {
 
   .article-toc {
     position: static;
+  }
+
+  .article-body {
+    width: 100%;
+    margin-left: 0;
+    padding-left: 22px;
   }
   
   .meta-grid {
