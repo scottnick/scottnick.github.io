@@ -180,9 +180,9 @@
     }
 
     function positionButton() {
-      const rect = toc?.getBoundingClientRect();
+      const rect = document.querySelector('.article-body')?.getBoundingClientRect() || toc?.getBoundingClientRect();
       if (!rect) return;
-      const preferredLeft = rect.right + 56;
+      const preferredLeft = rect.right + 24;
       const minLeft = 16;
       const maxLeft = window.innerWidth - button.offsetWidth - 16;
       const clampedLeft = Math.min(Math.max(preferredLeft, minLeft), maxLeft);
