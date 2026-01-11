@@ -10,7 +10,7 @@
 <body>
   <header>
     <nav class="navbar">
-      <a class="brand" href="index.html">scottnick 個人網頁</a>
+      <a class="brand" href="personal.html">scottnick 個人網頁</a>
       <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
       <div class="nav-links" id="nav-links">
         <a href="index.html">主頁</a>
@@ -28,37 +28,38 @@
 
   <main>
     <section class="hero">
-      <h1>scottnick 的主頁</h1>
-      <p>家教經驗、修課紀錄與 C++/LeetCode 筆記一次整理，方便追蹤成長軌跡。</p>
+      <h1>主頁</h1>
+      <p>這裡是我分享學習與生活紀錄的地方，包含家教心得、特選專題與日常筆記等主題。</p>
     </section>
 
-    <section>
-      <div class="card-grid">
-        <a class="card" href="index.html">
-          <span class="label">主頁</span>
-          <p>快速總覽與近期更新，一鍵回到起點。</p>
-        </a>
-        <a class="card" href="home/tutoring.html">
-          <span class="label">家教經驗</span>
-          <p>紀錄我對教學、補習班與溝通的想法。</p>
-        </a>
-        <a class="card" href="courses.html">
-          <span class="label">修課紀錄</span>
-          <p>依學期與主題整理修課足跡，輕鬆回顧。</p>
-        </a>
-        <a class="card" href="cpp.html">
-          <span class="label">C++學習筆記</span>
-          <p>LeetCode 與 C++ 札記入口，收斂解題思路。</p>
-        </a>
-      </div>
-    </section>
-
-    <section>
-      <h2 class="section-title">近期更新</h2>
-      <ul class="update-list" id="recent-updates" data-repo="scottnick/scottnick.github.io">
-        <li>正在載入最新更新...</li>
-      </ul>
-    </section>
+    <div class="course-terms">
+      <section class="term-block">
+        <h2>家教經驗</h2>
+        <div class="post-grid">
+          <a class="post-card" href="home/tutoring.html">
+            <h3>目前家教經驗</h3>
+            <p>整理現有的家教經歷與教學重點。</p>
+            <div class="post-tags">
+              <span class="post-tag">教學紀錄</span>
+            </div>
+          </a>
+        </div>
+      </section>
+      <section class="term-block">
+        <h2>台大數學系特殊選才</h2>
+        <div class="post-grid">
+          <a class="post-card" href="home/ntu-math-special.html">
+            <h3>準備與心得整理</h3>
+            <p>紀錄申請動機、準備歷程與面試反思，方便整理特選資料。</p>
+            <div class="post-tags">
+              <span class="post-tag">台大</span>
+              <span class="post-tag">數學系</span>
+              <span class="post-tag">經驗分享</span>
+            </div>
+          </a>
+        </div>
+      </section>
+    </div>
   </main>
 
   <script src="script.js"></script>
