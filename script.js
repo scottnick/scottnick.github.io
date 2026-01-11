@@ -182,7 +182,7 @@
     function positionButton() {
       const rect = toc?.getBoundingClientRect();
       if (!rect) return;
-      const preferredLeft = rect.right + 16;
+      const preferredLeft = rect.right + 32;
       const minLeft = 16;
       const maxLeft = window.innerWidth - button.offsetWidth - 16;
       const clampedLeft = Math.min(Math.max(preferredLeft, minLeft), maxLeft);
