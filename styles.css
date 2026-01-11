@@ -515,9 +515,9 @@ main {
 .article-body h2::after {
   content: "";
   display: block;
-  height: 1px;
+  height: 2px;
   background: var(--border);
-  margin-top: 10px;
+  margin-top: 12px;
 }
 
 .article-body p {
@@ -577,7 +577,7 @@ main {
 }
 
 .meta-field--date {
-  margin-left: 15%;
+  margin-left: 16%;
 }
 
 .meta-label {
