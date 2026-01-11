@@ -182,11 +182,12 @@
     function positionButton() {
       const rect = toc?.getBoundingClientRect();
       if (!rect) return;
-      const preferredLeft = rect.right - button.offsetWidth;
-      const minLeft = 16;
-      const maxLeft = window.innerWidth - button.offsetWidth - 16;
-      const clampedLeft = Math.min(Math.max(preferredLeft, minLeft), maxLeft);
-      button.style.left = `${clampedLeft}px`;
+      const preferredRight = window.innerWidth - rect.right;
+      const minRight = 16;
+      const maxRight = window.innerWidth - button.offsetWidth - 16;
+      const clampedRight = Math.min(Math.max(preferredRight, minRight), maxRight);
+      button.style.right = `${clampedRight}px`;
+      button.style.left = '';
     }
 
     button.addEventListener('click', () => {
