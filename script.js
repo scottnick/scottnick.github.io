@@ -171,6 +171,7 @@
 
   function initBackToTop() {
     const button = document.querySelector('.back-to-top');
+    const toc = document.querySelector('.article-toc');
     if (!button) return;
 
     function toggleVisibility() {
@@ -178,12 +179,25 @@
       button.classList.toggle('is-visible', shouldShow);
     }
 
+    function positionButton() {
+      const rect = toc?.getBoundingClientRect();
+      if (!rect) return;
+      const preferredLeft = rect.right + 16;
+      const minLeft = 16;
+      const maxLeft = window.innerWidth - button.offsetWidth - 16;
+      const clampedLeft = Math.min(Math.max(preferredLeft, minLeft), maxLeft);
+      button.style.left = `${clampedLeft}px`;
+      button.style.right = '';
+    }
+
     button.addEventListener('click', () => {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     });
 
+    window.addEventListener('resize', positionButton);
     window.addEventListener('scroll', toggleVisibility, { passive: true });
     toggleVisibility();
+    positionButton();
   }
 
   function setActiveNav() {
