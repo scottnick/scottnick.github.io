@@ -171,7 +171,7 @@
 
   function initBackToTop() {
     const button = document.querySelector('.back-to-top');
-    const articleLayout = document.querySelector('.article-layout');
+    const toc = document.querySelector('.article-toc');
     if (!button) return;
 
     function toggleVisibility() {
@@ -180,7 +180,7 @@
     }
 
     function positionButton() {
-      const rect = articleLayout?.getBoundingClientRect();
+      const rect = toc?.getBoundingClientRect();
       if (!rect) return;
       const preferredLeft = rect.right - button.offsetWidth;
       const minLeft = 16;
