@@ -637,8 +637,10 @@ main {
 }
 
 .article-footer {
+  --article-card-max: 1040px;
+  --article-card-width: min(100%, var(--article-card-max));
   margin-top: 24px;
-  width: 100%;
+  width: var(--article-card-width);
   max-width: var(--article-card-max);
   margin: 0 auto;
 }
