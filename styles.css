@@ -477,7 +477,8 @@ main {
   gap: var(--article-toc-gap);
   align-items: start;
   position: relative;
-  width: 100%;
+  width: var(--article-card-width);
+  margin: 0 auto;
 }
 
 .article-toc {
@@ -637,7 +638,7 @@ main {
   --article-card-max: 1040px;
   --article-card-width: min(100%, var(--article-card-max));
   margin-top: 24px;
-  width: 100%;
+  width: var(--article-card-width);
   max-width: var(--article-card-max);
   margin: 0 auto;
 }
@@ -676,6 +677,8 @@ main {
 @media (max-width: 900px) {
   .article-layout {
     grid-template-columns: 1fr;
+    width: 100%;
+    margin: 0;
   }
 
   .article-toc {
