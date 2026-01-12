@@ -490,7 +490,7 @@ main {
   font-size: 14px;
   z-index: 1;
   width: var(--article-toc-width);
-  transform: translateX(calc(-1 * (var(--article-toc-width) + var(--article-toc-gap))));
+  transform: translateX(calc(-1 * var(--article-toc-width)));
 }
 
 .article-toc strong {
