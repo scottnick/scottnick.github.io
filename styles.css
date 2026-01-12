@@ -583,9 +583,7 @@ main {
   padding: 20px;
   width: 100%;
   max-width: var(--article-card-max);
-  margin-left: 0;
-  margin-right: auto;
-  margin-left: auto;
+  margin: 0 auto;
 }
 
 .article-body section + section {
@@ -639,8 +637,7 @@ main {
   margin-top: 24px;
   width: 100%;
   max-width: var(--article-card-max);
-  margin-left: auto;
-  margin-right: auto;
+  margin: 0 auto;
 }
 
 .article-footer__title {
