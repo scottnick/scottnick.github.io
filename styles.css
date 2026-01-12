@@ -472,7 +472,7 @@ main {
   --article-toc-gap: 20px;
   --article-card-max: 880px;
   display: grid;
-  grid-template-columns: minmax(0, 1fr);
+  grid-template-columns: minmax(200px, 240px) minmax(0, 1fr);
   gap: var(--article-toc-gap);
   align-items: start;
   position: relative;
@@ -490,8 +490,8 @@ main {
   box-shadow: var(--shadow);
   font-size: 14px;
   z-index: 1;
-  width: var(--article-toc-width);
-  transform: translateX(calc(-1 * var(--article-toc-width)));
+  width: 100%;
+  transform: none;
 }
 
 .article-toc strong {
@@ -575,35 +575,48 @@ main {
   100% { transform: translateY(0); }
 }
 
-.article-body {
+.article-main {
   width: 100%;
   max-width: var(--article-card-max);
   margin: 0 auto;
 }
 
-.article-body section + section {
+.article-card,
+.meta-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  box-shadow: var(--shadow);
+  padding: 20px;
+}
+
+.article-card {
+  margin-top: 20px;
+}
+
+.meta-card {
   margin-top: 24px;
 }
 
-.article-body h2 {
+.article-content section + section {
+  margin-top: 24px;
+}
+
+.article-content h2 {
   margin: 0 0 14px;
   font-size: 20px;
 }
 
-.article-body h2::after {
-  content: none;
-}
-
-.article-body p {
+.article-content p {
   margin: 0;
   color: var(--muted);
 }
 
-.article-body p + p {
+.article-content p + p {
   margin-top: 12px;
 }
 
-.article-body section {
+.article-content section {
   scroll-margin-top: 110px;
 }
 
@@ -622,13 +635,6 @@ main {
 
 .breadcrumb span {
   color: var(--muted);
-}
-
-.article-footer {
-  margin-top: 24px;
-  width: 100%;
-  max-width: var(--article-card-max);
-  margin: 0 auto;
 }
 
 .article-footer__title {
@@ -654,7 +660,7 @@ main {
 }
 
 .meta-field--date {
-  margin-left: 10em;
+  margin-left: clamp(120px, 25%, 320px);
 }
 
 .meta-label {
@@ -673,11 +679,8 @@ main {
     transform: none;
   }
 
-  .article-body {
-    width: 100%;
+  .article-main {
     max-width: 100%;
-    margin-left: 0;
-    padding-left: 22px;
   }
   
   .meta-grid {
