@@ -477,17 +477,18 @@ main {
   gap: var(--article-toc-gap);
   align-items: start;
   position: relative;
-  width: 100%;
+  width: var(--article-card-width);
+  margin: 0 auto;
 }
 
 .article-toc {
   position: sticky;
   top: 96px;
   align-self: start;
-  justify-self: start;
+  position: absolute;
+  left: calc(-1 * (var(--article-toc-width) + var(--article-toc-gap)));
   grid-column: 1;
   grid-row: 1;
-  margin-left: calc((100% - var(--article-card-width)) / 2 - var(--article-toc-gap) - var(--article-toc-width));
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: 14px;
@@ -679,6 +680,8 @@ main {
 @media (max-width: 900px) {
   .article-layout {
     grid-template-columns: 1fr;
+    width: 100%;
+    margin: 0;
   }
 
   .article-toc {
@@ -686,7 +689,7 @@ main {
     width: 100%;
     grid-column: 1;
     grid-row: auto;
-    margin-left: 0;
+    left: auto;
   }
 
   .article-body {
