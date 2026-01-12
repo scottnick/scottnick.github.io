@@ -471,6 +471,7 @@ main {
   --article-toc-width: 220px;
   --article-toc-gap: 20px;
   --article-card-max: 1040px;
+  --article-card-width: min(100%, var(--article-card-max));
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, var(--article-card-max)) minmax(0, 1fr);
   gap: var(--article-toc-gap);
@@ -483,10 +484,10 @@ main {
   position: sticky;
   top: 96px;
   align-self: start;
-  justify-self: end;
+  justify-self: start;
   grid-column: 1;
   grid-row: 1;
-  margin-right: var(--article-toc-gap);
+  margin-left: calc((100% - var(--article-card-width)) / 2 - var(--article-toc-gap) - var(--article-toc-width));
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: 14px;
@@ -579,10 +580,10 @@ main {
 }
 
 .article-body {
-  width: 100%;
+  width: var(--article-card-width);
   max-width: var(--article-card-max);
   margin: 0 auto;
-  grid-column: 2;
+  grid-column: 1;
   grid-row: 1;
 }
 
@@ -683,7 +684,7 @@ main {
     width: 100%;
     grid-column: 1;
     grid-row: auto;
-    margin-right: 0;
+    margin-left: 0;
   }
 
   .article-body {
