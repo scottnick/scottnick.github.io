@@ -576,8 +576,7 @@ main {
   border-radius: 14px;
   box-shadow: var(--shadow);
   padding: 22px;
-  width: calc(100% + var(--article-toc-width) + var(--article-toc-gap));
-  margin-left: calc(-1 * (var(--article-toc-width) + var(--article-toc-gap)));
+  grid-column: 1 / -1;
   padding-left: calc(22px + var(--article-toc-width) + var(--article-toc-gap));
 }
 
@@ -673,8 +672,6 @@ main {
   }
 
   .article-body {
-    width: 100%;
-    margin-left: 0;
     padding-left: 22px;
   }
   
