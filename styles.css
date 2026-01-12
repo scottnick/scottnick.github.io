@@ -470,9 +470,10 @@ main {
 .article-layout {
   --article-toc-width: 220px;
   --article-toc-gap: 20px;
-  --article-card-max: 880px;
+  --article-card-max: 1040px;
+  --article-card-width: min(100%, var(--article-card-max));
   display: grid;
-  grid-template-columns: minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr) minmax(0, var(--article-card-max)) minmax(0, 1fr);
   gap: var(--article-toc-gap);
   align-items: start;
   position: relative;
@@ -483,6 +484,10 @@ main {
   position: sticky;
   top: 96px;
   align-self: start;
+  justify-self: end;
+  grid-column: 1;
+  grid-row: 1;
+  margin-right: var(--article-toc-gap);
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: 14px;
@@ -491,7 +496,6 @@ main {
   font-size: 14px;
   z-index: 1;
   width: var(--article-toc-width);
-  transform: translateX(calc(-1 * var(--article-toc-width)));
 }
 
 .article-toc strong {
@@ -577,8 +581,10 @@ main {
 
 .article-body {
   width: 100%;
-  max-width: var(--article-card-max);
-  margin: 0 auto;
+  max-width: 100%;
+  margin: 0;
+  grid-column: 2;
+  grid-row: 1;
 }
 
 .article-body section + section {
@@ -591,7 +597,13 @@ main {
 }
 
 .article-body h2::after {
-  content: none;
+  content: "";
+  display: block;
+  width: 48px;
+  height: 3px;
+  margin-top: 10px;
+  border-radius: 999px;
+  background: var(--primary);
 }
 
 .article-body p {
@@ -625,6 +637,8 @@ main {
 }
 
 .article-footer {
+  --article-card-max: 1040px;
+  --article-card-width: min(100%, var(--article-card-max));
   margin-top: 24px;
   width: 100%;
   max-width: var(--article-card-max);
@@ -670,14 +684,18 @@ main {
   .article-toc {
     position: static;
     width: 100%;
-    transform: none;
+    grid-column: 1;
+    grid-row: auto;
+    margin-right: 0;
   }
 
   .article-body {
     width: 100%;
     max-width: 100%;
-    margin-left: 0;
+    margin: 0;
     padding-left: 22px;
+    grid-column: 1;
+    grid-row: auto;
   }
   
   .meta-grid {
@@ -898,37 +916,6 @@ main {
 }
 
 .breadcrumb a:hover {
-  color: var(--primary);
-}
-
-.article-layout {
-  display: grid;
-  grid-template-columns: minmax(160px, 220px) 1fr;
-  gap: 24px;
-  align-items: start;
-}
-
-.article-toc {
-  position: sticky;
-  top: 96px;
-  padding: 14px;
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  background: var(--card);
-  box-shadow: var(--shadow);
-  font-size: 14px;
-}
-
-.article-toc ul {
-  margin: 8px 0 0;
-  padding-left: 18px;
-}
-
-.article-toc a {
-  color: var(--text);
-}
-
-.article-toc a:hover {
   color: var(--primary);
 }
 
