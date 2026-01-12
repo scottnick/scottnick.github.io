@@ -576,11 +576,6 @@ main {
 }
 
 .article-body {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  box-shadow: var(--shadow);
-  padding: 20px;
   width: 100%;
   max-width: var(--article-card-max);
   margin: 0 auto;
@@ -596,11 +591,7 @@ main {
 }
 
 .article-body h2::after {
-  content: "";
-  display: block;
-  height: 2px;
-  background: var(--border);
-  margin-top: 12px;
+  content: none;
 }
 
 .article-body p {
