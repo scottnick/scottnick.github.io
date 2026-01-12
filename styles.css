@@ -580,7 +580,7 @@ main {
   border: 1px solid var(--border);
   border-radius: 14px;
   box-shadow: var(--shadow);
-  padding: 22px;
+  padding: 20px;
   width: 100%;
   max-width: var(--article-card-max);
   margin-left: 0;
@@ -593,7 +593,7 @@ main {
 }
 
 .article-body h2 {
-  margin: 0 0 12px;
+  margin: 0 0 14px;
   font-size: 20px;
 }
 
