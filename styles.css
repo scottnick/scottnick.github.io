@@ -539,6 +539,7 @@ main {
 .back-to-top {
   position: fixed;
   bottom: 20px;
+  right: calc((100% - var(--article-card-max)) / 2);
   width: 48px;
   height: 48px;
   border-radius: 12px;
@@ -600,7 +601,7 @@ main {
   content: "";
   display: block;
   width: 48px;
-  height: 3px;
+  height: 15px;
   margin-top: 10px;
   border-radius: 999px;
   background: var(--primary);
@@ -630,6 +631,10 @@ main {
 
 .breadcrumb a {
   color: var(--primary);
+}
+
+.breadcrumb a:hover {
+  color: var(--primary-soft);
 }
 
 .breadcrumb span {
@@ -677,6 +682,9 @@ main {
 }
 
 @media (max-width: 900px) {
+  .back-to-top {
+    right: 20px;
+  }
   .article-layout {
     grid-template-columns: 1fr;
   }
