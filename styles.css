@@ -580,24 +580,21 @@ main {
   100% { transform: translateY(0); }
 }
 
-.article-body {
-  width: 100%;
-  max-width: 100%;
-  margin: 0;
+.article-box {
   grid-column: 2;
   grid-row: 1;
 }
 
-.article-body section + section {
+.article-box section + section {
   margin-top: 24px;
 }
 
-.article-body h2 {
+.article-box h2 {
   margin: 0 0 14px;
   font-size: 20px;
 }
 
-.article-body h2::after {
+.article-box h2::after {
   content: "";
   display: block;
   width: 48px;
@@ -607,16 +604,16 @@ main {
   background: var(--primary);
 }
 
-.article-body p {
+.article-box p {
   margin: 0;
   color: var(--muted);
 }
 
-.article-body p + p {
+.article-box p + p {
   margin-top: 12px;
 }
 
-.article-body section {
+.article-box section {
   scroll-margin-top: 110px;
 }
 
@@ -692,10 +689,7 @@ main {
     margin-right: 0;
   }
 
-  .article-body {
-    width: 100%;
-    max-width: 100%;
-    margin: 0;
+  .article-box {
     padding-left: 22px;
     grid-column: 1;
     grid-row: auto;
