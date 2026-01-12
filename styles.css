@@ -471,9 +471,10 @@ main {
   --article-toc-width: 220px;
   --article-toc-gap: 20px;
   display: grid;
-  grid-template-columns: minmax(160px, var(--article-toc-width)) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--article-toc-gap);
   align-items: start;
+  position: relative;
 }
 
 .article-toc {
@@ -487,6 +488,8 @@ main {
   box-shadow: var(--shadow);
   font-size: 14px;
   z-index: 1;
+  width: var(--article-toc-width);
+  transform: translateX(calc(-1 * (var(--article-toc-width) + var(--article-toc-gap))));
 }
 
 .article-toc strong {
@@ -576,8 +579,6 @@ main {
   border-radius: 14px;
   box-shadow: var(--shadow);
   padding: 22px;
-  grid-column: 1 / -1;
-  padding-left: calc(22px + var(--article-toc-width) + var(--article-toc-gap));
 }
 
 .article-body section + section {
@@ -669,6 +670,8 @@ main {
 
   .article-toc {
     position: static;
+    width: 100%;
+    transform: none;
   }
 
   .article-body {
