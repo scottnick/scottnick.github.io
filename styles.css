@@ -581,9 +581,9 @@ main {
 }
 
 .article-body {
-  width: var(--article-card-width);
-  max-width: var(--article-card-max);
-  margin: 0 auto;
+  width: 100%;
+  max-width: none;
+  margin: 0;
   grid-column: 1;
   grid-row: 1;
 }
