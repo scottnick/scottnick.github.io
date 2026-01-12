@@ -472,7 +472,7 @@ main {
   --article-toc-gap: 20px;
   --article-card-max: 1040px;
   display: grid;
-  grid-template-columns: minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr) minmax(0, var(--article-card-max)) minmax(0, 1fr);
   gap: var(--article-toc-gap);
   align-items: start;
   position: relative;
@@ -483,6 +483,10 @@ main {
   position: sticky;
   top: 96px;
   align-self: start;
+  justify-self: end;
+  grid-column: 1;
+  grid-row: 1;
+  margin-right: var(--article-toc-gap);
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: 14px;
@@ -491,7 +495,6 @@ main {
   font-size: 14px;
   z-index: 1;
   width: var(--article-toc-width);
-  transform: translateX(calc(-1 * var(--article-toc-width)));
 }
 
 .article-toc strong {
@@ -579,6 +582,8 @@ main {
   width: 100%;
   max-width: var(--article-card-max);
   margin: 0 auto;
+  grid-column: 2;
+  grid-row: 1;
 }
 
 .article-body section + section {
@@ -676,7 +681,9 @@ main {
   .article-toc {
     position: static;
     width: 100%;
-    transform: none;
+    grid-column: 1;
+    grid-row: auto;
+    margin-right: 0;
   }
 
   .article-body {
@@ -684,6 +691,8 @@ main {
     max-width: 100%;
     margin-left: 0;
     padding-left: 22px;
+    grid-column: 1;
+    grid-row: auto;
   }
   
   .meta-grid {
