@@ -485,8 +485,7 @@ main {
   position: sticky;
   top: 96px;
   align-self: start;
-  position: absolute;
-  left: calc(-1 * (var(--article-toc-width) + var(--article-toc-gap)));
+  justify-self: start;
   grid-column: 1;
   grid-row: 1;
   background: var(--card);
@@ -497,6 +496,7 @@ main {
   font-size: 14px;
   z-index: 1;
   width: var(--article-toc-width);
+  transform: translateX(calc(-1 * (var(--article-toc-width) + var(--article-toc-gap))));
 }
 
 .article-toc strong {
@@ -689,7 +689,7 @@ main {
     width: 100%;
     grid-column: 1;
     grid-row: auto;
-    left: auto;
+    transform: none;
   }
 
   .article-body {
