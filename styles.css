@@ -485,9 +485,10 @@ main {
   position: sticky;
   top: 96px;
   align-self: start;
-  justify-self: start;
+  justify-self: end;
   grid-column: 1;
   grid-row: 1;
+  margin-right: var(--article-toc-gap);
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: 14px;
@@ -496,7 +497,6 @@ main {
   font-size: 14px;
   z-index: 1;
   width: var(--article-toc-width);
-  transform: translateX(calc(-1 * (var(--article-toc-width) + var(--article-toc-gap))));
 }
 
 .article-toc strong {
@@ -582,9 +582,9 @@ main {
 
 .article-body {
   width: 100%;
-  max-width: none;
+  max-width: 100%;
   margin: 0;
-  grid-column: 1;
+  grid-column: 2;
   grid-row: 1;
 }
 
@@ -689,13 +689,13 @@ main {
     width: 100%;
     grid-column: 1;
     grid-row: auto;
-    transform: none;
+    margin-right: 0;
   }
 
   .article-body {
     width: 100%;
     max-width: 100%;
-    margin-left: 0;
+    margin: 0;
     padding-left: 22px;
     grid-column: 1;
     grid-row: auto;
