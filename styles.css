@@ -475,6 +475,7 @@ main {
   gap: var(--article-toc-gap);
   align-items: start;
   position: relative;
+  width: 100%;
 }
 
 .article-toc {
@@ -579,6 +580,8 @@ main {
   border-radius: 14px;
   box-shadow: var(--shadow);
   padding: 22px;
+  width: 100%;
+  max-width: 100%;
 }
 
 .article-body section + section {
