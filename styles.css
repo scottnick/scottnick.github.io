@@ -478,7 +478,7 @@ main {
   align-items: start;
   position: relative;
   width: 100%;
-  max-width: var(--article-card-max);
+  max-width: calc(var(--article-card-max) + var(--article-toc-width) + var(--article-toc-gap));
   margin: 0 auto;
 }
 
