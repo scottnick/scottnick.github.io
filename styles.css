@@ -470,7 +470,7 @@ main {
 .article-layout {
   --article-toc-width: 220px;
   --article-toc-gap: 20px;
-  --article-card-max: 1040px;
+  --article-card-max: 960px;
   --article-card-width: min(100%, var(--article-card-max));
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, var(--article-card-max)) minmax(0, 1fr);
@@ -508,7 +508,7 @@ main {
 
 .article-toc ul {
   list-style: none;
-  padding: 0;
+  padding: 0 0 0 6px;
   margin: 0;
   display: grid;
   gap: 8px;
@@ -541,7 +541,7 @@ main {
 .back-to-top {
   position: fixed;
   bottom: 20px;
-  right: calc((100% - var(--article-card-max)) / 2 - 12px);
+  right: max(20px, calc((100% - var(--article-card-max)) / 2 - 16px));
   width: 48px;
   height: 48px;
   border-radius: 12px;
@@ -582,43 +582,50 @@ main {
   100% { transform: translateY(0); }
 }
 
-.article-box {
-  grid-column: 1;
+.article-box,
+.article-content {
+  grid-column: 2;
   grid-row: 1;
   width: 100%;
   max-width: var(--article-card-max);
   margin: 0 auto;
 }
 
-.article-box section + section {
+.article-box section + section,
+.article-content section + section {
   margin-top: 24px;
 }
 
-.article-box h2 {
+.article-box h2,
+.article-content h2 {
   margin: 0 0 14px;
   font-size: 20px;
 }
 
-.article-box h2::after {
+.article-box h2::after,
+.article-content h2::after {
   content: "";
   display: block;
   width: 100%;
-  height: 3px;
+  height: 1.5px;
   margin-top: 12px;
   border-radius: 999px;
-  background: currentColor;
+  background: var(--border);
 }
 
-.article-box p {
+.article-box p,
+.article-content p {
   margin: 0;
   color: var(--muted);
 }
 
-.article-box p + p {
+.article-box p + p,
+.article-content p + p {
   margin-top: 12px;
 }
 
-.article-box section {
+.article-box section,
+.article-content section {
   scroll-margin-top: 110px;
 }
 
@@ -644,7 +651,7 @@ main {
 }
 
 .article-footer {
-  --article-card-max: 1040px;
+  --article-card-max: 960px;
   --article-card-width: min(100%, var(--article-card-max));
   margin-top: 24px;
   width: var(--article-card-width);
@@ -675,7 +682,7 @@ main {
 }
 
 .meta-field--date {
-  margin-left: 10em;
+  justify-self: center;
 }
 
 .meta-label {
@@ -701,7 +708,8 @@ main {
     transform: none;
   }
 
-  .article-box {
+  .article-box,
+  .article-content {
     padding-left: 22px;
     grid-column: 1;
     grid-row: auto;
