@@ -470,7 +470,7 @@ main {
 .article-layout {
   --article-toc-width: 220px;
   --article-toc-gap: 20px;
-  --article-card-max: 1040px;
+  --article-card-max: 960px;
   --article-card-width: min(100%, var(--article-card-max));
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, var(--article-card-max)) minmax(0, 1fr);
@@ -541,7 +541,7 @@ main {
 .back-to-top {
   position: fixed;
   bottom: 20px;
-  right: max(20px, calc((100% - var(--article-card-max)) / 2 - 24px));
+  right: max(20px, calc((100% - var(--article-card-max)) / 2 - 48px));
   width: 48px;
   height: 48px;
   border-radius: 12px;
@@ -607,10 +607,10 @@ main {
   content: "";
   display: block;
   width: 100%;
-  height: 1px;
+  height: 1.5px;
   margin-top: 12px;
   border-radius: 999px;
-  background: currentColor;
+  background: var(--border);
 }
 
 .article-box p,
@@ -651,7 +651,7 @@ main {
 }
 
 .article-footer {
-  --article-card-max: 1040px;
+  --article-card-max: 960px;
   --article-card-width: min(100%, var(--article-card-max));
   margin-top: 24px;
   width: var(--article-card-width);
