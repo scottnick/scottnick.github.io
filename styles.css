@@ -467,164 +467,6 @@ main {
   padding: 22px;
 }
 
-.article-layout {
-  --article-toc-width: 280px;
-  --article-toc-gap: 24px;
-  --article-card-max: 960px;
-  --article-card-width: min(100%, var(--article-card-max));
-  display: grid;
-  grid-template-columns: var(--article-toc-width) 1fr;
-  gap: var(--article-toc-gap);
-  align-items: start;
-  position: relative;
-  width: 100%;
-  max-width: calc(var(--article-card-max) + var(--article-toc-width) + var(--article-toc-gap));
-  margin: 0 auto;
-}
-
-.article-toc {
-  position: sticky;
-  top: 96px;
-  align-self: start;
-  justify-self: start;
-  grid-column: 1;
-  grid-row: 1;
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 16px;
-  box-shadow: var(--shadow);
-  font-size: 14px;
-  z-index: 1;
-  width: 100%;
-  max-height: calc(100vh - 120px);
-  overflow: auto;
-  transform: none;
-}
-
-@media (min-width: 901px) {
-  body.page-article .article-layout {
-    grid-template-columns: 1fr;
-    max-width: none;
-  }
-
-  body.page-article .article-content {
-    grid-column: 1;
-    width: 100%;
-    max-width: var(--article-card-max);
-    margin: 0 auto;
-  }
-
-  body.page-article .article-toc {
-    position: fixed;
-    top: 96px;
-    width: var(--article-toc-width);
-    left: max(
-      16px,
-      calc(
-        (100vw - var(--article-card-max)) / 2
-        - var(--article-toc-width)
-        - var(--article-toc-gap)
-      )
-    );
-    z-index: 20;
-    max-height: calc(100vh - 120px);
-    overflow: auto;
-  }
-}
-
-
-.article-toc strong {
-  display: block;
-  margin-bottom: 10px;
-  font-size: 15px;
-}
-
-.article-toc ul {
-  list-style: none;
-  padding: 0 0 0 6px;
-  margin: 0;
-  display: grid;
-  gap: 8px;
-}
-
-.article-toc a {
-  color: var(--text);
-}
-
-.article-toc a:hover {
-  color: var(--primary);
-}
-
-.article-toc a.active {
-  color: var(--primary);
-  font-weight: 600;
-}
-
-.article-toc a.active::before {
-  content: "";
-  display: inline-block;
-  width: 3px;
-  height: 1.1em;
-  margin-right: 8px;
-  background: var(--primary);
-  border-radius: 999px;
-  vertical-align: -2px;
-}
-
-.back-to-top {
-  position: fixed;
-  bottom: 20px;
-  right: 24px;
-  width: 48px;
-  height: 48px;
-  border-radius: 12px;
-  border: 1px solid var(--border);
-  background: var(--card);
-  color: var(--text);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: var(--shadow);
-  cursor: pointer;
-  opacity: 0;
-  pointer-events: none;
-  z-index: 9999;
-  transition: opacity var(--transition), transform var(--transition), border-color var(--transition);
-}
-
-
-.back-to-top.is-visible {
-  opacity: 1;
-  pointer-events: auto;
-}
-
-.back-to-top:hover {
-  border-color: var(--primary-soft);
-}
-
-.back-to-top svg {
-  display: block;
-}
-
-.back-to-top:hover svg {
-  animation: arrow-float 0.96s ease-in-out infinite;
-}
-
-@keyframes arrow-float {
-  0% { transform: translateY(0); }
-  50% { transform: translateY(-4px); }
-  100% { transform: translateY(0); }
-}
-
-.article-box,
-.article-content {
-  grid-column: 2;
-  grid-row: 1;
-  width: 100%;
-  max-width: var(--article-card-max);
-  margin: 0 auto;
-}
 
 .article-box section + section,
 .article-content section + section {
@@ -662,44 +504,6 @@ main {
 .article-box section,
 .article-content section {
   scroll-margin-top: 110px;
-}
-
-/* ✅ 桌機超寬：TOC 移到左側空白區固定，文章卡片維持置中 */
-@media (min-width: 1200px) {
-  /* 你的文章卡片最大寬度（右側內容卡） */
-  body.page-article .article-layout {
-    --article-card-max: 960px;
-    --article-toc-width: 260px;
-    --article-toc-gap: 24px;
-
-    /* 桌機時：內容不要再為 TOC 留一欄 */
-    grid-template-columns: 1fr;
-    max-width: none;
-  }
-
-  /* 右側文章卡片置中 */
-  body.page-article .article-content {
-    grid-column: 1;
-    max-width: var(--article-card-max);
-    margin: 0 auto;
-  }
-
-  /* TOC 固定在左側空白區（gutter） */
-  body.page-article .article-toc {
-    position: fixed;
-    top: 96px;
-    width: var(--article-toc-width);
-    left: max(
-      16px,
-      calc((100vw - var(--article-card-max)) / 2 - var(--article-toc-width) - var(--article-toc-gap))
-    );
-    z-index: 20;
-  }
-
-  /* 文章資訊卡片也跟文章同寬置中 */
-  body.page-article .article-footer {
-    --article-card-max: 960px;
-  }
 }
 
 .breadcrumb {
@@ -766,54 +570,6 @@ main {
   margin-top: 12px;
 }
 
-/* =========================
-   桌機超寬：TOC 移到左側空白區固定
-   ========================= */
-@media (min-width: 1200px) {
-  /* 桌機：文章區不再為 TOC 留一欄，內容卡片置中 */
-  body.page-article .article-layout {
-    --article-card-max: 960px;
-    --article-toc-width: 260px;
-    --article-toc-gap: 24px;
-
-    grid-template-columns: 1fr;
-    max-width: none;
-  }
-
-  /* 中間文章卡片保持置中 */
-  body.page-article .article-content {
-    grid-column: 1;
-    width: 100%;
-    max-width: var(--article-card-max);
-    margin: 0 auto;
-  }
-
-  /* TOC 固定在左側空白區 (gutter) */
-  body.page-article .article-toc {
-    position: fixed;
-    top: 96px;
-    width: var(--article-toc-width);
-    left: max(
-      16px,
-      calc(
-        (100vw - var(--article-card-max)) / 2
-        - var(--article-toc-width)
-        - var(--article-toc-gap)
-      )
-    );
-    z-index: 20;
-    max-height: calc(100vh - 120px);
-    overflow: auto;
-  }
-
-  /* 文章資訊卡片也跟文章同寬置中 */
-  body.page-article .article-footer {
-    width: min(100%, var(--article-card-max));
-    max-width: var(--article-card-max);
-    margin: 24px auto 0;
-  }
-}
-
 .meta-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -840,33 +596,22 @@ main {
   font-weight: 600;
 }
 
+@media (min-width: 900px) {
+  .meta-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .meta-field--date {
+    grid-column: 2;
+    justify-self: start;
+  }
+
+  .meta-field--full {
+    grid-column: 1 / -1;
+  }
+}
+
 @media (max-width: 900px) {
-  .back-to-top {
-    right: 20px;
-  }
-  .article-layout {
-    grid-template-columns: 1fr;
-    width: 100%;
-    margin: 0;
-  }
-
-  .article-toc {
-    position: static;
-    width: 100%;
-    grid-column: 1;
-    grid-row: auto;
-    max-height: none;
-    overflow: visible;
-    transform: none;
-  }
-
-  .article-box,
-  .article-content {
-    padding-left: 22px;
-    grid-column: 1;
-    grid-row: auto;
-  }
-  
   .meta-grid {
     grid-template-columns: 1fr;
   }
@@ -1364,14 +1109,6 @@ body.dark-mode .code-block {
     padding: 0;
   }
 
-  .article-layout {
-    grid-template-columns: 1fr;
-  }
-
-  .article-toc {
-    position: static;
-  }
-
   .toc-toggle {
     display: inline-flex;
     align-items: center;
@@ -1402,7 +1139,7 @@ body.dark-mode .code-block {
     justify-content: center;
   }
 
-  .profile-avatar {
-    margin: 0 auto;
-  }
+.profile-avatar {
+  margin: 0 auto;
+}
 }
