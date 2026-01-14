@@ -633,6 +633,44 @@ main {
   scroll-margin-top: 110px;
 }
 
+/* ✅ 桌機超寬：TOC 移到左側空白區固定，文章卡片維持置中 */
+@media (min-width: 1200px) {
+  /* 你的文章卡片最大寬度（右側內容卡） */
+  body.page-article .article-layout {
+    --article-card-max: 960px;
+    --article-toc-width: 260px;
+    --article-toc-gap: 24px;
+
+    /* 桌機時：內容不要再為 TOC 留一欄 */
+    grid-template-columns: 1fr;
+    max-width: none;
+  }
+
+  /* 右側文章卡片置中 */
+  body.page-article .article-content {
+    grid-column: 1;
+    max-width: var(--article-card-max);
+    margin: 0 auto;
+  }
+
+  /* TOC 固定在左側空白區（gutter） */
+  body.page-article .article-toc {
+    position: fixed;
+    top: 96px;
+    width: var(--article-toc-width);
+    left: max(
+      16px,
+      calc((100vw - var(--article-card-max)) / 2 - var(--article-toc-width) - var(--article-toc-gap))
+    );
+    z-index: 20;
+  }
+
+  /* 文章資訊卡片也跟文章同寬置中 */
+  body.page-article .article-footer {
+    --article-card-max: 960px;
+  }
+}
+
 .breadcrumb {
   display: flex;
   align-items: center;
