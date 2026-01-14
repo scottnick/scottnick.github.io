@@ -467,24 +467,7 @@ main {
   padding: 22px;
 }
 
-.article-layout {
-  --article-toc-width: 280px;
-  --article-toc-gap: 24px;
-  --article-card-max: 960px;
-  --article-card-width: min(100%, var(--article-card-max));
-  display: grid;
-  grid-template-columns: var(--article-toc-width) 1fr;
-  gap: var(--article-toc-gap);
-  align-items: start;
-  position: relative;
-  width: 100%;
-  max-width: calc(var(--article-card-max) + var(--article-toc-width) + var(--article-toc-gap));
-  margin: 0 auto;
-}
-
 .article-toc {
-  position: sticky;
-  top: 96px;
   align-self: start;
   justify-self: start;
   grid-column: 1;
@@ -497,40 +480,7 @@ main {
   font-size: 14px;
   z-index: 1;
   width: 100%;
-  max-height: calc(100vh - 120px);
-  overflow: auto;
   transform: none;
-}
-
-@media (min-width: 901px) {
-  body.page-article .article-layout {
-    grid-template-columns: 1fr;
-    max-width: none;
-  }
-
-  body.page-article .article-content {
-    grid-column: 1;
-    width: 100%;
-    max-width: var(--article-card-max);
-    margin: 0 auto;
-  }
-
-  body.page-article .article-toc {
-    position: fixed;
-    top: 96px;
-    width: var(--article-toc-width);
-    left: max(
-      16px,
-      calc(
-        (100vw - var(--article-card-max)) / 2
-        - var(--article-toc-width)
-        - var(--article-toc-gap)
-      )
-    );
-    z-index: 20;
-    max-height: calc(100vh - 120px);
-    overflow: auto;
-  }
 }
 
 
@@ -617,15 +567,6 @@ main {
   100% { transform: translateY(0); }
 }
 
-.article-box,
-.article-content {
-  grid-column: 2;
-  grid-row: 1;
-  width: 100%;
-  max-width: var(--article-card-max);
-  margin: 0 auto;
-}
-
 .article-box section + section,
 .article-content section + section {
   margin-top: 24px;
@@ -662,44 +603,6 @@ main {
 .article-box section,
 .article-content section {
   scroll-margin-top: 110px;
-}
-
-/* ✅ 桌機超寬：TOC 移到左側空白區固定，文章卡片維持置中 */
-@media (min-width: 1200px) {
-  /* 你的文章卡片最大寬度（右側內容卡） */
-  body.page-article .article-layout {
-    --article-card-max: 960px;
-    --article-toc-width: 260px;
-    --article-toc-gap: 24px;
-
-    /* 桌機時：內容不要再為 TOC 留一欄 */
-    grid-template-columns: 1fr;
-    max-width: none;
-  }
-
-  /* 右側文章卡片置中 */
-  body.page-article .article-content {
-    grid-column: 1;
-    max-width: var(--article-card-max);
-    margin: 0 auto;
-  }
-
-  /* TOC 固定在左側空白區（gutter） */
-  body.page-article .article-toc {
-    position: fixed;
-    top: 96px;
-    width: var(--article-toc-width);
-    left: max(
-      16px,
-      calc((100vw - var(--article-card-max)) / 2 - var(--article-toc-width) - var(--article-toc-gap))
-    );
-    z-index: 20;
-  }
-
-  /* 文章資訊卡片也跟文章同寬置中 */
-  body.page-article .article-footer {
-    --article-card-max: 960px;
-  }
 }
 
 .breadcrumb {
@@ -766,54 +669,6 @@ main {
   margin-top: 12px;
 }
 
-/* =========================
-   桌機超寬：TOC 移到左側空白區固定
-   ========================= */
-@media (min-width: 1200px) {
-  /* 桌機：文章區不再為 TOC 留一欄，內容卡片置中 */
-  body.page-article .article-layout {
-    --article-card-max: 960px;
-    --article-toc-width: 260px;
-    --article-toc-gap: 24px;
-
-    grid-template-columns: 1fr;
-    max-width: none;
-  }
-
-  /* 中間文章卡片保持置中 */
-  body.page-article .article-content {
-    grid-column: 1;
-    width: 100%;
-    max-width: var(--article-card-max);
-    margin: 0 auto;
-  }
-
-  /* TOC 固定在左側空白區 (gutter) */
-  body.page-article .article-toc {
-    position: fixed;
-    top: 96px;
-    width: var(--article-toc-width);
-    left: max(
-      16px,
-      calc(
-        (100vw - var(--article-card-max)) / 2
-        - var(--article-toc-width)
-        - var(--article-toc-gap)
-      )
-    );
-    z-index: 20;
-    max-height: calc(100vh - 120px);
-    overflow: auto;
-  }
-
-  /* 文章資訊卡片也跟文章同寬置中 */
-  body.page-article .article-footer {
-    width: min(100%, var(--article-card-max));
-    max-width: var(--article-card-max);
-    margin: 24px auto 0;
-  }
-}
-
 .meta-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -843,28 +698,6 @@ main {
 @media (max-width: 900px) {
   .back-to-top {
     right: 20px;
-  }
-  .article-layout {
-    grid-template-columns: 1fr;
-    width: 100%;
-    margin: 0;
-  }
-
-  .article-toc {
-    position: static;
-    width: 100%;
-    grid-column: 1;
-    grid-row: auto;
-    max-height: none;
-    overflow: visible;
-    transform: none;
-  }
-
-  .article-box,
-  .article-content {
-    padding-left: 22px;
-    grid-column: 1;
-    grid-row: auto;
   }
   
   .meta-grid {
@@ -1364,14 +1197,6 @@ body.dark-mode .code-block {
     padding: 0;
   }
 
-  .article-layout {
-    grid-template-columns: 1fr;
-  }
-
-  .article-toc {
-    position: static;
-  }
-
   .toc-toggle {
     display: inline-flex;
     align-items: center;
@@ -1402,7 +1227,89 @@ body.dark-mode .code-block {
     justify-content: center;
   }
 
-  .profile-avatar {
+.profile-avatar {
+  margin: 0 auto;
+}
+}
+
+/* =========================
+   Article page layout（唯一版本）
+   ========================= */
+
+/* ✅ 一般桌機：兩欄（左 TOC + 右文章卡） */
+body.page-article .article-layout {
+  --article-toc-width: 280px;
+  --article-toc-gap: 24px;
+  --article-card-max: 960px;
+
+  display: grid;
+  grid-template-columns: var(--article-toc-width) minmax(0, 1fr);
+  gap: var(--article-toc-gap);
+  align-items: start;
+
+  /* 兩欄合起來的總寬（不會影響 main 置中） */
+  max-width: calc(var(--article-card-max) + var(--article-toc-width) + var(--article-toc-gap));
+  margin: 0 auto;
+}
+
+/* ✅ 文章卡：永遠是 960px 置中感覺（跟 Two Sum 一樣） */
+body.page-article .article-content {
+  grid-column: 2;
+  width: 100%;
+  max-width: var(--article-card-max);
+}
+
+/* ✅ TOC：一般桌機先 sticky（不擋內文） */
+body.page-article .article-toc {
+  grid-column: 1;
+  position: sticky;
+  top: 96px;
+  max-height: calc(100vh - 120px);
+  overflow: auto;
+}
+
+/* ✅ 超寬桌機：TOC 固定在左側空白區，內文卡保持置中不變 */
+@media (min-width: 1200px) {
+  body.page-article .article-layout {
+    grid-template-columns: 1fr;
+    max-width: none;
+  }
+
+  body.page-article .article-content {
+    grid-column: 1;
     margin: 0 auto;
+    max-width: var(--article-card-max);
+  }
+
+  body.page-article .article-toc {
+    position: fixed;
+    top: 96px;
+    width: var(--article-toc-width);
+    left: calc(
+      50vw - (var(--article-card-max) / 2) - var(--article-toc-width) - var(--article-toc-gap)
+    );
+    z-index: 20;
+    max-height: calc(100vh - 120px);
+    overflow: auto;
+  }
+}
+
+/* ✅ 手機：一欄，TOC 變成上方區塊 */
+@media (max-width: 900px) {
+  body.page-article .article-layout {
+    grid-template-columns: 1fr;
+    max-width: 960px;
+  }
+
+  body.page-article .article-toc {
+    position: static;
+    max-height: none;
+    overflow: visible;
+  }
+
+  body.page-article .article-content {
+    grid-column: 1;
+    margin: 0 auto;
+    max-width: 960px;
   }
 }
