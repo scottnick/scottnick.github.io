@@ -735,6 +735,54 @@ main {
   margin-top: 12px;
 }
 
+/* =========================
+   桌機超寬：TOC 移到左側空白區固定
+   ========================= */
+@media (min-width: 1200px) {
+  /* 桌機：文章區不再為 TOC 留一欄，內容卡片置中 */
+  body.page-article .article-layout {
+    --article-card-max: 960px;
+    --article-toc-width: 260px;
+    --article-toc-gap: 24px;
+
+    grid-template-columns: 1fr;
+    max-width: none;
+  }
+
+  /* 中間文章卡片保持置中 */
+  body.page-article .article-content {
+    grid-column: 1;
+    width: 100%;
+    max-width: var(--article-card-max);
+    margin: 0 auto;
+  }
+
+  /* TOC 固定在左側空白區 (gutter) */
+  body.page-article .article-toc {
+    position: fixed;
+    top: 96px;
+    width: var(--article-toc-width);
+    left: max(
+      16px,
+      calc(
+        (100vw - var(--article-card-max)) / 2
+        - var(--article-toc-width)
+        - var(--article-toc-gap)
+      )
+    );
+    z-index: 20;
+    max-height: calc(100vh - 120px);
+    overflow: auto;
+  }
+
+  /* 文章資訊卡片也跟文章同寬置中 */
+  body.page-article .article-footer {
+    width: min(100%, var(--article-card-max));
+    max-width: var(--article-card-max);
+    margin: 24px auto 0;
+  }
+}
+
 .meta-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
