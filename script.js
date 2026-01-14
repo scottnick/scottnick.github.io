@@ -180,9 +180,27 @@
     activateFromScroll();
   }
 
+  function initArticleTocToggle() {
+    const toggle = document.getElementById('article-toc-toggle');
+    const toc = document.querySelector('.article-toc');
+    if (!toggle || !toc) return;
+
+    toggle.addEventListener('click', () => {
+      toc.classList.toggle('open');
+      const expanded = toc.classList.contains('open');
+      toggle.setAttribute('aria-expanded', expanded.toString());
+    });
+
+    toc.querySelectorAll('a').forEach((link) => {
+      link.addEventListener('click', () => {
+        toc.classList.remove('open');
+        toggle.setAttribute('aria-expanded', 'false');
+      });
+    });
+  }
+
   function initBackToTop() {
     const button = document.querySelector('.back-to-top');
-    const toc = document.querySelector('.article-toc');
     if (!button) return;
 
     function toggleVisibility() {
@@ -191,9 +209,16 @@
     }
 
     function positionButton() {
-      const rect = document.querySelector('.article-body')?.getBoundingClientRect() || toc?.getBoundingClientRect();
-      if (!rect) return;
-      const preferredLeft = rect.right + 24;
+      const article = document.querySelector('.article-content, .article-box');
+      const rect = article?.getBoundingClientRect();
+
+      if (!rect) {
+        button.style.left = '';
+        button.style.right = '24px';
+        return;
+      }
+
+      const preferredLeft = rect.right - button.offsetWidth - 16;
       const minLeft = 16;
       const maxLeft = window.innerWidth - button.offsetWidth - 16;
       const clampedLeft = Math.min(Math.max(preferredLeft, minLeft), maxLeft);
@@ -228,6 +253,7 @@
     initRecentUpdates();
     updateAccordionCounts();
     initArticleToc();
+    initArticleTocToggle();
     initBackToTop();
     setActiveNav();
   });
