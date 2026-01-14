@@ -1316,6 +1316,12 @@ body.page-article .article-footer {
     max-width: 960px;
     margin: 0;
   }
+
+  body.page-article .article-content {
+    width: 100%;
+    max-width: 960px;
+    margin: 0;
+  }
 }
 
 /* 1100 以下（筆電較窄）：回到兩欄 grid，避免太擠 */
