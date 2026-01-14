@@ -467,24 +467,7 @@ main {
   padding: 22px;
 }
 
-.article-layout {
-  --article-toc-width: 280px;
-  --article-toc-gap: 24px;
-  --article-card-max: 960px;
-  --article-card-width: min(100%, var(--article-card-max));
-  display: grid;
-  grid-template-columns: var(--article-toc-width) 1fr;
-  gap: var(--article-toc-gap);
-  align-items: start;
-  position: relative;
-  width: 100%;
-  max-width: calc(var(--article-card-max) + var(--article-toc-width) + var(--article-toc-gap));
-  margin: 0 auto;
-}
-
 .article-toc {
-  position: sticky;
-  top: 96px;
   align-self: start;
   justify-self: start;
   grid-column: 1;
@@ -497,40 +480,7 @@ main {
   font-size: 14px;
   z-index: 1;
   width: 100%;
-  max-height: calc(100vh - 120px);
-  overflow: auto;
   transform: none;
-}
-
-@media (min-width: 901px) {
-  body.page-article .article-layout {
-    grid-template-columns: 1fr;
-    max-width: none;
-  }
-
-  body.page-article .article-content {
-    grid-column: 1;
-    width: 100%;
-    max-width: var(--article-card-max);
-    margin: 0 auto;
-  }
-
-  body.page-article .article-toc {
-    position: fixed;
-    top: 96px;
-    width: var(--article-toc-width);
-    left: max(
-      16px,
-      calc(
-        (100vw - var(--article-card-max)) / 2
-        - var(--article-toc-width)
-        - var(--article-toc-gap)
-      )
-    );
-    z-index: 20;
-    max-height: calc(100vh - 120px);
-    overflow: auto;
-  }
 }
 
 
@@ -617,15 +567,6 @@ main {
   100% { transform: translateY(0); }
 }
 
-.article-box,
-.article-content {
-  grid-column: 2;
-  grid-row: 1;
-  width: 100%;
-  max-width: var(--article-card-max);
-  margin: 0 auto;
-}
-
 .article-box section + section,
 .article-content section + section {
   margin-top: 24px;
@@ -662,44 +603,6 @@ main {
 .article-box section,
 .article-content section {
   scroll-margin-top: 110px;
-}
-
-/* ✅ 桌機超寬：TOC 移到左側空白區固定，文章卡片維持置中 */
-@media (min-width: 1200px) {
-  /* 你的文章卡片最大寬度（右側內容卡） */
-  body.page-article .article-layout {
-    --article-card-max: 960px;
-    --article-toc-width: 260px;
-    --article-toc-gap: 24px;
-
-    /* 桌機時：內容不要再為 TOC 留一欄 */
-    grid-template-columns: 1fr;
-    max-width: none;
-  }
-
-  /* 右側文章卡片置中 */
-  body.page-article .article-content {
-    grid-column: 1;
-    max-width: var(--article-card-max);
-    margin: 0 auto;
-  }
-
-  /* TOC 固定在左側空白區（gutter） */
-  body.page-article .article-toc {
-    position: fixed;
-    top: 96px;
-    width: var(--article-toc-width);
-    left: max(
-      16px,
-      calc((100vw - var(--article-card-max)) / 2 - var(--article-toc-width) - var(--article-toc-gap))
-    );
-    z-index: 20;
-  }
-
-  /* 文章資訊卡片也跟文章同寬置中 */
-  body.page-article .article-footer {
-    --article-card-max: 960px;
-  }
 }
 
 .breadcrumb {
@@ -766,54 +669,6 @@ main {
   margin-top: 12px;
 }
 
-/* =========================
-   桌機超寬：TOC 移到左側空白區固定
-   ========================= */
-@media (min-width: 1200px) {
-  /* 桌機：文章區不再為 TOC 留一欄，內容卡片置中 */
-  body.page-article .article-layout {
-    --article-card-max: 960px;
-    --article-toc-width: 260px;
-    --article-toc-gap: 24px;
-
-    grid-template-columns: 1fr;
-    max-width: none;
-  }
-
-  /* 中間文章卡片保持置中 */
-  body.page-article .article-content {
-    grid-column: 1;
-    width: 100%;
-    max-width: var(--article-card-max);
-    margin: 0 auto;
-  }
-
-  /* TOC 固定在左側空白區 (gutter) */
-  body.page-article .article-toc {
-    position: fixed;
-    top: 96px;
-    width: var(--article-toc-width);
-    left: max(
-      16px,
-      calc(
-        (100vw - var(--article-card-max)) / 2
-        - var(--article-toc-width)
-        - var(--article-toc-gap)
-      )
-    );
-    z-index: 20;
-    max-height: calc(100vh - 120px);
-    overflow: auto;
-  }
-
-  /* 文章資訊卡片也跟文章同寬置中 */
-  body.page-article .article-footer {
-    width: min(100%, var(--article-card-max));
-    max-width: var(--article-card-max);
-    margin: 24px auto 0;
-  }
-}
-
 .meta-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -840,31 +695,24 @@ main {
   font-weight: 600;
 }
 
+@media (min-width: 900px) {
+  .meta-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .meta-field--date {
+    grid-column: 2;
+    justify-self: start;
+  }
+
+  .meta-field--full {
+    grid-column: 1 / -1;
+  }
+}
+
 @media (max-width: 900px) {
   .back-to-top {
     right: 20px;
-  }
-  .article-layout {
-    grid-template-columns: 1fr;
-    width: 100%;
-    margin: 0;
-  }
-
-  .article-toc {
-    position: static;
-    width: 100%;
-    grid-column: 1;
-    grid-row: auto;
-    max-height: none;
-    overflow: visible;
-    transform: none;
-  }
-
-  .article-box,
-  .article-content {
-    padding-left: 22px;
-    grid-column: 1;
-    grid-row: auto;
   }
   
   .meta-grid {
@@ -1364,14 +1212,6 @@ body.dark-mode .code-block {
     padding: 0;
   }
 
-  .article-layout {
-    grid-template-columns: 1fr;
-  }
-
-  .article-toc {
-    position: static;
-  }
-
   .toc-toggle {
     display: inline-flex;
     align-items: center;
@@ -1402,7 +1242,117 @@ body.dark-mode .code-block {
     justify-content: center;
   }
 
-  .profile-avatar {
+.profile-avatar {
+  margin: 0 auto;
+}
+}
+
+/* =========================
+   Article page layout（唯一版本）
+   ========================= */
+
+/* 文章頁：main 放寬，讓 TOC 可以去左側空白區 */
+body.page-article main {
+  max-width: none;
+  margin: 40px auto 60px;
+  padding: 0 20px;
+}
+
+/* breadcrumb & hero 仍維持跟內文卡同寬置中 */
+body.page-article .breadcrumb,
+body.page-article .hero {
+  max-width: 960px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* =========================
+   Article page layout (桌機)
+   ========================= */
+
+body.page-article .article-layout {
+  position: relative;
+}
+
+/* 內文卡：永遠置中，最大 960（不改你的電腦寬度習慣） */
+body.page-article .article-content {
+  width: min(100%, 960px);
+  margin: 0 auto;
+}
+
+/* 文章資訊：跟內文卡同寬置中 */
+body.page-article .article-footer {
+  width: min(100%, 960px);
+  margin: 32px auto 0;
+}
+
+/* TOC：桌機固定在左側空白區（HackMD 感覺） */
+@media (min-width: 1100px) {
+  body.page-article .article-toc {
+    position: fixed;
+    top: 96px;
+    width: 280px;
+    left: max(
+      16px,
+      calc((100vw - 960px) / 2 - 280px - 24px)
+    );
+    max-height: calc(100vh - 120px);
+    overflow: auto;
+    z-index: 20;
+  }
+}
+
+/* 1100 以下（筆電較窄）：回到兩欄 grid，避免太擠 */
+@media (min-width: 901px) and (max-width: 1099px) {
+  body.page-article .article-layout {
+    display: grid;
+    grid-template-columns: 280px minmax(0, 1fr);
+    gap: 24px;
+    align-items: start;
+    max-width: calc(960px + 280px + 24px);
     margin: 0 auto;
+  }
+
+  body.page-article .article-toc {
+    position: sticky;
+    top: 96px;
+    max-height: calc(100vh - 120px);
+    overflow: auto;
+  }
+
+  body.page-article .article-content {
+    width: 100%;
+    max-width: 960px;
+    margin: 0;
+  }
+}
+
+/* ✅ 手機：一欄，TOC 變成上方區塊 */
+@media (max-width: 900px) {
+  body.page-article .article-layout {
+    grid-template-columns: 1fr;
+    max-width: 960px;
+  }
+
+  body.page-article .article-toc {
+    position: static;
+    max-height: none;
+    overflow: visible;
+  }
+
+  body.page-article .article-content {
+    grid-column: 1;
+    margin: 0 auto;
+    max-width: 960px;
+  }
+}
+
+/* 小螢幕：TOC 變成可展開 */
+@media (max-width: 900px) {
+  body.page-article .article-toc ul {
+    display: none;
+  }
+  body.page-article .article-toc.open ul {
+    display: grid;
   }
 }
