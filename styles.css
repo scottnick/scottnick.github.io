@@ -475,7 +475,7 @@ main {
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: 14px;
-  padding: 16px;
+  padding: 20px;
   box-shadow: var(--shadow);
   font-size: 14px;
   z-index: 1;
@@ -545,7 +545,7 @@ main {
 
 @media (min-width: 1100px) {
   .back-to-top {
-    right: max(16px, calc((100vw - 960px) / 2 - 36px));
+    right: max(16px, calc((100vw - 960px) / 2 - 28px));
   }
 }
 
@@ -1292,21 +1292,31 @@ body.page-article .article-footer {
   margin: 32px auto 0;
 }
 
-/* TOC：桌機兩欄排列，與內文上緣對齊 */
+/* ✅ 桌機：文章置中（不動），TOC 固定在文章左側外面 */
 @media (min-width: 1100px) {
   body.page-article .article-layout {
-    display: grid;
-    grid-template-columns: 240px minmax(0, 1fr);
-    gap: 20px;
-    align-items: start;
-    max-width: calc(960px + 240px + 20px);
-    margin: 0 auto;
+    display: block;
   }
 
   body.page-article .article-toc {
-    position: static;
-    width: 240px;
-    z-index: 20;
+    --toc-w: 240px;
+    --toc-gap: 20px;
+    position: fixed;
+    width: var(--toc-w);
+    top: 78px;
+    left: max(
+      16px,
+      calc((100vw - 960px) / 2 - var(--toc-w) - var(--toc-gap))
+    );
+    max-height: calc(100vh - 98px);
+    overflow: auto;
+    z-index: 30;
+  }
+
+  body.page-article .article-content {
+    width: min(100%, 960px);
+    margin-left: auto;
+    margin-right: auto;
   }
 
   body.page-article .article-content {
@@ -1323,9 +1333,8 @@ body.page-article .article-footer {
     grid-template-columns: 240px minmax(0, 1fr);
     gap: 20px;
     align-items: start;
-    max-width: calc(960px + 240px + 20px);
-    margin: 0 auto;
     max-width: 960px;
+    margin: 0 auto;
   }
 
   body.page-article .article-toc {
