@@ -471,17 +471,11 @@ main {
    Article page layout
    ========================= */
 
-/* 文章頁讓 main 不要卡死 960px（不然永遠看起來左右超空） */
-body.page-article main {
-  max-width: none;
-  padding: 0 20px;
-}
-
 /* 預設：平板/一般桌機 = 兩欄（TOC + 文章卡） */
 body.page-article .article-layout {
   --article-toc-width: 280px;
   --article-toc-gap: 24px;
-  --article-card-max: 1040px;
+  --article-card-max: 960px;
 
   display: grid;
   grid-template-columns: var(--article-toc-width) minmax(0, 1fr);
