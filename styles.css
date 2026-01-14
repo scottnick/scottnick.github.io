@@ -545,7 +545,7 @@ main {
 
 @media (min-width: 1100px) {
   .back-to-top {
-    right: max(24px, calc((100vw - 960px) / 2 - 12px));
+    right: max(16px, calc((100vw - 960px) / 2 - 36px));
   }
 }
 
@@ -1292,19 +1292,27 @@ body.page-article .article-footer {
   margin: 32px auto 0;
 }
 
-/* TOC：桌機固定在左側空白區（HackMD 感覺） */
+/* TOC：桌機兩欄排列，與內文上緣對齊 */
 @media (min-width: 1100px) {
+  body.page-article .article-layout {
+    display: grid;
+    grid-template-columns: 240px minmax(0, 1fr);
+    gap: 20px;
+    align-items: start;
+    max-width: calc(960px + 240px + 20px);
+    margin: 0 auto;
+  }
+
   body.page-article .article-toc {
-    position: fixed;
-    top: 96px;
+    position: static;
     width: 240px;
-    left: max(
-      16px,
-      calc((100vw - 960px) / 2 - 240px - 16px)
-    );
-    max-height: calc(100vh - 120px);
-    overflow: auto;
     z-index: 20;
+  }
+
+  body.page-article .article-content {
+    width: 100%;
+    max-width: 960px;
+    margin: 0;
   }
 }
 
@@ -1321,10 +1329,7 @@ body.page-article .article-footer {
   }
 
   body.page-article .article-toc {
-    position: sticky;
-    top: 96px;
-    max-height: calc(100vh - 120px);
-    overflow: auto;
+    position: static;
   }
 
   body.page-article .article-content {
