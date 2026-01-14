@@ -475,7 +475,7 @@ main {
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: 14px;
-  padding: 16px;
+  padding: 20px;
   box-shadow: var(--shadow);
   font-size: 14px;
   z-index: 1;
@@ -545,7 +545,7 @@ main {
 
 @media (min-width: 1100px) {
   .back-to-top {
-    right: max(16px, calc((100vw - 960px) / 2 - 36px));
+    right: max(16px, calc((100vw - 960px) / 2 - 68px));
   }
 }
 
@@ -1304,9 +1304,17 @@ body.page-article .article-footer {
   }
 
   body.page-article .article-toc {
-    position: static;
+    position: sticky;
+    top: 0;
     width: 240px;
     z-index: 20;
+    height: max-content;
+  }
+
+  body.page-article .article-content {
+    width: 100%;
+    max-width: 960px;
+    margin: 0;
   }
 
   body.page-article .article-content {
