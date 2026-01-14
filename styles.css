@@ -468,12 +468,12 @@ main {
 }
 
 .article-layout {
-  --article-toc-width: 220px;
-  --article-toc-gap: 20px;
+  --article-toc-width: 280px;
+  --article-toc-gap: 24px;
   --article-card-max: 960px;
   --article-card-width: min(100%, var(--article-card-max));
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, var(--article-card-max)) minmax(0, 1fr);
+  grid-template-columns: var(--article-toc-width) 1fr;
   gap: var(--article-toc-gap);
   align-items: start;
   position: relative;
@@ -496,8 +496,10 @@ main {
   box-shadow: var(--shadow);
   font-size: 14px;
   z-index: 1;
-  width: var(--article-toc-width);
-  transform: translateX(calc(-1 * (var(--article-toc-width) + var(--article-toc-gap))));
+  width: 100%;
+  max-height: calc(100vh - 120px);
+  overflow: auto;
+  transform: none;
 }
 
 .article-toc strong {
@@ -733,6 +735,8 @@ main {
     width: 100%;
     grid-column: 1;
     grid-row: auto;
+    max-height: none;
+    overflow: visible;
     transform: none;
   }
 
