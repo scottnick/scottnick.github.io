@@ -7,7 +7,7 @@
   <title>Two Sum</title>
   <link rel="stylesheet" href="../../styles.css">
 </head>
-<body>
+<body class="page-article">
   <header>
     <nav class="navbar">
       <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
@@ -40,6 +40,9 @@
 
     <div class="article-layout">
       <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
         <strong>目錄</strong>
         <ul>
           <li><a href="#statement">📘 題目敘述</a></li>
@@ -49,7 +52,7 @@
         </ul>
       </aside>
 
-      <section class="term-block article-box">
+      <section class="term-block article-content">
         <section id="statement">
           <h2>📘 題目敘述</h2>
           <p>給定一個整數陣列 <code>nums</code> 與一個整數 <code>target</code>，請回傳兩個數字的索引，使得它們相加的結果等於 <code>target</code>。</p>
