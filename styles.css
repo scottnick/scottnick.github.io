@@ -1304,17 +1304,11 @@ body.page-article .article-footer {
     --toc-w: 240px;
     --toc-gap: 20px;
     --toc-fixed-top: 120px;
-    position: absolute;
+    position: sticky;
     width: var(--toc-w);
-    top: 0;
-    left: calc(-1 * (var(--toc-w) + var(--toc-gap)));
-    z-index: 30;
-  }
-
-  body.page-article .article-toc.is-fixed {
-    position: fixed;
     top: var(--toc-fixed-top);
-    left: var(--toc-left, 16px);
+    margin-left: calc(-1 * (var(--toc-w) + var(--toc-gap)));
+    z-index: 30;
     max-height: calc(100vh - var(--toc-fixed-top) - 20px);
     overflow: auto;
   }
