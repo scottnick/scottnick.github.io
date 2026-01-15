@@ -525,7 +525,12 @@ main {
 .back-to-top {
   position: fixed;
   bottom: 20px;
-  right: max(20px, calc((100vw - 960px) / 2 - 28px));
+  right: auto;
+  left: clamp(
+    16px,
+    calc((100vw + 960px) / 2 + 16px),
+    calc(100vw - 16px - 48px)
+  );
   width: 48px;
   height: 48px;
   border-radius: 12px;
@@ -548,6 +553,7 @@ main {
     right: max(16px, calc((100vw - 960px) / 2 - 28px));
   }
 }
+
 
 
 
