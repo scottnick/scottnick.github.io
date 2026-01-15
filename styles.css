@@ -522,64 +522,6 @@ main {
   vertical-align: -2px;
 }
 
-.back-to-top,
-.back-to-top-secondary {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  width: 48px;
-  height: 48px;
-  border-radius: 12px;
-  border: 1px solid var(--border);
-  background: var(--card);
-  color: var(--text);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: var(--shadow);
-  cursor: pointer;
-  opacity: 0;
-  pointer-events: none;
-  z-index: 9999;
-  transition: opacity var(--transition), transform var(--transition), border-color var(--transition);
-}
-
-.back-to-top-secondary {
-  right: auto;
-  left: clamp(
-    16px,
-    calc((100vw + 960px) / 2 + 16px),
-    calc(100vw - 16px - 48px)
-  );
-}
-
-.back-to-top.is-visible,
-.back-to-top-secondary.is-visible {
-  opacity: 1;
-  pointer-events: auto;
-}
-
-.back-to-top:hover,
-.back-to-top-secondary:hover {
-  border-color: var(--primary-soft);
-}
-
-.back-to-top svg,
-.back-to-top-secondary svg {
-  display: block;
-}
-
-.back-to-top:hover svg,
-.back-to-top-secondary:hover svg {
-  animation: arrow-float 0.96s ease-in-out infinite;
-}
-
-@keyframes arrow-float {
-  0% { transform: translateY(0); }
-  50% { transform: translateY(-4px); }
-  100% { transform: translateY(0); }
-}
-
 .article-box section + section,
 .article-content section + section {
   margin-top: 24px;

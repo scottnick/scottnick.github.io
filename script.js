@@ -200,27 +200,6 @@
   }
 
 
-  function initBackToTop() {
-    const buttons = document.querySelectorAll('.back-to-top, .back-to-top-secondary');
-    if (!buttons.length) return;
-
-    function toggleVisibility() {
-      const shouldShow = window.scrollY > 240;
-      buttons.forEach((button) => {
-        button.classList.toggle('is-visible', shouldShow);
-      });
-    }
-
-    buttons.forEach((button) => {
-      button.addEventListener('click', () => {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      });
-    });
-
-    window.addEventListener('scroll', toggleVisibility, { passive: true });
-    toggleVisibility();
-  }
-
   function setActiveNav() {
     const path = window.location.pathname.split('/').pop() || 'index.html';
     document.querySelectorAll('.nav-links a').forEach((link) => {
@@ -239,8 +218,6 @@
     updateAccordionCounts();
     initArticleToc();
     initArticleTocToggle();
-    initArticleTocSticky();
-    initBackToTop();
     setActiveNav();
   });
 })();
