@@ -216,7 +216,7 @@
     function recalc() {
       const fixedTop = readNumberVar(toc, '--toc-fixed-top', 120);
       const layoutTop = layout.getBoundingClientRect().top + window.scrollY;
-      startY = layoutTop - fixedTop;
+      startY = layoutTop + fixedTop;
 
       const gap = readNumberVar(toc, '--toc-gap', 20);
       const tocW = toc.getBoundingClientRect().width;
