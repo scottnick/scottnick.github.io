@@ -201,16 +201,20 @@
 
 
   function initBackToTop() {
-    const button = document.querySelector('.back-to-top');
-    if (!button) return;
+    const buttons = document.querySelectorAll('.back-to-top, .back-to-top-secondary');
+    if (!buttons.length) return;
 
     function toggleVisibility() {
       const shouldShow = window.scrollY > 240;
-      button.classList.toggle('is-visible', shouldShow);
+      buttons.forEach((button) => {
+        button.classList.toggle('is-visible', shouldShow);
+      });
     }
 
-    button.addEventListener('click', () => {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+    buttons.forEach((button) => {
+      button.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
     });
 
     window.addEventListener('scroll', toggleVisibility, { passive: true });
