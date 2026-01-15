@@ -199,6 +199,49 @@
     });
   }
 
+  function initArticleTocSticky() {
+    const toc = document.querySelector('.article-toc');
+    if (!toc) return;
+
+    const desktopQuery = window.matchMedia('(min-width: 1100px)');
+    let originalTop = 0;
+
+    function readFixedTop() {
+      const value = getComputedStyle(toc).getPropertyValue('--toc-fixed-top').trim();
+      const parsed = Number.parseFloat(value);
+      return Number.isNaN(parsed) ? 120 : parsed;
+    }
+
+    function measureOriginalTop() {
+      toc.classList.remove('is-fixed');
+      originalTop = toc.getBoundingClientRect().top + window.scrollY;
+    }
+
+    function updateStickyState() {
+      if (!desktopQuery.matches) {
+        toc.classList.remove('is-fixed');
+        return;
+      }
+
+      const fixedTop = readFixedTop();
+      const shouldFix = window.scrollY + fixedTop >= originalTop;
+      toc.classList.toggle('is-fixed', shouldFix);
+    }
+
+    measureOriginalTop();
+    updateStickyState();
+
+    window.addEventListener('scroll', updateStickyState, { passive: true });
+    window.addEventListener('resize', () => {
+      measureOriginalTop();
+      updateStickyState();
+    });
+    desktopQuery.addEventListener('change', () => {
+      measureOriginalTop();
+      updateStickyState();
+    });
+  }
+
   function initBackToTop() {
     const button = document.querySelector('.back-to-top');
     if (!button) return;
@@ -254,6 +297,7 @@
     updateAccordionCounts();
     initArticleToc();
     initArticleTocToggle();
+    initArticleTocSticky();
     initBackToTop();
     setActiveNav();
   });
