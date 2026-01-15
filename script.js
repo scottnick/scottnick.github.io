@@ -199,6 +199,7 @@
     });
   }
 
+
   function initBackToTop() {
     const button = document.querySelector('.back-to-top');
     if (!button) return;
@@ -209,20 +210,7 @@
     }
 
     function positionButton() {
-      const article = document.querySelector('.article-content, .article-box');
-      const rect = article?.getBoundingClientRect();
-
-      if (!rect) {
-        button.style.left = '';
-        button.style.right = '24px';
-        return;
-      }
-
-      const preferredLeft = rect.right - button.offsetWidth - 16;
-      const minLeft = 16;
-      const maxLeft = window.innerWidth - button.offsetWidth - 16;
-      const clampedLeft = Math.min(Math.max(preferredLeft, minLeft), maxLeft);
-      button.style.left = `${clampedLeft}px`;
+      button.style.left = '';
       button.style.right = '';
     }
 
