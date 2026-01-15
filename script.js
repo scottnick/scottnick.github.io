@@ -199,6 +199,7 @@
     });
   }
 
+
   function initBackToTop() {
     const button = document.querySelector('.back-to-top');
     if (!button) return;
