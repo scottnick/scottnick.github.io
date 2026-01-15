@@ -525,7 +525,7 @@ main {
 .back-to-top {
   position: fixed;
   bottom: 20px;
-  right: calc((100vw - 960px) / 2 - 28px);
+  right: max(20px, calc((100vw - 960px) / 2 - 28px));
   width: 48px;
   height: 48px;
   border-radius: 12px;
@@ -548,6 +548,7 @@ main {
     right: max(16px, calc((100vw - 960px) / 2 - 28px));
   }
 }
+
 
 
 .back-to-top.is-visible {
