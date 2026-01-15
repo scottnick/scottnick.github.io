@@ -525,7 +525,7 @@ main {
 .back-to-top {
   position: fixed;
   bottom: 20px;
-  right: 20px;
+  right: calc((100vw - 960px) / 2 - 28px);
   width: 48px;
   height: 48px;
   border-radius: 12px;

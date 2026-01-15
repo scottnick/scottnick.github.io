@@ -209,19 +209,12 @@
       button.classList.toggle('is-visible', shouldShow);
     }
 
-    function positionButton() {
-      button.style.left = '';
-      button.style.right = '';
-    }
-
     button.addEventListener('click', () => {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     });
 
-    window.addEventListener('resize', positionButton);
     window.addEventListener('scroll', toggleVisibility, { passive: true });
     toggleVisibility();
-    positionButton();
   }
 
   function setActiveNav() {
