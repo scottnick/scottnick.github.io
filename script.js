@@ -199,6 +199,55 @@
     });
   }
 
+  function initArticleTocSticky() {
+    const toc = document.querySelector('.article-toc');
+    const layout = document.querySelector('.article-layout');
+    if (!toc || !layout) return;
+
+    const desktopQuery = window.matchMedia('(min-width: 1100px)');
+    let startY = 0;
+
+    function readNumberVar(el, name, fallback) {
+      const v = getComputedStyle(el).getPropertyValue(name).trim();
+      const n = Number.parseFloat(v);
+      return Number.isNaN(n) ? fallback : n;
+    }
+
+    function recalc() {
+      const fixedTop = readNumberVar(toc, '--toc-fixed-top', 120);
+      const layoutTop = layout.getBoundingClientRect().top + window.scrollY;
+      startY = layoutTop - fixedTop;
+
+      const gap = readNumberVar(toc, '--toc-gap', 20);
+      const tocW = toc.getBoundingClientRect().width;
+      const layoutLeft = layout.getBoundingClientRect().left;
+
+      toc.style.setProperty('--toc-left', `${layoutLeft - tocW - gap}px`);
+    }
+
+    function update() {
+      if (!desktopQuery.matches) {
+        toc.classList.remove('is-fixed');
+        toc.style.removeProperty('--toc-left');
+        return;
+      }
+      toc.classList.toggle('is-fixed', window.scrollY >= startY);
+    }
+
+    recalc();
+    update();
+
+    window.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', () => {
+      recalc();
+      update();
+    });
+    desktopQuery.addEventListener('change', () => {
+      recalc();
+      update();
+    });
+  }
+
   function initBackToTop() {
     const button = document.querySelector('.back-to-top');
     if (!button) return;
@@ -254,6 +303,7 @@
     updateAccordionCounts();
     initArticleToc();
     initArticleTocToggle();
+    initArticleTocSticky();
     initBackToTop();
     setActiveNav();
   });
