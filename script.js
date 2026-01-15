@@ -255,6 +255,7 @@
     updateAccordionCounts();
     initArticleToc();
     initArticleTocToggle();
+    initArticleTocSticky();
     initBackToTop();
     setActiveNav();
   });
