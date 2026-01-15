@@ -1305,7 +1305,7 @@ body.page-article .article-footer {
     --toc-gap: 20px;
     position: fixed;
     width: var(--toc-w);
-    top: 78px;
+    top: 160px;
     left: max(
       16px,
       calc((100vw - 960px) / 2 - var(--toc-w) - var(--toc-gap))
