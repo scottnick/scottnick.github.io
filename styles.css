@@ -168,7 +168,7 @@ main {
 
 @keyframes fade-in {
   from { opacity: 0; transform: translateY(6px); }
-  to { opacity: 1; transform: translateY(0); }
+  to { opacity: 1; transform: none; }
 }
 
 .hero {
@@ -475,7 +475,7 @@ main {
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: 14px;
-  padding: 16px;
+  padding: 20px;
   box-shadow: var(--shadow);
   font-size: 14px;
   z-index: 1;
@@ -525,7 +525,12 @@ main {
 .back-to-top {
   position: fixed;
   bottom: 20px;
-  right: 24px;
+  right: auto;
+  left: clamp(
+    16px,
+    calc((100vw + 960px) / 2 + 16px),
+    calc(100vw - 16px - 48px)
+  );
   width: 48px;
   height: 48px;
   border-radius: 12px;
@@ -542,6 +547,7 @@ main {
   z-index: 9999;
   transition: opacity var(--transition), transform var(--transition), border-color var(--transition);
 }
+
 
 
 .back-to-top.is-visible {
@@ -1286,19 +1292,31 @@ body.page-article .article-footer {
   margin: 32px auto 0;
 }
 
-/* TOC：桌機固定在左側空白區（HackMD 感覺） */
+/* ✅ 桌機：文章置中（不動），TOC 固定在文章左側外面 */
 @media (min-width: 1100px) {
+  body.page-article .article-layout {
+    display: flow-root;
+    width: min(100%, 960px);
+    margin: 0 auto;
+  }
+
   body.page-article .article-toc {
-    position: fixed;
-    top: 96px;
-    width: 280px;
-    left: max(
-      16px,
-      calc((100vw - 960px) / 2 - 280px - 24px)
-    );
-    max-height: calc(100vh - 120px);
+    --toc-w: 240px;
+    --toc-gap: 20px;
+    --toc-fixed-top: 120px;
+    position: sticky;
+    float: left;
+    width: var(--toc-w);
+    top: var(--toc-fixed-top);
+    margin-left: calc(-1 * (var(--toc-w) + var(--toc-gap)));
+    z-index: 30;
+    max-height: calc(100vh - var(--toc-fixed-top) - 20px);
     overflow: auto;
-    z-index: 20;
+  }
+
+  body.page-article .article-content {
+    width: 100%;
+    margin: 0;
   }
 }
 
@@ -1306,19 +1324,15 @@ body.page-article .article-footer {
 @media (min-width: 901px) and (max-width: 1099px) {
   body.page-article .article-layout {
     display: grid;
-    grid-template-columns: 280px minmax(0, 1fr);
-    gap: 24px;
+    grid-template-columns: 240px minmax(0, 1fr);
+    gap: 20px;
     align-items: start;
-    max-width: calc(960px + 280px + 24px);
-    margin: 0 auto;
     max-width: 960px;
+    margin: 0 auto;
   }
 
   body.page-article .article-toc {
-    position: sticky;
-    top: 96px;
-    max-height: calc(100vh - 120px);
-    overflow: auto;
+    position: static;
   }
 
   body.page-article .article-content {
