@@ -201,44 +201,50 @@
 
   function initArticleTocSticky() {
     const toc = document.querySelector('.article-toc');
-    if (!toc) return;
+    const layout = document.querySelector('.article-layout');
+    if (!toc || !layout) return;
 
     const desktopQuery = window.matchMedia('(min-width: 1100px)');
-    let originalTop = 0;
+    let startY = 0;
 
-    function readFixedTop() {
-      const value = getComputedStyle(toc).getPropertyValue('--toc-fixed-top').trim();
-      const parsed = Number.parseFloat(value);
-      return Number.isNaN(parsed) ? 120 : parsed;
+    function readNumberVar(el, name, fallback) {
+      const v = getComputedStyle(el).getPropertyValue(name).trim();
+      const n = Number.parseFloat(v);
+      return Number.isNaN(n) ? fallback : n;
     }
 
-    function measureOriginalTop() {
-      toc.classList.remove('is-fixed');
-      originalTop = toc.getBoundingClientRect().top + window.scrollY;
+    function recalc() {
+      const fixedTop = readNumberVar(toc, '--toc-fixed-top', 120);
+      const layoutTop = layout.getBoundingClientRect().top + window.scrollY;
+      startY = layoutTop - fixedTop;
+
+      const gap = readNumberVar(toc, '--toc-gap', 20);
+      const tocW = toc.getBoundingClientRect().width;
+      const layoutLeft = layout.getBoundingClientRect().left;
+
+      toc.style.setProperty('--toc-left', `${layoutLeft - tocW - gap}px`);
     }
 
-    function updateStickyState() {
+    function update() {
       if (!desktopQuery.matches) {
         toc.classList.remove('is-fixed');
+        toc.style.removeProperty('--toc-left');
         return;
       }
-
-      const fixedTop = readFixedTop();
-      const shouldFix = window.scrollY + fixedTop >= originalTop;
-      toc.classList.toggle('is-fixed', shouldFix);
+      toc.classList.toggle('is-fixed', window.scrollY >= startY);
     }
 
-    measureOriginalTop();
-    updateStickyState();
+    recalc();
+    update();
 
-    window.addEventListener('scroll', updateStickyState, { passive: true });
+    window.addEventListener('scroll', update, { passive: true });
     window.addEventListener('resize', () => {
-      measureOriginalTop();
-      updateStickyState();
+      recalc();
+      update();
     });
     desktopQuery.addEventListener('change', () => {
-      measureOriginalTop();
-      updateStickyState();
+      recalc();
+      update();
     });
   }
 

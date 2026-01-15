@@ -1314,10 +1314,7 @@ body.page-article .article-footer {
   body.page-article .article-toc.is-fixed {
     position: fixed;
     top: var(--toc-fixed-top);
-    left: max(
-      16px,
-      calc((100vw - 960px) / 2 - var(--toc-w) - var(--toc-gap))
-    );
+    left: var(--toc-left, 16px);
     max-height: calc(100vh - var(--toc-fixed-top) - 20px);
     overflow: auto;
   }
