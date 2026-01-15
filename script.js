@@ -219,7 +219,7 @@
         return;
       }
 
-      const preferredLeft = rect.right - button.offsetWidth - 16;
+      const preferredLeft = rect.right + 16;
       const minLeft = 16;
       const maxLeft = window.innerWidth - button.offsetWidth - 16;
       const clampedLeft = Math.min(Math.max(preferredLeft, minLeft), maxLeft);

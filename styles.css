@@ -1295,7 +1295,7 @@ body.page-article .article-footer {
 /* ✅ 桌機：文章置中（不動），TOC 固定在文章左側外面 */
 @media (min-width: 1100px) {
   body.page-article .article-layout {
-    display: block;
+    display: flow-root;
     width: min(100%, 960px);
     margin: 0 auto;
   }
@@ -1305,6 +1305,7 @@ body.page-article .article-footer {
     --toc-gap: 20px;
     --toc-fixed-top: 120px;
     position: sticky;
+    float: left;
     width: var(--toc-w);
     top: var(--toc-fixed-top);
     margin-left: calc(-1 * (var(--toc-w) + var(--toc-gap)));
