@@ -587,18 +587,18 @@ body.dark-mode .article-content p {
 .article-box hr,
 .article-content hr {
   border: 0;
-  border-top: 1.5px solid var(--border);
+  border-top: 1.5px solid var(--border-strong, var(--border));
   margin: 18px 0;
 }
 
 .article-box :not(pre) > code,
 .article-content :not(pre) > code {
-  background: #f3f4f6;
+  background: #ffffff;
   border: 1px solid #e5e7eb;
   border-radius: 6px;
   padding: 2px 6px;
   font-size: 0.92em;
-  color: #111827;
+  color: #0f172a;
 }
 
 .article-box pre,
@@ -619,9 +619,9 @@ body.dark-mode .article-content pre {
 
 body.dark-mode .article-box :not(pre) > code,
 body.dark-mode .article-content :not(pre) > code {
-  background: #2b2f36;
-  border: 1px solid #2b2f36;
-  color: #f9fafb;
+  background: #1f2937;
+  border: 1px solid #374151;
+  color: #e5e7eb;
 }
 
 .article-box pre code,
