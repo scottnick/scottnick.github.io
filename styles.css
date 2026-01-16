@@ -530,7 +530,7 @@ main {
 .article-box h2,
 .article-content h2 {
   margin: 0 0 14px;
-  font-size: 20px;
+  font-size: 22px;
 }
 
 .article-box h2::after,
@@ -542,6 +542,20 @@ main {
   margin-top: 12px;
   border-radius: 999px;
   background: var(--border);
+}
+
+.article-box h3,
+.article-content h3 {
+  margin: 18px 0 10px;
+  font-size: 18px;
+  color: var(--text);
+}
+
+.article-box h4,
+.article-content h4 {
+  margin: 14px 0 8px;
+  font-size: 16px;
+  color: var(--muted);
 }
 
 .article-box p,
@@ -558,6 +572,45 @@ main {
 .article-box section,
 .article-content section {
   scroll-margin-top: 110px;
+}
+
+.article-box hr,
+.article-content hr {
+  border: 0;
+  border-top: 1.5px solid var(--border);
+  margin: 18px 0;
+}
+
+.article-box :not(pre) > code,
+.article-content :not(pre) > code {
+  background: var(--primary-soft);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 2px 6px;
+  font-size: 0.92em;
+}
+
+.article-box pre,
+.article-content pre {
+  background: #0b1221;
+  color: #e5e7eb;
+  padding: 16px;
+  border-radius: 12px;
+  overflow-x: auto;
+  margin: 12px 0 0;
+}
+
+body.dark-mode .article-box pre,
+body.dark-mode .article-content pre {
+  background: #0a0f1c;
+}
+
+.article-box pre code,
+.article-content pre code {
+  display: block;
+  font-family: 'JetBrains Mono', 'SFMono-Regular', Consolas, monospace;
+  font-size: 14px;
+  line-height: 1.6;
 }
 
 .breadcrumb {

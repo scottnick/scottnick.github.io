@@ -35,7 +35,9 @@
 
     <section class="hero">
       <h1>1. Two Sum</h1>
-      <p><strong>練習日期：</strong>2025-02-04<br><strong>難度：</strong>Easy<br><strong>類型：</strong>Array、Hash Table</p>
+      <p><strong>練習日期：</strong>2025-12-29</p>
+      <p><strong>難度：</strong>Easy</p>
+      <p><strong>類型：</strong>Array、Hash Table</p>
     </section>
 
     <div class="article-layout">
@@ -53,56 +55,57 @@
       </aside>
 
       <section class="term-block article-content">
-        <section id="statement">
-          <h2>📘 題目敘述</h2>
-          <p>給定一個整數陣列 <code>nums</code> 與一個整數 <code>target</code>，請回傳兩個數字的索引，使得它們相加的結果等於 <code>target</code>。</p>
-          <h3>條件限制</h3>
-          <ul>
-            <li><code>2 ≤ nums.length ≤ 10^4</code></li>
-            <li><code>-10^9 ≤ nums[i] ≤ 10^9</code></li>
-            <li><code>-10^9 ≤ target ≤ 10^9</code></li>
-            <li>題目保證<strong>恰好只有一組解</strong></li>
-          </ul>
-        </section>
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給定一個整數陣列 <code>nums</code> 與一個整數 <code>target</code>，請回傳兩個數字的索引，使得它們相加的結果等於 <code>target</code>。</p>
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>2 ≤ nums.length ≤ 10^4</code></li>
+          <li><code>-10^9 ≤ nums[i] ≤ 10^9</code></li>
+          <li><code>-10^9 ≤ target ≤ 10^9</code></li>
+          <li>題目保證<strong>恰好只有一組解</strong></li>
+        </ul>
 
-        <section id="approach">
-          <h2>🧠 解題思路</h2>
-          <p>在看這題時，我的直覺想法是：只要找到陣列中<strong>任意兩個不同位置的數字</strong>，它們相加等於 <code>target</code> 即可。</p>
-          <p>因此我把問題拆成兩個步驟來思考：</p>
-          <ol>
-            <li>先固定第一個數字的位置 <code>i</code></li>
-            <li>再從後面的元素中，尋找是否存在另一個位置 <code>j</code>，使得 <code>nums[i] + nums[j] == target</code></li>
-          </ol>
-          <p>只要找到一組符合條件的索引，就可以直接回傳答案，因為題目已經保證 <strong>恰好只有一組解</strong>。</p>
-          <p>在固定 <code>i</code> 之後，對應的第二層搜尋會出現以下幾種情況：</p>
-          <h3>情況一：找到符合條件的配對</h3>
-          <ul>
-            <li>當 <code>nums[i] + nums[j] == target</code> 時</li>
-            <li>代表目前這一組 <code>(i, j)</code> 就是答案</li>
-            <li>可以立即回傳 <code>{i, j}</code>，結束搜尋</li>
-          </ul>
-          <h3>情況二：搜尋完仍找不到符合條件的數字</h3>
-          <ul>
-            <li>表示以目前的 <code>i</code> 作為第一個數字時，沒有任何可行的配對</li>
-            <li>此時改固定下一個 <code>i</code>，重複相同的搜尋流程</li>
-          </ul>
-          <h3>為什麼第二層迴圈從 <code>j = i + 1</code> 開始？</h3>
-          <p>第二層迴圈從 <code>j = i + 1</code> 開始，主要是為了避免兩種不合理的情況：</p>
-          <ul>
-            <li>使用到同一個元素（<code>i == j</code>）</li>
-            <li>重複檢查相同的數字配對（例如 <code>(i, j)</code> 與 <code>(j, i)</code>）</li>
-          </ul>
-          <p>這樣的設計可以確保：</p>
-          <ul>
-            <li>兩個索引一定不同（<code>i ≠ j</code>）</li>
-            <li>每一組數字配對只會被檢查一次</li>
-          </ul>
-          <p>也讓整個搜尋流程保持最直觀、最容易理解。</p>
-        </section>
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>在看這題時，我的直覺想法是：</p>
+        <p>只要找到陣列中<strong>任意兩個不同位置的數字</strong>，它們相加等於 <code>target</code> 即可。</p>
+        <p>因此我把問題拆成兩個步驟來思考：</p>
+        <ul>
+          <li>1. 先固定第一個數字的位置 <code>i</code></li>
+          <li>2. 再從後面的元素中，尋找是否存在另一個位置 <code>j</code>，使得 <code>nums[i] + nums[j] == target</code></li>
+        </ul>
+        <p>只要找到一組符合條件的索引，就可以直接回傳答案，</p>
+        <p>因為題目已經保證 <strong>恰好只有一組解</strong>。</p>
+        <hr />
+        <p>在固定 <code>i</code> 之後，對應的第二層搜尋會出現以下幾種情況：</p>
 
-        <section id="brute-force">
-          <h2>💻 程式碼實作（暴力解）</h2>
-          <pre><code class="language-cpp">class Solution {
+        <h3>情況一：找到符合條件的配對</h3>
+        <ul>
+          <li>當 <code>nums[i] + nums[j] == target</code> 時</li>
+          <li>代表目前這一組 <code>(i, j)</code> 就是答案</li>
+          <li>可以立即回傳 <code>{i, j}</code>，結束搜尋</li>
+        </ul>
+
+        <h3>情況二：搜尋完仍找不到符合條件的數字</h3>
+        <ul>
+          <li>表示以目前的 <code>i</code> 作為第一個數字時，沒有任何可行的配對</li>
+          <li>此時改固定下一個 <code>i</code>，重複相同的搜尋流程</li>
+        </ul>
+        <hr />
+        <h3>為什麼第二層迴圈從 <code>j = i + 1</code> 開始？</h3>
+        <p>第二層迴圈從 <code>j = i + 1</code> 開始，主要是為了避免兩種不合理的情況：</p>
+        <ul>
+          <li>使用到同一個元素（<code>i == j</code>）</li>
+          <li>重複檢查相同的數字配對（例如 <code>(i, j)</code> 與 <code>(j, i)</code>）</li>
+        </ul>
+        <p>這樣的設計可以確保：</p>
+        <ul>
+          <li>兩個索引一定不同（<code>i ≠ j</code>）</li>
+          <li>每一組數字配對只會被檢查一次</li>
+        </ul>
+        <p>也讓整個搜尋流程保持最直觀、最容易理解。</p>
+
+        <h2 id="brute-force">💻 程式碼實作（暴力解）</h2>
+        <pre><code class="language-cpp">class Solution {
 public:
     vector&lt;int&gt; twoSum(vector&lt;int&gt;&amp; nums, int target) {
         for (int i = 0; i &lt; nums.size(); i++) {
@@ -116,12 +119,9 @@ public:
     }
 };
 </code></pre>
-        </section>
 
-        <section id="link">
-          <h2>🔗 題目連結</h2>
-          <p>https://leetcode.com/problems/two-sum/description/</p>
-        </section>
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/two-sum/description/</p>
       </section>
     </div>
 
@@ -134,7 +134,7 @@ public:
         </div>
         <div class="meta-field meta-field--date">
           <span class="meta-label">撰寫日期：</span>
-          <span class="meta-value">2025-02-04</span>
+          <span class="meta-value">2025-12-29</span>
         </div>
         <div class="meta-field meta-field--full">
           <span class="meta-label">類別：</span>
