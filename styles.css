@@ -632,6 +632,57 @@ body.dark-mode .article-content :not(pre) > code {
   line-height: 1.6;
 }
 
+pre code[class*="language-"] {
+  color: inherit;
+}
+
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+  color: #6b7280;
+}
+
+.token.string,
+.token.char {
+  color: #34d399;
+}
+
+.token.number {
+  color: #fbbf24;
+}
+
+.token.keyword {
+  color: #c084fc;
+}
+
+.token.builtin,
+.token.class-name,
+.token.type {
+  color: #60a5fa;
+}
+
+.token.function {
+  color: #f59e0b;
+}
+
+.token.directive,
+.token.macro,
+.token.hashbang {
+  color: #f472b6;
+}
+
+.token.operator,
+.token.punctuation {
+  color: #e5e7eb;
+}
+
+.token.variable,
+.token.parameter,
+.token.property {
+  color: inherit;
+}
+
 .breadcrumb {
   display: flex;
   align-items: center;
