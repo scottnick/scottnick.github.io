@@ -199,56 +199,6 @@
     });
   }
 
-  function initBackToTop() {
-    const button = document.querySelector('.back-to-top');
-    if (!button) return;
-
-    function toggleVisibility() {
-      const shouldShow = window.scrollY > 240;
-      button.classList.toggle('is-visible', shouldShow);
-    }
-
-    function positionButton() {
-      const article = document.querySelector('.article-content, .article-box');
-      const rect = article?.getBoundingClientRect();
-
-      // fallback：找不到文章卡片就用右下角
-      if (!rect) {
-        button.style.left = '';
-        button.style.right = '20px';
-        return;
-      }
-
-      const gap = 16;
-
-      // 方案A：優先「放在卡片右側外面」(像你紅框那樣靠右下角外側)
-      const preferredLeftOutside = rect.right + gap;
-
-      // 方案B：如果右側空間不夠，就「貼在卡片內側右下角」
-      const preferredLeftInside = rect.right - button.offsetWidth - gap;
-
-      const maxLeft = window.innerWidth - button.offsetWidth - gap;
-      const minLeft = gap;
-
-      // 右側是否塞得下整顆按鈕
-      const canPlaceOutside = preferredLeftOutside <= maxLeft;
-
-      const targetLeft = canPlaceOutside ? preferredLeftOutside : preferredLeftInside;
-      const clampedLeft = Math.min(Math.max(targetLeft, minLeft), maxLeft);
-
-      button.style.left = `${clampedLeft}px`;
-      button.style.right = '';
-    }
-
-    window.addEventListener('resize', positionButton);
-    window.addEventListener('scroll', toggleVisibility, { passive: true });
-    window.addEventListener('scroll', positionButton, { passive: true });
-
-    toggleVisibility();
-    positionButton();
-  }
-
-
   function setActiveNav() {
     const path = window.location.pathname.split('/').pop() || 'index.html';
     document.querySelectorAll('.nav-links a').forEach((link) => {
