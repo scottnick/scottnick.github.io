@@ -277,6 +277,8 @@ main {
   text-decoration: none;
   color: var(--text);
   line-height: 1.4;
+  flex-wrap: nowrap;
+  text-align: left;
 }
 
 .accordion__summary::-webkit-details-marker {
