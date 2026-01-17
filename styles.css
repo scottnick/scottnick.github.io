@@ -273,7 +273,7 @@ main {
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   padding: 14px 16px;
   cursor: pointer;
   list-style: none;
@@ -285,12 +285,16 @@ main {
   flex-wrap: nowrap;
   text-align: left;
   width: 100%;
+  font-size: 17px;
 }
 
 .accordion__summary > span:first-child {
   flex: 1;
   text-align: left;
   white-space: nowrap;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .accordion__summary .accordion__meta {
@@ -309,6 +313,7 @@ main {
   color: var(--muted);
   font-weight: 500;
   white-space: nowrap;
+  font-size: 1em;
 }
 
 .accordion__count {
@@ -320,14 +325,14 @@ main {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 20px;
-  height: 20px;
+  width: 1.4em;
+  height: 1.4em;
   transition: transform var(--transition);
 }
 
 .accordion__caret svg {
-  width: 18px;
-  height: 18px;
+  width: 1.2em;
+  height: 1.2em;
 }
 
 .accordion__content {
