@@ -288,6 +288,11 @@ main {
 
 .accordion__summary > span:first-child {
   flex: 1;
+  text-align: left;
+}
+
+.accordion__summary .accordion__meta {
+  text-align: right;
 }
 
 .accordion__summary::-webkit-details-marker {
