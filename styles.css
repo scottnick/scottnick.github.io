@@ -249,6 +249,10 @@ main {
   gap: 12px;
 }
 
+.category-list .accordion__content {
+  display: none;
+}
+
 .category-item {
   border: 1px solid var(--border);
   border-radius: 12px;
@@ -279,6 +283,11 @@ main {
   line-height: 1.4;
   flex-wrap: nowrap;
   text-align: left;
+  width: 100%;
+}
+
+.accordion__summary > span:first-child {
+  flex: 1;
 }
 
 .accordion__summary::-webkit-details-marker {
