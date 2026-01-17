@@ -1462,3 +1462,25 @@ pre code.hljs,
 code.hljs {
   background: transparent !important;
 }
+
+.hljs-ln {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.hljs-ln td {
+  padding: 0;
+}
+
+.hljs-ln-numbers {
+  text-align: right;
+  user-select: none;
+  padding-right: 12px !important;
+  opacity: 0.45;
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  vertical-align: top;
+}
+
+.hljs-ln-code {
+  padding-left: 12px !important;
+}

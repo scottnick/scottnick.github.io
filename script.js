@@ -209,43 +209,57 @@
     });
   }
 
-  function initCodeHighlight() {
-    const codes = Array.from(document.querySelectorAll('pre code'));
-    if (!codes.length) return;
+  function initCodeHighlighting() {
+    const codeBlocks = document.querySelectorAll('pre code');
+    if (!codeBlocks.length) return;
 
-    const hasLanguage = (code) => /\blanguage-/.test(code.className || '');
-    if (!codes.some(hasLanguage)) return;
-
-    if (!document.querySelector('link[data-highlight-theme]')) {
-      const theme = document.createElement('link');
-      theme.rel = 'stylesheet';
-      theme.href = '/vendor/highlight/github-dark.min.css';
-      theme.dataset.highlightTheme = 'true';
-      document.head.appendChild(theme);
-    }
-
-    function applyHighlight() {
-      if (!window.hljs) return;
-      codes.forEach((code) => {
-        if (hasLanguage(code)) {
-          window.hljs.highlightElement(code);
-        }
+    function loadOnce(tag, attrs) {
+      return new Promise((resolve, reject) => {
+        const el = document.createElement(tag);
+        Object.entries(attrs).forEach(([key, value]) => {
+          el[key] = value;
+        });
+        el.onload = resolve;
+        el.onerror = reject;
+        document.head.appendChild(el);
       });
     }
 
-    if (window.hljs) {
-      applyHighlight();
+    if (window.__hljs_loaded__) {
+      window.hljs?.highlightAll?.();
+      window.hljs?.initLineNumbersOnLoad?.();
       return;
     }
+    window.__hljs_loaded__ = true;
 
-    if (!document.querySelector('script[data-highlight-script]')) {
-      const script = document.createElement('script');
-      script.src = '/vendor/highlight/highlight.min.js';
-      script.defer = true;
-      script.dataset.highlightScript = 'true';
-      script.addEventListener('load', applyHighlight);
-      document.body.appendChild(script);
-    }
+    const cssHref =
+      'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css';
+
+    Promise.resolve()
+      .then(() => loadOnce('link', { rel: 'stylesheet', href: cssHref }))
+      .then(() =>
+        loadOnce('script', {
+          src: 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js',
+          defer: true,
+        })
+      )
+      .then(() =>
+        loadOnce('script', {
+          src: 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js',
+          defer: true,
+        })
+      )
+      .then(() =>
+        loadOnce('script', {
+          src: 'https://cdnjs.cloudflare.com/ajax/libs/highlightjs-line-numbers.js/2.8.0/highlightjs-line-numbers.min.js',
+          defer: true,
+        })
+      )
+      .then(() => {
+        window.hljs.highlightAll();
+        window.hljs.initLineNumbersOnLoad();
+      })
+      .catch(() => {});
   }
 
   document.addEventListener('DOMContentLoaded', () => {
@@ -258,6 +272,6 @@
     initArticleToc();
     initArticleTocToggle();
     setActiveNav();
-    initCodeHighlight();
+    initCodeHighlighting();
   });
 })();
