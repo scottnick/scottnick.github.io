@@ -274,6 +274,9 @@ main {
   list-style: none;
   font-weight: 600;
   gap: 12px;
+  text-decoration: none;
+  color: var(--text);
+  line-height: 1.4;
 }
 
 .accordion__summary::-webkit-details-marker {
