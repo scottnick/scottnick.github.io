@@ -530,7 +530,7 @@ main {
 .article-box h2,
 .article-content h2 {
   margin: 24px 0 14px;
-  font-size: 22px;
+  font-size: 24px;
 }
 
 .article-box h2:first-child,
@@ -552,14 +552,14 @@ main {
 .article-box h3,
 .article-content h3 {
   margin: 22px 0 10px;
-  font-size: 18px;
+  font-size: 19px;
   color: var(--text);
 }
 
 .article-box h4,
 .article-content h4 {
   margin: 20px 0 8px;
-  font-size: 16px;
+  font-size: 17px;
   color: var(--muted);
 }
 
@@ -593,7 +593,7 @@ body.dark-mode .article-content p {
 
 .article-box :not(pre) > code,
 .article-content :not(pre) > code {
-  background: #f3f4f6;
+  background: #f5f5f5;
   border: 0;
   border-radius: 6px;
   padding: 2px 6px;
@@ -619,7 +619,7 @@ body.dark-mode .article-content pre {
 
 body.dark-mode .article-box :not(pre) > code,
 body.dark-mode .article-content :not(pre) > code {
-  background: #2b2f36;
+  background: #3a3f47;
   border: 0;
   color: #e5e7eb;
 }
