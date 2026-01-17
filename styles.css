@@ -271,6 +271,7 @@ main {
 
 .accordion__summary {
   display: flex;
+  flex-direction: row;
   align-items: center;
   justify-content: space-between;
   padding: 14px 16px;
@@ -289,10 +290,12 @@ main {
 .accordion__summary > span:first-child {
   flex: 1;
   text-align: left;
+  white-space: nowrap;
 }
 
 .accordion__summary .accordion__meta {
   text-align: right;
+  margin-left: auto;
 }
 
 .accordion__summary::-webkit-details-marker {
