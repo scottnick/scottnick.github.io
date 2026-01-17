@@ -285,21 +285,17 @@ main {
   flex-wrap: nowrap;
   text-align: left;
   width: 100%;
-  font-size: 17px;
 }
 
 .accordion__summary > span:first-child {
   flex: 1;
   text-align: left;
   white-space: nowrap;
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 .accordion__summary .accordion__meta {
   text-align: right;
-  margin-left: auto;
+  margin-left: 16px;
 }
 
 .accordion__summary::-webkit-details-marker {
