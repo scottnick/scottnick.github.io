@@ -209,6 +209,45 @@
     });
   }
 
+  function initCodeHighlight() {
+    const codes = Array.from(document.querySelectorAll('pre code'));
+    if (!codes.length) return;
+
+    const hasLanguage = (code) => /\blanguage-/.test(code.className || '');
+    if (!codes.some(hasLanguage)) return;
+
+    if (!document.querySelector('link[data-highlight-theme]')) {
+      const theme = document.createElement('link');
+      theme.rel = 'stylesheet';
+      theme.href = '/vendor/highlight/github-dark.min.css';
+      theme.dataset.highlightTheme = 'true';
+      document.head.appendChild(theme);
+    }
+
+    function applyHighlight() {
+      if (!window.hljs) return;
+      codes.forEach((code) => {
+        if (hasLanguage(code)) {
+          window.hljs.highlightElement(code);
+        }
+      });
+    }
+
+    if (window.hljs) {
+      applyHighlight();
+      return;
+    }
+
+    if (!document.querySelector('script[data-highlight-script]')) {
+      const script = document.createElement('script');
+      script.src = '/vendor/highlight/highlight.min.js';
+      script.defer = true;
+      script.dataset.highlightScript = 'true';
+      script.addEventListener('load', applyHighlight);
+      document.body.appendChild(script);
+    }
+  }
+
   document.addEventListener('DOMContentLoaded', () => {
     initTheme();
     initThemeToggle();
@@ -219,5 +258,6 @@
     initArticleToc();
     initArticleTocToggle();
     setActiveNav();
+    initCodeHighlight();
   });
 })();
