@@ -199,42 +199,6 @@
     });
   }
 
-  function initBackToTop() {
-    const button = document.querySelector('.back-to-top');
-    if (!button) return;
-
-    function toggleVisibility() {
-      const shouldShow = window.scrollY > 240;
-      button.classList.toggle('is-visible', shouldShow);
-    }
-
-    function positionButton() {
-      const article = document.querySelector('.article-content, .article-box');
-      const rect = article?.getBoundingClientRect();
-
-      if (!rect) {
-        button.style.left = '';
-        button.style.right = '24px';
-        return;
-      }
-
-      const preferredLeft = rect.right - button.offsetWidth - 16;
-      const minLeft = 16;
-      const maxLeft = window.innerWidth - button.offsetWidth - 16;
-      const clampedLeft = Math.min(Math.max(preferredLeft, minLeft), maxLeft);
-      button.style.left = `${clampedLeft}px`;
-      button.style.right = '';
-    }
-
-    button.addEventListener('click', () => {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
-
-    window.addEventListener('resize', positionButton);
-    window.addEventListener('scroll', toggleVisibility, { passive: true });
-    toggleVisibility();
-    positionButton();
-  }
 
   function setActiveNav() {
     const path = window.location.pathname.split('/').pop() || 'index.html';
@@ -243,6 +207,45 @@
         link.classList.add('active');
       }
     });
+  }
+
+  function initCodeHighlight() {
+    const codes = Array.from(document.querySelectorAll('pre code'));
+    if (!codes.length) return;
+
+    const hasLanguage = (code) => /\blanguage-/.test(code.className || '');
+    if (!codes.some(hasLanguage)) return;
+
+    if (!document.querySelector('link[data-highlight-theme]')) {
+      const theme = document.createElement('link');
+      theme.rel = 'stylesheet';
+      theme.href = '/vendor/highlight/github-dark.min.css';
+      theme.dataset.highlightTheme = 'true';
+      document.head.appendChild(theme);
+    }
+
+    function applyHighlight() {
+      if (!window.hljs) return;
+      codes.forEach((code) => {
+        if (hasLanguage(code)) {
+          window.hljs.highlightElement(code);
+        }
+      });
+    }
+
+    if (window.hljs) {
+      applyHighlight();
+      return;
+    }
+
+    if (!document.querySelector('script[data-highlight-script]')) {
+      const script = document.createElement('script');
+      script.src = '/vendor/highlight/highlight.min.js';
+      script.defer = true;
+      script.dataset.highlightScript = 'true';
+      script.addEventListener('load', applyHighlight);
+      document.body.appendChild(script);
+    }
   }
 
   document.addEventListener('DOMContentLoaded', () => {
@@ -254,7 +257,7 @@
     updateAccordionCounts();
     initArticleToc();
     initArticleTocToggle();
-    initBackToTop();
     setActiveNav();
+    initCodeHighlight();
   });
 })();
