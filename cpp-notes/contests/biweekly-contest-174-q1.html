@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Biweekly Contest 174 - Q1</title>
+  <title>Q1. Best Reachable Tower</title>
   <link rel="stylesheet" href="../../styles.css">
 </head>
 <body class="page-article">
@@ -38,8 +38,187 @@
     </nav>
 
     <section class="hero">
-      <h1>Q1</h1>
-      <p>內容待補。</p>
+      <h1>Q1. Best Reachable Tower</h1>
+      <p><strong>練習日期：</strong>2026-01-17</p>
+      <p><strong>類型：</strong>Biweekly Contest 174</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#variables">🧾 所有變數</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#summary">💡 整體邏輯總結</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給定一個二維整數陣列 <code>towers</code>，其中 <code>towers[i] = [xi, yi, qi]</code> 表示第 <code>i</code> 座塔的座標 <code>(xi, yi)</code> 與品質值 <code>qi</code>。</p>
+        <p>同時給定一個整數陣列 <code>center = [cx, cy]</code> 表示你所在的位置，以及一個整數 <code>radius</code>。</p>
+        <p>若某座塔與 <code>center</code> 的 <strong>曼哈頓距離（Manhattan distance）</strong> 小於或等於 <code>radius</code>，則該塔視為 <strong>可到達（reachable）</strong>。</p>
+        <p>在所有可到達的塔之中：</p>
+        <ul>
+          <li>回傳 <strong>品質值 <code>qi</code> 最大</strong> 的那座塔的座標</li>
+          <li>若品質值相同，回傳 <strong>字典序（lexicographically）較小</strong> 的座標</li>
+          <li>若沒有任何塔可到達，回傳 <code>[-1, -1]</code></li>
+        </ul>
+        <p>曼哈頓距離定義為： <code>|xi - xj| + |yi - yj|</code></p>
+        <p>字典序比較定義為：<code>[xi, yi]</code> 比 <code>[xj, yj]</code> 小，若：</p>
+        <ul>
+          <li><code>xi &lt; xj</code>，或</li>
+          <li><code>xi == xj</code> 且 <code>yi &lt; yj</code></li>
+        </ul>
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>1 ≤ towers.length ≤ 10^5</code></li>
+          <li><code>towers[i] = [xi, yi, qi]</code></li>
+          <li><code>center = [cx, cy]</code></li>
+          <li><code>0 ≤ xi, yi, qi, cx, cy ≤ 10^5</code></li>
+          <li><code>0 ≤ radius ≤ 10^5</code></li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>我的想法其實很直接：</p>
+        <p><strong>把每一座 tower 都檢查一次，只要在範圍內，就和目前最佳答案比較。</strong></p>
+        <p>這題沒有要最佳化到什麼資料結構或排序，因為每一座塔是否可到達，彼此之間是獨立的。</p>
+        <p>所以整體邏輯就是：</p>
+        <ol>
+          <li>逐一檢查每一座 tower 是否在 <code>radius</code> 範圍內</li>
+          <li>若可到達：
+            <ul>
+              <li>比較品質值 <code>q</code> 是否更大</li>
+              <li>若品質相同，再比座標的字典序</li>
+            </ul>
+          </li>
+          <li>全部檢查完後：
+            <ul>
+              <li>若有找到任何可到達的 tower，回傳最佳座標</li>
+              <li>否則回傳 <code>[-1, -1]</code></li>
+            </ul>
+          </li>
+        </ol>
+
+        <h2 id="variables">🧾 所有變數</h2>
+        <ul>
+          <li><code>towers</code>：所有塔的資料，每筆為 <code>[x, y, q]</code></li>
+          <li><code>center</code>：中心點座標 <code>[cx, cy]</code></li>
+          <li><code>radius</code>：可到達的最大曼哈頓距離</li>
+          <li><code>n</code>：tower 的總數</li>
+          <li><code>q</code>：目前找到的「最大品質值」</li>
+          <li><code>xi, yi</code>：目前最佳 tower 的座標</li>
+          <li><code>check</code>：是否至少找到一座可到達的 tower</li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+        <h3>第一步：檢查是否可到達</h3>
+        <p>對每一座 <code>towers[i]</code>：</p>
+        <ul>
+          <li>計算其與 <code>center</code> 的曼哈頓距離：<code>|towers[i][0] - center[0]| + |towers[i][1] - center[1]|</code></li>
+          <li>若距離 <code>&lt;= radius</code>，代表這座塔可到達</li>
+          <li>一旦有可到達的 tower，就把 <code>check</code> 設為 <code>true</code></li>
+        </ul>
+        <hr />
+        <h3>第二步：更新目前最佳答案</h3>
+        <p>若 tower 可到達，會分成兩種情況：</p>
+        <h4>情況一：品質值更大</h4>
+        <ul>
+          <li>若 <code>towers[i][2] &gt; q</code></li>
+          <li>代表找到更好的 tower</li>
+          <li>直接更新：<code>q</code>、<code>xi</code>、<code>yi</code></li>
+        </ul>
+        <h4>情況二：品質值相同（需要 tie-breaking）</h4>
+        <ul>
+          <li>若 <code>towers[i][2] == q</code></li>
+          <li>比較座標字典序：<code>x</code> 較小者優先，若 <code>x</code> 相同，<code>y</code> 較小者優先</li>
+          <li>若新的 tower 字典序較小，就更新座標</li>
+        </ul>
+        <hr />
+        <h3>第三步：回傳結果</h3>
+        <ul>
+          <li>若 <code>check == true</code> → 至少有一座可到達的 tower，回傳 <code>[xi, yi]</code></li>
+          <li>若 <code>check == false</code> → 沒有任何 tower 在範圍內，回傳 <code>[-1, -1]</code></li>
+        </ul>
+
+        <h2 id="summary">💡 整體邏輯總結</h2>
+        <ul>
+          <li>正確使用 <strong>曼哈頓距離</strong></li>
+          <li>在掃描過程中即時維護「目前最佳答案」</li>
+          <li>清楚處理 <strong>品質值相同時的 tie-breaking 規則</strong></li>
+        </ul>
+        <p>時間複雜度為 <code>O(n)</code>，空間複雜度為 <code>O(1)</code>（只使用固定變數）。</p>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    vector&lt;int&gt; bestTower(vector&lt;vector&lt;int&gt;&gt;&amp; towers, vector&lt;int&gt;&amp; center,
+                          int radius) {
+        int xi = 100000, yi = 100000, q = -1;
+        int n = towers.size();
+        bool check = false;
+        for (int i = 0; i &lt; n; i++) {
+            if (abs(towers[i][0] - center[0]) +
+                abs(towers[i][1] - center[1]) &lt;= radius) {
+                check = true;
+                if (towers[i][2] == q) {
+                    if (towers[i][0] &lt; xi ||
+                        (towers[i][0] == xi &amp;&amp; towers[i][1] &lt; yi)) {
+                        xi = towers[i][0];
+                        yi = towers[i][1];
+                    }
+                } else if (towers[i][2] &gt; q) {
+                    q = towers[i][2];
+                    xi = towers[i][0];
+                    yi = towers[i][1];
+                }
+            }
+        }
+        if (check) {
+            return {xi, yi};
+        } else {
+            return {-1, -1};
+        }
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/contest/biweekly-contest-174/problems/best-reachable-tower/description/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-01-17</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value">
+            <span class="post-tags">
+              <span class="post-tag">Biweekly Contest 174</span>
+            </span>
+          </span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/contests/biweekly-contest-174-q1.html</span>
+        </div>
+      </div>
     </section>
   </main>
 
