@@ -199,42 +199,6 @@
     });
   }
 
-  function initBackToTop() {
-    const button = document.querySelector('.back-to-top');
-    if (!button) return;
-
-    function toggleVisibility() {
-      const shouldShow = window.scrollY > 240;
-      button.classList.toggle('is-visible', shouldShow);
-    }
-
-    function positionButton() {
-      const article = document.querySelector('.article-content, .article-box');
-      const rect = article?.getBoundingClientRect();
-
-      if (!rect) {
-        button.style.left = '';
-        button.style.right = '24px';
-        return;
-      }
-
-      const preferredLeft = rect.right - button.offsetWidth - 16;
-      const minLeft = 16;
-      const maxLeft = window.innerWidth - button.offsetWidth - 16;
-      const clampedLeft = Math.min(Math.max(preferredLeft, minLeft), maxLeft);
-      button.style.left = `${clampedLeft}px`;
-      button.style.right = '';
-    }
-
-    button.addEventListener('click', () => {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
-
-    window.addEventListener('resize', positionButton);
-    window.addEventListener('scroll', toggleVisibility, { passive: true });
-    toggleVisibility();
-    positionButton();
-  }
 
   function setActiveNav() {
     const path = window.location.pathname.split('/').pop() || 'index.html';
@@ -243,6 +207,59 @@
         link.classList.add('active');
       }
     });
+  }
+
+  function initCodeHighlighting() {
+    const codeBlocks = document.querySelectorAll('pre code');
+    if (!codeBlocks.length) return;
+
+    function loadOnce(tag, attrs) {
+      return new Promise((resolve, reject) => {
+        const el = document.createElement(tag);
+        Object.entries(attrs).forEach(([key, value]) => {
+          el[key] = value;
+        });
+        el.onload = resolve;
+        el.onerror = reject;
+        document.head.appendChild(el);
+      });
+    }
+
+    if (window.__hljs_loaded__) {
+      window.hljs?.highlightAll?.();
+      window.hljs?.initLineNumbersOnLoad?.();
+      return;
+    }
+    window.__hljs_loaded__ = true;
+
+    const cssHref =
+      'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css';
+
+    Promise.resolve()
+      .then(() => loadOnce('link', { rel: 'stylesheet', href: cssHref }))
+      .then(() =>
+        loadOnce('script', {
+          src: 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js',
+          defer: true,
+        })
+      )
+      .then(() =>
+        loadOnce('script', {
+          src: 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js',
+          defer: true,
+        })
+      )
+      .then(() =>
+        loadOnce('script', {
+          src: 'https://cdnjs.cloudflare.com/ajax/libs/highlightjs-line-numbers.js/2.8.0/highlightjs-line-numbers.min.js',
+          defer: true,
+        })
+      )
+      .then(() => {
+        window.hljs.highlightAll();
+        window.hljs.initLineNumbersOnLoad();
+      })
+      .catch(() => {});
   }
 
   document.addEventListener('DOMContentLoaded', () => {
@@ -254,7 +271,7 @@
     updateAccordionCounts();
     initArticleToc();
     initArticleTocToggle();
-    initBackToTop();
     setActiveNav();
+    initCodeHighlighting();
   });
 })();
