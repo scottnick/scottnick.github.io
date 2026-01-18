@@ -34,7 +34,7 @@
       <span aria-hidden="true">/</span>
       <a href="biweekly-contest-174.html">Biweekly Contest 174</a>
       <span aria-hidden="true">/</span>
-      <span>Q1</span>
+      <span>Q1. Best Reachable Tower</span>
     </nav>
 
     <section class="hero">
@@ -50,18 +50,18 @@
         </button>
         <strong>目錄</strong>
         <ul>
-          <li><a href="#statement">📘 題目敘述</a></li>
-          <li><a href="#approach">🧠 解題思路</a></li>
-          <li><a href="#variables">🧾 所有變數</a></li>
-          <li><a href="#steps">🪜 主要流程步驟</a></li>
-          <li><a href="#summary">💡 整體邏輯總結</a></li>
-          <li><a href="#code">💻 程式碼實作</a></li>
-          <li><a href="#link">🔗 題目連結</a></li>
+          <li><a href="#statement">題目敘述</a></li>
+          <li><a href="#approach">解題思路</a></li>
+          <li><a href="#variables">所有變數</a></li>
+          <li><a href="#steps">主要流程步驟</a></li>
+          <li><a href="#summary">整體邏輯總結</a></li>
+          <li><a href="#code">程式碼實作</a></li>
+          <li><a href="#link">題目連結</a></li>
         </ul>
       </aside>
 
       <section class="term-block article-content">
-        <h2 id="statement">📘 題目敘述</h2>
+        <h3 id="statement">題目敘述</h3>
         <p>給定一個二維整數陣列 <code>towers</code>，其中 <code>towers[i] = [xi, yi, qi]</code> 表示第 <code>i</code> 座塔的座標 <code>(xi, yi)</code> 與品質值 <code>qi</code>。</p>
         <p>同時給定一個整數陣列 <code>center = [cx, cy]</code> 表示你所在的位置，以及一個整數 <code>radius</code>。</p>
         <p>若某座塔與 <code>center</code> 的 <strong>曼哈頓距離（Manhattan distance）</strong> 小於或等於 <code>radius</code>，則該塔視為 <strong>可到達（reachable）</strong>。</p>
@@ -86,7 +86,7 @@
           <li><code>0 ≤ radius ≤ 10^5</code></li>
         </ul>
 
-        <h2 id="approach">🧠 解題思路</h2>
+        <h3 id="approach">解題思路</h3>
         <p>我的想法其實很直接：</p>
         <p><strong>把每一座 tower 都檢查一次，只要在範圍內，就和目前最佳答案比較。</strong></p>
         <p>這題沒有要最佳化到什麼資料結構或排序，因為每一座塔是否可到達，彼此之間是獨立的。</p>
@@ -107,7 +107,7 @@
           </li>
         </ol>
 
-        <h2 id="variables">🧾 所有變數</h2>
+        <h3 id="variables">所有變數</h3>
         <ul>
           <li><code>towers</code>：所有塔的資料，每筆為 <code>[x, y, q]</code></li>
           <li><code>center</code>：中心點座標 <code>[cx, cy]</code></li>
@@ -118,7 +118,7 @@
           <li><code>check</code>：是否至少找到一座可到達的 tower</li>
         </ul>
 
-        <h2 id="steps">🪜 主要流程步驟</h2>
+        <h3 id="steps">主要流程步驟</h3>
         <h3>第一步：檢查是否可到達</h3>
         <p>對每一座 <code>towers[i]</code>：</p>
         <ul>
@@ -148,7 +148,7 @@
           <li>若 <code>check == false</code> → 沒有任何 tower 在範圍內，回傳 <code>[-1, -1]</code></li>
         </ul>
 
-        <h2 id="summary">💡 整體邏輯總結</h2>
+        <h3 id="summary">整體邏輯總結</h3>
         <ul>
           <li>正確使用 <strong>曼哈頓距離</strong></li>
           <li>在掃描過程中即時維護「目前最佳答案」</li>
@@ -156,7 +156,7 @@
         </ul>
         <p>時間複雜度為 <code>O(n)</code>，空間複雜度為 <code>O(1)</code>（只使用固定變數）。</p>
 
-        <h2 id="code">💻 程式碼實作</h2>
+        <h3 id="code">程式碼實作</h3>
         <pre><code class="language-cpp">class Solution {
 public:
     vector&lt;int&gt; bestTower(vector&lt;vector&lt;int&gt;&gt;&amp; towers, vector&lt;int&gt;&amp; center,
@@ -190,7 +190,7 @@ public:
 };
 </code></pre>
 
-        <h2 id="link">🔗 題目連結</h2>
+        <h3 id="link">題目連結</h3>
         <p>https://leetcode.com/contest/biweekly-contest-174/problems/best-reachable-tower/description/</p>
       </section>
     </div>

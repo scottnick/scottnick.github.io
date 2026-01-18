@@ -592,7 +592,7 @@ main {
 .article-content h4 {
   margin: 20px 0 8px;
   font-size: 17px;
-  color: var(--muted);
+  color: var(--text);
 }
 
 .article-box p,
