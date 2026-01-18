@@ -52,6 +52,7 @@
         <ul>
           <li><a href="#statement">📘 題目敘述</a></li>
           <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#variables">所有變數</a></li>
           <li><a href="#steps">🪜 主要流程步驟</a></li>
           <li><a href="#code">💻 程式碼實作</a></li>
           <li><a href="#link">🔗 題目連結</a></li>
@@ -65,7 +66,8 @@
         <p>你可以進行以下操作任意次（包含 0 次）：</p>
         <ul>
           <li>選擇一個整數值 <code>x</code></li>
-          <li>找出所有最大連續區段，使得區段內 <code>nums[i] == x</code>（區段為 maximal 表示不能再往左或往右延伸仍保持值都等於 <code>x</code>）</li>
+          <li>找出所有最大連續區段，使得區段內 <code>nums[i] == x</code>
+            （區段為 maximal 表示不能再往左或往右延伸仍保持值都等於 <code>x</code>）</li>
           <li>對每個這樣的區段 <code>[l, r]</code>，同時更新：
             <ul>
               <li><code>nums[l] = target[l]</code></li>
@@ -86,7 +88,8 @@
         <p>我抓到這題操作的本質是：</p>
         <ul>
           <li>一次操作只能選一個值 <code>x</code></li>
-          <li>而且一次操作只會影響「目前 <code>nums[i] == x</code>」的那些位置（不管它們分成幾段，符合 <code>x</code> 的段都會一起被更新）</li>
+          <li>而且一次操作只會影響「目前 <code>nums[i] == x</code>」的那些位置
+            （不管它們分成幾段，符合 <code>x</code> 的段都會一起被更新）</li>
         </ul>
         <p>所以我就把問題轉成在想：</p>
         <ul>
@@ -99,9 +102,11 @@
           <li>不選 <code>x</code>，那些位置永遠不會被動到</li>
         </ul>
         <p>因此我的結論就是：</p>
-        <p><strong>最少操作次數 = 在所有 <code>nums[i] != target[i]</code> 的位置中，<code>nums[i]</code> 的不同值數量</strong></p>
+        <blockquote>
+          <p><strong>最少操作次數 = 在所有 <code>nums[i] != target[i]</code> 的位置中，<code>nums[i]</code> 的不同值數量</strong></p>
+        </blockquote>
 
-        <h3>所有變數</h3>
+        <h3 id="variables">所有變數</h3>
         <ul>
           <li><code>seen</code>：用來記錄「某個數值 <code>x</code> 是否已經算過一次操作」</li>
           <li><code>n</code>：陣列長度</li>
@@ -113,20 +118,27 @@
         <h3>掃描所有位置</h3>
         <p>我從左到右掃過每個索引 <code>i</code>：</p>
         <ul>
-          <li>若 <code>nums[i] == target[i]</code> 代表這個位置本來就是對的，不需要處理</li>
-          <li>若 <code>nums[i] != target[i]</code> 代表這個位置一定需要被某次操作更新，這時我就去看它目前的值 <code>nums[i]</code></li>
+          <li>若 <code>nums[i] == target[i]</code>
+            代表這個位置本來就是對的，不需要處理</li>
+          <li>若 <code>nums[i] != target[i]</code>
+            代表這個位置一定需要被某次操作更新
+            這時我就去看它目前的值 <code>nums[i]</code></li>
         </ul>
         <hr />
         <h3>統計「需要被處理的值」有幾種</h3>
         <p>對於每個 <code>nums[i] != target[i]</code> 的位置：</p>
         <ul>
-          <li>如果 <code>seen[nums[i]] == false</code> 代表這個值是第一次出現在「需要被修正的位置」
+          <li>如果 <code>seen[nums[i]] == false</code>
+            代表這個值是第一次出現在「需要被修正的位置」
+            → 我就：
             <ul>
               <li><code>ans++</code>（表示至少需要一次選這個值的操作）</li>
               <li><code>seen[nums[i]] = true</code>（避免重複計數）</li>
             </ul>
           </li>
-          <li>如果 <code>seen[nums[i]] == true</code> 代表之前已經算過這個值了，不需要再增加操作次數</li>
+          <li>如果 <code>seen[nums[i]] == true</code>
+            代表之前已經算過這個值了
+            → 不需要再增加操作次數</li>
         </ul>
         <hr />
         <h3>最後回傳</h3>

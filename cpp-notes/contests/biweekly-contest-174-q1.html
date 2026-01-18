@@ -52,6 +52,7 @@
         <ul>
           <li><a href="#statement">📘 題目敘述</a></li>
           <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#variables">所有變數</a></li>
           <li><a href="#steps">🪜 主要流程步驟</a></li>
           <li><a href="#summary">💡 整體邏輯總結</a></li>
           <li><a href="#code">💻 程式碼實作</a></li>
@@ -71,7 +72,7 @@
           <li>若沒有任何塔可到達，回傳 <code>[-1, -1]</code></li>
         </ul>
         <p>曼哈頓距離定義為： <code>|xi - xj| + |yi - yj|</code></p>
-        <p>字典序比較定義為：<code>[xi, yi]</code> 比 <code>[xj, yj]</code> 小，若：</p>
+        <p>字典序比較定義為： <code>[xi, yi]</code> 比 <code>[xj, yj]</code> 小，若：</p>
         <ul>
           <li><code>xi &lt; xj</code>，或</li>
           <li><code>xi == xj</code> 且 <code>yi &lt; yj</code></li>
@@ -87,7 +88,9 @@
 
         <h2 id="approach">🧠 解題思路</h2>
         <p>我的想法其實很直接：</p>
-        <p><strong>把每一座 tower 都檢查一次，只要在範圍內，就和目前最佳答案比較。</strong></p>
+        <blockquote>
+          <p><strong>把每一座 tower 都檢查一次，只要在範圍內，就和目前最佳答案比較。</strong></p>
+        </blockquote>
         <p>這題沒有要最佳化到什麼資料結構或排序，因為每一座塔是否可到達，彼此之間是獨立的。</p>
         <p>所以整體邏輯就是：</p>
         <ol>
@@ -106,7 +109,7 @@
           </li>
         </ol>
 
-        <h3>所有變數</h3>
+        <h3 id="variables">所有變數</h3>
         <ul>
           <li><code>towers</code>：所有塔的資料，每筆為 <code>[x, y, q]</code></li>
           <li><code>center</code>：中心點座標 <code>[cx, cy]</code></li>
@@ -120,8 +123,9 @@
         <h2 id="steps">🪜 主要流程步驟</h2>
         <h3>第一步：檢查是否可到達</h3>
         <p>對每一座 <code>towers[i]</code>：</p>
+        <p>計算其與 <code>center</code> 的曼哈頓距離：</p>
+        <p><code>|towers[i][0] - center[0]| + |towers[i][1] - center[1]|</code></p>
         <ul>
-          <li>計算其與 <code>center</code> 的曼哈頓距離：<code>|towers[i][0] - center[0]| + |towers[i][1] - center[1]|</code></li>
           <li>若距離 <code>&lt;= radius</code>，代表這座塔可到達</li>
           <li>一旦有可到達的 tower，就把 <code>check</code> 設為 <code>true</code></li>
         </ul>
