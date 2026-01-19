@@ -186,6 +186,15 @@ main {
   color: var(--muted);
 }
 
+.contest-photo {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 16px auto;
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+}
+
 .card-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -583,7 +592,7 @@ main {
 .article-content h4 {
   margin: 20px 0 8px;
   font-size: 17px;
-  color: var(--muted);
+  color: var(--text);
 }
 
 .article-box p,
