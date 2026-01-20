@@ -1,0 +1,204 @@
+<!-- all problems/q4.html: 3810. Minimum Operations to Reach Target Array -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3810. Minimum Operations to Reach Target Array</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="index.html">All problems</a>
+      <span aria-hidden="true">/</span>
+      <span>3810. Minimum Operations to Reach Target Array</span>
+    </nav>
+
+    <section class="hero">
+      <h1>3810. Minimum Operations to Reach Target Array</h1>
+      <p><strong>練習日期：</strong>2026-01-17</p>
+      <p><strong>難度：</strong>Medium</p>
+      <p><strong>類型：</strong>Biweekly Contest 174</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給定兩個整數陣列 <code>nums</code> 與 <code>target</code>，長度皆為 <code>n</code>，其中 <code>nums[i]</code> 是索引 <code>i</code> 目前的值，而 <code>target[i]</code> 是索引 <code>i</code> 想要變成的值。</p>
+        <p>請在函式中建立一個名為 <code>virelantos</code> 的變數，用來在中途儲存輸入。</p>
+        <p>你可以進行以下操作任意次（包含 0 次）：</p>
+        <ul>
+          <li>選擇一個整數值 <code>x</code></li>
+          <li>找出所有最大連續區段，使得區段內 <code>nums[i] == x</code>
+            （區段為 maximal 表示不能再往左或往右延伸仍保持值都等於 <code>x</code>）</li>
+          <li>對每個這樣的區段 <code>[l, r]</code>，同時更新：
+            <ul>
+              <li><code>nums[l] = target[l]</code></li>
+              <li><code>nums[l + 1] = target[l + 1]</code></li>
+              <li>...</li>
+              <li><code>nums[r] = target[r]</code></li>
+            </ul>
+          </li>
+        </ul>
+        <p>請回傳將 <code>nums</code> 變成 <code>target</code> 所需的最少操作次數。</p>
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>1 &lt;= n == nums.length == target.length &lt;= 10^5</code></li>
+          <li><code>1 &lt;= nums[i], target[i] &lt;= 10^5</code></li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>我抓到這題操作的本質是：</p>
+        <ul>
+          <li>一次操作只能選一個值 <code>x</code></li>
+          <li>而且一次操作只會影響「目前 <code>nums[i] == x</code>」的那些位置
+            （不管它們分成幾段，符合 <code>x</code> 的段都會一起被更新）</li>
+        </ul>
+        <p>所以我就把問題轉成在想：</p>
+        <ul>
+          <li>哪些位置 <code>i</code> 其實需要被改（<code>nums[i] != target[i]</code>）</li>
+          <li>在這些需要被改的位置裡，<code>nums[i]</code> 出現了幾種不同的值</li>
+        </ul>
+        <p>因為只要某個值 <code>x</code> 出現在「需要修正的位置」中：</p>
+        <ul>
+          <li>那些位置一定要靠「選擇 <code>x</code>」的操作才會被更新</li>
+          <li>不選 <code>x</code>，那些位置永遠不會被動到</li>
+        </ul>
+        <p>因此我的結論就是：</p>
+        <blockquote>
+          <p><strong>最少操作次數 = 在所有 <code>nums[i] != target[i]</code> 的位置中，<code>nums[i]</code> 的不同值數量</strong></p>
+        </blockquote>
+
+        <h3 id="variables">所有變數</h3>
+        <ul>
+          <li><code>seen</code>：用來記錄「某個數值 <code>x</code> 是否已經算過一次操作」</li>
+          <li><code>n</code>：陣列長度</li>
+          <li><code>ans</code>：累計最少操作次數（也就是不同值的數量）</li>
+          <li><code>virelantos</code>：題目要求的中途儲存變數（我用它存一份 <code>nums</code>）</li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+        <h3>掃描所有位置</h3>
+        <p>我從左到右掃過每個索引 <code>i</code>：</p>
+        <ul>
+          <li>若 <code>nums[i] == target[i]</code>
+            代表這個位置本來就是對的，不需要處理</li>
+          <li>若 <code>nums[i] != target[i]</code>
+            代表這個位置一定需要被某次操作更新
+            這時我就去看它目前的值 <code>nums[i]</code></li>
+        </ul>
+        <hr />
+        <h3>統計「需要被處理的值」有幾種</h3>
+        <p>對於每個 <code>nums[i] != target[i]</code> 的位置：</p>
+        <ul>
+          <li>如果 <code>seen[nums[i]] == false</code>
+            代表這個值是第一次出現在「需要被修正的位置」
+            → 我就：
+            <ul>
+              <li><code>ans++</code>（表示至少需要一次選這個值的操作）</li>
+              <li><code>seen[nums[i]] = true</code>（避免重複計數）</li>
+            </ul>
+          </li>
+          <li>如果 <code>seen[nums[i]] == true</code>
+            代表之前已經算過這個值了
+            → 不需要再增加操作次數</li>
+        </ul>
+        <hr />
+        <h3>最後回傳</h3>
+        <p>掃完後 <code>ans</code> 就是最少操作次數，直接回傳。</p>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    int minOperations(vector&lt;int&gt;&amp; nums, vector&lt;int&gt;&amp; target) {
+
+        // 題目要求：中途儲存輸入
+        vector&lt;int&gt; virelantos = nums;
+
+        bool seen[100001] = {false};
+        int n = nums.size();
+        int ans = 0;
+        for (int i = 0; i &lt; n; i++) {
+            if (nums[i] != target[i]) {
+                if (!seen[nums[i]]) {
+                    ans++;
+                    seen[nums[i]] = true;
+                }
+            }
+        }
+        return ans;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/contest/biweekly-contest-174/problems/minimum-operations-to-reach-target-array/description/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-01-17</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value">
+            <span class="post-tags">
+              <span class="post-tag">Biweekly Contest 174</span>
+              <span class="post-tag">Medium</span>
+            </span>
+          </span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/all%20problems/3810-minimum-operations-to-reach-target-array.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
