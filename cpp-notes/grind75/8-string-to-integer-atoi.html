@@ -1,0 +1,238 @@
+<!-- grind75/8-string-to-integer-atoi.html: Grind 75 文章 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>String to Integer (atoi)</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="../grind75/index.html">Grind 75</a>
+      <span aria-hidden="true">/</span>
+      <span>8. String to Integer (atoi)</span>
+    </nav>
+
+    <section class="hero">
+      <h1>8. String to Integer (atoi)</h1>
+      <p><strong>練習日期：</strong>2025-12-29</p>
+      <p><strong>難度：</strong>Medium</p>
+      <p><strong>類型：</strong>String</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>請實作 <code>myAtoi(string s)</code>，將字串轉換成 32-bit 有號整數（signed integer）。</p>
+        <p>轉換規則如下：</p>
+        <ol>
+          <li>先忽略字串開頭的空白字元（space）。</li>
+          <li>接著可以讀取一個可選的正負號 <code>'+'</code> 或 <code>'-'</code>。</li>
+          <li>然後讀取連續的數字字元（<code>'0'</code> 到 <code>'9'</code>），並將其視為整數。</li>
+          <li>讀取數字結束後，停止轉換；其後的字元不再處理。</li>
+          <li>若沒有讀取到任何數字，結果為 <code>0</code>。</li>
+          <li>若結果超出 32-bit 有號整數範圍 <code>[-2^31, 2^31 - 1]</code>，則需要截斷：
+            <ul>
+              <li>小於 <code>-2^31</code> 回傳 <code>-2^31</code></li>
+              <li>大於 <code>2^31 - 1</code> 回傳 <code>2^31 - 1</code></li>
+            </ul>
+          </li>
+        </ol>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>0 <= s.length <= 200</code></li>
+          <li><code>s</code> 由英文字母、數字、空白 <code>' '</code>、<code>'+'</code>、<code>'-'</code>、<code>'.'</code> 等字元組成</li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>我把這題想成「從左到右掃描字串」，並且用幾個變數記錄目前處理到哪個階段。</p>
+
+        <h3 id="variables">所有變數</h3>
+        <ul>
+          <li><code>start</code>：是否仍在「前置處理階段」
+            <ul>
+              <li><code>start = true</code>：表示我還在處理開頭空白、以及正負號（數字還沒開始）</li>
+              <li><code>start = false</code>：表示我已經開始讀數字（或已經確認過正負號），接下來遇到非數字就應該停止</li>
+            </ul>
+          </li>
+          <li><code>sign</code>：結果的正負號
+            <ul>
+              <li>初始為 <code>+1</code></li>
+              <li>若遇到 <code>'-'</code>，就改成 <code>-1</code></li>
+            </ul>
+          </li>
+          <li><code>ans</code>：目前累積出來的數字（用 <code>long long</code> 暫存，避免中途溢位）</li>
+          <li><code>max / min</code>：32-bit 有號整數範圍上界與下界，用來做溢位截斷</li>
+        </ul>
+        <hr />
+
+        <p>接下來我逐字掃描 <code>s[i]</code>，會遇到以下幾種情況：</p>
+
+        <h3>情況一：遇到空白字元 <code>' '</code>（且仍在 start 階段）</h3>
+        <ul>
+          <li>表示目前還在處理字串開頭的前導空白</li>
+          <li>在這個階段，空白字元對數值轉換沒有意義，應該被忽略</li>
+        </ul>
+        <p>我的做法是：</p>
+        <ul>
+          <li>直接將這個空白字元從字串中刪除：<code>s.erase(i, 1)</code></li>
+          <li>接著將 <code>i--</code>，讓下一次迴圈仍然檢查同一個位置</li>
+        </ul>
+        <p>這樣的效果等同於「跳過所有前面的空白」。</p>
+        <hr />
+
+        <h3>情況二：遇到 <code>'+'</code> 或 <code>'-'</code>（且仍在 start 階段）</h3>
+        <ul>
+          <li>代表目前讀到的是數字的正負號</li>
+          <li>如果是 <code>'-'</code>，表示最後的結果應該是負數，因此將 <code>sign</code> 設為 <code>-1</code></li>
+          <li>不論是 <code>'+'</code> 或 <code>'-'</code>，都表示「符號已經處理完成」</li>
+        </ul>
+        <p>因此在讀到正負號後：</p>
+        <ul>
+          <li>會將 <code>start</code> 設為 <code>false</code></li>
+          <li>表示接下來應該開始讀取數字，一旦再遇到非數字字元，就必須停止轉換</li>
+        </ul>
+        <hr />
+
+        <h3>情況三：遇到數字字元 <code>'0'</code> 到 <code>'9'</code></h3>
+        <ul>
+          <li>表示正式開始（或持續）累積整數值</li>
+          <li>一旦進入數字階段，就將 <code>start</code> 設為 <code>false</code></li>
+        </ul>
+        <p>在把數字加進 <code>ans</code> 之前，我會先進行「溢位檢查」：</p>
+        <ul>
+          <li>若是正數，且下一步會超過 <code>2147483647</code>，直接回傳最大值</li>
+          <li>若是負數，且下一步會小於 <code>-2147483648</code>，直接回傳最小值</li>
+        </ul>
+        <p>只有在確認不會溢位的情況下，才會執行：</p>
+        <ul>
+          <li><code>ans = ans * 10 + (s[i] - '0')</code></li>
+        </ul>
+        <hr />
+
+        <h3>情況四：遇到其他非數字字元</h3>
+        <p>這時代表數字讀取應該停止。</p>
+        <p>我的做法是：</p>
+        <ul>
+          <li>直接把 <code>i</code> 後面的全部刪掉：<code>s.erase(i)</code></li>
+          <li>然後 <code>break</code> 結束迴圈</li>
+        </ul>
+        <hr />
+
+        <h3>最後回傳</h3>
+        <ul>
+          <li>回傳 <code>sign * ans</code></li>
+          <li>若從頭到尾都沒遇到數字，<code>ans</code> 會維持 0，因此自然回傳 0</li>
+        </ul>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    int myAtoi(string s) {
+        bool start = true;
+        int sign = 1;
+        long long int ans = 0;
+        int max = 2147483647;
+        int min = -2147483648;
+        for (int i = 0; i < s.size(); i++) {
+            if ((s[i] >= '0') && (s[i] <= '9')) {
+                start = false;
+                if ((sign == 1) &&
+                    (ans > (max / 10) || (ans == (max / 10) && (s[i] > '7')))) {
+                    return max;
+                } else if ((sign == -1) &&
+                           (ans > (max / 10) ||
+                            (ans == (max / 10) && (s[i] > '8')))) {
+                    return min;
+                }
+                ans = ans * 10 + (s[i] - '0');
+            } else if (start && (s[i] == ' ')) {
+                s.erase(i, 1);
+                i--;
+            } else if (start && ((s[i] == '+') || (s[i] == '-'))) {
+                if (s[i] == '-') {
+                    sign = -1;
+                }
+                start = false;
+            } else {
+                s.erase(i);
+                break;
+            }
+        }
+        return sign * ans;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/string-to-integer-atoi/description/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2025-12-29</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value">
+            <span class="post-tags">
+              <span class="post-tag">String</span>
+              <span class="post-tag">Medium</span>
+            </span>
+          </span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/grind75/8-string-to-integer-atoi.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
