@@ -1,0 +1,172 @@
+<!-- all problems/383-ransom-note.html: LeetCode 383 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>383. Ransom Note</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="index.html">All problems</a>
+      <span aria-hidden="true">/</span>
+      <span>383. Ransom Note</span>
+    </nav>
+
+    <section class="hero">
+      <h1>383. Ransom Note</h1>
+      <p><strong>練習日期：</strong>2025-12-29</p>
+      <p><strong>難度：</strong>Easy</p>
+      <p><strong>類型：</strong>String</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#code">💻 程式碼實作（第一直覺解）</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給定兩個字串 <code>ransomNote</code> 與 <code>magazine</code>，如果 <code>ransomNote</code> 可以由 <code>magazine</code> 中的字母構成，則回傳 <code>true</code>，否則回傳 <code>false</code>。</p>
+        <p><code>magazine</code> 中的每個字母<strong>只能使用一次</strong>（也就是每個字元最多被拿來用一次）。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>1 ≤ ransomNote.length, magazine.length ≤ 10^5</code></li>
+          <li><code>ransomNote</code> 與 <code>magazine</code> 只包含小寫英文字母</li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>我在看這題時，是把問題想成一個「逐字配對」的過程。</p>
+        <p>我有一個需要完成的字串 <code>ransomNote</code>，以及一個可以使用的字串 <code>magazine</code>，我要確認的是：能不能依序替 <code>ransomNote</code> 中的每一個字母，在 <code>magazine</code> 中找到一個可以用、而且不會重複使用的對應字母。</p>
+        <p>因此我先設定一個布林變數 <code>same</code>，用來表示目前的判斷結果：</p>
+        <ul>
+          <li><code>same = true</code>：到目前為止，每一個需要的字母都成功找到</li>
+          <li><code>same = false</code>：已經出現至少一個無法構成的字母</li>
+        </ul>
+
+        <p>接下來，我依序處理 <code>ransomNote</code> 中的每一個字母，對於目前的字母 <code>ransomNote[i]</code>，會出現以下幾種情況：</p>
+        <hr />
+
+        <h3>情況一：在 <code>magazine</code> 中找到相同字母</h3>
+        <ul>
+          <li>表示這個字母可以被成功構成</li>
+          <li>因為每個字母只能使用一次，找到後會將該字母從 <code>magazine</code> 中刪除</li>
+          <li>接著繼續處理下一個 <code>ransomNote</code> 字母</li>
+        </ul>
+        <hr />
+
+        <h3>情況二：整個 <code>magazine</code> 都找不到相同字母</h3>
+        <ul>
+          <li>代表目前的 <code>ransomNote[i]</code> 無法被構成</li>
+          <li>此時將 <code>same</code> 設為 <code>false</code></li>
+          <li>表示答案已經不成立</li>
+        </ul>
+        <hr />
+
+        <h3>情況三：<code>magazine</code> 已經沒有任何字母</h3>
+        <ul>
+          <li>如果在處理過程中發現 <code>magazine</code> 已經為空</li>
+          <li>後續不可能再提供任何字母</li>
+          <li>因此也需要將 <code>same</code> 設為 <code>false</code></li>
+        </ul>
+        <hr />
+
+        <p>整個流程結束後，只需要回傳 <code>same</code>：</p>
+        <ul>
+          <li>若為 <code>true</code>，代表所有字母皆成功配對</li>
+          <li>若為 <code>false</code>，代表至少有一個字母無法構成</li>
+        </ul>
+
+        <h2 id="code">💻 程式碼實作（第一直覺解）</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    bool canConstruct(string ransomNote, string magazine) {
+        bool same = true;
+        for (int i = 0; i < ransomNote.size(); i++) {
+            if (magazine.size() == 0) {
+                same = false;
+            }
+            for (int j = 0; j < magazine.size(); j++) {
+                if (ransomNote[i] == magazine[j]) {
+                    magazine.erase(j, 1);
+                    break;
+                } else {
+                    if (j == magazine.size() - 1) {
+                        same = false;
+                    }
+                }
+            }
+        }
+        return same;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/ransom-note/description/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2025-12-29</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value">
+            <span class="post-tags">
+              <span class="post-tag">String</span>
+              <span class="post-tag">Easy</span>
+            </span>
+          </span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/all%20problems/383-ransom-note.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
