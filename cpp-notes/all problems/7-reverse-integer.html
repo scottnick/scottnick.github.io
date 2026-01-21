@@ -1,0 +1,193 @@
+<!-- all problems/7-reverse-integer.html: LeetCode 7 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>7. Reverse Integer</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="index.html">All problems</a>
+      <span aria-hidden="true">/</span>
+      <span>7. Reverse Integer</span>
+    </nav>
+
+    <section class="hero">
+      <h1>7. Reverse Integer</h1>
+      <p><strong>練習日期：</strong>2026-01-01</p>
+      <p><strong>難度：</strong>Medium</p>
+      <p><strong>類型：</strong>Math</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給定一個 32-bit 有號整數 <code>x</code>，請將其數字反轉後回傳。</p>
+        <p>若反轉後的整數超出 32-bit 有號整數範圍 <code>[-2^31, 2^31 - 1]</code>，則回傳 <code>0</code>。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>-2^31 ≤ x ≤ 2^31 - 1</code></li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>我的做法是「一位一位反轉數字」，而不是先轉成字串。</p>
+        <p>整體流程可以分成三件事：</p>
+        <ol>
+          <li>從原本的數字 <code>x</code> 取出最後一位數字</li>
+          <li>把這一位數字接到新的結果 <code>y</code> 後面</li>
+          <li>在每一次接之前，先確認不會發生溢位</li>
+        </ol>
+
+        <h3 id="variables">所有變數（對應程式碼）</h3>
+        <ul>
+          <li><code>x</code>：目前還沒處理完的原始整數</li>
+          <li><code>y</code>：目前已經反轉完成的結果</li>
+          <li><code>digit</code>：從 <code>x</code> 取出的最後一位數字</li>
+          <li><code>intmax</code>：32-bit 有號整數最大值 <code>2147483647</code></li>
+          <li><code>intmin</code>：32-bit 有號整數最小值 <code>-2147483648</code></li>
+        </ul>
+        <hr />
+
+        <h3>while (x != 0)：逐位處理數字</h3>
+        <p>這個迴圈代表：</p>
+        <ul>
+          <li>只要 <code>x</code> 還不是 0，就表示還有數字尚未被反轉</li>
+          <li>每一輪迴圈，處理 <code>x</code> 的「最後一位」</li>
+        </ul>
+        <hr />
+
+        <h3>第一步：取出最後一位數字</h3>
+        <pre><code class="language-cpp">int digit = x % 10;
+</code></pre>
+        <p>這一行的作用是：透過 mod 10 取得 x 的最後一位數字。</p>
+        <p>在 C++ 中，若 x 是負數，digit 也會是負的，因此正負數可以用同一套邏輯處理。</p>
+        <hr />
+
+        <h3>第二步：檢查是否會發生溢位（重點）</h3>
+        <p>在真正把 digit 接到 y 後面之前，我會先檢查：</p>
+        <pre><code class="language-cpp">y = y * 10 + digit;
+</code></pre>
+        <p>這一步是否會超出 32-bit 有號整數範圍。</p>
+        <h4>情況一：x &gt; 0（處理正數）</h4>
+        <pre><code class="language-cpp">if (y > intmax / 10 || (y == intmax / 10 && digit > 7)) {
+    return 0;
+}
+</code></pre>
+        <p>若 <code>y &gt; intmax / 10</code>，下一步乘 10 一定會溢位；若 <code>y == intmax / 10</code>，最後一位只能接 0 ~ 7。</p>
+        <h4>情況二：x &lt; 0（處理負數）</h4>
+        <pre><code class="language-cpp">else if (y < intmin / 10 || (y == intmin / 10 && digit < -8)) {
+    return 0;
+}
+</code></pre>
+        <p>intmin 的最後一位是 -8，若下一步會小於 <code>-2^31</code> 就直接回傳 0。</p>
+        <hr />
+
+        <h3>第三步：安全地更新反轉結果</h3>
+        <pre><code class="language-cpp">y = y * 10 + digit;
+</code></pre>
+        <p>這一行只會在已經確認不會溢位的情況下執行。</p>
+        <h3>第四步：移除 x 的最後一位</h3>
+        <pre><code class="language-cpp">x = (x - digit) / 10;
+</code></pre>
+        <p>把剛剛取出的 digit 從 x 中移除，讓下一輪處理新的最後一位數字。</p>
+        <hr />
+
+        <p>迴圈結束後，當 <code>x == 0</code>，代表所有位數都已經反轉完成，此時 <code>y</code> 就是最終答案。</p>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    int reverse(int x) {
+        int y = 0;
+        int sign = 1;
+        int intmax = 2147483647;
+        int intmin = -2147483648;
+        while (x != 0) {
+            int digit = x % 10;
+            if (x > 0 && (y > intmax / 10 || (y == intmax / 10 && digit > 7))) {
+                return 0;
+            } else if (x < 0 &&
+                       (y < intmin / 10 || (y == intmin / 10 && digit < -8))) {
+                return 0;
+            }
+            y = y * 10 + digit;
+            x = (x - digit) / 10;
+        }
+        return y;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/reverse-integer/description/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-01-01</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value">
+            <span class="post-tags">
+              <span class="post-tag">Math</span>
+              <span class="post-tag">Medium</span>
+            </span>
+          </span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/all%20problems/7-reverse-integer.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>

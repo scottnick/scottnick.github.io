@@ -1,0 +1,264 @@
+<!-- leetcode75/1071-greatest-common-divisor-of-strings.html: LeetCode 75 文章 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>1071. Greatest Common Divisor of Strings</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="../leetcode75/index.html">LeetCode 75</a>
+      <span aria-hidden="true">/</span>
+      <span>1071. Greatest Common Divisor of Strings</span>
+    </nav>
+
+    <section class="hero">
+      <h1>1071. Greatest Common Divisor of Strings</h1>
+      <p><strong>練習日期：</strong>2026-01-08</p>
+      <p><strong>難度：</strong>Easy</p>
+      <p><strong>類型：</strong>Math、String</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路（一）但 TLE</a></li>
+          <li><a href="#approach-2">🧠 解題思路（二）更簡單想法</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>對於兩個字串 <code>s</code> 和 <code>t</code>，只有在 <code>s = t + t + t + ... + t</code>（也就是 <code>t</code> 重複串接一次或多次）時，我們才說「<code>t</code> 可以整除 <code>s</code>」。</p>
+        <p>給定兩個字串 <code>str1</code> 與 <code>str2</code>，請回傳最大的字串 <code>x</code>，使得 <code>x</code> 同時可以整除 <code>str1</code> 與 <code>str2</code>。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>1 ≤ str1.length, str2.length ≤ 1000</code></li>
+          <li><code>str1</code> 與 <code>str2</code> 只包含英文大寫字母</li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路（一）但 TLE</h2>
+        <p>我的想法是先從「長度」下手：</p>
+        <ul>
+          <li>如果某個字串 <code>x</code> 能整除 <code>str1</code> 和 <code>str2</code></li>
+          <li>那 <code>x</code> 的長度一定同時是 <code>str1.length</code> 與 <code>str2.length</code> 的公因數</li>
+          <li>所以我先算出兩個長度的最大公因數 <code>mgcd</code></li>
+          <li>再把 <code>mgcd</code> 的所有因數列出來（從大到小試）</li>
+          <li>每次拿一個長度 <code>L</code>，取 <code>str1</code> 的前 <code>L</code> 個字元當候選字串 <code>rep</code></li>
+          <li>檢查 <code>str1</code>、<code>str2</code> 是否都能被 <code>rep</code> 以「一段一段相同」的方式完整組成</li>
+          <li>只要成功，第一個成功的 <code>rep</code> 就是答案（因為我由大到小試）</li>
+        </ul>
+
+        <h3 id="variables">所有變數（對應程式碼）</h3>
+        <ul>
+          <li><code>m</code>：<code>str1</code> 的長度</li>
+          <li><code>n</code>：<code>str2</code> 的長度</li>
+          <li><code>mgcd</code>：<code>gcd(m, n)</code>，兩個長度的最大公因數</li>
+          <li><code>factor</code>：用來存 <code>mgcd</code> 的所有因數（我用由大到小的順序存，方便直接從最大候選開始試）</li>
+          <li><code>rep</code>：目前嘗試的候選字串（取 <code>str1</code> 的前 <code>L</code> 個字元）</li>
+          <li><code>check</code>：這個 <code>rep</code> 是否同時能整除 <code>str1</code> 與 <code>str2</code></li>
+          <li><code>check1</code>：在 <code>str1</code> 中，目前比對到的位置（每次成功就往後跳 <code>L</code>）</li>
+          <li><code>check2</code>：在 <code>str2</code> 中，目前比對到的位置（每次成功就往後跳 <code>L</code>）</li>
+        </ul>
+
+        <h3>步驟一：先求長度的最大公因數 <code>mgcd</code></h3>
+        <ul>
+          <li>因為答案 <code>x</code> 的長度一定是兩個字串長度的公因數</li>
+          <li>所以我先算 <code>mgcd = gcd(m, n)</code></li>
+        </ul>
+
+        <h3>步驟二：列出 <code>mgcd</code> 的所有因數（由大到小）</h3>
+        <ul>
+          <li>我把所有 <code>mgcd</code> 的因數放進 <code>factor</code></li>
+          <li>這樣可以保證我先試最大的長度，找到就直接回傳（就是「最大」公因字串）</li>
+        </ul>
+
+        <h3>步驟三：對每個候選長度 <code>L</code> 做驗證</h3>
+        <ul>
+          <li>取候選字串 <code>rep = str1.substr(0, L)</code></li>
+          <li>檢查 <code>str1</code> 是否能被 <code>rep</code> 完整拼出來</li>
+          <li>若 <code>str1</code> 成功，再用同樣方法檢查 <code>str2</code></li>
+          <li>若兩邊都完全通過，代表 <code>rep</code> 同時整除兩個字串</li>
+          <li>直接 <code>return rep</code></li>
+        </ul>
+
+        <h3>步驟四：都找不到就回傳空字串</h3>
+        <ul>
+          <li>若所有因數長度都試完仍失敗，代表不存在共同的整除字串</li>
+          <li>回傳 <code>""</code></li>
+        </ul>
+
+        <pre><code class="language-cpp">class Solution {
+public:
+    string gcdOfStrings(string str1, string str2) {
+        int m = str1.size();
+        int n = str2.size();
+        int mgcd = gcd(m, n);
+        vector&lt;int&gt; factor;
+        for (int i = mgcd; i &gt; 0; i--) {
+            if (mgcd % i == 0) {
+                factor.push_back(i);
+            }
+        }
+
+        for (int j = 0; j &lt; factor.size(); j++) {
+            int check1 = 0, check2 = 0;
+            bool check = true;
+            string rep = str1.substr(0, factor[j]);
+            while (check1 &lt; str1.size() &amp;&amp; check) {
+                for (int k = 0; k &lt; factor[j]; k++) {
+                    if (str1[check1 + k] != rep[k]) {
+                        check = false;
+                        break;
+                    }
+                }
+                if (check) {
+                    check1 += factor[j];
+                }
+            }
+
+            while (check2 &lt; str2.size() &amp;&amp; check) {
+                for (int l = 0; l &lt; factor[j]; l++) {
+                    if (str2[check2 + l] != rep[l]) {
+                        check = false;
+                        break;
+                    }
+                }
+                if (check) {
+                    check2 += factor[j];
+                }
+            }
+
+            if (check) {
+                return rep;
+            }
+        }
+        return "";
+    }
+};
+</code></pre>
+
+        <h2 id="approach-2">🧠 解題思路（二）更簡單想法</h2>
+        <p>我後來發現這題其實可以用一個很關鍵的判斷，把整個流程大幅簡化：</p>
+        <ul>
+          <li>如果 <code>str1</code> 和 <code>str2</code> 真的都是由同一個字串 <code>x</code> 重複組成，那它們的「拼接順序」應該不影響結果</li>
+          <li>也就是必須滿足：<code>str1 + str2 == str2 + str1</code></li>
+          <li>只要這個條件成立，答案的長度就一定是 <code>gcd(m, n)</code></li>
+          <li>最後回傳 <code>str1</code> 的前 <code>gcd(m, n)</code> 個字元即可</li>
+        </ul>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>m</code>：<code>str1</code> 的長度</li>
+          <li><code>n</code>：<code>str2</code> 的長度</li>
+          <li><code>rep</code>：<code>gcd(m, n)</code>，也就是答案字串的長度</li>
+        </ul>
+
+        <h3>步驟一：先檢查是否可能有共同的「重複基底」</h3>
+        <pre><code class="language-cpp">if (str1 + str2 != str2 + str1) {
+    return "";
+}
+</code></pre>
+        <ul>
+          <li>如果兩個字串不是由同一個模式重複出來，那拼接後的結果會不一樣</li>
+          <li>這時候代表不可能有共同的 x，直接回傳 <code>""</code></li>
+        </ul>
+
+        <h3>步驟二：用長度的最大公因數決定答案長度</h3>
+        <pre><code class="language-cpp">int rep = gcd(m, n);
+</code></pre>
+        <ul>
+          <li>當 str1、str2 都是同一個字串重複組成時，能同時整除兩者的最大字串長度一定是 <code>gcd(m, n)</code></li>
+        </ul>
+
+        <h3>步驟三：取出答案</h3>
+        <pre><code class="language-cpp">return str1.substr(0, rep);
+</code></pre>
+        <ul>
+          <li>直接取 str1 的前 rep 個字元</li>
+          <li>這段就是最大的共同整除字串</li>
+        </ul>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    string gcdOfStrings(string str1, string str2) {
+        int m = str1.size();
+        int n = str2.size();
+        if (str1 + str2 != str2 + str1) {
+            return "";
+        }
+        int rep = gcd(m, n);
+        return str1.substr(0, rep);
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/greatest-common-divisor-of-strings/description/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-01-08</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value">
+            <span class="post-tags">
+              <span class="post-tag">Math</span>
+              <span class="post-tag">String</span>
+              <span class="post-tag">Easy</span>
+            </span>
+          </span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/leetcode75/1071-greatest-common-divisor-of-strings.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
