@@ -1523,6 +1523,29 @@ body.page-article .article-footer {
   }
 }
 
+/* 平板/手機：TOC 改成左側抽屜（由 navbar 按鈕控制） */
+@media (max-width: 1279px) {
+  body.page-article .article-toc {
+    position: fixed;
+    left: 16px;
+    top: 80px;
+    width: min(80vw, 260px);
+    max-height: calc(100vh - 120px);
+    overflow: auto;
+    transform: translateX(-120%);
+    transition: transform 0.2s ease;
+    z-index: 40;
+  }
+
+  body.page-article .article-toc.open {
+    transform: translateX(0);
+  }
+
+  body.page-article .article-toc ul {
+    display: grid;
+  }
+}
+
 pre code.hljs,
 code.hljs {
   background: transparent !important;
