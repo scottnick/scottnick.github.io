@@ -50,7 +50,7 @@
         <strong>目錄</strong>
         <ul>
           <li><a href="#statement">📘 題目敘述</a></li>
-          <li><a href="#approach">🧠 解題思路（一）但 TLE</a></li>
+          <li><a href="#approach">🧠 解題思路（一）但TLE</a></li>
           <li><a href="#approach-2">🧠 解題思路（二）更簡單想法</a></li>
           <li><a href="#code">💻 程式碼實作</a></li>
           <li><a href="#link">🔗 題目連結</a></li>
@@ -68,7 +68,7 @@
           <li><code>str1</code> 與 <code>str2</code> 只包含英文大寫字母</li>
         </ul>
 
-        <h2 id="approach">🧠 解題思路（一）但 TLE</h2>
+        <h2 id="approach">🧠 解題思路（一）但TLE</h2>
         <p>我的想法是先從「長度」下手：</p>
         <ul>
           <li>如果某個字串 <code>x</code> 能整除 <code>str1</code> 和 <code>str2</code></li>
@@ -92,11 +92,15 @@
           <li><code>check2</code>：在 <code>str2</code> 中，目前比對到的位置（每次成功就往後跳 <code>L</code>）</li>
         </ul>
 
+        <h2>🪜 主要流程步驟</h2>
+
         <h3>步驟一：先求長度的最大公因數 <code>mgcd</code></h3>
         <ul>
           <li>因為答案 <code>x</code> 的長度一定是兩個字串長度的公因數</li>
           <li>所以我先算 <code>mgcd = gcd(m, n)</code></li>
         </ul>
+
+        <hr />
 
         <h3>步驟二：列出 <code>mgcd</code> 的所有因數（由大到小）</h3>
         <ul>
@@ -104,21 +108,40 @@
           <li>這樣可以保證我先試最大的長度，找到就直接回傳（就是「最大」公因字串）</li>
         </ul>
 
+        <hr />
+
         <h3>步驟三：對每個候選長度 <code>L</code> 做驗證</h3>
-        <ul>
+        <p>對於每個 <code>L = factor[j]</code>：</p>
+        <ol>
           <li>取候選字串 <code>rep = str1.substr(0, L)</code></li>
-          <li>檢查 <code>str1</code> 是否能被 <code>rep</code> 完整拼出來</li>
-          <li>若 <code>str1</code> 成功，再用同樣方法檢查 <code>str2</code></li>
-          <li>若兩邊都完全通過，代表 <code>rep</code> 同時整除兩個字串</li>
-          <li>直接 <code>return rep</code></li>
-        </ul>
+          <li>檢查 <code>str1</code> 是否能被 <code>rep</code> 完整拼出來
+            <ul>
+              <li>我用 <code>check1</code> 從 0 開始，每次比對一段長度 <code>L</code></li>
+              <li>只要某段有任何字元不一樣，<code>check = false</code></li>
+            </ul>
+          </li>
+          <li>若 <code>str1</code> 成功，再用同樣方法檢查 <code>str2</code>
+            <ul>
+              <li>用 <code>check2</code> 一段一段比對</li>
+            </ul>
+          </li>
+          <li>若兩邊都完全通過，代表 <code>rep</code> 同時整除兩個字串
+            <ul>
+              <li>直接 <code>return rep</code></li>
+            </ul>
+          </li>
+        </ol>
+
+        <hr />
 
         <h3>步驟四：都找不到就回傳空字串</h3>
         <ul>
-          <li>若所有因數長度都試完仍失敗，代表不存在共同的整除字串</li>
+          <li>若所有因數長度都試完仍失敗</li>
+          <li>代表不存在共同的整除字串</li>
           <li>回傳 <code>""</code></li>
         </ul>
 
+        <h2 id="code">💻 程式碼實作</h2>
         <pre><code class="language-cpp">class Solution {
 public:
     string gcdOfStrings(string str1, string str2) {
@@ -172,7 +195,8 @@ public:
         <h2 id="approach-2">🧠 解題思路（二）更簡單想法</h2>
         <p>我後來發現這題其實可以用一個很關鍵的判斷，把整個流程大幅簡化：</p>
         <ul>
-          <li>如果 <code>str1</code> 和 <code>str2</code> 真的都是由同一個字串 <code>x</code> 重複組成，那它們的「拼接順序」應該不影響結果</li>
+          <li>如果 <code>str1</code> 和 <code>str2</code> 真的都是由同一個字串 <code>x</code> 重複組成</li>
+          <li>那它們的「拼接順序」應該不影響結果</li>
           <li>也就是必須滿足：<code>str1 + str2 == str2 + str1</code></li>
           <li>只要這個條件成立，答案的長度就一定是 <code>gcd(m, n)</code></li>
           <li>最後回傳 <code>str1</code> 的前 <code>gcd(m, n)</code> 個字元即可</li>
@@ -185,22 +209,30 @@ public:
           <li><code>rep</code>：<code>gcd(m, n)</code>，也就是答案字串的長度</li>
         </ul>
 
+        <h2>🪜 主要流程步驟</h2>
+
         <h3>步驟一：先檢查是否可能有共同的「重複基底」</h3>
         <pre><code class="language-cpp">if (str1 + str2 != str2 + str1) {
     return "";
 }
 </code></pre>
         <ul>
-          <li>如果兩個字串不是由同一個模式重複出來，那拼接後的結果會不一樣</li>
+          <li>如果兩個字串不是由同一個模式重複出來</li>
+          <li>那拼接後的結果會不一樣</li>
           <li>這時候代表不可能有共同的 x，直接回傳 <code>""</code></li>
         </ul>
+
+        <hr />
 
         <h3>步驟二：用長度的最大公因數決定答案長度</h3>
         <pre><code class="language-cpp">int rep = gcd(m, n);
 </code></pre>
         <ul>
-          <li>當 str1、str2 都是同一個字串重複組成時，能同時整除兩者的最大字串長度一定是 <code>gcd(m, n)</code></li>
+          <li>當 str1、str2 都是同一個字串重複組成時</li>
+          <li>能同時整除兩者的最大字串長度，一定是 <code>gcd(m, n)</code></li>
         </ul>
+
+        <hr />
 
         <h3>步驟三：取出答案</h3>
         <pre><code class="language-cpp">return str1.substr(0, rep);
@@ -210,7 +242,7 @@ public:
           <li>這段就是最大的共同整除字串</li>
         </ul>
 
-        <h2 id="code">💻 程式碼實作</h2>
+        <h2 id="code-alt">💻 程式碼實作</h2>
         <pre><code class="language-cpp">class Solution {
 public:
     string gcdOfStrings(string str1, string str2) {
