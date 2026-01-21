@@ -115,7 +115,8 @@
   function updateAccordionCounts() {
     document.querySelectorAll('.accordion__content[data-count-id]').forEach((content) => {
       const id = content.dataset.countId;
-      const count = content.querySelectorAll('a, li').length;
+      const selector = content.dataset.countSelector || 'a, li';
+      const count = content.querySelectorAll(selector).length;
       const target = document.querySelector(`.accordion__count[data-count-for="${id}"]`);
       if (target) {
         target.textContent = count.toString();
