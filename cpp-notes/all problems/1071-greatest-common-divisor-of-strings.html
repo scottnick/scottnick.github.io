@@ -51,8 +51,11 @@
         <ul>
           <li><a href="#statement">📘 題目敘述</a></li>
           <li><a href="#approach">🧠 解題思路（一）但TLE</a></li>
+          <li><a href="#steps">🪜 主要流程步驟（一）</a></li>
           <li><a href="#approach-2">🧠 解題思路（二）更簡單想法</a></li>
-          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#steps-2">🪜 主要流程步驟（二）</a></li>
+          <li><a href="#code">💻 程式碼實作（一）</a></li>
+          <li><a href="#code-alt">💻 程式碼實作（二）</a></li>
           <li><a href="#link">🔗 題目連結</a></li>
         </ul>
       </aside>
@@ -92,7 +95,7 @@
           <li><code>check2</code>：在 <code>str2</code> 中，目前比對到的位置（每次成功就往後跳 <code>L</code>）</li>
         </ul>
 
-        <h2>🪜 主要流程步驟</h2>
+        <h2 id="steps">🪜 主要流程步驟（一）</h2>
 
         <h3>步驟一：先求長度的最大公因數 <code>mgcd</code></h3>
         <ul>
@@ -209,7 +212,7 @@ public:
           <li><code>rep</code>：<code>gcd(m, n)</code>，也就是答案字串的長度</li>
         </ul>
 
-        <h2>🪜 主要流程步驟</h2>
+        <h2 id="steps-2">🪜 主要流程步驟（二）</h2>
 
         <h3>步驟一：先檢查是否可能有共同的「重複基底」</h3>
         <pre><code class="language-cpp">if (str1 + str2 != str2 + str1) {
