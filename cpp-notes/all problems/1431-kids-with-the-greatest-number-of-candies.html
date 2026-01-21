@@ -1,0 +1,199 @@
+<!-- all problems/1431-kids-with-the-greatest-number-of-candies.html: LeetCode 1431 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>1431. Kids With the Greatest Number of Candies</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="toc-fab" id="article-toc-toggle" type="button" aria-expanded="false" aria-label="開啟目錄">
+        ☰
+      </button>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="index.html">All problems</a>
+      <span aria-hidden="true">/</span>
+      <span>1431. Kids With the Greatest Number of Candies</span>
+    </nav>
+
+    <section class="hero">
+      <h1>1431. Kids With the Greatest Number of Candies</h1>
+      <p><strong>練習日期：</strong>2026-01-09</p>
+      <p><strong>難度：</strong>Easy</p>
+      <p><strong>類型：</strong>Array</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+<strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給定一個整數陣列 <code>candies</code>，其中 <code>candies[i]</code> 表示第 <code>i</code> 個小孩目前擁有的糖果數量，以及一個整數 <code>extraCandies</code>。</p>
+        <p>對於每一個小孩，請判斷：</p>
+        <blockquote>
+          如果把 <code>extraCandies</code> 全部給這個小孩，他是否能成為「糖果數量最多的小孩（可並列）」。
+        </blockquote>
+        <p>請回傳一個布林陣列，對應每個小孩的結果。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>2 ≤ candies.length ≤ 100</code></li>
+          <li><code>1 ≤ candies[i] ≤ 100</code></li>
+          <li><code>1 ≤ extraCandies ≤ 50</code></li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>我的想法很直接，把題目拆成兩個步驟來看：</p>
+        <ol>
+          <li><strong>先找出目前所有小孩中，糖果數量的最大值</strong></li>
+          <li><strong>再逐一檢查</strong>：如果某個小孩拿到 <code>extraCandies</code> 之後，糖果數量是否能「達到或超過」這個最大值</li>
+        </ol>
+        <p>只要能達到，就代表這個小孩「有可能成為糖果最多的人」。</p>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>candies</code>：每個小孩目前擁有的糖果數</li>
+          <li><code>extraCandies</code>：可以額外給某一個小孩的糖果數</li>
+          <li><code>max</code>：目前所有小孩中，最大的糖果數量</li>
+          <li><code>great</code>：結果用的布林陣列，<code>true / false</code> 對應每個小孩</li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+
+        <h3>步驟一：找出目前的最大糖果數</h3>
+        <pre><code class="language-cpp">for (int i = 0; i &lt; candies.size(); i++) {
+    if (candies[i] &gt; max) {
+        max = candies[i];
+    }
+}
+</code></pre>
+        <p>這個迴圈的作用是：</p>
+        <ul>
+          <li>掃描整個 candies 陣列</li>
+          <li>找出目前所有小孩中，糖果數量的最大值</li>
+          <li>這個 max 會作為後續比較的標準</li>
+        </ul>
+
+        <hr />
+
+        <h3>步驟二：逐一判斷每個小孩是否能達到最大值</h3>
+        <pre><code class="language-cpp">for (int j = 0; j &lt; candies.size(); j++) {
+    if (candies[j] + extraCandies &gt;= max) {
+        great.push_back(true);
+    } else {
+        great.push_back(false);
+    }
+}
+</code></pre>
+        <p>對每一個小孩：</p>
+        <ul>
+          <li>假設把 extraCandies 全部給他</li>
+          <li>檢查 <code>candies[j] + extraCandies</code> 是否大於等於 max</li>
+          <li>是 → true</li>
+          <li>否 → false</li>
+        </ul>
+        <p>這樣可以保證：</p>
+        <ul>
+          <li>不需要真的修改 candies</li>
+          <li>只是在「假設情況下」做判斷</li>
+        </ul>
+
+        <hr />
+
+        <h3>為什麼這樣做是正確的？</h3>
+        <ul>
+          <li>題目允許「並列最多」</li>
+          <li>所以判斷條件是 <code>&gt;= max</code>，而不是一定要大於</li>
+          <li>先找最大值，再統一比較，邏輯清楚也避免重複計算</li>
+        </ul>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    vector&lt;bool&gt; kidsWithCandies(vector&lt;int&gt;&amp; candies, int extraCandies) {
+        int max = 0;
+        vector&lt;bool&gt; great;
+        for (int i = 0; i &lt; candies.size(); i++) {
+            if (candies[i] &gt; max) {
+                max = candies[i];
+            }
+        }
+        for (int j = 0; j &lt; candies.size(); j++) {
+            if (candies[j] + extraCandies &gt;= max) {
+                great.push_back(true);
+            } else {
+                great.push_back(false);
+            }
+        }
+        return great;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/kids-with-the-greatest-number-of-candies/description/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-01-09</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value">
+            <span class="post-tags">
+              <span class="post-tag">Array</span>
+              <span class="post-tag">Easy</span>
+            </span>
+          </span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/all%20problems/1431-kids-with-the-greatest-number-of-candies.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>

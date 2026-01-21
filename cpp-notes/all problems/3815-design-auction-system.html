@@ -1,0 +1,288 @@
+<!-- all problems/3815-design-auction-system.html: Weekly Contest 485 Q3 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3815. Design Auction System</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="toc-fab" id="article-toc-toggle" type="button" aria-expanded="false" aria-label="開啟目錄">
+        ☰
+      </button>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="index.html">All problems</a>
+      <span aria-hidden="true">/</span>
+      <span>3815. Design Auction System</span>
+    </nav>
+
+    <section class="hero">
+      <h1>3815. Design Auction System</h1>
+      <p><strong>練習日期：</strong>2026-01-18</p>
+      <p><strong>難度：</strong>Medium</p>
+      <p><strong>類型：</strong>Weekly Contest 485</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+<strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路（但最後TLE）</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>你要設計一個即時拍賣系統，用來管理多位使用者對多個商品的出價。</p>
+        <p>每一筆出價都包含：</p>
+        <ul>
+          <li><code>userId</code></li>
+          <li><code>itemId</code></li>
+          <li><code>bidAmount</code></li>
+        </ul>
+        <p>請實作 <code>AuctionSystem</code> 類別，支援以下操作：</p>
+        <ul>
+          <li><code>AuctionSystem()</code>：初始化拍賣系統</li>
+          <li><code>addBid(int userId, int itemId, int bidAmount)</code>：
+            <ul>
+              <li>新增一筆使用者 <code>userId</code> 對商品 <code>itemId</code> 的出價 <code>bidAmount</code>。</li>
+              <li>若同一個 <code>userId</code> 已經對該 <code>itemId</code> 出價過，則用新的 <code>bidAmount</code> 覆蓋原本出價。</li>
+            </ul>
+          </li>
+          <li><code>updateBid(int userId, int itemId, int newAmount)</code>：
+            <ul>
+              <li>更新 <code>userId</code> 對 <code>itemId</code> 的既有出價為 <code>newAmount</code>。（題目保證這筆出價存在）</li>
+            </ul>
+          </li>
+          <li><code>removeBid(int userId, int itemId)</code>：
+            <ul>
+              <li>移除 <code>userId</code> 對 <code>itemId</code> 的出價。（題目保證這筆出價存在）</li>
+            </ul>
+          </li>
+          <li><code>getHighestBidder(int itemId)</code>：
+            <ul>
+              <li>回傳 <code>itemId</code> 當前最高出價者的 <code>userId</code>。</li>
+              <li>若最高出價金額相同，回傳 <code>userId</code> 較大的那位。</li>
+              <li>若該商品沒有任何出價，回傳 <code>-1</code>。</li>
+            </ul>
+          </li>
+        </ul>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>1 &lt;= userId, itemId &lt;= 5 * 10^4</code></li>
+          <li><code>1 &lt;= bidAmount, newAmount &lt;= 10^9</code></li>
+          <li><code>addBid / updateBid / removeBid / getHighestBidder</code> 總呼叫次數最多 <code>5 * 10^4</code></li>
+          <li>題目保證 <code>updateBid</code> 與 <code>removeBid</code> 的操作一定是有效出價</li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路（但最後TLE）</h2>
+        <p>我的做法是把每個 <code>itemId</code> 的出價記錄分開存，並且用「兩個 vector 對齊」的方式保存出價資料：</p>
+        <ul>
+          <li><code>users[itemId]</code>：存所有對該商品出價的 <code>userId</code></li>
+          <li><code>bids[itemId]</code>：存對應的出價金額，並且和 <code>users[itemId]</code> 用同一個索引對齊</li>
+        </ul>
+        <p>所以對同一個 <code>itemId</code> 來說：</p>
+        <ul>
+          <li><code>users[itemId][k]</code> 的出價金額就是 <code>bids[itemId][k]</code></li>
+        </ul>
+        <p>接下來每個操作都只要在該商品的 vector 裡做線性掃描即可。</p>
+
+        <h3 id="variables">所有變數</h3>
+        <ul>
+          <li><code>users</code>：二維 vector，<code>users[itemId]</code> 存該商品所有出價者的 <code>userId</code></li>
+          <li><code>bids</code>：二維 vector，<code>bids[itemId]</code> 存該商品所有出價金額（索引和 users 對齊）</li>
+          <li><code>hprice</code>：在 <code>getHighestBidder</code> 中，當前找到的最高出價金額</li>
+          <li><code>buser</code>：在 <code>getHighestBidder</code> 中，對應最高出價者的 <code>userId</code></li>
+          <li><code>u</code>：掃描某個 <code>itemId</code> 時取出的使用者 id</li>
+          <li><code>a</code>：掃描某個 <code>itemId</code> 時取出的出價金額</li>
+          <li><code>i</code>：掃描 <code>users[itemId]</code> / <code>bids[itemId]</code> 的索引</li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+        <h3>1. 建構子：初始化</h3>
+        <ul>
+          <li>我用 <code>assign(50001, {})</code> 先建立 <code>itemId = 0~50000</code> 的容器</li>
+          <li>讓每個 <code>itemId</code> 都有自己的出價列表（一開始是空的）</li>
+          <li>之後存取 <code>users[itemId]</code> / <code>bids[itemId]</code> 都不會越界</li>
+        </ul>
+        <hr />
+        <h3>2. <code>addBid(userId, itemId, bidAmount)</code>：新增 / 覆蓋出價</h3>
+        <p>我分兩種情況處理：</p>
+        <h4>情況一：同一個 userId 已經出價過</h4>
+        <ul>
+          <li>線性掃描 <code>users[itemId]</code></li>
+          <li>若找到 <code>users[itemId][i] == userId</code>
+            <ul>
+              <li>直接覆蓋 <code>bids[itemId][i] = bidAmount</code></li>
+              <li>然後 <code>return</code></li>
+            </ul>
+          </li>
+        </ul>
+        <h4>情況二：userId 第一次對此 itemId 出價</h4>
+        <ul>
+          <li>把 <code>userId</code> 加到 <code>users[itemId]</code></li>
+          <li>把 <code>bidAmount</code> 加到 <code>bids[itemId]</code></li>
+          <li>兩個 vector 的索引保持對齊</li>
+        </ul>
+        <hr />
+        <h3>3. <code>updateBid(userId, itemId, newAmount)</code>：更新既有出價</h3>
+        <ul>
+          <li>題目保證這筆出價一定存在</li>
+          <li>所以我直接線性掃描 <code>users[itemId]</code></li>
+          <li>找到對應 <code>userId</code> 後，把 <code>bids[itemId][i]</code> 改成 <code>newAmount</code>，然後 <code>return</code></li>
+        </ul>
+        <hr />
+        <h3>4. <code>removeBid(userId, itemId)</code>：移除出價</h3>
+        <ul>
+          <li>題目保證這筆出價一定存在</li>
+          <li>我線性掃描 <code>users[itemId]</code> 找到 <code>userId</code> 的位置 <code>i</code></li>
+          <li>一旦找到：
+            <ul>
+              <li><code>users[itemId].erase(users[itemId].begin() + i)</code></li>
+              <li><code>bids[itemId].erase(bids[itemId].begin() + i)</code></li>
+            </ul>
+          </li>
+          <li>這樣可以確保兩個 vector 仍然索引對齊</li>
+        </ul>
+        <hr />
+        <h3>5. <code>getHighestBidder(itemId)</code>：找最高出價者</h3>
+        <h4>情況一：該商品沒有任何出價</h4>
+        <ul>
+          <li><code>users[itemId].empty()</code> → 回傳 <code>-1</code></li>
+        </ul>
+        <h4>情況二：有出價</h4>
+        <ul>
+          <li>線性掃描所有出價 <code>(userId, bidAmount)</code></li>
+          <li>若出價金額 <code>a</code> 比目前 <code>hprice</code> 大 → 更新 <code>(hprice, buser)</code></li>
+          <li>若出價金額相同 <code>a == hprice</code>
+            <ul>
+              <li>題目規定要回傳 <code>userId</code> 較大的</li>
+              <li>所以若 <code>u &gt; buser</code> → 更新 <code>buser</code></li>
+            </ul>
+          </li>
+        </ul>
+        <p>最後回傳 <code>buser</code>。</p>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class AuctionSystem {
+public:
+    vector&lt;vector&lt;int&gt;&gt; users;
+    vector&lt;vector&lt;int&gt;&gt; bids;
+
+    AuctionSystem() {
+        users.assign(50001, {});
+        bids.assign(50001, {});
+    }
+
+    void addBid(int userId, int itemId, int bidAmount) {
+        for (int i = 0; i &lt; (int)users[itemId].size(); i++) {
+            if (users[itemId][i] == userId) {
+                bids[itemId][i] = bidAmount;
+                return;
+            }
+        }
+        users[itemId].push_back(userId);
+        bids[itemId].push_back(bidAmount);
+    }
+
+    void updateBid(int userId, int itemId, int newAmount) {
+        for (int i = 0; i &lt; (int)users[itemId].size(); i++) {
+            if (users[itemId][i] == userId) {
+                bids[itemId][i] = newAmount;
+                return;
+            }
+        }
+    }
+
+    void removeBid(int userId, int itemId) {
+        for (int i = 0; i &lt; (int)users[itemId].size(); i++) {
+            if (users[itemId][i] == userId) {
+                users[itemId].erase(users[itemId].begin() + i);
+                bids[itemId].erase(bids[itemId].begin() + i);
+                return;
+            }
+        }
+    }
+
+    int getHighestBidder(int itemId) {
+        if (users[itemId].empty()) {
+            return -1;
+        }
+        int hprice = -1;
+        int buser = -1;
+        for (int i = 0; i &lt; (int)users[itemId].size(); i++) {
+            int u = users[itemId][i];
+            int a = bids[itemId][i];
+            if (a &gt; hprice || (a == hprice &amp;&amp; u &gt; buser)) {
+                hprice = a;
+                buser = u;
+            }
+        }
+        return buser;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/design-auction-system/description/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-01-18</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value">
+            <span class="post-tags">
+              <span class="post-tag">Weekly Contest 485</span>
+              <span class="post-tag">Medium</span>
+            </span>
+          </span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/all%20problems/3815-design-auction-system.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>

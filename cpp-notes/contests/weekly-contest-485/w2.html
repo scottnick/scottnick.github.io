@@ -1,0 +1,209 @@
+<!-- contests/weekly-contest-485/w2.html: Weekly Contest 485 Q2 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Q2. Maximum Capacity Within Budget</title>
+  <link rel="stylesheet" href="../../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../../personal.html">scottnick 個人網頁</a>
+      <button class="toc-fab" id="article-toc-toggle" type="button" aria-expanded="false" aria-label="開啟目錄">
+        ☰
+      </button>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../../index.html">主頁</a>
+        <a href="../../../courses.html">修課紀錄</a>
+        <a href="../../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="../index.html">Contests</a>
+      <span aria-hidden="true">/</span>
+      <a href="../weekly-contest-485.html">Weekly Contest 485</a>
+      <span aria-hidden="true">/</span>
+      <span>Q2. Maximum Capacity Within Budget</span>
+    </nav>
+
+    <section class="hero">
+      <h1>Q2. Maximum Capacity Within Budget</h1>
+      <p><strong>練習日期：</strong>2026-01-18</p>
+      <p><strong>類型：</strong>Weekly Contest 485</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+<strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路（但最後TLE）</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給定兩個長度相同的整數陣列：</p>
+        <ul>
+          <li><code>costs[i]</code>：第 <code>i</code> 個設備的花費</li>
+          <li><code>capacity[i]</code>：第 <code>i</code> 個設備所提供的容量</li>
+        </ul>
+        <p>以及一個整數 <code>budget</code>，代表可使用的總預算。</p>
+        <p>你可以選擇：</p>
+        <ul>
+          <li><strong>不選任何設備</strong></li>
+          <li><strong>只選一個設備</strong></li>
+          <li><strong>或選兩個不同的設備</strong></li>
+        </ul>
+        <p>前提是所選設備的總花費 <strong>小於 <code>budget</code></strong>。</p>
+        <p>請回傳在預算限制內，<strong>可以達到的最大總容量</strong>。</p>
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>1 ≤ costs.length == capacity.length ≤ 100</code></li>
+          <li><code>0 ≤ costs[i], capacity[i], budget ≤ 10^5</code></li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路（但最後TLE）</h2>
+        <p>我的想法是直接把所有「可能的選擇情況」都列出來比較：</p>
+        <p>這題最多只能選 <strong>兩個設備</strong>，因此所有情況其實只有三種：</p>
+        <ol>
+          <li>不選任何設備（容量為 0）</li>
+          <li>只選一個設備</li>
+          <li>選兩個不同的設備</li>
+        </ol>
+        <p>因為陣列長度不大，我選擇用 <strong>暴力枚舉</strong> 的方式，
+          直接檢查每一種可能，並在符合預算的情況下更新最大容量。</p>
+
+        <h3 id="variables">所有變數</h3>
+        <ul>
+          <li><code>n</code>：設備的數量（<code>costs.size()</code>）</li>
+          <li><code>ncap</code>：目前找到的最大總容量</li>
+          <li><code>i, j</code>：用來枚舉設備索引的迴圈變數</li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+        <h3>第一部分：只選一個設備</h3>
+        <p>我先考慮「只選一個設備」的情況：</p>
+        <ul>
+          <li>逐一檢查每個設備 <code>i</code></li>
+          <li>若 <code>costs[i] &lt; budget</code>
+            <ul>
+              <li>表示單獨購買這個設備是可行的</li>
+            </ul>
+          </li>
+          <li>在所有可行的設備中
+            <ul>
+              <li>持續更新最大的 <code>capacity[i]</code></li>
+            </ul>
+          </li>
+        </ul>
+        <p>這一步是為了處理「最佳解只需要一個設備」的情況。</p>
+        <hr />
+        <h3>第二部分：選兩個不同的設備</h3>
+        <p>接著考慮「選兩個設備」的情況：</p>
+        <ul>
+          <li>使用兩層迴圈枚舉所有 <code>(i, j)</code> 且 <code>i &lt; j</code></li>
+          <li>對每一組設備：
+            <ul>
+              <li>檢查 <code>costs[i] + costs[j] &lt; budget</code></li>
+              <li>若符合預算限制
+                <ul>
+                  <li>計算總容量 <code>capacity[i] + capacity[j]</code></li>
+                  <li>與目前的 <code>ncap</code> 比較，更新最大值</li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+        <p>這樣可以確保所有「兩設備組合」都被完整檢查過。</p>
+        <hr />
+        <h3>為什麼這樣做是可行的？</h3>
+        <ul>
+          <li>題目限制最多只能選兩個設備</li>
+          <li>資料規模允許 <code>O(n^2)</code> 的解法</li>
+          <li>暴力枚舉能完整涵蓋所有可能情況</li>
+          <li>邏輯直覺、好驗證、不容易寫錯</li>
+        </ul>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    int maxCapacity(vector&lt;int&gt;&amp; costs, vector&lt;int&gt;&amp; capacity, int budget) {
+        int ncap = 0;
+        int n = costs.size();
+
+        // 只選一個設備
+        for (int i = 0; i &lt; n; i++) {
+            if (costs[i] &lt; budget &amp;&amp; capacity[i] &gt; ncap) {
+                ncap = capacity[i];
+            }
+        }
+
+        // 選兩個不同的設備
+        for (int i = 0; i &lt; n - 1; i++) {
+            for (int j = i + 1; j &lt; n; j++) {
+                if (costs[i] + costs[j] &lt; budget) {
+                    if (capacity[i] + capacity[j] &gt; ncap) {
+                        ncap = capacity[i] + capacity[j];
+                    }
+                }
+            }
+        }
+
+        return ncap;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/contest/weekly-contest-485/problems/maximum-capacity-within-budget/description/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-01-18</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value">
+            <span class="post-tags">
+              <span class="post-tag">Weekly Contest 485</span>
+            </span>
+          </span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/contests/weekly-contest-485/w2.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../../script.js"></script>
+</body>
+</html>

@@ -1,0 +1,199 @@
+<!-- neetcode150/longest-substring-without-repeating-characters.html: NeetCode 150 文章 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Longest Substring Without Repeating Characters</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="toc-fab" id="article-toc-toggle" type="button" aria-expanded="false" aria-label="開啟目錄">
+        ☰
+      </button>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="../neetcode150/index.html">NeetCode 150</a>
+      <span aria-hidden="true">/</span>
+      <span>3. Longest Substring Without Repeating Characters</span>
+    </nav>
+
+    <section class="hero">
+      <h1>3. Longest Substring Without Repeating Characters</h1>
+      <p><strong>練習日期：</strong>2025-12-29</p>
+      <p><strong>難度：</strong>Medium</p>
+      <p><strong>類型：</strong>Hash Table、String、Sliding Window</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+<strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給定一個字串 <code>s</code>，請找出其中「不包含重複字元」的最長子字串長度。</p>
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>0 ≤ s.length ≤ 5 × 10^4</code></li>
+          <li><code>s</code> 由英文字母、數字、符號與空白字元組成</li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>我把這題想成一個「從左到右掃描字串，同時維持一段目前不重複的連續區間」的過程。</p>
+        <p>在掃描的同時，我會隨時記錄目前這段區間的長度，並更新目前看過的最大值。</p>
+
+        <h3 id="variables">所有變數</h3>
+        <ul>
+          <li><code>sub</code>：目前維持的「不包含重複字元」的子字串，可以視為一個直覺版的滑動視窗</li>
+          <li><code>ans</code>：目前為止找到的最長不重複子字串長度</li>
+          <li><code>check</code>：用來標記「這一輪是否已經處理過重複字元」</li>
+        </ul>
+        <hr />
+        <p>一開始的處理方式是：</p>
+        <ul>
+          <li>若字串為空，直接回傳 0</li>
+          <li>否則先將 <code>sub</code> 設為第一個字元，代表目前視窗長度為 1</li>
+          <li>接著從第二個字元開始，逐一往右掃描</li>
+        </ul>
+        <hr />
+        <p>接下來我依序處理每一個 <code>s[i]</code>，會出現以下幾種情況：</p>
+
+        <h3>情況一：<code>s[i]</code> 沒有出現在 <code>sub</code> 中（沒有重複）</h3>
+        <ul>
+          <li>表示目前的子字串仍然符合「不重複」的條件</li>
+          <li>可以直接將 <code>s[i]</code> 加到 <code>sub</code> 後面</li>
+          <li>視窗向右擴張一格</li>
+        </ul>
+        <hr />
+        <h3>情況二：<code>s[i]</code> 出現在 <code>sub</code> 中（發生重複）</h3>
+        <ul>
+          <li>代表若直接加入 <code>s[i]</code>，子字串中會出現重複字元</li>
+          <li>因此需要將子字串的左邊界往右移動</li>
+        </ul>
+        <p>當在 <code>sub[j]</code> 找到與 <code>s[i]</code> 相同的字元時：</p>
+        <ul>
+          <li>將 <code>sub</code> 改成 <code>sub.substr(j + 1)</code>
+            <ul>
+              <li>也就是捨棄重複字元以及它之前的所有字元</li>
+            </ul>
+          </li>
+          <li>再將目前的 <code>s[i]</code> 加入新的 <code>sub</code></li>
+          <li>並將 <code>check</code> 設為 <code>true</code>，表示這一輪已經處理過重複情況</li>
+        </ul>
+        <p>這樣可以確保新的 <code>sub</code> 仍然是不包含重複字元的連續子字串。</p>
+        <hr />
+        <h3>為什麼要在內層迴圈中更新 <code>ans</code>？</h3>
+        <p>在掃描 <code>sub</code> 的過程中：</p>
+        <ul>
+          <li><code>sub</code> 代表的是當下合法的子字串</li>
+          <li>無論接下來是否遇到重複，這一刻的長度都可能成為目前的最大值</li>
+        </ul>
+        <p>因此我會在內層迴圈中，用目前的 <code>sub.size()</code> 持續更新 <code>ans</code>。</p>
+        <p>另外，在整個掃描結束後：</p>
+        <ul>
+          <li>再額外比較一次最後的 <code>sub.size()</code>，避免漏掉最後一段子字串</li>
+        </ul>
+        <hr />
+        <h3>最後回傳</h3>
+        <ul>
+          <li>回傳 <code>ans</code></li>
+          <li>代表整個字串中，不包含重複字元的最長子字串長度</li>
+        </ul>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    int lengthOfLongestSubstring(string s) {
+        if (s.empty()) {
+            return 0;
+        }
+        string sub = s.substr(0, 1);
+        int ans = 0;
+        for (int i = 1; i &lt; s.size(); i++) {
+            bool check = false;
+            for (int j = 0; j &lt; sub.size(); j++) {
+                if (ans &lt; sub.size()) {
+                    ans = sub.size();
+                }
+                if (s[i] == sub[j]) {
+                    sub = sub.substr(j + 1);
+                    sub.push_back(s[i]);
+                    check = true;
+                    break;
+                }
+            }
+            if (!check) {
+                sub.push_back(s[i]);
+            }
+        }
+        ans = max(ans, (int)sub.size());
+        return ans;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/longest-substring-without-repeating-characters/description/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2025-12-29</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value">
+            <span class="post-tags">
+              <span class="post-tag">Hash Table</span>
+              <span class="post-tag">String</span>
+              <span class="post-tag">Sliding Window</span>
+              <span class="post-tag">Medium</span>
+            </span>
+          </span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/neetcode150/longest-substring-without-repeating-characters.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>

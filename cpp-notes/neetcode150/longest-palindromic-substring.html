@@ -1,0 +1,323 @@
+<!-- neetcode150/longest-palindromic-substring.html: NeetCode 150 文章 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Longest Palindromic Substring</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="toc-fab" id="article-toc-toggle" type="button" aria-expanded="false" aria-label="開啟目錄">
+        ☰
+      </button>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="../neetcode150/index.html">NeetCode 150</a>
+      <span aria-hidden="true">/</span>
+      <span>5. Longest Palindromic Substring</span>
+    </nav>
+
+    <section class="hero">
+      <h1>5. Longest Palindromic Substring</h1>
+      <p><strong>練習日期：</strong>2025-12-30</p>
+      <p><strong>難度：</strong>Medium</p>
+      <p><strong>類型：</strong>Two Pointers、String、Dynamic Programming</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+<strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路 (一) 直覺想法</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#dp">🧠 解題思路（二）：DP（動態規劃）</a></li>
+          <li><a href="#dp-code">💻 程式碼實作（DP 版本）</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給定一個字串 <code>s</code>，請找出 <code>s</code> 中最長的迴文子字串（palindromic substring）。</p>
+        <p>迴文字串指的是：從左往右讀與從右往左讀完全相同的字串。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>1 ≤ s.length ≤ 1000</code></li>
+          <li><code>s</code> 只包含英文字母與數字</li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路 (一) 直覺想法</h2>
+        <p>我把這題想成「找迴文的中心，然後往外擴張」的過程。</p>
+        <p>因為迴文一定是左右對稱，所以只要先確定中心位置，就能往外一層一層比對。</p>
+        <p>我的做法分成三大步：</p>
+        <ol>
+          <li>先處理字串長度很小的邊界情況（長度 1 或 2）</li>
+          <li>接著先找「偶數長度」迴文（中心在兩個字中間）</li>
+          <li>再找「奇數長度」迴文（中心在某一個字上）</li>
+        </ol>
+        <p>這樣做的原因是：迴文的中心型態只有兩種（偶數中心 / 奇數中心），把它們分開處理會比較直覺。</p>
+        <hr />
+
+        <h3 id="variables">所有變數</h3>
+        <ul>
+          <li><code>best</code>：目前找到的最長迴文子字串，一開始先設為第一個字元</li>
+          <li><code>now</code>：在某個中心展開時，目前正在形成的迴文子字串（暫存用）</li>
+        </ul>
+        <hr />
+
+        <h3>步驟一：先處理長度 1 或 2 的情況</h3>
+        <ul>
+          <li>若 <code>s.size() == 1</code>：答案就是整個字串本身</li>
+          <li>若 <code>s.size() == 2</code>：
+            <ul>
+              <li>若兩個字相同，整個字串就是迴文，回傳 <code>s</code></li>
+              <li>否則最長迴文只能是任意一個單字元，回傳 <code>best</code></li>
+            </ul>
+          </li>
+        </ul>
+        <p>這樣做是為了避免後面展開時遇到不必要的邊界麻煩，也讓邏輯更乾淨。</p>
+        <hr />
+
+        <h3>步驟二：處理「偶數長度」迴文（中心在 i 和 i+1 之間）</h3>
+        <p>偶數長度迴文的特徵是：中間會有兩個相同的字元，例如 <code>"bb"</code>。</p>
+        <p>因此我先枚舉每一個可能的中心 <code>(i, i+1)</code>：</p>
+        <ul>
+          <li>只有當 <code>s[i] == s[i+1]</code> 時，才有可能形成偶數迴文</li>
+          <li>一旦確認中心成立，就從這個中心向外擴張，比較左右兩邊是否仍相等</li>
+          <li>若左右仍相等，就把迴文擴大；一旦不相等就停止</li>
+        </ul>
+        <hr />
+
+        <h3>步驟三：處理「奇數長度」迴文（中心在 i+1）</h3>
+        <p>奇數長度迴文的特徵是：中間會有一個中心字元，例如 <code>"aba"</code> 的中心是 <code>'b'</code>。</p>
+        <p>我的寫法是把中心視為 <code>(i, i+2)</code> 這種「左右對稱的兩個點」：</p>
+        <ul>
+          <li>只有當 <code>s[i] == s[i+2]</code> 時，才表示以 <code>i+1</code> 為中心至少能形成長度 3 的迴文</li>
+          <li>一旦確認中心成立，就同樣向外擴張，比較更外層的左右字元是否相等</li>
+          <li>若左右仍相等就繼續擴大；不相等就停止</li>
+        </ul>
+        <hr />
+
+        <h3>每次擴充字串後要做什麼？</h3>
+        <p>不論是偶數中心或奇數中心，只要我目前形成的迴文 <code>now</code> 長度超過 <code>best</code>，就立刻更新：</p>
+        <ul>
+          <li><code>best = now</code></li>
+        </ul>
+        <p>最後回傳 <code>best</code>，就是全域最長的迴文子字串。</p>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    string longestPalindrome(string s) {
+        string best = s.substr(0, 1);
+        if (s.size() == 1) {
+            return best;
+        }
+        if (s.size() == 2) {
+            if (s[0] == s[1]) {
+                return s;
+            } else {
+                return best;
+            }
+        }
+        for (int i = 0; i < s.size() - 1; i++) {
+            if (s[i] == s[(i + 1)]) {
+                string now = "";
+                for (int j = i; (j >= 0) && (2 * i + 1 - j < s.size()); j--) {
+                    if (s[j] == s[2 * i + 1 - j]) {
+                        now = s[j] + now;
+                        now.push_back(s[2 * i + 1 - j]);
+                    } else {
+                        break;
+                    }
+                    if (now.size() > best.size()) {
+                        best = now;
+                    }
+                }
+            }
+        }
+        for (int i = 0; i < s.size() - 2; i++) {
+            if (s[i] == s[(i + 2)]) {
+                string now = s.substr(i + 1, 1);
+                for (int j = i; (j >= 0) && (2 * i + 2 - j < s.size()); j--) {
+                    if (s[j] == s[2 * i + 2 - j]) {
+                        now = s[j] + now;
+                        now.push_back(s[2 * i + 2 - j]);
+                    } else {
+                        break;
+                    }
+                    if (now.size() > best.size()) {
+                        best = now;
+                    }
+                }
+            }
+        }
+        return best;
+    }
+};
+</code></pre>
+
+        <h2 id="dp">🧠 解題思路（二）：DP（動態規劃）</h2>
+        <p>參考了一下官方提供解法，利用 Dynamic programming 解題。</p>
+        <p>先用一個表格記錄「某一段子字串是不是迴文」，之後就能用更小的區間推導更大的區間。</p>
+        <hr />
+
+        <h3>DP 的想法</h3>
+        <p>我建立一個二維 bool 陣列 <code>dp</code>：</p>
+        <ul>
+          <li><code>dp[i][j] = true</code> 表示 <code>s[i..j]</code>（從 i 到 j 的子字串）是迴文</li>
+          <li><code>dp[i][j] = false</code> 表示不是迴文</li>
+        </ul>
+        <p>核心轉移關係是：</p>
+        <ul>
+          <li>如果 <code>s[i] == s[j]</code>，且內層的子字串 <code>s[i+1..j-1]</code> 是迴文，那麼 <code>s[i..j]</code> 也是迴文</li>
+        </ul>
+        <p>也就是：</p>
+        <p><code>dp[i][j] = (s[i] == s[j]) && dp[i+1][j-1]</code></p>
+        <hr />
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>start</code>：目前最長迴文的起點</li>
+          <li><code>len</code>：目前最長迴文的長度</li>
+        </ul>
+        <p>最後回傳 <code>s.substr(start, len)</code>。</p>
+        <hr />
+
+        <h3>初始化（先處理長度 1 與 2）</h3>
+        <p>因為 DP 需要從小區間開始建立：</p>
+        <h4>長度 1</h4>
+        <p>任何單一字元一定是迴文：</p>
+        <ul>
+          <li><code>dp[i][i] = true</code></li>
+        </ul>
+        <h4>長度 2</h4>
+        <ul>
+          <li>若 <code>s[j] == s[j+1]</code>，則 <code>dp[j][j+1] = true</code></li>
+          <li>同時更新 <code>start = j</code>、<code>len = 2</code></li>
+        </ul>
+        <hr />
+
+        <h3>狀態轉移（長度 ≥ 3）</h3>
+        <p>接著我用 <code>k</code> 表示子字串長度（從 3 一路做到 n）：</p>
+        <ul>
+          <li>枚舉起點 <code>l</code></li>
+          <li>終點就是 <code>r = l + k - 1</code></li>
+          <li>只要：
+            <ul>
+              <li><code>s[l] == s[r]</code>（首尾相同）</li>
+              <li><code>dp[l+1][r-1] == true</code>（中間那段也是迴文）</li>
+            </ul>
+          </li>
+          <li>就能推出 <code>dp[l][r] = true</code></li>
+        </ul>
+        <p>並且每次找到更長的迴文，就更新：</p>
+        <ul>
+          <li><code>start = l</code></li>
+          <li><code>len = k</code></li>
+        </ul>
+        <hr />
+
+        <h3>最後回傳</h3>
+        <ul>
+          <li>回傳 <code>s.substr(start, len)</code>，就是最長迴文子字串</li>
+        </ul>
+
+        <h2 id="dp-code">💻 程式碼實作（DP 版本）</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    string longestPalindrome(string s) {
+        int n = s.size();
+        int start = 0;
+        int len = 1;
+        if (n <= 1) {
+            return s;
+        }
+        vector&lt;vector&lt;bool&gt;&gt; dp(n, vector&lt;bool&gt;(n, false));
+        // dp[i][j]：看 s[i] 到 s[j] 是否為迴文
+
+        for (int i = 0; i < n; i++) {
+            dp[i][i] = true;
+        }
+        for (int j = 0; j < n - 1; j++) {
+            if (s[j] == s[j + 1]) {
+                dp[j][j + 1] = true;
+                start = j;
+                len = 2;
+            }
+        }
+        for (int k = 3; k <= n; k++) {
+            for (int l = 0; l < n - k + 1; l++) {
+                if ((s[l] == s[l + k - 1]) && dp[l + 1][l + k - 2]) {
+                    dp[l][l + k - 1] = true;
+                    start = l;
+                    len = k;
+                }
+            }
+        }
+        return s.substr(start, len);
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/longest-palindromic-substring/description/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2025-12-30</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value">
+            <span class="post-tags">
+              <span class="post-tag">Two Pointers</span>
+              <span class="post-tag">String</span>
+              <span class="post-tag">Dynamic Programming</span>
+              <span class="post-tag">Medium</span>
+            </span>
+          </span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/neetcode150/longest-palindromic-substring.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>

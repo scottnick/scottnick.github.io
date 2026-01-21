@@ -186,6 +186,15 @@ main {
   color: var(--muted);
 }
 
+.contest-photo {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 16px auto;
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+}
+
 .card-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -458,6 +467,28 @@ main {
   margin: 0 0 10px;
 }
 
+.leetcode75-group {
+  margin-top: 16px;
+}
+
+.leetcode75-group__title {
+  font-size: 18px;
+  margin: 0 0 6px;
+  color: var(--text);
+}
+
+.leetcode75-item {
+  display: inline-block;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text);
+  text-decoration: none;
+}
+
+.leetcode75-item:hover {
+  text-decoration: underline;
+}
+
 .update-list {
   list-style: none;
   padding: 0;
@@ -504,6 +535,31 @@ main {
   z-index: 1;
   width: 100%;
   transform: none;
+}
+
+/* 左上角目錄按鈕（平板/手機才顯示） */
+.toc-fab {
+  display: none;
+  border: 0;
+  background: transparent;
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 8px 10px;
+  border-radius: 10px;
+}
+
+@media (max-width: 1279px) {
+  .toc-fab {
+    display: inline-flex;
+    align-items: center;
+  }
+}
+
+@media (min-width: 1280px) {
+  .toc-fab {
+    display: none;
+  }
 }
 
 
@@ -583,7 +639,7 @@ main {
 .article-content h4 {
   margin: 20px 0 8px;
   font-size: 17px;
-  color: var(--muted);
+  color: var(--text);
 }
 
 .article-box p,

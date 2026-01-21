@@ -1,0 +1,224 @@
+<!-- all problems/605-can-place-flowers.html: LeetCode 605 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>605. Can Place Flowers</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="toc-fab" id="article-toc-toggle" type="button" aria-expanded="false" aria-label="開啟目錄">
+        ☰
+      </button>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="index.html">All problems</a>
+      <span aria-hidden="true">/</span>
+      <span>605. Can Place Flowers</span>
+    </nav>
+
+    <section class="hero">
+      <h1>605. Can Place Flowers</h1>
+      <p><strong>練習日期：</strong>2026-01-10</p>
+      <p><strong>難度：</strong>Easy</p>
+      <p><strong>類型：</strong>Array、Greedy</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+<strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給定一個整數陣列 <code>flowerbed</code>，其中：</p>
+        <ul>
+          <li><code>0</code> 表示空地</li>
+          <li><code>1</code> 表示已經種花</li>
+        </ul>
+        <p>規則是：<strong>不能在相鄰的位置種花</strong>。</p>
+        <p>請判斷是否能在不違反規則的情況下，再種下 <code>n</code> 朵花。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>1 ≤ flowerbed.length ≤ 2 * 10^4</code></li>
+          <li><code>flowerbed[i]</code> 只會是 <code>0</code> 或 <code>1</code></li>
+          <li><code>0 ≤ n ≤ flowerbed.length</code></li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>這題我沒有選擇「一格一格嘗試能不能種花」的模擬方式，而是換一個角度，把整個花圃看成由多段<strong>連續的空地（0）</strong>所組成。</p>
+        <p>問題就可以轉換成：</p>
+        <blockquote>
+          每一段連續的 <code>0</code>，在不和相鄰花衝突的情況下，<strong>最多可以放幾朵花？</strong>
+        </blockquote>
+        <p>只要把所有區段「最多能放的花數」加起來，再和 <code>n</code> 比較，就能知道答案。</p>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>block</code>：代表「目前正在累積的連續空地長度」。</li>
+          <li><code>all</code>：代表「在理想情況下，目前最多總共可以放幾朵花」。</li>
+        </ul>
+        <p>我會從左到右掃描整個 <code>flowerbed</code>，一邊累積 <code>block</code>，一邊在適當時機把它結算進 <code>all</code>。</p>
+
+        <h3>為什麼 <code>block</code> 一開始設為 1？</h3>
+        <p>這是一個用來<strong>統一處理邊界</strong>的小技巧。</p>
+        <p>在花圃最左邊：</p>
+        <ul>
+          <li>如果一開始是 <code>0</code>，左邊實際上是沒有花的</li>
+          <li>等同於「左邊有一個不能放花的邊界」</li>
+        </ul>
+        <p>把 <code>block</code> 初始化為 <code>1</code>，就可以讓「左邊界的空地段」和「中間被花夾住的空地段」用同一套公式處理，不需要額外寫特例。</p>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+
+        <h3>情況一：遇到 <code>0</code>（空地）</h3>
+        <ul>
+          <li>代表目前這一段空地還在延續</li>
+          <li>我只做一件事：讓 <code>block</code> 加一</li>
+          <li>不急著計算能放幾朵花，等這段空地結束再一起算</li>
+        </ul>
+
+        <hr />
+
+        <h3>情況二：遇到 <code>1</code>（已種花）</h3>
+        <ul>
+          <li>代表前面那一整段連續的 <code>0</code> 已經結束</li>
+          <li>這時可以「結算」這一段空地最多能放幾朵花</li>
+        </ul>
+        <p>對於被花（或左邊界）夾住的空地區段，最多能放的花數是：</p>
+        <p><code>(block - 1) / 2</code></p>
+        <p>原因是：</p>
+        <ul>
+          <li>相鄰不能種花</li>
+          <li>每放一朵花，左右都至少要空一格</li>
+          <li><code>(block - 1)</code> 正好把邊界影響扣掉</li>
+        </ul>
+        <p>結算完後，把 <code>block</code> 重設，準備累積下一段空地。</p>
+
+        <hr />
+
+        <h3>情況三：走到花圃最後一格</h3>
+        <ul>
+          <li>如果最後是 <code>0</code>，代表有一段空地尚未被結算</li>
+          <li>尾端沒有右邊界的花，因此計算方式略有不同</li>
+        </ul>
+        <p>尾端空地最多能放的花數為：</p>
+        <p><code>block / 2</code></p>
+        <p>把這個結果加進 <code>all</code>，就完成所有區段的統計。</p>
+
+        <hr />
+
+        <h3>最後判斷邏輯</h3>
+        <ul>
+          <li><code>all</code> 代表在「最理想情況下」最多能放的花數</li>
+          <li>如果 <code>all &gt;= n</code>：代表一定存在一種合法的種花方式</li>
+          <li>否則：不論怎麼安排，都不可能放下 <code>n</code> 朵花</li>
+        </ul>
+
+        <hr />
+
+        <h3>整體邏輯總結</h3>
+        <p>這題的關鍵不在模擬，而在<strong>轉換問題的角度</strong>：</p>
+        <ul>
+          <li>把「能不能種花」轉成「連續空地的最大容納量」</li>
+          <li>每一段空地都可以獨立計算</li>
+          <li>用一次線性掃描就能完成所有計算</li>
+        </ul>
+        <p>這樣的寫法：</p>
+        <ul>
+          <li>時間複雜度是 <code>O(n)</code></li>
+          <li>不需要反覆嘗試或回溯</li>
+          <li>邏輯清楚，也容易驗證正確性</li>
+        </ul>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    bool canPlaceFlowers(vector&lt;int&gt;&amp; flowerbed, int n) {
+        int m = flowerbed.size();
+        int block = 1, all = 0;
+        for (int i = 0; i &lt; m; i++) {
+            if ((flowerbed[i] == 1 &amp;&amp; block &gt; 0)) {
+                all += (block - 1) / 2;
+                block = 0;
+            } else if (flowerbed[i] == 0) {
+                block += 1;
+            }
+            if (i == (m - 1)) {
+                all += block / 2;
+            }
+        }
+        if (all &gt;= n) {
+            return true;
+        }
+        return false;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/can-place-flowers/description/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-01-10</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value">
+            <span class="post-tags">
+              <span class="post-tag">Array</span>
+              <span class="post-tag">Greedy</span>
+              <span class="post-tag">Easy</span>
+            </span>
+          </span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/all%20problems/605-can-place-flowers.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
