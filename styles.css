@@ -467,6 +467,28 @@ main {
   margin: 0 0 10px;
 }
 
+.leetcode75-group {
+  margin-top: 16px;
+}
+
+.leetcode75-group__title {
+  font-size: 18px;
+  margin: 0 0 6px;
+  color: var(--text);
+}
+
+.leetcode75-item {
+  display: inline-block;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text);
+  text-decoration: none;
+}
+
+.leetcode75-item:hover {
+  text-decoration: underline;
+}
+
 .update-list {
   list-style: none;
   padding: 0;
