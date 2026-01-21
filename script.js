@@ -112,16 +112,45 @@
       });
   }
 
-  function updateAccordionCounts() {
-    document.querySelectorAll('.accordion__content[data-count-id]').forEach((content) => {
-      const id = content.dataset.countId;
-      const selector = content.dataset.countSelector || 'a, li';
-      const count = content.querySelectorAll(selector).length;
-      const target = document.querySelector(`.accordion__count[data-count-for="${id}"]`);
-      if (target) {
+  async function updateAccordionCounts() {
+    const repo = document.body?.dataset.countRepo || 'scottnick/scottnick.github.io';
+    const contents = Array.from(document.querySelectorAll('.accordion__content[data-count-id]'));
+
+    await Promise.all(
+      contents.map(async (content) => {
+        const id = content.dataset.countId;
+        const selector = content.dataset.countSelector || 'a, li';
+        const target = document.querySelector(`.accordion__count[data-count-for="${id}"]`);
+        if (!target) return;
+
+        const path = content.dataset.countPath;
+        if (path) {
+          try {
+            const response = await fetch(
+              `https://api.github.com/repos/${repo}/contents/${encodeURI(path)}`
+            );
+            if (response.ok) {
+              const data = await response.json();
+              if (Array.isArray(data)) {
+                const count = data.filter(
+                  (item) =>
+                    item.type === 'file' &&
+                    item.name.endsWith('.html') &&
+                    item.name !== 'index.html'
+                ).length;
+                target.textContent = count.toString();
+                return;
+              }
+            }
+          } catch (error) {
+            console.warn('Failed to load GitHub counts', error);
+          }
+        }
+
+        const count = content.querySelectorAll(selector).length;
         target.textContent = count.toString();
-      }
-    });
+      })
+    );
   }
 
   function initArticleToc() {
