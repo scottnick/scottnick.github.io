@@ -1,0 +1,184 @@
+<!-- all problems/70-climbing-stairs.html: 全部題單文章 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>70. Climbing Stairs</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="../all%20problems/index.html">All problems</a>
+      <span aria-hidden="true">/</span>
+      <span>70. Climbing Stairs</span>
+    </nav>
+
+    <section class="hero">
+      <h1>70. Climbing Stairs</h1>
+      <p><strong>練習日期：</strong>2026-01-15</p>
+      <p><strong>難度：</strong>Easy</p>
+      <p><strong>類型：</strong>Dynamic Programming、Math</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#dp">為什麼這是一題動態規劃（DP）</a></li>
+          <li><a href="#fibonacci">和費波那契數列的關係</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>你正在爬一個有 <code>n</code> 階的樓梯。每一次你可以選擇爬<strong>1 階</strong> 或 <strong>2 階</strong>。</p>
+        <p>請問總共有多少種不同的方法可以爬到樓梯頂端？</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>0 ≤ n ≤ 45</code></li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>我在思考這題時，並不是直接想「要怎麼算最快」，而是先問自己一個最根本的問題：</p>
+        <p><strong>如果我要走到第 <code>n</code> 階，最後一步是怎麼來的？</strong></p>
+        <p>這個問題一想清楚，整題的結構其實就已經出來了。</p>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>n</code>：樓梯的總階數（題目輸入）</li>
+          <li><code>step</code>：用來記錄「走到第 i 階的方法數」的陣列</li>
+          <li><code>stair</code>：目前正在計算的方法數所對應的階數</li>
+          <li><code>top</code>：最後要回傳的結果，也就是走到第 <code>n</code> 階的方法數</li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+        <h3>關鍵觀察：最後一步的來源</h3>
+        <p>假設我要走到第 <code>n</code> 階，那最後一步只可能有兩種情況：</p>
+        <ol>
+          <li>從第 <code>n-1</code> 階走 <strong>1 步</strong> 上來</li>
+          <li>從第 <code>n-2</code> 階走 <strong>2 步</strong> 上來</li>
+        </ol>
+        <p>也就是說：</p>
+        <ul>
+          <li>所有能走到第 <code>n-1</code> 階的方法，最後再走 1 步，都可以到 <code>n</code></li>
+          <li>所有能走到第 <code>n-2</code> 階的方法，最後再走 2 步，也可以到 <code>n</code></li>
+        </ul>
+        <hr />
+
+        <h3>核心遞推關係</h3>
+        <p>走到第 <code>n</code> 階的方法數 = 走到第 <code>n-1</code> 階的方法數 + 走到第 <code>n-2</code> 階的方法數</p>
+        <p><code>step[n] = step[n-1] + step[n-2]</code></p>
+        <hr />
+
+        <h3>為什麼要先處理最小情況</h3>
+        <p>在正式往上推之前，我會先確認最小的階數狀況：</p>
+        <ul>
+          <li><strong><code>n = 0</code></strong>：沒有階梯要爬，什麼都不做，也算是一種方法</li>
+          <li><strong><code>n = 1</code></strong>：只能走 1 階，也只有一種方法</li>
+        </ul>
+        <p>因此：</p>
+        <ul>
+          <li><code>step[0] = 1</code></li>
+          <li><code>step[1] = 1</code></li>
+        </ul>
+
+        <h2 id="dp">為什麼這是一題動態規劃（DP）</h2>
+        <p>整理完整體想法後，我發現這題完全符合 DP 的特徵：</p>
+        <ul>
+          <li>大問題（走到第 <code>n</code> 階）可以拆成小問題（<code>n-1</code>、<code>n-2</code>）</li>
+          <li>子問題的結果會被反覆使用</li>
+          <li>有明確的狀態轉移關係</li>
+        </ul>
+        <p>因此正確的做法不是暴力列出所有走法，而是從小的階數開始把每一階的結果記錄下來，一路推到第 <code>n</code> 階。</p>
+
+        <h2 id="fibonacci">和費波那契數列的關係</h2>
+        <p>這個遞推關係和初始條件其實和<strong>費波那契數列</strong>是完全一樣的結構，只是題目換成了「爬樓梯」這個情境。</p>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    int climbStairs(int n) {
+        vector&lt;int&gt; step = {1, 1};
+        int stair = 2;
+        int top;
+        if (n == 0 || n == 1) {
+            return 1;
+        }
+        while (stair &lt;= n) {
+            step.push_back(step[stair - 1] + step[stair - 2]);
+            stair++;
+        }
+        top = step[n];
+        return top;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p><a href="https://leetcode.com/problems/climbing-stairs/description/">https://leetcode.com/problems/climbing-stairs/description/</a></p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-01-15</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value">
+            <span class="post-tags">
+              <span class="post-tag">Dynamic Programming</span>
+              <span class="post-tag">Math</span>
+              <span class="post-tag">Easy</span>
+            </span>
+          </span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/all%20problems/70-climbing-stairs.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
