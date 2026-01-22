@@ -1,0 +1,194 @@
+<!-- neetcode150/66-plus-one.html: NeetCode 150 文章 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>66. Plus One</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="../neetcode150/index.html">NeetCode 150</a>
+      <span aria-hidden="true">/</span>
+      <span>66. Plus One</span>
+    </nav>
+
+    <section class="hero">
+      <h1>66. Plus One</h1>
+      <p><strong>練習日期：</strong>2026-01-15</p>
+      <p><strong>難度：</strong>Easy</p>
+      <p><strong>類型：</strong>Array、Math</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給定一個由整數組成的陣列 <code>digits</code>，其中每一個元素代表一個數字的一位，整個陣列代表一個<strong>非負整數</strong>。</p>
+        <p>請將這個整數<strong>加一</strong>，並回傳加一後的結果（仍以陣列形式表示）。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>1 ≤ digits.length ≤ 100</code></li>
+          <li><code>0 ≤ digits[i] ≤ 9</code></li>
+          <li>陣列不會有前導零（除了數字本身是 0）</li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>我在想這題時，是把它當成「<strong>手算加法</strong>」來處理。</p>
+        <p>加一這個動作，最直接影響的是：</p>
+        <ul>
+          <li><strong>最後一位數字</strong></li>
+          <li>以及可能一路往前產生的「進位」</li>
+        </ul>
+        <p>所以我的想法是：</p>
+        <ul>
+          <li>先直接把最後一位加一</li>
+          <li>如果沒有進位，事情就結束</li>
+          <li>如果有進位，就一路往前處理</li>
+          <li>最後再檢查最前面會不會多出一位數</li>
+        </ul>
+        <p>整體邏輯完全對應到我們平常做加法的過程。</p>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>digits</code>：題目給定的數字陣列，同時也是最後要回傳的結果</li>
+          <li><code>n</code>：<code>digits</code> 的長度</li>
+          <li><code>check</code>：用來處理進位的索引指標，一開始指向最後一位</li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+        <h3>第一步：從最後一位開始加一</h3>
+        <ul>
+          <li>先將 <code>digits</code> 的最後一位直接加一</li>
+          <li>因為「加一」一定是從個位數開始影響</li>
+        </ul>
+        <hr />
+
+        <h3>第二步：處理可能的進位（從後往前）</h3>
+        <p>接下來檢查是否發生進位：</p>
+        <ul>
+          <li>只要某一位數字大於 9，就減去 10，並把進位加到前一位</li>
+          <li>然後把指標往前移，繼續檢查</li>
+        </ul>
+        <p>這個過程會一路往前傳遞進位，直到：</p>
+        <ul>
+          <li>不再有進位</li>
+          <li>或已經處理到最前面一位為止</li>
+        </ul>
+        <hr />
+
+        <h3>第三步：處理最前面的特殊情況</h3>
+        <p>如果最後發現最前面那一位仍然大於 9，代表原本的數字是像 <code>999</code>、<code>99</code>、<code>9</code> 這種情況，加一後會多出一位數。</p>
+        <ul>
+          <li>把最前面那一位修正成 0</li>
+          <li>再在陣列最前面插入一個 <code>1</code></li>
+        </ul>
+        <p>這樣就能正確表示新的數字。</p>
+        <hr />
+
+        <h3>整體邏輯總結</h3>
+        <ol>
+          <li>從最後一位開始加一</li>
+          <li>有進位就往前傳</li>
+          <li>最前面如果還有進位，就補一位</li>
+        </ol>
+        <p>整個流程不需要轉成整數或字串，只要用陣列直接操作即可。</p>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    vector&lt;int&gt; plusOne(vector&lt;int&gt;&amp; digits) {
+        int n = digits.size();
+        int check = n - 1;
+        digits[check]++;
+        while (check &gt; 0) {
+            if (digits[check] &gt; 9) {
+                digits[check] -= 10;
+                digits[check - 1]++;
+                check--;
+            } else {
+                break;
+            }
+        }
+        if (digits[check] &gt; 9) {
+            digits[check] -= 10;
+            digits.insert(digits.begin(), 1);
+        }
+        return digits;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p><a href="https://leetcode.com/problems/plus-one/description/">https://leetcode.com/problems/plus-one/description/</a></p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-01-15</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value">
+            <span class="post-tags">
+              <span class="post-tag">Array</span>
+              <span class="post-tag">Math</span>
+              <span class="post-tag">Easy</span>
+            </span>
+          </span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/neetcode150/66-plus-one.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
