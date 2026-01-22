@@ -71,7 +71,9 @@
 
         <h2 id="approach">🧠 解題思路</h2>
         <p>我在思考這題時，並不是直接想「要怎麼算最快」，而是先問自己一個最根本的問題：</p>
-        <p><strong>如果我要走到第 <code>n</code> 階，最後一步是怎麼來的？</strong></p>
+        <blockquote>
+          <p><strong>如果我要走到第 <code>n</code> 階，最後一步是怎麼來的？</strong></p>
+        </blockquote>
         <p>這個問題一想清楚，整題的結構其實就已經出來了。</p>
 
         <h3>所有變數</h3>
@@ -89,29 +91,42 @@
           <li>從第 <code>n-1</code> 階走 <strong>1 步</strong> 上來</li>
           <li>從第 <code>n-2</code> 階走 <strong>2 步</strong> 上來</li>
         </ol>
+        <p>除此之外，不存在第三種可能。</p>
         <p>也就是說：</p>
         <ul>
-          <li>所有能走到第 <code>n-1</code> 階的方法，最後再走 1 步，都可以到 <code>n</code></li>
-          <li>所有能走到第 <code>n-2</code> 階的方法，最後再走 2 步，也可以到 <code>n</code></li>
+          <li>所有「能走到第 <code>n-1</code> 階的方法」，最後再走 1 步，都可以到 <code>n</code></li>
+          <li>所有「能走到第 <code>n-2</code> 階的方法」，最後再走 2 步，也可以到 <code>n</code></li>
         </ul>
+        <p>而這兩種來源 <strong>互不重疊</strong>，剛好涵蓋所有走法。</p>
         <hr />
 
         <h3>核心遞推關係</h3>
         <p>走到第 <code>n</code> 階的方法數 = 走到第 <code>n-1</code> 階的方法數 + 走到第 <code>n-2</code> 階的方法數</p>
+        <p>用符號表示就是：</p>
         <p><code>step[n] = step[n-1] + step[n-2]</code></p>
         <hr />
 
         <h3>為什麼要先處理最小情況</h3>
         <p>在正式往上推之前，我會先確認最小的階數狀況：</p>
+
+        <h4><code>n = 0</code></h4>
         <ul>
-          <li><strong><code>n = 0</code></strong>：沒有階梯要爬，什麼都不做，也算是一種方法</li>
-          <li><strong><code>n = 1</code></strong>：只能走 1 階，也只有一種方法</li>
+          <li>沒有階梯要爬</li>
+          <li>什麼都不做，也算是一種方法</li>
         </ul>
-        <p>因此：</p>
+
+        <h4><code>n = 1</code></h4>
+        <ul>
+          <li>只能走 1 階</li>
+          <li>也只有一種方法</li>
+        </ul>
+
+        <p>因此在我的邏輯中：</p>
         <ul>
           <li><code>step[0] = 1</code></li>
           <li><code>step[1] = 1</code></li>
         </ul>
+        <p>這兩個值就是整個推導的起點。</p>
 
         <h2 id="dp">為什麼這是一題動態規劃（DP）</h2>
         <p>整理完整體想法後，我發現這題完全符合 DP 的特徵：</p>
@@ -120,10 +135,21 @@
           <li>子問題的結果會被反覆使用</li>
           <li>有明確的狀態轉移關係</li>
         </ul>
-        <p>因此正確的做法不是暴力列出所有走法，而是從小的階數開始把每一階的結果記錄下來，一路推到第 <code>n</code> 階。</p>
+        <p>因此正確的做法不是暴力列出所有走法，而是：</p>
+        <ul>
+          <li>從小的階數開始</li>
+          <li>把每一階的結果記錄下來</li>
+          <li>一路推到第 <code>n</code> 階</li>
+        </ul>
+        <hr />
 
-        <h2 id="fibonacci">和費波那契數列的關係</h2>
-        <p>這個遞推關係和初始條件其實和<strong>費波那契數列</strong>是完全一樣的結構，只是題目換成了「爬樓梯」這個情境。</p>
+        <h3 id="fibonacci">和費波那契數列的關係</h3>
+        <p>在寫完這題後，我也意識到：</p>
+        <ul>
+          <li>這個遞推關係</li>
+          <li>這個初始條件</li>
+        </ul>
+        <p>其實和 <strong>費波那契數列</strong> 是完全一樣的結構，只是題目換成了「爬樓梯」這個情境。</p>
 
         <h2 id="code">💻 程式碼實作</h2>
         <pre><code class="language-cpp">class Solution {
