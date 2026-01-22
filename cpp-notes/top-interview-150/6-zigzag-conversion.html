@@ -1,0 +1,211 @@
+<!-- top-interview-150/6-zigzag-conversion.html: Top Interview 150 文章 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>6. Zigzag Conversion</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="../top-interview-150/index.html">Top Interview 150</a>
+      <span aria-hidden="true">/</span>
+      <span>6. Zigzag Conversion</span>
+    </nav>
+
+    <section class="hero">
+      <h1>6. Zigzag Conversion</h1>
+      <p><strong>練習日期：</strong>2026-01-06</p>
+      <p><strong>難度：</strong>Medium</p>
+      <p><strong>類型：</strong>String</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>字串 <code>s</code> 會以 <code>numRows</code> 行的 Zigzag 方式排列，然後再依照每一行由上到下讀出，形成新的字串。</p>
+        <p>請回傳 Zigzag 轉換後的字串。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>1 ≤ s.length ≤ 1000</code></li>
+          <li><code>s</code> 由英文字母（小寫與大寫）、<code>,</code>、<code>.</code> 組成</li>
+          <li><code>1 ≤ numRows ≤ 1000</code></li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>我的想法是：<strong>不要真的把 Zigzag 畫成矩陣</strong>，而是直接找出「每一行在原字串 <code>s</code> 裡會被讀到的索引位置」，依序把字元接到答案字串 <code>zig</code>。</p>
+        <p>Zigzag 排列有一個固定的週期（cycle）：</p>
+        <ul>
+          <li><code>cycle = numRows - 1</code></li>
+          <li>每一次完整的「往下 + 往上」會回到同一行</li>
+          <li>對應到索引跳躍的總距離是 <code>cycle * 2</code></li>
+        </ul>
+        <p>因此我用「逐行掃描」的方式：</p>
+        <ol>
+          <li>外層用 <code>i</code> 代表目前要處理第 <code>i</code> 行</li>
+          <li>內層用 <code>count</code> 代表在原字串中下一個要取的索引</li>
+          <li>每行依照規則更新 <code>count</code>，直到超出 <code>s.size()</code> 為止</li>
+        </ol>
+
+        <h3>所有變數（對應程式碼）</h3>
+        <ul>
+          <li><code>zig</code>：最後要回傳的結果字串（依照 Zigzag 讀行順序拼起來）</li>
+          <li><code>cycle</code>：<code>numRows - 1</code>，用來計算每次索引跳躍的週期</li>
+          <li><code>i</code>：目前正在處理的行數（從 <code>0</code> 到 <code>numRows - 1</code>）</li>
+          <li><code>count</code>：目前在原字串 <code>s</code> 中要讀取的索引位置</li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+        <h3>步驟一：特判 <code>numRows == 1</code></h3>
+        <ul>
+          <li>如果 <code>numRows == 1</code>，Zigzag 其實不會改變排列</li>
+          <li>直接回傳原字串 <code>s</code></li>
+        </ul>
+        <hr />
+
+        <h3>步驟二：逐行讀取字元（外層 <code>for</code>）</h3>
+        <ul>
+          <li>外層 <code>for (int i = 0; i &lt; numRows; i++)</code>：
+            <ul>
+              <li>表示我會照「第 0 行 → 第 1 行 → ... → 第 numRows-1 行」依序把該行的字元放進 <code>zig</code></li>
+            </ul>
+          </li>
+        </ul>
+        <hr />
+
+        <h3>步驟三：在同一行內，依規則跳索引（內層 <code>while</code>）</h3>
+        <p>每一行會從 <code>count = i</code> 開始：</p>
+        <ul>
+          <li><code>count</code> 表示目前要讀的字元是 <code>s[count]</code></li>
+          <li>只要 <code>count &lt; s.size()</code> 就持續往後取字元</li>
+        </ul>
+
+        <h4>情況一：第一行 / 最後一行（<code>i == 0</code> 或 <code>i == cycle</code>）</h4>
+        <ul>
+          <li>這兩行在 Zigzag 中沒有「斜上」的字元</li>
+          <li>所以同一行內的索引都是固定跳 <code>cycle * 2</code></li>
+        </ul>
+        <p>也就是每輪都做：</p>
+        <ul>
+          <li>取 <code>s[count]</code></li>
+          <li><code>count += cycle * 2</code></li>
+        </ul>
+
+        <h4>情況二：中間行（其他的 <code>i</code>）</h4>
+        <p>中間行會出現「兩種不同間距」交替：</p>
+        <ul>
+          <li>第一個間距：<code>(numRows - 1) * 2 - 2 * i</code></li>
+          <li>第二個間距：<code>2 * i</code></li>
+        </ul>
+        <p>我的做法是：</p>
+        <ol>
+          <li>先取 <code>s[count]</code></li>
+          <li>用第一個間距更新 <code>count</code>，並嘗試再取一次（對應到斜上那個字）</li>
+          <li>再用第二個間距更新 <code>count</code>，回到下一個週期的位置</li>
+        </ol>
+        <p>這樣就能在不建表的情況下，把中間行該出現的字元依序抓出來。</p>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    string convert(string s, int numRows) {
+        if (numRows == 1) {
+            return s;
+        }
+        string zig = "";
+        int cycle = numRows - 1;
+        for (int i = 0; i &lt; numRows; i++) {
+            int count = i;
+            while (count &lt; s.size()) {
+                zig = zig + s[count];
+                if (i == 0 || i == cycle) {
+                    count = count + cycle * 2;
+                } else {
+                    count = count + (numRows - 1) * 2 - 2 * i;
+                    if (count &lt; s.size()) {
+                        zig = zig + s[count];
+                    } else {
+                        break;
+                    }
+                    count = count + 2 * i;
+                }
+            }
+        }
+        return zig;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/zigzag-conversion/description/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-01-06</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value">
+            <span class="post-tags">
+              <span class="post-tag">String</span>
+              <span class="post-tag">Medium</span>
+            </span>
+          </span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/top-interview-150/6-zigzag-conversion.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>

@@ -1,0 +1,221 @@
+<!-- top-interview-150/28-find-the-index-of-the-first-occurrence-in-a-string.html: Top Interview 150 文章 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>28. Find the Index of the First Occurrence in a String</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="../top-interview-150/index.html">Top Interview 150</a>
+      <span aria-hidden="true">/</span>
+      <span>28. Find the Index of the First Occurrence in a String</span>
+    </nav>
+
+    <section class="hero">
+      <h1>28. Find the Index of the First Occurrence in a String</h1>
+      <p><strong>練習日期：</strong>2026-01-12</p>
+      <p><strong>難度：</strong>Easy</p>
+      <p><strong>類型：</strong>String、Two Pointers</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#variables">所有變數</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給定兩個字串 <code>haystack</code> 與 <code>needle</code>，請找出 <code>needle</code> 在 <code>haystack</code> 中<strong>第一次出現的位置索引</strong>。</p>
+        <p>若 <code>needle</code> 不是 <code>haystack</code> 的子字串，則回傳 <code>-1</code>。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>1 ≤ haystack.length, needle.length ≤ 10^4</code></li>
+          <li><code>haystack</code> 與 <code>needle</code> 只包含小寫英文字母</li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>我的做法是最直觀的「<strong>暴力比對</strong>」方式：</p>
+        <ul>
+          <li>把 <code>haystack</code> 中的每一個位置，都當作可能的起點</li>
+          <li>從這個起點開始，嘗試完整比對 <code>needle</code></li>
+          <li>只要有任何一個字元不相同，就代表這個起點不可能成功</li>
+          <li>若某個起點能把 <code>needle</code> 全部比對完成，這個起點就是答案</li>
+        </ul>
+        <p>因為題目只要求「第一次出現的位置」，所以一旦找到，就可以立刻回傳，不需要再繼續搜尋。</p>
+
+        <h2 id="variables">所有變數</h2>
+        <ul>
+          <li><code>pos</code>：目前在 <code>haystack</code> 中嘗試比對的起始位置</li>
+          <li><code>n</code>：<code>haystack</code> 的長度</li>
+          <li><code>m</code>：<code>needle</code> 的長度</li>
+          <li><code>check</code>：用來判斷「目前這個起點是否能完整匹配 <code>needle</code>」</li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+        <h3>前置判斷：長度不可能的情況</h3>
+        <ul>
+          <li>如果 <code>haystack</code> 的長度小於 <code>needle</code></li>
+          <li>那不可能出現完整匹配</li>
+          <li>直接回傳 <code>-1</code></li>
+        </ul>
+        <hr />
+
+        <h3>外層邏輯：枚舉所有可能的起點</h3>
+        <p>我用 <code>pos</code> 從 <code>0</code> 開始，一路往右移動：</p>
+        <ul>
+          <li>每一個 <code>pos</code> 都代表「假設 <code>needle</code> 從這裡開始出現」</li>
+          <li>只要還沒超出 <code>haystack</code>，就繼續嘗試</li>
+        </ul>
+        <hr />
+
+        <h3>內層邏輯：從目前起點開始比對 <code>needle</code></h3>
+        <p>對於固定的 <code>pos</code>：</p>
+        <ul>
+          <li>我從 <code>needle</code> 的第 <code>0</code> 個字元開始比</li>
+          <li>依序檢查：<code>haystack[pos + i]</code> 是否等於 <code>needle[i]</code></li>
+        </ul>
+        <p>在比對過程中會遇到幾種情況：</p>
+
+        <h4>情況一：索引超出範圍</h4>
+        <ul>
+          <li>若 <code>pos + i >= n</code></li>
+          <li>代表剩下的 <code>haystack</code> 長度不夠</li>
+          <li>這個起點直接失敗</li>
+        </ul>
+
+        <h4>情況二：字元不相等</h4>
+        <ul>
+          <li>只要有任一個字元不同</li>
+          <li>就代表這個起點不可能成功</li>
+          <li>立刻停止比對，換下一個 <code>pos</code></li>
+        </ul>
+
+        <h4>情況三：完整比對成功</h4>
+        <ul>
+          <li>如果 <code>needle</code> 的所有字元都成功比對</li>
+          <li>代表在 <code>pos</code> 這個位置找到答案</li>
+          <li>直接回傳 <code>pos</code></li>
+        </ul>
+        <hr />
+
+        <h3>全部嘗試完仍找不到</h3>
+        <ul>
+          <li>若所有可能的起點都試過</li>
+          <li>仍然沒有任何一個成功</li>
+          <li>回傳 <code>-1</code></li>
+        </ul>
+        <hr />
+
+        <h3>為什麼這樣想是合理的？</h3>
+        <ul>
+          <li>題目規模不大，允許 <code>O(n * m)</code> 的暴力解</li>
+          <li>每一個起點的比對邏輯都很清楚</li>
+          <li>沒有額外資料結構，直覺且好驗證</li>
+          <li>非常適合當作字串比對題的「基礎模板」</li>
+        </ul>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    int strStr(string haystack, string needle) {
+        int pos = 0;
+        int n = haystack.size();
+        int m = needle.size();
+        if (n &lt; m) {
+            return -1;
+        }
+        while (pos &lt; n) {
+            bool check = true;
+            for (int i = 0; i &lt; m; i++) {
+                if (pos + i &gt;= n) {
+                    check = false;
+                    break;
+                }
+                if (haystack[pos + i] != needle[i]) {
+                    check = false;
+                    break;
+                }
+            }
+            if (check) {
+                return pos;
+            }
+            pos++;
+        }
+        return -1;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/find-the-index-of-the-first-occurrence-in-a-string/description/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-01-12</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value">
+            <span class="post-tags">
+              <span class="post-tag">String</span>
+              <span class="post-tag">Two Pointers</span>
+              <span class="post-tag">Easy</span>
+            </span>
+          </span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/top-interview-150/28-find-the-index-of-the-first-occurrence-in-a-string.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
