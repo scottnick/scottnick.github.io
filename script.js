@@ -9,6 +9,13 @@
     });
   }
 
+  function updateThemeToggleState(theme) {
+    const isDark = theme === 'dark';
+    document.querySelectorAll('#theme-toggle').forEach((btn) => {
+      btn.setAttribute('aria-pressed', isDark.toString());
+    });
+  }
+
   function applyTheme(mode) {
     const theme = mode === 'dark' ? 'dark' : 'light';
     const isDark = theme === 'dark';
@@ -16,6 +23,7 @@
     root.setAttribute('data-theme', theme);
     localStorage.setItem(THEME_KEY, theme);
     updateThemeIcon(theme);
+    updateThemeToggleState(theme);
   }
 
   function initTheme() {
@@ -32,7 +40,6 @@
       btn.addEventListener('click', () => {
         const isDark = document.body.classList.contains('dark-mode');
         applyTheme(isDark ? 'light' : 'dark');
-        btn.setAttribute('aria-pressed', (!isDark).toString());
       });
     });
   }
