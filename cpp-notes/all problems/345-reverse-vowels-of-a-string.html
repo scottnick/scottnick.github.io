@@ -1,0 +1,194 @@
+<!-- all problems/345-reverse-vowels-of-a-string.html: All problems 文章 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>345. Reverse Vowels of a String</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="index.html">All problems</a>
+      <span aria-hidden="true">/</span>
+      <span>345. Reverse Vowels of a String</span>
+    </nav>
+
+    <section class="hero">
+      <h1>345. Reverse Vowels of a String</h1>
+      <p><strong>練習日期：</strong>2026-01-11</p>
+      <p><strong>難度：</strong>Easy</p>
+      <p><strong>類型：</strong>Two Pointers、String</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給定一個字串 <code>s</code>，請將字串中的所有母音（vowels）反轉後回傳。</p>
+        <p>母音包含：<code>'a'</code>, <code>'e'</code>, <code>'i'</code>, <code>'o'</code>, <code>'u'</code>（以及對應的大寫）。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>1 ≤ s.length ≤ 3 * 10^5</code></li>
+          <li><code>s</code> 由可列印的 ASCII 字元組成</li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>我這題的想法是把「母音的位置」先全部抓出來，然後再反過來填回去。</p>
+        <p>具體來說我做了兩件事：</p>
+        <ol>
+          <li>掃描整個字串，把所有母音出現的位置記下來</li>
+          <li>再用「反向對應」的方式，把母音依序寫回原本的位置</li>
+        </ol>
+        <p>這樣我就不需要在掃描時馬上交換字元，而是先收集資訊，再一次完成替換。</p>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>revvow</code>：一個 2 列的 vector，用來記錄所有母音資訊
+            <ul>
+              <li><code>revvow[0]</code>：母音出現的位置（index）</li>
+              <li><code>revvow[1]</code>：母音是哪一個（用它在 <code>vowels</code> 裡的索引表示）</li>
+            </ul>
+          </li>
+          <li><code>n</code>：字串 <code>s</code> 的長度</li>
+          <li><code>vowels</code>：母音清單（包含大小寫），用來判斷是否為母音，以及最後替換時查表用</li>
+          <li><code>rev</code>：母音總數（也就是 <code>revvow[0].size()</code>）</li>
+          <li><code>pos</code>：要被替換的位置（第 <code>k</code> 個母音所在的 index）</li>
+          <li><code>vpos</code>：反轉後要放進來的母音（透過 <code>vowels</code> 的索引查出）</li>
+        </ul>
+
+        <h3>第一段：找出所有母音的位置與種類</h3>
+        <p>我會從左到右掃描字串 <code>s</code>：</p>
+        <ul>
+          <li>對每個字元 <code>s[i]</code>，再去比對 <code>vowels</code> 清單</li>
+          <li>如果 <code>s[i]</code> 是母音：
+            <ul>
+              <li>把位置 <code>i</code> 存到 <code>revvow[0]</code></li>
+              <li>把它在 <code>vowels</code> 清單中的索引 <code>j</code> 存到 <code>revvow[1]</code></li>
+            </ul>
+          </li>
+        </ul>
+        <p>這樣做完之後，我就知道母音總共有幾個、每個母音的位置在哪裡，以及每個母音原本是哪一個字元。</p>
+        <hr />
+
+        <h3>第二段：用「反向對應」把母音寫回去</h3>
+        <p>母音反轉的意思是：</p>
+        <ul>
+          <li>第 0 個母音的位置，要放「最後一個母音」</li>
+          <li>第 1 個母音的位置，要放「倒數第二個母音」</li>
+          <li>以此類推</li>
+        </ul>
+        <p>所以我用 <code>k</code> 從 <code>0</code> 到 <code>rev - 1</code>：</p>
+        <ul>
+          <li><code>pos = revvow[0][k]</code>：第 k 個母音的位置</li>
+          <li><code>vpos = revvow[1][rev - 1 - k]</code>：反轉後要放的母音</li>
+          <li>最後把 <code>s[pos]</code> 改成 <code>vowels[vpos]</code></li>
+        </ul>
+        <hr />
+
+        <h3>這個寫法的直覺總結</h3>
+        <ul>
+          <li>我先把母音挑出來排成一列</li>
+          <li>再把這列母音反過來</li>
+          <li>最後照原本母音的位置依序填回去</li>
+        </ul>
+        <p>因此非母音的位置完全不會被動到，符合題目要求。</p>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    string reverseVowels(string s) {
+        vector&lt;vector&lt;int&gt;&gt; revvow(2); // revvow[0]是位置，revvow[1]是母音
+        int n = s.size();
+        int pos, vpos;
+        vector&lt;char&gt; vowels = {'A', 'E', 'I', 'O', 'U', 'a', 'e', 'i', 'o', 'u'};
+        for (int i = 0; i &lt; n; i++) {
+            for (int j = 0; j &lt; vowels.size(); j++) {
+                if (s[i] == vowels[j]) {
+                    revvow[0].push_back(i);
+                    revvow[1].push_back(j);
+                }
+            }
+        }
+        int rev = revvow[0].size();
+        for (int k = 0; k &lt; rev; k++) {
+            pos = revvow[0][k];
+            vpos = revvow[1][rev - 1 - k];
+            s[pos] = vowels[vpos];
+        }
+        return s;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/reverse-vowels-of-a-string/description/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-01-11</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value">
+            <span class="post-tags">
+              <span class="post-tag">Two Pointers</span>
+              <span class="post-tag">String</span>
+              <span class="post-tag">Easy</span>
+            </span>
+          </span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/all%20problems/345-reverse-vowels-of-a-string.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
