@@ -1,0 +1,201 @@
+<!-- neetcode150/704-binary-search.html: NeetCode 150 文章 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>704. Binary Search</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="../neetcode150/index.html">NeetCode 150</a>
+      <span aria-hidden="true">/</span>
+      <span>704. Binary Search</span>
+    </nav>
+
+    <section class="hero">
+      <h1>704. Binary Search</h1>
+      <p><strong>練習日期：</strong>2026-01-02</p>
+      <p><strong>難度：</strong>Easy</p>
+      <p><strong>類型：</strong>Array、Binary Search</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給定一個已排序的整數陣列 <code>nums</code> 與一個整數 <code>target</code>，請在陣列中搜尋 <code>target</code>，若存在則回傳其索引，否則回傳 <code>-1</code>。</p>
+        <p>你必須使用時間複雜度為 <code>O(log n)</code> 的演算法。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>1 ≤ nums.length ≤ 10^4</code></li>
+          <li><code>-10^4 ≤ nums[i], target ≤ 10^4</code></li>
+          <li><code>nums</code> 為遞增排序（ascending order）</li>
+          <li><code>nums</code> 中的元素皆不重複</li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>我的做法是使用 <strong>Binary Search（二分搜尋）</strong>。</p>
+        <p>因為陣列已經排序過，每次比較中間的元素後，都可以直接捨棄一半不可能包含答案的區間。</p>
+
+        <h3>所有變數（對應程式碼）</h3>
+        <ul>
+          <li><code>n</code>：陣列 <code>nums</code> 的長度</li>
+          <li><code>left</code>：目前搜尋區間的左邊界</li>
+          <li><code>right</code>：目前搜尋區間的右邊界</li>
+          <li><code>pos</code>：目前區間的中間位置索引</li>
+        </ul>
+        <hr />
+
+        <h3><code>while (left &lt;= right)</code>：只要區間還存在就繼續搜尋</h3>
+        <p>這個迴圈代表：</p>
+        <ul>
+          <li><code>[left, right]</code> 是目前可能包含 target 的搜尋區間</li>
+          <li>只要 <code>left &lt;= right</code>，區間內至少還有一個元素需要檢查</li>
+        </ul>
+        <hr />
+
+        <h3>每一輪迴圈實際在做的事情</h3>
+        <p>在 <code>while (left &lt;= right)</code> 的每一輪中，我都會針對目前的搜尋區間 <code>[left, right]</code> 做一次判斷與縮小。</p>
+        <hr />
+
+        <h3>第一步：計算中間位置</h3>
+        <pre><code class="language-cpp">int pos = (left + right) / 2;
+</code></pre>
+        <p>這一行會取得目前搜尋區間的中間索引 <code>pos</code>。</p>
+        <p>接下來會根據 <code>nums[pos]</code> 與 <code>target</code> 的比較結果，決定要往左半邊或右半邊繼續搜尋。</p>
+        <hr />
+
+        <h3>第二步：比較中間值與 target</h3>
+        <p>接下來會根據比較結果，出現以下三種情況：</p>
+
+        <h4>情況一：<code>nums[pos] == target</code></h4>
+        <pre><code class="language-cpp">if (nums[pos] == target) {
+    return pos;
+}
+</code></pre>
+        <p>中間位置的元素剛好等於 target，代表已經找到答案，直接回傳索引 pos。</p>
+        <hr />
+
+        <h4>情況二：<code>nums[pos] &lt; target</code>（目標在右半邊）</h4>
+        <pre><code class="language-cpp">else if (nums[pos] &lt; target) {
+    left = pos + 1;
+}
+</code></pre>
+        <p>因為陣列是遞增排序，中間值小於 target，pos 與其左側元素皆不可能是答案。</p>
+        <p>搜尋區間縮小為 <code>[pos + 1, right]</code>。</p>
+        <hr />
+
+        <h4>情況三：<code>nums[pos] &gt; target</code>（目標在左半邊）</h4>
+        <pre><code class="language-cpp">else {
+    right = pos - 1;
+}
+</code></pre>
+        <p>中間值大於 target，pos 與其右側元素皆不可能是答案。</p>
+        <p>搜尋區間縮小為 <code>[left, pos - 1]</code>。</p>
+        <hr />
+
+        <h3>第三步：更新搜尋區間並進入下一輪</h3>
+        <p>根據上述三種情況之一，更新 <code>left</code> 或 <code>right</code>，回到 while 條件，判斷是否還有區間需要搜尋。</p>
+        <hr />
+
+        <h3>迴圈結束後</h3>
+        <ul>
+          <li>當 <code>left &gt; right</code> 時，代表搜尋區間已經為空</li>
+          <li>所有可能的位置都已經被檢查過</li>
+          <li>若仍未找到 <code>target</code>，回傳 <code>-1</code></li>
+        </ul>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    int search(vector&lt;int&gt;&amp; nums, int target) {
+        int n = nums.size();
+        int left = 0, right = n - 1;
+        while (left &lt;= right) {
+            int pos = (left + right) / 2;
+            if (nums[pos] == target) {
+                return pos;
+            } else if (nums[pos] &lt; target) {
+                left = pos + 1;
+            } else {
+                right = pos - 1;
+            }
+        }
+        return -1;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p><a href="https://leetcode.com/problems/binary-search/description/">https://leetcode.com/problems/binary-search/description/</a></p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-01-02</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value">
+            <span class="post-tags">
+              <span class="post-tag">Array</span>
+              <span class="post-tag">Binary Search</span>
+              <span class="post-tag">Easy</span>
+            </span>
+          </span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/neetcode150/704-binary-search.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
