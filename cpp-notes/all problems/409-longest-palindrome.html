@@ -1,0 +1,160 @@
+<!-- all problems/409-longest-palindrome.html: 全部題單文章 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>409. Longest Palindrome</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="../all%20problems/index.html">All problems</a>
+      <span aria-hidden="true">/</span>
+      <span>409. Longest Palindrome</span>
+    </nav>
+
+    <section class="hero">
+      <h1>409. Longest Palindrome</h1>
+      <p><strong>練習日期：</strong>2026-01-02</p>
+      <p><strong>難度：</strong>Easy</p>
+      <p><strong>類型：</strong>Hash Table、String、Greedy</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給定一個由小寫或大寫英文字母組成的字串 <code>s</code>，請回傳能用這些字母組成的<strong>最長回文</strong>字串的<strong>長度</strong>。</p>
+        <p>字母大小寫是有區分的，例如：<code>"Aa"</code> 在這題不會被視為回文。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>1 &lt;= s.length &lt;= 2000</code></li>
+          <li><code>s</code> 只由小寫與/或大寫英文字母組成</li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>我的做法是用「配對」的概念：</p>
+        <ul>
+          <li>回文的左右兩邊一定要能成對出現</li>
+          <li>所以我會固定一個位置 <code>i</code> 當作左邊的字母</li>
+          <li>再去 <code>i</code> 後面找一個相同字母的位置 <code>j</code> 來配成一對</li>
+          <li>找到就代表這個字母可以貢獻回文長度 <code>+2</code></li>
+          <li>如果有任何字母無法配對，就代表最後回文中間可以放一個單獨字母，因此最後再 <code>+1</code></li>
+        </ul>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>pal</code>：目前已經成功配對出的回文長度（每配到一對就 <code>+2</code>）</li>
+          <li><code>left</code>：是否存在「配不到對」的字母</li>
+          <li><code>check</code>：每一輪固定 <code>i</code> 時，用來判斷 <code>s[i]</code> 這個字母是否有成功找到配對</li>
+        </ul>
+        <hr />
+
+        <h3>步驟一：特判 <code>s</code> 長度為 1</h3>
+        <ul>
+          <li>若 <code>s.size() == 1</code>，答案就是 <code>1</code>，直接回傳</li>
+        </ul>
+
+        <h3>步驟二：外層迴圈固定 <code>i</code>，內層找配對的 <code>j</code></h3>
+        <ul>
+          <li>外層 <code>for (int i = 0; i &lt; s.size(); i++)</code>：我把 <code>s[i]</code> 當作想配對的字母</li>
+          <li>內層 <code>for (int j = i + 1; j &lt; s.size(); j++)</code>：從 <code>i</code> 後面開始找</li>
+        </ul>
+        <hr />
+
+        <h4>情況一：找到配對（<code>s[i] == s[j]</code>）</h4>
+        <ul>
+          <li><code>s.erase(j, 1)</code>：把配對到的字母刪掉，避免重複使用</li>
+          <li><code>pal = pal + 2</code>：回文長度增加 2</li>
+          <li><code>check = false</code> 並 <code>break</code>：這輪結束</li>
+        </ul>
+        <hr />
+
+        <h4>情況二：整輪都找不到配對（<code>check</code> 仍是 <code>true</code>）</h4>
+        <ul>
+          <li><code>left = true</code>，代表最後回文中心有機會放一個單獨字母</li>
+        </ul>
+        <hr />
+
+        <h3>結束後判斷要不要補中心字母</h3>
+        <ul>
+          <li>如果 <code>left == true</code>，我做 <code>pal = pal + 1</code></li>
+          <li>回文最多只能有一個單獨字母放在中間</li>
+        </ul>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    int longestPalindrome(string s) {
+        int len = s.size();
+        bool left = false;
+        int pal = 0;
+        if (s.size() == 1) {
+            return 1;
+        }
+        for (int i = 0; i &lt; s.size(); i++) {
+            bool check = true;
+            for (int j = i + 1; j &lt; s.size(); j++) {
+                if (s[i] == s[j]) {
+                    s.erase(j, 1);
+                    pal = pal + 2;
+                    check = false;
+                    break;
+                }
+            }
+            if (check) {
+                left = true;
+            }
+        }
+        if (left) {
+            pal = pal + 1;
+        }
+        return pal;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p><a href="https://leetcode.com/problems/longest-palindrome/description/">https://leetcode.com/problems/longest-palindrome/description/</a></p>
+      </section>
+    </div>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
