@@ -1,0 +1,217 @@
+<!-- leetcode75/11-container-with-most-water.html: LeetCode 75 文章 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>11. Container With Most Water</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="../leetcode75/index.html">LeetCode 75</a>
+      <span aria-hidden="true">/</span>
+      <span>11. Container With Most Water</span>
+    </nav>
+
+    <section class="hero">
+      <h1>11. Container With Most Water</h1>
+      <p><strong>練習日期：</strong>2025-12-30</p>
+      <p><strong>難度：</strong>Medium</p>
+      <p><strong>類型：</strong>Array、Two Pointers、Greedy</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路（第一直覺）</a></li>
+          <li><a href="#variables">所有變數</a></li>
+          <li><a href="#cases">核心判斷（這題的重點）</a></li>
+          <li><a href="#steps">每一步在做什麼？</a></li>
+          <li><a href="#why">為什麼「移動比較高的那一邊」一定不會變好？</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給定一個長度為 <code>n</code> 的整數陣列 <code>height</code>，其中 <code>height[i]</code> 代表在座標 <code>i</code> 處的一條垂直線段高度。</p>
+        <p>請找出兩條線段，使它們與 x 軸形成一個容器，並回傳這個容器所能盛裝的最大水量。</p>
+        <p>注意：容器不能傾斜。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>n == height.length</code></li>
+          <li><code>2 ≤ n ≤ 10^5</code></li>
+          <li><code>0 ≤ height[i] ≤ 10^4</code></li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路（第一直覺）</h2>
+        <p>在看這題時，我的想法是：因為題目保證 <code>height</code> 至少有兩個元素，所以一定能形成一個容器。</p>
+        <p>我先從<strong>最左邊與最右邊</strong>各選一條線段開始，這樣可以得到<strong>目前可能的最大寬度</strong>。</p>
+        <p>容器能裝多少水，取決於兩個因素：</p>
+        <ul>
+          <li>寬度：<code>j - i</code></li>
+          <li>高度：<code>min(height[i], height[j])</code></li>
+        </ul>
+        <p>因此面積為：<code>(j - i) * min(height[i], height[j])</code></p>
+        <hr />
+
+        <h3 id="variables">所有變數</h3>
+        <ul>
+          <li><code>i</code>：左指標，從陣列最左邊開始</li>
+          <li><code>j</code>：右指標，從陣列最右邊開始</li>
+          <li><code>vol</code>：目前為止找到的最大水量</li>
+          <li><code>nvol</code>：目前 <code>(i, j)</code> 這組位置計算出的水量（暫存）</li>
+        </ul>
+        <p>在固定 <code>i</code> 與 <code>j</code> 之後，我會先計算目前這組線段所形成的水量，接著再決定「要移動哪一邊的指標」。</p>
+        <hr />
+
+        <h3 id="cases">核心判斷（這題的重點）</h3>
+        <p>在 <code>(i, j)</code> 這個位置下：</p>
+        <ul>
+          <li>容器的高度一定是 <code>min(height[i], height[j])</code></li>
+          <li>也就是說，<strong>比較矮的那一邊會限制整個容器的高度</strong></li>
+        </ul>
+        <p>因此會出現兩種情況：</p>
+        <hr />
+
+        <h4>情況一：<code>height[i] &gt;= height[j]</code>（右邊比較矮）</h4>
+        <ul>
+          <li>此時容器高度由 <code>height[j]</code> 決定</li>
+          <li>如果我移動左邊（比較高的那一邊）：
+            <ul>
+              <li>寬度會變小</li>
+              <li>高度仍然被右邊的矮線段限制</li>
+              <li>面積只可能變小，不可能變大</li>
+            </ul>
+          </li>
+        </ul>
+        <p>因此我選擇：</p>
+        <ul>
+          <li>將右指標往內移動：<code>j--</code></li>
+          <li>因為只有把「比較矮的那一邊」往內推，才有機會遇到更高的線段，讓高度變大</li>
+        </ul>
+        <hr />
+
+        <h4>情況二：<code>height[i] &lt; height[j]</code>（左邊比較矮）</h4>
+        <ul>
+          <li>此時容器高度由 <code>height[i]</code> 決定</li>
+          <li>同樣地，若移動右邊（比較高的一邊）只會讓寬度變小，高度不變</li>
+          <li>因此我選擇將左指標往內移動：<code>i++</code></li>
+        </ul>
+        <p>嘗試尋找一條比目前 <code>height[i]</code> 更高的線段，以解除容器高度受限於左邊矮線的情況。</p>
+        <hr />
+
+        <h3 id="steps">每一步在做什麼？</h3>
+        <p>在每一次指標移動前：</p>
+        <ul>
+          <li>先計算目前 <code>(i, j)</code> 的水量</li>
+          <li>若 <code>nvol</code> 大於目前的 <code>vol</code>，就更新最大值</li>
+        </ul>
+        <p>接著依照「移動較矮邊」的規則，更新 <code>i</code> 或 <code>j</code>。</p>
+        <p>當 <code>i &gt;= j</code> 時，代表所有可能的組合都已經考慮完成，回傳 <code>vol</code> 即可。</p>
+        <hr />
+
+        <h3 id="why">為什麼「移動比較高的那一邊」一定不會變好？</h3>
+        <p>在 <code>(i, j)</code> 固定的情況下，容器的水量為：</p>
+        <p><code>(j - i) * min(height[i], height[j])</code></p>
+        <p>這代表一件很關鍵的事情：</p>
+        <ul>
+          <li><strong>容器的高度永遠由比較矮的那一邊決定</strong></li>
+          <li>比較高的那一邊，對目前這個容器的高度其實沒有貢獻</li>
+        </ul>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    int maxArea(vector&lt;int&gt;&amp; height) {
+        int i = 0;
+        int j = height.size() - 1;
+        int vol = 0;
+        int nvol = 0;
+        while (i &lt; j) {
+            if (height[i] &gt;= height[j]) {
+                nvol = (j - i) * height[j];
+                if (vol &lt; nvol) {
+                    vol = nvol;
+                }
+                j = j - 1;
+            } else {
+                nvol = (j - i) * height[i];
+                if (vol &lt; nvol) {
+                    vol = nvol;
+                }
+                i = i + 1;
+            }
+        }
+        return vol;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/container-with-most-water/description/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2025-12-30</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value">
+            <span class="post-tags">
+              <span class="post-tag">Array</span>
+              <span class="post-tag">Two Pointers</span>
+              <span class="post-tag">Greedy</span>
+              <span class="post-tag">Medium</span>
+            </span>
+          </span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/leetcode75/11-container-with-most-water.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
