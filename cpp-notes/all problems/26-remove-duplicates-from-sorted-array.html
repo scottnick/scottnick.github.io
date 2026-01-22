@@ -1,0 +1,202 @@
+<!-- all problems/26-remove-duplicates-from-sorted-array.html: 全部題單文章 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>26. Remove Duplicates from Sorted Array</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="../all%20problems/index.html">All problems</a>
+      <span aria-hidden="true">/</span>
+      <span>26. Remove Duplicates from Sorted Array</span>
+    </nav>
+
+    <section class="hero">
+      <h1>26. Remove Duplicates from Sorted Array</h1>
+      <p><strong>練習日期：</strong>2026-01-17</p>
+      <p><strong>難度：</strong>Easy</p>
+      <p><strong>類型：</strong>Array、Two Pointers</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#summary">💡 整體邏輯總結</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給定一個<strong>已排序（non-decreasing）</strong>的整數陣列 <code>nums</code>，請<strong>原地（in-place）移除重複的元素</strong>，使每個元素只出現一次。</p>
+        <p>回傳移除重複後的元素數量 <code>k</code>，並保證：</p>
+        <ul>
+          <li><code>nums</code> 的前 <code>k</code> 個元素為不重複的結果</li>
+          <li>超過 <code>k</code> 之後的內容不重要</li>
+        </ul>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>1 ≤ nums.length ≤ 3 * 10^4</code></li>
+          <li><code>-100 ≤ nums[i] ≤ 100</code></li>
+          <li><code>nums</code> 已經排序完成</li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>這題的關鍵前提是：<strong>陣列已經排序</strong>。</p>
+        <p>因為已排序：</p>
+        <ul>
+          <li>相同的數字一定會「連續出現」</li>
+          <li>只要和「前一個保留下來的值」比較，就能知道是不是重複</li>
+        </ul>
+        <p>我的想法是用一個指標 <code>pos</code>，專門指向「下一個可以放入不重複元素的位置」。</p>
+        <p>整體概念是：</p>
+        <blockquote>
+          <p>一邊掃描陣列，一邊把「第一次出現的數字」往前覆蓋，重複的就直接跳過</p>
+        </blockquote>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>nums</code>：題目給定、同時也是要被原地修改的陣列</li>
+          <li><code>n</code>：<code>nums</code> 的長度</li>
+          <li><code>before</code>：目前已經保留下來的「上一個不重複元素」</li>
+          <li><code>pos</code>：下一個不重複元素應該放入的位置（也是最後回傳的長度）</li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+        <h3>初始化階段</h3>
+        <ul>
+          <li>因為陣列至少有一個元素，第一個元素一定可以保留</li>
+          <li>設定 <code>before = nums[0]</code></li>
+          <li>設定 <code>pos = 1</code>，表示目前已經保留了 1 個不重複元素</li>
+        </ul>
+        <hr />
+
+        <h3>逐一掃描陣列</h3>
+        <p>接著我用一個 for 迴圈，從頭到尾掃描 <code>nums</code>。</p>
+        <p>對每一個 <code>nums[i]</code>，會出現兩種情況：</p>
+        <h4>情況一：<code>nums[i] == before</code></h4>
+        <ul>
+          <li>代表這個數字和上一個保留的數字一樣</li>
+          <li>屬於重複元素</li>
+          <li><strong>直接跳過，不做任何事</strong></li>
+        </ul>
+
+        <h4>情況二：<code>nums[i] != before</code></h4>
+        <ul>
+          <li>代表這是一個新的、不重複的數字</li>
+          <li>把它放到 <code>nums[pos]</code></li>
+          <li><code>pos++</code>，準備下一個位置</li>
+          <li>同時更新 <code>before = nums[i]</code></li>
+        </ul>
+        <p>這樣做的效果是：</p>
+        <ul>
+          <li>陣列前半段會逐步被「覆蓋成不重複版本」</li>
+          <li>後面的資料即使被覆蓋也沒關係，題目不在乎</li>
+        </ul>
+        <hr />
+
+        <h3>回傳結果</h3>
+        <p>當整個陣列掃描完：</p>
+        <ul>
+          <li><code>pos</code> 就是「不重複元素的總數」</li>
+          <li><code>nums[0] ~ nums[pos-1]</code> 就是答案內容</li>
+        </ul>
+        <p>直接回傳 <code>pos</code> 即可。</p>
+
+        <h2 id="summary">💡 整體邏輯總結</h2>
+        <ul>
+          <li>利用「已排序」這個條件</li>
+          <li>只需要和前一個保留值比較</li>
+          <li>用一個指標 <code>pos</code> 原地覆蓋陣列</li>
+        </ul>
+        <p>時間複雜度是 <code>O(n)</code>，空間複雜度是 <code>O(1)</code>（只用常數額外變數）。</p>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    int removeDuplicates(vector&lt;int&gt;&amp; nums) {
+        int pos = 1;
+        int before = nums[0];
+        int n = nums.size();
+        for (int i = 0; i &lt; n; i++) {
+            if (nums[i] != before) {
+                nums[pos] = nums[i];
+                pos++;
+                before = nums[i];
+            }
+        }
+        return pos;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/remove-duplicates-from-sorted-array/description/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-01-17</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value">
+            <span class="post-tags">
+              <span class="post-tag">Array</span>
+              <span class="post-tag">Two Pointers</span>
+              <span class="post-tag">Easy</span>
+            </span>
+          </span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/all%20problems/26-remove-duplicates-from-sorted-array.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>

@@ -1,0 +1,221 @@
+<!-- top-interview-150/88-merge-sorted-array.html: Top Interview 150 文章 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>88. Merge Sorted Array</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="../top-interview-150/index.html">Top Interview 150</a>
+      <span aria-hidden="true">/</span>
+      <span>88. Merge Sorted Array</span>
+    </nav>
+
+    <section class="hero">
+      <h1>88. Merge Sorted Array</h1>
+      <p><strong>練習日期：</strong>2026-01-16</p>
+      <p><strong>難度：</strong>Easy</p>
+      <p><strong>類型：</strong>Array、Two Pointers、Sorting</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#summary">💡 整體邏輯總結</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給定兩個整數陣列 <code>nums1</code> 與 <code>nums2</code>，它們都已經按照<strong>非遞減順序</strong>排序。</p>
+        <ul>
+          <li><code>nums1</code> 的長度為 <code>m + n</code>，前 <code>m</code> 個元素是有效資料，最後 <code>n</code> 個位置是 <code>0</code>（只是佔位用）</li>
+          <li><code>nums2</code> 的長度為 <code>n</code>，包含 <code>n</code> 個有效元素</li>
+        </ul>
+        <p>請你將 <code>nums2</code> 合併進 <code>nums1</code>，使得合併後的 <code>nums1</code> 仍然是排序好的結果。</p>
+        <p>題目要求：<strong>不要回傳任何值</strong>，直接修改 <code>nums1</code>。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>nums1.length == m + n</code></li>
+          <li><code>nums2.length == n</code></li>
+          <li><code>0 ≤ m, n ≤ 200</code></li>
+          <li><code>1 ≤ m + n ≤ 200</code></li>
+          <li><code>-10^9 ≤ nums1[i], nums2[j] ≤ 10^9</code></li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>我的想法是用「兩個指標」去合併兩個已排序的陣列，做法很像 merge sort 的合併步驟。</p>
+        <p>因為：</p>
+        <ul>
+          <li><code>nums1</code> 的前 <code>m</code> 個是有效排序資料</li>
+          <li><code>nums2</code> 的 <code>n</code> 個也都是排序資料</li>
+        </ul>
+        <p>所以我可以：</p>
+        <ol>
+          <li>用 <code>pos1</code> 指向 <code>nums1</code> 的有效區間開頭</li>
+          <li>用 <code>pos2</code> 指向 <code>nums2</code> 的開頭</li>
+          <li>每次比較 <code>nums1[pos1]</code> 和 <code>nums2[pos2]</code></li>
+          <li>把比較小的那個放進一個新的陣列 <code>nums</code></li>
+          <li>對應的指標往前移</li>
+          <li>最後把剩下的元素全部補進 <code>nums</code></li>
+        </ol>
+        <p>等 <code>nums</code> 變成完整的合併結果後，再把它寫回 <code>nums1</code>。</p>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>m</code>：<code>nums1</code> 中有效元素的數量（只看前 <code>m</code> 個）</li>
+          <li><code>n</code>：<code>nums2</code> 的元素數量</li>
+          <li><code>nums</code>：我額外開的一個暫存陣列，用來存合併後的排序結果</li>
+          <li><code>pos1</code>：掃描 <code>nums1</code> 有效區間的指標（範圍 <code>0 ~ m-1</code>）</li>
+          <li><code>pos2</code>：掃描 <code>nums2</code> 的指標（範圍 <code>0 ~ n-1</code>）</li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+        <h3>第一步：同時掃描兩個陣列，逐個放入較小值</h3>
+        <p>當 <code>pos1 &lt; m</code> 且 <code>pos2 &lt; n</code> 時代表：</p>
+        <ul>
+          <li><code>nums1</code> 還有有效元素可以比較</li>
+          <li><code>nums2</code> 也還有元素可以比較</li>
+        </ul>
+        <p>我每次都做同一件事：</p>
+        <ul>
+          <li>若 <code>nums1[pos1] &lt; nums2[pos2]</code> → 把 <code>nums1[pos1]</code> 放進 <code>nums</code>，然後 <code>pos1++</code></li>
+          <li>否則（代表 <code>nums2[pos2]</code> 比較小或相等） → 把 <code>nums2[pos2]</code> 放進 <code>nums</code>，然後 <code>pos2++</code></li>
+        </ul>
+        <p>這樣可以確保 <code>nums</code> 一直保持排序。</p>
+        <hr />
+
+        <h3>第二步：把剩下沒放完的那一邊全部補上</h3>
+        <p>當第一段 while 結束時，代表：</p>
+        <ul>
+          <li>其中一個陣列已經用完了</li>
+          <li>另一個陣列可能還有剩下的元素</li>
+        </ul>
+        <p>因為剩下的元素本來就已經排序好，所以我直接整段補進 <code>nums</code>：</p>
+        <ul>
+          <li>如果 <code>pos1 &lt; m</code> → 把 <code>nums1</code> 剩下的有效元素全部 push 進去</li>
+          <li>如果 <code>pos2 &lt; n</code> → 把 <code>nums2</code> 剩下的元素全部 push 進去</li>
+        </ul>
+        <hr />
+
+        <h3>第三步：把合併結果寫回 <code>nums1</code></h3>
+        <p>最後題目要求直接修改 <code>nums1</code>，所以我做兩件事：</p>
+        <ol>
+          <li>先把 <code>nums1</code> 的長度調整成 <code>m + n</code>，用 <code>nums1.resize(m + n)</code> 確保大小正確</li>
+          <li>再把 <code>nums</code> 中的每個元素依序寫回 <code>nums1[i]</code></li>
+        </ol>
+        <p>這樣合併後的結果就完整存在 <code>nums1</code> 裡面。</p>
+
+        <h2 id="summary">💡 整體邏輯總結</h2>
+        <p>這題我的重點是：</p>
+        <ul>
+          <li>因為兩個陣列都已經排序好</li>
+          <li>所以用兩個指標從頭往後掃描</li>
+          <li>每次選較小的放進新陣列</li>
+          <li>最後再把結果寫回 <code>nums1</code></li>
+        </ul>
+        <p>整體流程直觀，且能一次完成合併。</p>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    void merge(vector&lt;int&gt;&amp; nums1, int m, vector&lt;int&gt;&amp; nums2, int n) {
+        vector&lt;int&gt; nums;
+        int pos1 = 0, pos2 = 0;
+        while (pos1 &lt; m &amp;&amp; pos2 &lt; n) {
+            if (nums1[pos1] &lt; nums2[pos2]) {
+                nums.push_back(nums1[pos1]);
+                pos1++;
+            } else {
+                nums.push_back(nums2[pos2]);
+                pos2++;
+            }
+        }
+        while (pos1 &lt; m) {
+            nums.push_back(nums1[pos1]);
+            pos1++;
+        }
+        while (pos2 &lt; n) {
+            nums.push_back(nums2[pos2]);
+            pos2++;
+        }
+        nums1.resize(m + n);
+        for (int i = 0; i &lt; m + n; i++) {
+            nums1[i] = nums[i];
+        }
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/merge-sorted-array/description/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-01-16</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value">
+            <span class="post-tags">
+              <span class="post-tag">Array</span>
+              <span class="post-tag">Two Pointers</span>
+              <span class="post-tag">Sorting</span>
+              <span class="post-tag">Easy</span>
+            </span>
+          </span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/top-interview-150/88-merge-sorted-array.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
