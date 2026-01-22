@@ -1,0 +1,226 @@
+<!-- grind75/20-valid-parentheses.html: Grind 75 文章 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>20. Valid Parentheses</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="../grind75/index.html">Grind 75</a>
+      <span aria-hidden="true">/</span>
+      <span>20. Valid Parentheses</span>
+    </nav>
+
+    <section class="hero">
+      <h1>20. Valid Parentheses</h1>
+      <p><strong>練習日期：</strong>2026-01-15</p>
+      <p><strong>難度：</strong>Easy</p>
+      <p><strong>類型：</strong>Stack、String</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給定一個只包含字元 <code>'('</code>、<code>')'</code>、<code>'{'</code>、<code>'}'</code>、<code>'['</code>、<code>']'</code> 的字串 <code>s</code>，請判斷該字串是否為<strong>有效的括號字串</strong>。</p>
+        <p>有效的括號字串必須符合以下條件：</p>
+        <ul>
+          <li>每一個左括號都必須被<strong>相同類型</strong>的右括號關閉</li>
+          <li>括號必須以<strong>正確的順序</strong>關閉</li>
+        </ul>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>1 ≤ s.length ≤ 10^4</code></li>
+          <li><code>s</code> 僅由上述六種括號字元組成</li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>我在想這題時，重點不是「比對字元」，而是思考一件事：</p>
+        <p><strong>右括號出現時，它應該要對應到「最近還沒被關掉的左括號」</strong></p>
+        <p>這個「最近」的概念，讓我直接聯想到 <strong>Stack（堆疊）</strong>。</p>
+        <p>因此我的想法是：</p>
+        <ul>
+          <li>左括號出現時，先記下來，等之後來配對</li>
+          <li>右括號出現時，必須和最後出現、但尚未配對的左括號做比對</li>
+          <li>只要有一次配對錯誤，整個字串就不合法</li>
+        </ul>
+        <hr />
+
+        <h3>為什麼要用 Stack</h3>
+        <p>Stack 的特性是<strong>後進先出（LIFO）</strong>，正好符合括號的配對邏輯：</p>
+        <ul>
+          <li>最後出現的左括號，必須最先被關閉</li>
+          <li>巢狀結構天然就是 Stack 的使用情境</li>
+        </ul>
+        <hr />
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>brackets</code>：一個 stack，用來存尚未被配對的左括號</li>
+          <li><code>n</code>：字串 <code>s</code> 的長度</li>
+          <li><code>t</code>：stack 最上層的左括號，用來和目前的右括號比對</li>
+        </ul>
+
+        <h3>🪜 主要流程步驟</h3>
+        <h4>整體流程</h4>
+        <p>我從左到右掃描整個字串 <code>s</code>，每一個字元只會做一件很明確的事情。</p>
+        <hr />
+
+        <h4>情況一：遇到左括號</h4>
+        <p>當目前字元是 <code>'('</code>、<code>'['</code>、<code>'{'</code>，代表這是一個尚未配對的左括號。</p>
+        <ul>
+          <li>直接把它推進 stack 中</li>
+          <li>等之後遇到對應的右括號再處理</li>
+        </ul>
+        <hr />
+
+        <h4>情況二：遇到右括號</h4>
+        <p>當目前字元是右括號時，需要進行配對檢查。</p>
+
+        <h5>步驟一：檢查 stack 是否為空</h5>
+        <ul>
+          <li>如果 stack 是空的，代表沒有任何左括號可以配對，出現多出來的右括號</li>
+          <li>這種情況直接回傳 <code>false</code></li>
+        </ul>
+        <hr />
+
+        <h5>步驟二：檢查括號類型是否相符</h5>
+        <ul>
+          <li>取出 stack 最上層的左括號 <code>t</code></li>
+          <li>根據目前的右括號種類，檢查是否配對正確：</li>
+        </ul>
+        <ul>
+          <li><code>')'</code> 必須對應 <code>'('</code></li>
+          <li><code>']'</code> 必須對應 <code>'['</code></li>
+          <li><code>'}'</code> 必須對應 <code>'{'</code></li>
+        </ul>
+        <p>只要有一種不相符，就代表括號順序或類型錯誤，直接回傳 <code>false</code>。</p>
+        <hr />
+
+        <h5>步驟三：配對成功，移除左括號</h5>
+        <ul>
+          <li>如果種類正確，表示成功配對</li>
+          <li>將 stack 最上層的左括號移除（<code>pop</code>）</li>
+        </ul>
+        <hr />
+
+        <h4>迴圈結束後的檢查</h4>
+        <ul>
+          <li>如果 stack 是空的，代表所有左括號都成功被配對，回傳 <code>true</code></li>
+          <li>如果 stack 仍然有元素，代表還有左括號沒有被關閉，回傳 <code>false</code></li>
+        </ul>
+        <hr />
+
+        <h4>整體邏輯總結</h4>
+        <ol>
+          <li>左括號先記起來</li>
+          <li>右括號一定要對到「最近的左括號」</li>
+          <li>最後不能留下任何沒配對的左括號</li>
+        </ol>
+        <p>只要這三件事同時成立，字串就是合法的。</p>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    bool isValid(string s) {
+        stack&lt;char&gt; brackets;
+        int n = s.size();
+        for (int i = 0; i &lt; n; i++) {
+            if (s[i] == '(' || s[i] == '[' || s[i] == '{') {
+                brackets.push(s[i]);
+            } else {
+                if (brackets.empty()) {
+                    return false;
+                }
+                char t = brackets.top();
+                if (s[i] == ')' &amp;&amp; t != '(') {
+                    return false;
+                }
+                if (s[i] == ']' &amp;&amp; t != '[') {
+                    return false;
+                }
+                if (s[i] == '}' &amp;&amp; t != '{') {
+                    return false;
+                }
+                brackets.pop();
+            }
+        }
+        return brackets.empty();
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/valid-parentheses/description/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-01-15</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value">
+            <span class="post-tags">
+              <span class="post-tag">Stack</span>
+              <span class="post-tag">String</span>
+              <span class="post-tag">Easy</span>
+            </span>
+          </span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/grind75/20-valid-parentheses.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>

@@ -1,0 +1,354 @@
+<!-- leetcode75/334-increasing-triplet-subsequence.html: LeetCode 75 文章 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>334. Increasing Triplet Subsequence</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="../leetcode75/index.html">LeetCode 75</a>
+      <span aria-hidden="true">/</span>
+      <span>334. Increasing Triplet Subsequence</span>
+    </nav>
+
+    <section class="hero">
+      <h1>334. Increasing Triplet Subsequence</h1>
+      <p><strong>練習日期：</strong>2026-01-21</p>
+      <p><strong>難度：</strong>Medium</p>
+      <p><strong>類型：</strong>Array、Greedy</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach-1">🧠 解題思路（一）（直覺）</a></li>
+          <li><a href="#steps-1">🪜 主要流程步驟</a></li>
+          <li><a href="#code-1">💻 程式碼實作</a></li>
+          <li><a href="#approach-2">🧠 解題思路（二）Greedy</a></li>
+          <li><a href="#steps-2">🪜 主要流程步驟</a></li>
+          <li><a href="#code-2">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給定一個整數陣列 <code>nums</code>，請判斷是否存在三個索引 <code>i &lt; j &lt; k</code>，使得：</p>
+        <p><code>nums[i] &lt; nums[j] &lt; nums[k]</code></p>
+        <p>若存在，回傳 <code>true</code>；否則回傳 <code>false</code>。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>1 ≤ nums.length ≤ 5 * 10^5</code></li>
+          <li><code>-2^31 ≤ nums[i] ≤ 2^31 - 1</code></li>
+        </ul>
+
+        <h2 id="approach-1">🧠 解題思路（一）（直覺）</h2>
+        <p>我這份程式的想法是：我想要一路掃過陣列，維持一組「可能形成遞增三元組」的前兩個值：</p>
+        <ul>
+          <li><code>first</code>：目前選到的第一個數（希望越小越好）</li>
+          <li><code>second</code>：目前選到的第二個數（要大於 <code>first</code>，且也希望越小越好）</li>
+        </ul>
+        <p>只要後面出現一個數 <code>&gt; second</code>，就代表我找到了：<code>first &lt; second &lt; nums[i]</code> → 直接回傳 <code>true</code>。</p>
+        <p>但我在寫的時候多加了一個變數 <code>nfst</code>，用來記錄「目前看到的更小的第一個候選值」，讓我可以在某些情況下把 <code>first</code> 更新得更合理（例如遇到更小的值時先存起來，等到找到適合的 <code>second</code> 才一起更新）。</p>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>first</code>：目前候選的第一個值（前面那個小的）</li>
+          <li><code>second</code>：目前候選的第二個值（要比 <code>first</code> 大），一開始設成 <code>2147483647</code> 當作無限大</li>
+          <li><code>nfst</code>：我額外記的「新的 first 候選值」（遇到更小的數先放這裡）</li>
+          <li><code>i</code>：掃描陣列用的索引</li>
+        </ul>
+
+        <h2 id="steps-1">🪜 主要流程步驟</h2>
+        <h3>1. 先處理不可能的情況</h3>
+        <ul>
+          <li>如果 <code>nums.size() &lt; 3</code>，不可能有三個數，直接回傳 <code>false</code></li>
+        </ul>
+        <hr />
+
+        <h3>2. 初始化候選值</h3>
+        <ul>
+          <li><code>first = nums[0]</code></li>
+          <li><code>second = INT_MAX</code>（代表目前還沒有找到合適的第二個數）</li>
+          <li><code>nfst = nums[0]</code>（先用第一個數當作初始「新 first 候選」）</li>
+        </ul>
+        <hr />
+
+        <h3>3. 逐個掃描 nums[i]，更新候選或判斷成功</h3>
+        <p>我從 <code>i = 1</code> 開始掃，對每個 <code>nums[i]</code> 分三種情況：</p>
+
+        <h4>情況一：<code>nums[i] &gt; second</code> 直接成功</h4>
+        <ul>
+          <li>這表示我已經有一組 <code>(first, second)</code></li>
+          <li>現在又出現一個更大的 <code>nums[i]</code></li>
+          <li>所以形成 <code>first &lt; second &lt; nums[i]</code> → 立刻回傳 <code>true</code></li>
+        </ul>
+        <hr />
+
+        <h4>情況二：<code>nums[i]</code> 可以當作「更好的 second」</h4>
+        <p>判斷式是：</p>
+        <ul>
+          <li><code>nums[i] &lt; second</code> 表示它比目前的 second 更小（更好）</li>
+          <li><code>(nums[i] &gt; first || nums[i] &gt; nfst)</code> 表示它要能當第二個數（必須比第一個候選大）</li>
+        </ul>
+        <p>如果符合這個條件：</p>
+        <ul>
+          <li>我會把 <code>first</code> 更新成 <code>nfst</code></li>
+          <li>把 <code>second</code> 更新成 <code>nums[i]</code></li>
+        </ul>
+        <p>直覺意思是：我找到一個更好的「第二個數」，那我就把第一個數也一起換成我目前記著更小的 <code>nfst</code>，讓 <code>(first, second)</code> 更可能接到後面的第三個數。</p>
+        <hr />
+
+        <h4>情況三：以上都不符合 → 更新 nfst</h4>
+        <ul>
+          <li>我就把 <code>nfst = nums[i]</code></li>
+        </ul>
+        <p>這代表：目前這個值不適合當 second（可能太小或破壞遞增），但它可能成為未來更好的第一個候選，所以先記起來。</p>
+        <hr />
+
+        <h3>4. 全部掃完還沒成功</h3>
+        <ul>
+          <li>代表過程中一直找不到 <code>&gt; second</code> 的第三個數</li>
+          <li>回傳 <code>false</code></li>
+        </ul>
+
+        <h2 id="code-1">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    bool increasingTriplet(vector&lt;int&gt;&amp; nums) {
+        if (nums.size() &lt; 3) {
+            return false;
+        }
+        int first = nums[0], second = 2147483647;
+        int nfst = nums[0];
+        for (int i = 1; i &lt; nums.size(); i++) {
+            if (nums[i] &gt; second) {
+                return true;
+            } else if (nums[i] &lt; second &amp;&amp; (nums[i] &gt; first || nums[i] &gt; nfst)) {
+                first = nfst;
+                second = nums[i];
+            } else {
+                nfst = nums[i];
+            }
+        }
+        return false;
+    }
+};
+</code></pre>
+
+        <h2 id="approach-2">🧠 解題思路（二）Greedy</h2>
+        <p>這題我的核心想法是：</p>
+        <blockquote>
+          <p><strong>不需要真的找出三個數字，只要能確定「存在可能性」即可。</strong></p>
+        </blockquote>
+        <p>我在掃描整個陣列的過程中，只維護兩個狀態：</p>
+        <ul>
+          <li><code>fst</code>：目前為止，能當作「第一個數」的最小值</li>
+          <li><code>snd</code>：在 <code>fst</code> 之後，能當作「第二個數」的最小值</li>
+        </ul>
+        <p>如果在之後的掃描中，出現一個數字 <code>x</code>，使得：</p>
+        <pre><code class="language-text">fst &lt; snd &lt; x
+</code></pre>
+        <p>那代表遞增三元子序列一定存在，可以直接回傳 <code>true</code>。</p>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>fst</code>：目前找到的最小值，作為遞增序列的第一個數</li>
+          <li><code>snd</code>：在 <code>fst</code> 之後，找到的次小值，作為第二個數</li>
+          <li><code>nums[i]</code>：目前正在掃描的陣列元素</li>
+        </ul>
+
+        <h2 id="steps-2">🪜 主要流程步驟</h2>
+        <h3>1. 初始化兩個狀態變數</h3>
+        <ul>
+          <li>將 <code>fst</code> 與 <code>snd</code> 都初始化為非常大的值（例如 <code>INT_MAX</code>）</li>
+          <li>表示目前還沒選到任何有效的第一、第二個數</li>
+        </ul>
+        <hr />
+
+        <h3>2. 由左到右掃描整個陣列</h3>
+        <p>對每一個 <code>nums[i]</code>，依序判斷：</p>
+
+        <h4>情況一：<code>nums[i] &lt;= fst</code></h4>
+        <ul>
+          <li>代表找到了一個「更小的第一個數」</li>
+          <li>更新：</li>
+        </ul>
+        <pre><code class="language-text">fst = nums[i]
+</code></pre>
+        <hr />
+
+        <h4>情況二：<code>nums[i] &gt; fst</code> 且 <code>nums[i] &lt;= snd</code></h4>
+        <ul>
+          <li>代表這個數字可以當作「第二個數」</li>
+          <li>更新：</li>
+        </ul>
+        <pre><code class="language-text">snd = nums[i]
+</code></pre>
+        <hr />
+
+        <h4>情況三：<code>nums[i] &gt; snd</code></h4>
+        <ul>
+          <li>代表已經找到：<code>fst &lt; snd &lt; nums[i]</code></li>
+          <li>遞增三元子序列成立</li>
+          <li>直接回傳 <code>true</code></li>
+        </ul>
+        <hr />
+
+        <h3>3. 掃描結束仍未成功</h3>
+        <ul>
+          <li>若整個陣列掃完都沒有進入情況三</li>
+          <li>代表不存在遞增三元子序列</li>
+          <li>回傳 <code>false</code></li>
+        </ul>
+        <hr />
+
+        <h3>為什麼像 <code>2 3 -1 4</code> 這種情況也會回傳 <code>true</code>？</h3>
+        <p>這是這題 <strong>最容易誤解、但其實非常關鍵的一點</strong>。</p>
+        <p>我們用這組輸入實際走一次流程：</p>
+        <pre><code class="language-text">nums = [2, 3, -1, 4]
+</code></pre>
+
+        <h4>狀態變化過程</h4>
+        <ol>
+          <li>
+            <p>讀到 <code>2</code></p>
+            <ul>
+              <li><code>fst = 2</code></li>
+              <li><code>snd = +∞</code></li>
+            </ul>
+          </li>
+          <li>
+            <p>讀到 <code>3</code></p>
+            <ul>
+              <li><code>snd = 3</code></li>
+              <li>此時已經有潛在組合：<code>2 &lt; 3</code></li>
+            </ul>
+          </li>
+          <li>
+            <p>讀到 <code>-1</code></p>
+            <ul>
+              <li><code>-1 &lt;= fst</code></li>
+              <li>更新：</li>
+            </ul>
+            <pre><code class="language-text">fst = -1
+</code></pre>
+            <ul>
+              <li>此時狀態變成：<code>fst = -1</code>, <code>snd = 3</code></li>
+            </ul>
+            <ul>
+              <li>我只是把「第一個數」換成更小的值</li>
+              <li>並沒有破壞「第二個數」的有效性</li>
+              <li><code>snd = 3</code> 仍然是合法的第二個數候選</li>
+            </ul>
+          </li>
+          <li>
+            <p>讀到 <code>4</code></p>
+            <ul>
+              <li><code>4 &gt; snd</code></li>
+              <li>成立：<code>-1 &lt; 3 &lt; 4</code></li>
+              <li>回傳 <code>true</code></li>
+            </ul>
+          </li>
+        </ol>
+        <hr />
+
+        <h3>為什麼這樣是正確的？</h3>
+        <p>因為題目找的是 <strong>子序列（subsequence）</strong>：</p>
+        <ul>
+          <li>不要求連續</li>
+          <li>只要求索引遞增</li>
+        </ul>
+        <p>所以：</p>
+        <ul>
+          <li><code>fst</code> 和 <code>snd</code> 不一定要來自同一段連續區間</li>
+          <li>只要存在某個順序能滿足大小關係即可</li>
+        </ul>
+        <p>這也是 Greedy 解法能成立的根本原因。</p>
+
+        <h2 id="code-2">💻 程式碼實作 (Greedy)</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    bool increasingTriplet(vector&lt;int&gt;&amp; nums) {
+        int fst = 2147483647, snd = 2147483647;
+        for (int i = 0; i &lt; nums.size(); i++) {
+            if (nums[i] &lt;= fst) {
+                fst = nums[i];
+            } else if (nums[i] &lt;= snd) {
+                snd = nums[i];
+            } else {
+                return true;
+            }
+        }
+        return false;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/increasing-triplet-subsequence/description/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-01-21</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value">
+            <span class="post-tags">
+              <span class="post-tag">Array</span>
+              <span class="post-tag">Greedy</span>
+              <span class="post-tag">Medium</span>
+            </span>
+          </span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/leetcode75/334-increasing-triplet-subsequence.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
