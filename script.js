@@ -112,15 +112,68 @@
       });
   }
 
-  function updateAccordionCounts() {
-    document.querySelectorAll('.accordion__content[data-count-id]').forEach((content) => {
-      const id = content.dataset.countId;
-      const count = content.querySelectorAll('a, li').length;
-      const target = document.querySelector(`.accordion__count[data-count-for="${id}"]`);
-      if (target) {
-        target.textContent = count.toString();
+  function getNextLink(linkHeader) {
+    if (!linkHeader) return null;
+    const matches = linkHeader.split(',');
+    for (const match of matches) {
+      const nextMatch = match.match(/<([^>]+)>;\s*rel="next"/);
+      if (nextMatch) {
+        return nextMatch[1];
       }
-    });
+    }
+    return null;
+  }
+
+  async function fetchGithubHtmlCount(repo, path) {
+    let url = `https://api.github.com/repos/${repo}/contents/${encodeURI(path)}?per_page=100`;
+    let total = 0;
+
+    while (url) {
+      const response = await fetch(url);
+      if (!response.ok) {
+        return null;
+      }
+      const data = await response.json();
+      if (!Array.isArray(data)) {
+        return null;
+      }
+      total += data.filter(
+        (item) => item.type === 'file' && item.name.endsWith('.html') && item.name !== 'index.html'
+      ).length;
+      url = getNextLink(response.headers.get('Link'));
+    }
+
+    return total;
+  }
+
+  async function updateAccordionCounts() {
+    const repo = document.body?.dataset.countRepo || 'scottnick/scottnick.github.io';
+    const contents = Array.from(document.querySelectorAll('.accordion__content[data-count-id]'));
+
+    await Promise.all(
+      contents.map(async (content) => {
+        const id = content.dataset.countId;
+        const selector = content.dataset.countSelector || 'a, li';
+        const target = document.querySelector(`.accordion__count[data-count-for="${id}"]`);
+        if (!target) return;
+
+        const path = content.dataset.countPath;
+        if (path) {
+          try {
+            const count = await fetchGithubHtmlCount(repo, path);
+            if (typeof count === 'number') {
+              target.textContent = count.toString();
+              return;
+            }
+          } catch (error) {
+            console.warn('Failed to load GitHub counts', error);
+          }
+        }
+
+        const count = content.querySelectorAll(selector).length;
+        target.textContent = count.toString();
+      })
+    );
   }
 
   function initArticleToc() {
