@@ -1,0 +1,306 @@
+<!-- top-interview-150/238-product-of-array-except-self.html: Top Interview 150 文章 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>238. Product of Array Except Self</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="../top-interview-150/index.html">Top Interview 150</a>
+      <span aria-hidden="true">/</span>
+      <span>238. Product of Array Except Self</span>
+    </nav>
+
+    <section class="hero">
+      <h1>238. Product of Array Except Self</h1>
+      <p><strong>練習日期：</strong>2026-01-15</p>
+      <p><strong>難度：</strong>Medium</p>
+      <p><strong>類型：</strong>Array、Prefix Sum</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach-1">🧠 解題思路（一）</a></li>
+          <li><a href="#steps-1">🪜 主要流程步驟</a></li>
+          <li><a href="#summary">💡 整體邏輯總結</a></li>
+          <li><a href="#code-1">💻 程式碼實作</a></li>
+          <li><a href="#approach-2">🧠 解題思路（二）（但會TLE）</a></li>
+          <li><a href="#steps-2">🪜 主要流程步驟</a></li>
+          <li><a href="#code-2">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給定一個整數陣列 <code>nums</code>，請回傳一個陣列 <code>answer</code>，其中 <code>answer[i]</code> 代表：</p>
+        <ul>
+          <li><code>nums</code> 中除了 <code>nums[i]</code> 以外所有元素的乘積</li>
+        </ul>
+        <p>題目要求：</p>
+        <ul>
+          <li><strong>不能使用除法</strong>（題目原本的進階要求）</li>
+          <li>並且演算法需在 <code>O(n)</code> 時間內完成</li>
+        </ul>
+        <p>（我的寫法有用除法，但我先把題目需求完整寫在這裡）</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>2 ≤ nums.length ≤ 10^5</code></li>
+          <li><code>-30 ≤ nums[i] ≤ 30</code></li>
+          <li>保證任意前綴或後綴的乘積都在 32-bit 整數範圍內</li>
+        </ul>
+
+        <h2 id="approach-1">🧠 解題思路（一）</h2>
+        <p>我這份程式的核心想法是：</p>
+        <ul>
+          <li>先把「所有非 0 的數字」乘起來，得到一個總乘積 <code>pd</code></li>
+          <li>然後用 <code>pd</code> 去算每一個位置「除了自己以外的乘積」</li>
+        </ul>
+        <p>但是這題最麻煩的地方其實是 <code>0</code>，因為：</p>
+        <ul>
+          <li>只要陣列中有 0，乘積會整個變成 0</li>
+          <li>如果直接做除法 <code>pd / nums[i]</code>，遇到 <code>nums[i] = 0</code> 也會出錯</li>
+        </ul>
+        <p>所以我的邏輯主要是在分情況處理「0 的數量」。</p>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>n</code>：陣列 <code>nums</code> 的長度</li>
+          <li><code>pd</code>：把所有「非 0 元素」乘起來的乘積</li>
+          <li><code>zero</code>：是否已經遇到過 0（用來判斷 0 的數量）</li>
+          <li><code>zpos</code>：若只有一個 0，記錄那個 0 出現的位置</li>
+          <li><code>answer</code>：答案陣列（我先初始化為全 0，方便處理多個 0 的情況）</li>
+        </ul>
+
+        <h2 id="steps-1">🪜 主要流程步驟</h2>
+        <h3>第一階段：掃描整個陣列，統計 0 的情況並計算乘積</h3>
+        <p>我用一次迴圈掃過 <code>nums</code>：</p>
+        <h4>情況一：遇到 <code>nums[i] == 0</code></h4>
+        <ul>
+          <li>如果我之前已經遇過 0（<code>zero == true</code>），代表陣列裡至少有<strong>兩個 0</strong></li>
+        </ul>
+        <p>這種情況下，不管你排除哪一個元素，剩下的乘積裡一定還有 0，所以答案一定是：</p>
+        <ul>
+          <li>每一格都是 0</li>
+        </ul>
+        <p>因此我直接回傳已經是全 0 的 <code>answer</code>。</p>
+        <hr />
+
+        <h4>情況二：第一次遇到 0</h4>
+        <ul>
+          <li>把 <code>zero</code> 設成 <code>true</code></li>
+          <li>把 <code>zpos</code> 記錄成目前位置</li>
+        </ul>
+        <p>同時我不把 0 乘進 <code>pd</code>（避免整個乘積變成 0）。</p>
+        <hr />
+
+        <h4>情況三：遇到非 0 的數字</h4>
+        <ul>
+          <li>我把它乘進 <code>pd</code></li>
+          <li>因為 <code>pd</code> 代表的是「所有非 0 的總乘積」</li>
+        </ul>
+        <hr />
+
+        <h3>第二階段：根據 0 的數量決定怎麼填答案</h3>
+        <h4>情況一：陣列中剛好只有一個 0（<code>zero == true</code>）</h4>
+        <p>這時候只有 <code>zpos</code> 那個位置的答案會是非 0：</p>
+        <ul>
+          <li><code>answer[zpos] =</code> 「所有非 0 的乘積」= <code>pd</code></li>
+        </ul>
+        <p>原因是：</p>
+        <ul>
+          <li>對於 <code>zpos</code> 位置：排除掉 0 之後，剩下全都是非 0，所以乘積是 <code>pd</code></li>
+          <li>對於其他位置：你排除的是非 0，但剩下仍包含那個 0，所以乘積一定是 0</li>
+        </ul>
+        <p>而我一開始把 <code>answer</code> 初始化成全 0，所以只要補 <code>zpos</code> 這格就好。</p>
+        <hr />
+
+        <h4>情況二：陣列中完全沒有 0（<code>zero == false</code>）</h4>
+        <p>這時候我就可以用最直覺的方式：</p>
+        <ul>
+          <li><code>answer[j] = pd / nums[j]</code></li>
+        </ul>
+        <p>因為：</p>
+        <ul>
+          <li><code>pd</code> 是所有元素的乘積</li>
+          <li>除掉 <code>nums[j]</code> 就得到「除了自己以外的乘積」</li>
+        </ul>
+
+        <h2 id="summary">💡 整體邏輯總結</h2>
+        <ol>
+          <li><strong>兩個以上的 0</strong> → 全部答案都是 0</li>
+          <li><strong>剛好一個 0</strong> → 只有 0 的位置是 <code>pd</code>，其他都 0</li>
+          <li><strong>沒有 0</strong> → 用總乘積 <code>pd</code> 直接除掉自己</li>
+        </ol>
+        <p>這樣可以在 <code>O(n)</code> 時間內完成，而且邏輯非常直觀。</p>
+
+        <h2 id="code-1">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    vector&lt;int&gt; productExceptSelf(vector&lt;int&gt;&amp; nums) {
+        int n = nums.size();
+        int pd = 1, zpos;
+        bool zero = false;
+        vector&lt;int&gt; answer(n, 0);
+        for (int i = 0; i &lt; n; i++) {
+            if (nums[i] == 0) {
+                if (zero) {
+                    return answer;
+                } else {
+                    zero = true;
+                    zpos = i;
+                }
+            } else {
+                pd = pd * nums[i];
+            }
+        }
+        if (zero) {
+            answer[zpos] = pd;
+            return answer;
+        }
+        for (int j = 0; j &lt; n; j++) {
+            answer[j] = pd / nums[j];
+        }
+        return answer;
+    }
+};
+</code></pre>
+
+        <h2 id="approach-2">🧠 解題思路（二）（但會TLE）</h2>
+        <p>我後來想到的做法是：</p>
+        <ul>
+          <li>先把 <code>answer</code> 初始化成全部都是 <code>1</code></li>
+          <li>然後對每個位置 <code>j</code>，把「所有不是 <code>j</code> 的元素」都乘進去</li>
+        </ul>
+        <p>我的寫法是用兩層迴圈去完成：</p>
+        <ul>
+          <li>外層固定某個元素 <code>nums[i]</code></li>
+          <li>內層跑過所有位置 <code>j</code>，只要 <code>i != j</code>，就把 <code>nums[i]</code> 乘到 <code>answer[j]</code></li>
+        </ul>
+        <p>這樣做的效果就是：</p>
+        <ul>
+          <li>對於每個 <code>j</code>，我會把除了 <code>nums[j]</code> 以外的所有數字都乘進 <code>answer[j]</code></li>
+        </ul>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>n</code>：陣列 <code>nums</code> 的長度</li>
+          <li><code>answer</code>：答案陣列，一開始全部設成 <code>1</code></li>
+          <li><code>i</code>：外層迴圈正在看的元素索引</li>
+          <li><code>j</code>：內層迴圈正在更新的答案位置</li>
+        </ul>
+
+        <h2 id="steps-2">🪜 主要流程步驟</h2>
+        <h3>第一步：初始化答案陣列</h3>
+        <ul>
+          <li>建立 <code>answer</code>，長度為 <code>n</code></li>
+          <li>每一格都先放 <code>1</code>，因為乘法的單位元素是 <code>1</code></li>
+        </ul>
+        <hr />
+
+        <h3>第二步：雙迴圈把元素乘進去</h3>
+        <h4>外層：走過每個 <code>nums[i]</code></h4>
+        <p>我把 <code>nums[i]</code> 當成「等一下要乘進去的某一個因數」。</p>
+        <h4>內層：走過每個答案位置 <code>answer[j]</code></h4>
+        <ul>
+          <li>如果 <code>j != i</code>，代表 <code>answer[j]</code> 的乘積應該包含 <code>nums[i]</code></li>
+          <li>所以執行 <code>answer[j] *= nums[i]</code></li>
+        </ul>
+        <hr />
+
+        <h3>為什麼這樣會 TLE</h3>
+        <p>因為我用了兩層迴圈：</p>
+        <ul>
+          <li>外層跑 <code>n</code> 次</li>
+          <li>內層也跑 <code>n</code> 次</li>
+        </ul>
+        <p>所以總操作次數大約是：<code>n * n = O(n^2)</code>。</p>
+        <p>而題目給的 <code>n</code> 最大可以到 <code>10^5</code>，<code>10^5^2 = 10^10</code> 次操作，這個數量級一定會超時。</p>
+        <p>因此這個方法雖然直觀、也很好理解，但不符合題目要求的 <code>O(n)</code>。</p>
+
+        <h2 id="code-2">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    vector&lt;int&gt; productExceptSelf(vector&lt;int&gt;&amp; nums) {
+        int n = nums.size();
+        vector&lt;int&gt; answer(n, 1);
+        for (int i = 0; i &lt; n; i++) {
+            for (int j = 0; j &lt; n; j++) {
+                if (i != j) {
+                    answer[j] *= nums[i];
+                }
+            }
+        }
+        return answer;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/product-of-array-except-self/description/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-01-15</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value">
+            <span class="post-tags">
+              <span class="post-tag">Array</span>
+              <span class="post-tag">Prefix Sum</span>
+              <span class="post-tag">Medium</span>
+            </span>
+          </span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/top-interview-150/238-product-of-array-except-self.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
