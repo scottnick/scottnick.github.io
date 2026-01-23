@@ -1,0 +1,172 @@
+<!-- all problems/796-rotate-string.html: 全部題單文章 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>796. Rotate String</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="../all%20problems/index.html">All problems</a>
+      <span aria-hidden="true">/</span>
+      <span>796. Rotate String</span>
+    </nav>
+
+    <section class="hero">
+      <h1>796. Rotate String</h1>
+      <p><strong>練習日期：</strong>2026-01-06</p>
+      <p><strong>難度：</strong>Easy</p>
+      <p><strong>類型：</strong>String、String Matching</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給定兩個字串 <code>s</code> 與 <code>goal</code>，請回傳 <code>true</code> 當且僅當 <code>s</code> 可以經過「若干次位移」變成 <code>goal</code>。</p>
+        <p>一次位移（shift）的定義是：把 <code>s</code> 的最左邊字元移到最右邊。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>1 ≤ s.length, goal.length ≤ 100</code></li>
+          <li><code>s</code> 與 <code>goal</code> 只包含小寫英文字母</li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>我的想法是：直接枚舉「旋轉的起點」。</p>
+        <ul>
+          <li>如果 <code>s</code> 能旋轉成 <code>goal</code>，代表存在某個起點 <code>i</code></li>
+          <li>讓 <code>s</code> 從 <code>i</code> 開始讀（並且尾巴接回開頭）剛好等於 <code>goal</code></li>
+        </ul>
+        <p>所以我會：</p>
+        <ol>
+          <li>先檢查長度：<code>s.size() != goal.size()</code> 直接 <code>false</code></li>
+          <li>枚舉每個可能的起點 <code>i</code>（代表旋轉 <code>i</code> 次的效果）</li>
+          <li>對每個 <code>i</code>，逐字比對：用 <code>s[(i + j) % n]</code> 去對 <code>goal[j]</code></li>
+          <li>只要某個 <code>i</code> 全部字元都吻合，就回傳 <code>true</code></li>
+          <li>所有 <code>i</code> 都試完仍沒成功，就回傳 <code>false</code></li>
+        </ol>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>n</code>：字串 <code>s</code> 的長度（也等於 <code>goal</code> 的長度）</li>
+          <li><code>i</code>：目前假設的「旋轉起點」（相當於旋轉幾次）</li>
+          <li><code>j</code>：用來逐字比對的位置</li>
+          <li><code>check</code>：這次起點 <code>i</code> 是否能完整匹配 <code>goal</code></li>
+        </ul>
+        <hr />
+
+        <h3>為什麼用 <code>s[(i + j) % n]</code>？</h3>
+        <p>因為旋轉後的字串其實就是：</p>
+        <ul>
+          <li>從 <code>s[i]</code> 一路讀到結尾</li>
+          <li>再接回 <code>s[0]</code> 繼續讀</li>
+        </ul>
+        <p>用 <code>(i + j) % n</code> 就能把「超出範圍的索引」繞回開頭，模擬旋轉後的讀法。</p>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+        <ol>
+          <li>若 <code>s</code> 與 <code>goal</code> 長度不同，直接回傳 <code>false</code></li>
+          <li>枚舉每個起點 <code>i</code>，逐字比對旋轉後的字元</li>
+          <li>一旦某次比對完全成功，立即回傳 <code>true</code></li>
+          <li>全部起點都失敗，回傳 <code>false</code></li>
+        </ol>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    bool rotateString(string s, string goal) {
+        if (s.size() != goal.size()) {
+            return false;
+        }
+        int n = s.size();
+        for (int i = 0; i < n; i++) {
+            bool check = true;
+            for (int j = 0; j < n; j++) {
+                if (s[(i + j) % n] != goal[j]) {
+                    check = false;
+                    break;
+                }
+            }
+            if (check) {
+                return true;
+            }
+        }
+        return false;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/rotate-string/description/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-01-06</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value">
+            <span class="post-tags">
+              <span class="post-tag">String</span>
+              <span class="post-tag">String Matching</span>
+              <span class="post-tag">Easy</span>
+            </span>
+          </span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/all%20problems/796-rotate-string.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
