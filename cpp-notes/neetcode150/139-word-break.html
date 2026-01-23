@@ -1,0 +1,335 @@
+<!-- neetcode150/139-word-break.html: NeetCode 150 文章 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>139. Word Break</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="../neetcode150/index.html">NeetCode 150</a>
+      <span aria-hidden="true">/</span>
+      <span>139. Word Break</span>
+    </nav>
+
+    <section class="hero">
+      <h1>139. Word Break</h1>
+      <p><strong>練習日期：</strong>2026-01-03</p>
+      <p><strong>難度：</strong>Medium</p>
+      <p><strong>類型：</strong>Array、Hash Table、String、Dynamic Programming、Trie、Memoization</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach-1">🧠 解題思路（一）：正確但結果TLE</a></li>
+          <li><a href="#code-1">💻 程式碼實作</a></li>
+          <li><a href="#approach-2">🧠 解題思路（二）：加入剪枝紀錄</a></li>
+          <li><a href="#code-2">💻 程式碼實作（剪枝版本）</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給定一個字串 <code>s</code> 與一個字典 <code>wordDict</code>（一組字串），請判斷 <code>s</code> 是否能被切分成一個或多個「字典中的單字」所組成。</p>
+        <p>注意：字典中的單字可以被重複使用。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>1 ≤ s.length ≤ 300</code></li>
+          <li><code>1 ≤ wordDict.length ≤ 1000</code></li>
+          <li><code>1 ≤ wordDict[i].length ≤ 20</code></li>
+          <li><code>s</code> 與 <code>wordDict[i]</code> 只包含小寫英文字母</li>
+          <li><code>wordDict</code> 中的字串皆不重複</li>
+        </ul>
+
+        <h2 id="approach-1">🧠 解題思路（一）：正確但結果TLE</h2>
+        <p>這題我寫得比較像「手動回溯（backtracking）」：</p>
+        <ul>
+          <li>我會把「目前切到 <code>s</code> 的哪個位置」記起來</li>
+          <li>並且在每個位置上，嘗試用 <code>wordDict</code> 的每個單字去匹配看看</li>
+          <li>只要有一條路能一路切到 <code>s</code> 的結尾，就回傳 <code>true</code></li>
+          <li>如果某個位置把字典都試完了還不行，就回到上一層（pop），改試下一個單字</li>
+          <li>如果整個 stack 都空了，代表所有可能都試過仍無法組成 <code>s</code>，回傳 <code>false</code></li>
+        </ul>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>n</code>：<code>wordDict</code> 的大小（字典總共有幾個單字）</li>
+          <li><code>num</code>：我用兩條 vector 當成「stack」來記錄回溯狀態
+            <ul>
+              <li><code>num[0][k]</code>：第 <code>k</code> 層目前要嘗試的字典索引（我現在試到 <code>wordDict</code> 的第幾個）</li>
+              <li><code>num[1][k]</code>：第 <code>k</code> 層對應的 <code>s</code> 位置（目前切分到 <code>s</code> 的哪個 index）</li>
+            </ul>
+          </li>
+          <li><code>pos</code>：這一層要從 <code>s[pos]</code> 開始比對</li>
+          <li><code>i</code>：這一層要嘗試的字典單字索引（也就是 <code>wordDict[i]</code>）</li>
+          <li><code>len</code>：<code>wordDict[i]</code> 的長度</li>
+          <li><code>check</code>：這個單字是否能在 <code>s[pos..]</code> 成功匹配</li>
+        </ul>
+
+        <h3>🪜 主要流程步驟</h3>
+        <h4>步驟一：初始化 stack</h4>
+        <pre><code class="language-cpp">num[0].push_back(0);
+num[1].push_back(0);
+</code></pre>
+        <p>一開始表示「從 s 的 pos = 0 開始切」，並且從字典的第 0 個單字開始嘗試。</p>
+        <hr />
+
+        <h4>步驟二：只要 stack 還沒空就繼續嘗試</h4>
+        <pre><code class="language-cpp">while (!num[0].empty()) { ... }
+</code></pre>
+        <p>stack 不空代表「還有路可以走、還有狀態可以回溯」，stack 空代表「所有可能都試完了」，回傳 false。</p>
+        <hr />
+
+        <h4>步驟三：取出目前最上層（最後一層）的狀態</h4>
+        <pre><code class="language-cpp">int m = num[0].size() - 1;
+int i = num[0][m];
+int pos = num[1][m];
+</code></pre>
+        <p>這代表目前這一層在做：我現在在 s 的位置 pos，打算用 <code>wordDict[i]</code> 去匹配 <code>s[pos..]</code>。</p>
+
+        <h4>情況一：這一層的字典都試完了（要回溯）</h4>
+        <pre><code class="language-cpp">if (i >= n) {
+    num[0].pop_back();
+    num[1].pop_back();
+    if (!num[0].empty()) {
+        num[0].back()++;
+    }
+    continue;
+}
+</code></pre>
+        <p><code>i >= n</code> 表示這個 pos 下，wordDict 全部都試過了仍不行，所以我把這層狀態 pop 掉回到上一層，並改試下一個單字。</p>
+
+        <h4>情況二：嘗試用 <code>wordDict[i]</code> 去比對 <code>s[pos..]</code></h4>
+        <p>我先做兩件事：</p>
+        <ul>
+          <li>長度是否超界：如果 pos + len > s.size() 一定不可能匹配</li>
+          <li>逐字元比對是否相同：只要有一個字元不同就失敗</li>
+        </ul>
+        <p>最後用 check 表示「這個單字是否能放在這個 pos」。</p>
+
+        <h4>情況三：匹配成功（往下一層走）</h4>
+        <pre><code class="language-cpp">if (check) {
+    int npos = pos + len;
+    if (npos == s.size()) {
+        return true;
+    }
+    num[0].push_back(0);
+    num[1].push_back(npos);
+}
+</code></pre>
+        <p>如果成功，代表我可以把切分位置推進到 npos = pos + len；若 npos == s.size()，代表剛好切到結尾，直接回傳 true，否則進入下一層。</p>
+
+        <h4>情況四：匹配失敗（同一層改試下一個單字）</h4>
+        <pre><code class="language-cpp">else {
+    num[0][m]++;
+}
+</code></pre>
+        <p>代表在同一個 pos 上，wordDict[i] 不合，所以我把 i 往後移，改試下一個字典單字。</p>
+
+        <p>迴圈結束後 stack 空了，代表所有路徑都嘗試過仍無法組成 s，因此回傳 false。</p>
+
+        <h2 id="code-1">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    bool wordBreak(string s, vector&lt;string&gt;&amp; wordDict) {
+        vector&lt;vector&lt;int&gt;&gt; num(2); // num[0][k]=位置, num[1][k]=長度
+        num[0].push_back(0);
+        num[1].push_back(0);
+        int n = wordDict.size();
+        while (!num[0].empty()) {
+            int m = num[0].size() - 1;
+            int i = num[0][m];
+            int pos = num[1][m];
+            if (i >= n) {
+                num[0].pop_back();
+                num[1].pop_back();
+                if (!num[0].empty()) {
+                    num[0].back()++;
+                }
+                continue;
+            }
+            int len = wordDict[i].size();
+            bool check = true;
+            if (pos + len > s.size()) {
+                check = false;
+            } else {
+                for (int j = 0; j &lt; len; j++) {
+                    if (wordDict[i][j] != s[pos + j]) {
+                        check = false;
+                        break;
+                    }
+                }
+            }
+            if (check) {
+                int npos = pos + len;
+                if (npos == s.size()) {
+                    return true;
+                }
+                num[0].push_back(0);
+                num[1].push_back(npos);
+            } else {
+                num[0][m]++;
+            }
+        }
+        return false;
+    }
+};
+</code></pre>
+
+        <h2 id="approach-2">🧠 解題思路（二）：加入剪枝紀錄</h2>
+        <p>在原本的寫法中，我使用回溯方式嘗試所有可能的切分路徑，但在某些情況下會反覆走到同一個切分位置 <code>pos</code>，導致時間複雜度過高而 TLE。</p>
+        <p>因此我在後來的版本中，加入了一個剪枝用的記錄陣列來避免重複嘗試。</p>
+
+        <h3>新增 <code>bad[pos]</code>：記錄「一定失敗的起點」</h3>
+        <p>我新增一個陣列：</p>
+        <ul>
+          <li><code>bad[pos] = 1</code> 表示：從字串位置 <code>pos</code> 出發，已經完整嘗試過所有字典單字，最後仍然無法切到字串結尾，因此這個 <code>pos</code> 是一條「死路」。</li>
+        </ul>
+        <p>之後只要再次走到同一個 <code>pos</code>，就可以直接跳過，不再嘗試。</p>
+
+        <h3>剪枝實際發生的兩個時機</h3>
+        <h4>情況一：進入某一層時，發現 <code>bad[pos] == 1</code></h4>
+        <ul>
+          <li>代表這個 <code>pos</code> 之前已經被完整驗證過且不可能成功</li>
+          <li>因此直接將這一層狀態 pop 掉，回到上一層，並讓上一層改試下一個單字</li>
+        </ul>
+
+        <h4>情況二：某個 <code>pos</code> 已把整個字典都試完（<code>i >= n</code>）</h4>
+        <ul>
+          <li>代表以這個 <code>pos</code> 作為起點，所有單字都無法成功切分</li>
+          <li>我會將 <code>bad[pos]</code> 標記為 <code>1</code>，未來任何路徑再走到這個 <code>pos</code> 都可以直接剪枝</li>
+        </ul>
+
+        <h3>為什麼這樣改就不會 TLE？</h3>
+        <p>加入 <code>bad[pos]</code> 之後，每個 <code>pos</code> 最多只會被完整嘗試一次，一旦確認失敗就不再重複進入，搜尋空間被大幅縮小。</p>
+
+        <h2 id="code-2">💻 程式碼實作（剪枝版本）</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    bool wordBreak(string s, vector&lt;string&gt;&amp; wordDict) {
+        vector&lt;vector&lt;int&gt;&gt; num(2); // num[0][k]=位置, num[1][k]=長度
+        num[0].push_back(0);
+        num[1].push_back(0);
+        int n = wordDict.size();
+        vector&lt;int&gt; bad(s.size() + 1, 0);  // bad[pos] = 1 表示從 pos出發已經完整嘗試且不可能成功
+        while (!num[0].empty()) {
+            int m = num[0].size() - 1;
+            int i = num[0][m];
+            int pos = num[1][m];
+            if (bad[pos]) {
+                num[0].pop_back();
+                num[1].pop_back();
+                if (!num[0].empty()) {
+                    num[0].back()++;
+                }
+                continue;
+            }
+            if (i >= n) {
+                bad[pos] = 1;
+                num[0].pop_back();
+                num[1].pop_back();
+                if (!num[0].empty()) {
+                    num[0].back()++;
+                }
+                continue;
+            }
+            int len = wordDict[i].size();
+            bool check = true;
+            if (pos + len > s.size()) {
+                check = false;
+            } else {
+                for (int j = 0; j &lt; len; j++) {
+                    if (wordDict[i][j] != s[pos + j]) {
+                        check = false;
+                        break;
+                    }
+                }
+            }
+            if (check) {
+                int npos = pos + len;
+                if (npos == s.size()) {
+                    return true;
+                }
+                num[0].push_back(0);
+                num[1].push_back(npos);
+            } else {
+                num[0][m]++;
+            }
+        }
+        return false;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/word-break/description/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-01-03</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value">
+            <span class="post-tags">
+              <span class="post-tag">Array</span>
+              <span class="post-tag">Hash Table</span>
+              <span class="post-tag">String</span>
+              <span class="post-tag">Dynamic Programming</span>
+              <span class="post-tag">Trie</span>
+              <span class="post-tag">Memoization</span>
+              <span class="post-tag">Medium</span>
+            </span>
+          </span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/neetcode150/139-word-break.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
