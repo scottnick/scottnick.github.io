@@ -1,4 +1,4 @@
-<!-- all problems/11-container-with-most-water.html: 全部題單文章 -->
+<!-- leetcode75/11-container-with-most-water.html: LeetCode 75 文章 -->
 <!doctype html>
 <html lang="zh-Hant">
 <head>
@@ -30,7 +30,7 @@
     <nav class="breadcrumb" aria-label="文章路徑">
       <a href="../../cpp.html">C++學習筆記</a>
       <span aria-hidden="true">/</span>
-      <a href="../all%20problems/index.html">All problems</a>
+      <a href="../leetcode75/index.html">LeetCode 75</a>
       <span aria-hidden="true">/</span>
       <span>11. Container With Most Water</span>
     </nav>
@@ -51,7 +51,6 @@
         <ul>
           <li><a href="#statement">📘 題目敘述</a></li>
           <li><a href="#approach">🧠 解題思路（第一直覺）</a></li>
-          <li><a href="#steps">🪜 主要流程步驟</a></li>
           <li><a href="#code">💻 程式碼實作</a></li>
           <li><a href="#link">🔗 題目連結</a></li>
         </ul>
@@ -71,8 +70,7 @@
         </ul>
 
         <h2 id="approach">🧠 解題思路（第一直覺）</h2>
-        <p>在看這題時，我的想法是：</p>
-        <p>因為題目保證 <code>height</code> 至少有兩個元素，所以一定能形成一個容器。</p>
+        <p>在看這題時，我的想法是：因為題目保證 <code>height</code> 至少有兩個元素，所以一定能形成一個容器。</p>
         <p>我先從<strong>最左邊與最右邊</strong>各選一條線段開始，這樣可以得到<strong>目前可能的最大寬度</strong>。</p>
         <p>容器能裝多少水，取決於兩個因素：</p>
         <ul>
@@ -92,15 +90,16 @@
         <p>在固定 <code>i</code> 與 <code>j</code> 之後，我會先計算目前這組線段所形成的水量，接著再決定「要移動哪一邊的指標」。</p>
         <hr />
 
-        <h3>核心判斷（這題的重點）</h3>
+        <h3 id="cases">核心判斷（這題的重點）</h3>
         <p>在 <code>(i, j)</code> 這個位置下：</p>
         <ul>
           <li>容器的高度一定是 <code>min(height[i], height[j])</code></li>
           <li>也就是說，<strong>比較矮的那一邊會限制整個容器的高度</strong></li>
         </ul>
+        <p>因此會出現兩種情況：</p>
+        <hr />
 
-        <h3 id="steps">🪜 主要流程步驟</h3>
-        <h4>情況一：<code>height[i] >= height[j]</code>（右邊比較矮）</h4>
+        <h4>情況一：<code>height[i] &gt;= height[j]</code>（右邊比較矮）</h4>
         <ul>
           <li>此時容器高度由 <code>height[j]</code> 決定</li>
           <li>如果我移動左邊（比較高的那一邊）：
@@ -118,25 +117,26 @@
         </ul>
         <hr />
 
-        <h4>情況二：<code>height[i] < height[j]</code>（左邊比較矮）</h4>
+        <h4>情況二：<code>height[i] &lt; height[j]</code>（左邊比較矮）</h4>
         <ul>
           <li>此時容器高度由 <code>height[i]</code> 決定</li>
           <li>同樣地，若移動右邊（比較高的一邊）只會讓寬度變小，高度不變</li>
+          <li>因此我選擇將左指標往內移動：<code>i++</code></li>
         </ul>
-        <p>因此我選擇將左指標往內移動：<code>i++</code></p>
         <p>嘗試尋找一條比目前 <code>height[i]</code> 更高的線段，以解除容器高度受限於左邊矮線的情況。</p>
         <hr />
 
-        <h4>每一步在做什麼？</h4>
+        <h3 id="steps">每一步在做什麼？</h3>
+        <p>在每一次指標移動前：</p>
         <ul>
-          <li>在每一次指標移動前，先計算目前 <code>(i, j)</code> 的水量</li>
+          <li>先計算目前 <code>(i, j)</code> 的水量</li>
           <li>若 <code>nvol</code> 大於目前的 <code>vol</code>，就更新最大值</li>
-          <li>接著依照「移動較矮邊」的規則，更新 <code>i</code> 或 <code>j</code></li>
-          <li>當 <code>i >= j</code> 時，代表所有可能的組合都已經考慮完成，回傳 <code>vol</code> 即可</li>
         </ul>
+        <p>接著依照「移動較矮邊」的規則，更新 <code>i</code> 或 <code>j</code>。</p>
+        <p>當 <code>i &gt;= j</code> 時，代表所有可能的組合都已經考慮完成，回傳 <code>vol</code> 即可。</p>
         <hr />
 
-        <h4>為什麼「移動比較高的那一邊」一定不會變好？</h4>
+        <h3 id="why">為什麼「移動比較高的那一邊」一定不會變好？</h3>
         <p>在 <code>(i, j)</code> 固定的情況下，容器的水量為：</p>
         <p><code>(j - i) * min(height[i], height[j])</code></p>
         <p>這代表一件很關鍵的事情：</p>
@@ -202,7 +202,7 @@ public:
         </div>
         <div class="meta-field meta-field--full">
           <span class="meta-label">原文連結：</span>
-          <span class="meta-value">https://scottnick.github.io/cpp-notes/all%20problems/11-container-with-most-water.html</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/leetcode75/11-container-with-most-water.html</span>
         </div>
       </div>
     </section>
