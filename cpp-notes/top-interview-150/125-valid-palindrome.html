@@ -1,0 +1,234 @@
+<!-- top-interview-150/125-valid-palindrome.html: Top Interview 150 文章 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>125. Valid Palindrome</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="../top-interview-150/index.html">Top Interview 150</a>
+      <span aria-hidden="true">/</span>
+      <span>125. Valid Palindrome</span>
+    </nav>
+
+    <section class="hero">
+      <h1>125. Valid Palindrome</h1>
+      <p><strong>練習日期：</strong>2026-01-11</p>
+      <p><strong>難度：</strong>Easy</p>
+      <p><strong>類型：</strong>Two Pointers、String</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給定一個字串 <code>s</code>，請判斷在把所有非英數字元移除、並將英文字母轉成小寫後，剩下的字串是否為迴文（palindrome）。</p>
+        <p>若一個字串從左往右讀與從右往左讀都相同，則它是迴文。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>1 ≤ s.length ≤ 2 * 10^5</code></li>
+          <li><code>s</code> 只包含可列印的 ASCII 字元</li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>我把這題分成兩個階段來做：</p>
+        <p>第一階段是「先把字串整理成我想比較的樣子」：</p>
+        <ul>
+          <li>把大寫英文字母轉成小寫</li>
+          <li>保留小寫字母與數字</li>
+          <li>其他符號（空白、逗號、冒號…）全部刪掉</li>
+        </ul>
+        <p>這樣處理完之後，字串 <code>s</code> 就只剩下 <code>[a-z]</code> 和 <code>[0-9]</code>，可以直接拿來比對。</p>
+        <p>第二階段才是「判斷是不是迴文」：</p>
+        <ul>
+          <li>我沒有用左右指標直接比</li>
+          <li>而是把字串後半段倒著接起來形成 <code>pal</code></li>
+          <li>再把 <code>s</code> 的前半段拿來和 <code>pal</code> 做字串比較</li>
+        </ul>
+        <p>因為偶數長度與奇數長度的「中心點」處理不同，所以我用 <code>n</code> 的奇偶分開處理。</p>
+
+        <h3 id="variables">所有變數</h3>
+        <ul>
+          <li><code>trans</code>：第一階段用來掃描字串的位置指標（逐字處理、同時可能刪字元）</li>
+          <li><code>pal</code>：第二階段用來存「反轉後半段」的字串，最後用來和前半段比較</li>
+          <li><code>n</code>：整理完後的字串長度，用來判斷奇偶與切割範圍</li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+        <h3>第一階段：整理字串（只保留英數，字母轉小寫）</h3>
+        <p>我用 <code>trans</code> 從左到右掃描 <code>s</code>，會遇到幾種情況：</p>
+
+        <h4>情況一：遇到大寫字母 <code>A</code>～<code>Z</code></h4>
+        <ul>
+          <li>我把它轉成小寫（透過 ASCII 差值）</li>
+          <li>然後 <code>trans++</code> 繼續往後走</li>
+        </ul>
+
+        <h4>情況二：遇到數字 <code>0</code>～<code>9</code></h4>
+        <ul>
+          <li>這些字元本來就要保留</li>
+          <li>直接 <code>trans++</code></li>
+        </ul>
+
+        <h4>情況三：遇到小寫字母 <code>a</code>～<code>z</code></h4>
+        <ul>
+          <li>這些字元也要保留</li>
+          <li>直接 <code>trans++</code></li>
+        </ul>
+
+        <h4>情況四：遇到其他字元（符號、空白、標點）</h4>
+        <ul>
+          <li>這些字元不應該參與回文判斷</li>
+          <li>所以我把它從字串中刪掉</li>
+          <li><strong>刪掉後不做 <code>trans++</code></strong>，因為刪除會讓後面的字元往前補上來，需要繼續檢查同一個索引位置</li>
+        </ul>
+        <p>整理完後，字串 <code>s</code> 就變成只含英數的乾淨版本。</p>
+        <hr />
+
+        <h3>第二階段：判斷是否迴文（用字串切半比較）</h3>
+        <p>整理完後我令 <code>n = s.size()</code>，接著看長度是偶數還是奇數：</p>
+
+        <h4>情況一：<code>n</code> 是偶數</h4>
+        <ul>
+          <li>我把後半段反過來接成 <code>pal</code></li>
+          <li>然後比較：
+            <ul>
+              <li>前半段 <code>s.substr(0, n / 2)</code></li>
+              <li>是否等於 <code>pal</code></li>
+            </ul>
+          </li>
+          <li>相等就回傳 <code>true</code>，否則 <code>false</code></li>
+        </ul>
+
+        <h4>情況二：<code>n</code> 是奇數</h4>
+        <ul>
+          <li>這時中間那個字元左右對稱時會自己對到自己</li>
+          <li>我的做法是把「包含中間字元的那一半」也一起放進比較</li>
+          <li>所以我同樣把後半段反過來接成 <code>pal</code></li>
+          <li>然後比較：
+            <ul>
+              <li><code>s.substr(0, n / 2 + 1)</code></li>
+              <li>是否等於 <code>pal</code></li>
+            </ul>
+          </li>
+          <li>相等就回傳 <code>true</code>，否則 <code>false</code></li>
+        </ul>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    bool isPalindrome(string s) {
+        int trans = 0;
+        string pal = "";
+        while (trans &lt; s.size()) {
+            if (s[trans] &gt;= 'A' &amp;&amp; s[trans] &lt;= 'Z') {
+                s[trans] = (char)(s[trans] + 'a' - 'A');
+                trans++;
+            } else if (s[trans] &gt;= '0' &amp;&amp; s[trans] &lt;= '9') {
+                trans++;
+            } else if (s[trans] &lt; 'a' || s[trans] &gt; 'z') {
+                s.erase(trans, 1);
+            } else {
+                trans++;
+            }
+        }
+
+        int n = s.size();
+        if (n % 2 == 0) {
+            for (int i = n - 1; i &gt;= n / 2; i--) {
+                pal += s[i];
+            }
+            if (s.substr(0, n / 2) == pal) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            for (int i = n - 1; i &gt;= n / 2; i--) {
+                pal += s[i];
+            }
+            if (s.substr(0, n / 2 + 1) == pal) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/valid-palindrome/description/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-01-11</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value">
+            <span class="post-tags">
+              <span class="post-tag">Two Pointers</span>
+              <span class="post-tag">String</span>
+              <span class="post-tag">Easy</span>
+            </span>
+          </span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/top-interview-150/125-valid-palindrome.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>

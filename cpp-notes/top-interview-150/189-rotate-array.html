@@ -1,0 +1,192 @@
+<!-- top-interview-150/189-rotate-array.html: Top Interview 150 文章 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>189. Rotate Array</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="../top-interview-150/index.html">Top Interview 150</a>
+      <span aria-hidden="true">/</span>
+      <span>189. Rotate Array</span>
+    </nav>
+
+    <section class="hero">
+      <h1>189. Rotate Array</h1>
+      <p><strong>練習日期：</strong>2026-01-16</p>
+      <p><strong>難度：</strong>Medium</p>
+      <p><strong>類型：</strong>Array、Two Pointers</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#summary">💡 整體邏輯總結</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給定一個整數陣列 <code>nums</code>，請將陣列往右旋轉 <code>k</code> 步。</p>
+        <p>換句話說：</p>
+        <ul>
+          <li>每次旋轉 1 步，就是把最後一個元素搬到最前面</li>
+          <li>旋轉 <code>k</code> 步後，回傳旋轉完成的陣列結果（題目要求原地修改 <code>nums</code>）</li>
+        </ul>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>1 ≤ nums.length ≤ 10^5</code></li>
+          <li><code>-2^31 ≤ nums[i] ≤ 2^31 - 1</code></li>
+          <li><code>0 ≤ k ≤ 10^5</code></li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>我這份寫法的想法是：</p>
+        <p>與其真的做 <code>k</code> 次「把最後一個搬到最前面」，我直接找出「旋轉後的新陣列」會從原本哪個位置開始。</p>
+        <p>假設陣列長度是 <code>n</code>：</p>
+        <ul>
+          <li>往右旋轉 <code>k</code> 步等價於往左旋轉 <code>n - k</code> 步（因為繞一圈會回到原本位置）</li>
+        </ul>
+        <p>所以我只要先算出：</p>
+        <ul>
+          <li>新陣列的第 0 個位置，應該對應到原本的哪個索引 <code>pos</code></li>
+        </ul>
+        <p>接著用 <code>pos</code> 往後一路放進新的陣列 <code>rnums</code>，並用 <code>% n</code> 讓索引循環即可。</p>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>n</code>：<code>nums</code> 的長度</li>
+          <li><code>k</code>：題目要求往右旋轉的步數</li>
+          <li><code>pos</code>：我用來指出「旋轉後第一個元素」在原陣列中的起始位置</li>
+          <li><code>rnums</code>：暫存旋轉後結果的陣列，最後再整個指定回 <code>nums</code></li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+        <h3>第一步：把 <code>k</code> 轉成等效的起始位置（重點）</h3>
+        <p>因為 <code>k</code> 可能比 <code>n</code> 大，所以實際旋轉效果是以 <code>k % n</code> 為主。</p>
+        <p>我用這行去算起點：</p>
+        <ul>
+          <li><code>pos = n - (k % n)</code> 的概念</li>
+          <li>再把它整理成一定落在 <code>[0, n-1]</code> 的安全寫法</li>
+        </ul>
+        <p>所以最後 <code>pos</code> 代表：</p>
+        <blockquote>
+          <p>旋轉後的新陣列第 0 個元素，應該從原陣列的 <code>nums[pos]</code> 開始拿</p>
+        </blockquote>
+        <hr />
+
+        <h3>第二步：依序把元素放進 <code>rnums</code></h3>
+        <p>接著我跑 <code>n</code> 次：</p>
+        <ul>
+          <li>每次把 <code>nums[pos]</code> 放進 <code>rnums</code></li>
+          <li>然後 <code>pos++</code></li>
+          <li>再用 <code>pos = pos % n</code> 讓索引回到開頭（形成循環）</li>
+        </ul>
+        <p>這樣就能做到「從起點開始繞一圈」，把所有元素按旋轉後順序收集完成。</p>
+        <hr />
+
+        <h3>第三步：把結果寫回 <code>nums</code></h3>
+        <p>最後我直接：</p>
+        <ul>
+          <li><code>nums = rnums</code></li>
+        </ul>
+        <p>完成題目要求的「修改原本陣列」的效果。</p>
+        <hr />
+
+        <h2 id="summary">💡 整體邏輯總結</h2>
+        <ol>
+          <li>先找出旋轉後的起點 <code>pos</code></li>
+          <li>從 <code>pos</code> 開始把元素依序搬到新陣列</li>
+          <li>用 <code>% n</code> 讓索引循環</li>
+          <li>最後把新陣列整個覆蓋回 <code>nums</code></li>
+        </ol>
+        <p>這樣時間是 <code>O(n)</code>，邏輯也很直觀。（但額外用了 <code>rnums</code>，所以空間是 <code>O(n)</code>。）</p>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    void rotate(vector&lt;int&gt;&amp; nums, int k) {
+        int n = nums.size();
+        int pos = (((n - k) % n) + n) % n;
+        vector&lt;int&gt; rnums;
+        for (int i = 0; i &lt; n; i++) {
+            rnums.push_back(nums[pos]);
+            pos++;
+            pos = pos % n;
+        }
+        nums = rnums;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/rotate-array/description/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-01-16</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value">
+            <span class="post-tags">
+              <span class="post-tag">Array</span>
+              <span class="post-tag">Two Pointers</span>
+              <span class="post-tag">Medium</span>
+            </span>
+          </span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/top-interview-150/189-rotate-array.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
