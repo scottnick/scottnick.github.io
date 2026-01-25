@@ -1,0 +1,175 @@
+<!-- contests/weekly-contest-486/q1-minimum-prefix-removal-to-make-array-strictly-increasing.html: Weekly Contest 486 Q1 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Q1. Minimum Prefix Removal to Make Array Strictly Increasing</title>
+  <link rel="stylesheet" href="../../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../../index.html">主頁</a>
+        <a href="../../../courses.html">修課紀錄</a>
+        <a href="../../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="../index.html">Contests</a>
+      <span aria-hidden="true">/</span>
+      <a href="../weekly-contest-486.html">Weekly Contest 486</a>
+      <span aria-hidden="true">/</span>
+      <span>Q1. Minimum Prefix Removal to Make Array Strictly Increasing</span>
+    </nav>
+
+    <section class="hero">
+      <h1>Q1. Minimum Prefix Removal to Make Array Strictly Increasing</h1>
+      <p><strong>練習日期：</strong>2026-01-25</p>
+      <p><strong>類型：</strong>Weekly Contest 486</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給定一個整數陣列 <code>nums</code>。</p>
+        <p>你需要從 <code>nums</code> 中<strong>移除恰好一個前綴（prefix）</strong>，這個前綴可以是<strong>空的</strong>。</p>
+        <p>請回傳一個整數，表示<strong>最少需要移除的前綴長度</strong>，使得剩下的陣列成為<strong>嚴格遞增（strictly increasing）</strong>。</p>
+        <p>如果一個陣列中，對於所有合法的 <code>i</code>，都滿足 <code>nums[i] &lt; nums[i + 1]</code>，則稱該陣列為嚴格遞增。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>1 &lt;= nums.length &lt;= 10^5</code></li>
+          <li><code>-10^9 &lt;= nums[i] &lt;= 10^9</code></li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>我的想法是：</p>
+        <p>我想要留下來的「剩餘陣列」必須是嚴格遞增，所以我只要找出「最早可以開始變成嚴格遞增的地方」就好。</p>
+        <p>換句話說，我在從左到右掃描時，只要發現 <strong><code>nums[i]</code> 沒有比前一個數字大（也就是 <code>nums[i] &lt;= last</code>）</strong>，那就代表：</p>
+        <ul>
+          <li>如果我希望剩下的陣列從某個位置開始是嚴格遞增</li>
+          <li>那至少要把 prefix 移除到 <code>i</code> 這個位置之前</li>
+          <li>所以「需要移除的最短長度」至少要更新成 <code>i</code></li>
+        </ul>
+        <p>因此我一路掃描，記錄「最後一次破壞嚴格遞增的位置」，最後回傳那個位置 <code>count</code>，就是答案。</p>
+
+        <h3 id="variables">所有變數</h3>
+        <ul>
+          <li><code>last</code>：上一個掃描到的數字（用來判斷目前 <code>nums[i]</code> 是否仍維持嚴格遞增）</li>
+          <li><code>count</code>：目前推到的「最短要移除的 prefix 長度」（也就是最後一次違反嚴格遞增的索引 <code>i</code>）</li>
+          <li><code>i</code>：掃描陣列的索引</li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+        <h3>1. 初始化</h3>
+        <ul>
+          <li><code>last = nums[0]</code>：先把第一個數字當作比較基準</li>
+          <li><code>count = 0</code>：預設移除長度為 0（代表可能本來就已經嚴格遞增）</li>
+        </ul>
+        <hr />
+        <h3>2. 從左到右掃描整個陣列</h3>
+        <p>每次看一個 <code>nums[i]</code>，做兩件事：</p>
+        <h4>情況一：<code>nums[i] &lt;= last</code>（破壞嚴格遞增）</h4>
+        <ul>
+          <li>這代表如果「剩下的陣列要從某個位置開始嚴格遞增」</li>
+          <li>那至少不能從 <code>i</code> 之前開始留下來</li>
+          <li>所以我更新：<code>count = i</code></li>
+        </ul>
+        <h4>情況二：<code>nums[i] &gt; last</code>（仍維持嚴格遞增）</h4>
+        <ul>
+          <li>代表目前還沒有破壞條件</li>
+          <li><code>count</code> 不需要改動</li>
+        </ul>
+        <p>不管是哪個情況，最後都會更新：</p>
+        <ul>
+          <li><code>last = nums[i]</code>：讓下一輪用新的 <code>last</code> 繼續比較</li>
+        </ul>
+        <hr />
+        <h3>3. 回傳答案</h3>
+        <ul>
+          <li>掃描完後，<code>count</code> 就是「最短需要移除的 prefix 長度」</li>
+          <li>因為它代表「最後一次出現 <code>nums[i] &lt;= nums[i-1]</code> 的位置」</li>
+          <li>把 prefix 移除到 <code>count</code>，剩下的尾巴就會是嚴格遞增</li>
+        </ul>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    int minimumPrefixLength(vector&lt;int&gt;&amp; nums) {
+        int last = nums[0];
+        int count = 0;
+        for (int i = 0; i &lt; nums.size(); i++) {
+            if (nums[i] &lt;= last) {
+                count = i;
+            }
+            last = nums[i];
+        }
+        return count;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/contest/weekly-contest-486/problems/minimum-prefix-removal-to-make-array-strictly-increasing/description/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-01-25</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value">
+            <span class="post-tags">
+              <span class="post-tag">Weekly Contest 486</span>
+            </span>
+          </span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/contests/weekly-contest-486/q1-minimum-prefix-removal-to-make-array-strictly-increasing.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../../script.js"></script>
+</body>
+</html>
