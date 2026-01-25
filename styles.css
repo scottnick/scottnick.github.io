@@ -818,8 +818,13 @@ pre code[class*="language-"] {
   grid-column: 1 / -1;
   display: grid;
   grid-template-columns: max-content minmax(0, 1fr);
-  align-items: start;
+  align-items: center;
   column-gap: 8px;
+}
+
+.meta-field--full .meta-value {
+  display: flex;
+  align-items: center;
 }
 
 .meta-field--full .post-tags {
