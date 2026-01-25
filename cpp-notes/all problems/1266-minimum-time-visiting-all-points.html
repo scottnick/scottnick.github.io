@@ -1,0 +1,205 @@
+<!-- all problems/1266-minimum-time-visiting-all-points.html: 全部題單文章 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>1266. Minimum Time Visiting All Points</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="../all%20problems/index.html">All problems</a>
+      <span aria-hidden="true">/</span>
+      <span>1266. Minimum Time Visiting All Points</span>
+    </nav>
+
+    <section class="hero">
+      <h1>1266. Minimum Time Visiting All Points</h1>
+      <p><strong>練習日期：</strong>2026-01-12</p>
+      <p><strong>難度：</strong>Easy</p>
+      <p><strong>類型：</strong>Math、Greedy、Geometry</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給定一個二維平面上的點集合 <code>points</code>，其中 <code>points[i] = [xi, yi]</code> 表示第 <code>i</code> 個點的座標。</p>
+        <p>你一開始位於 <code>points[0]</code>，並且必須依序走訪 <code>points[1]</code>、<code>points[2]</code>、…、直到最後一個點。</p>
+        <p>在每一秒鐘，你可以進行以下其中一種移動：</p>
+        <ul>
+          <li>水平移動 1 單位</li>
+          <li>垂直移動 1 單位</li>
+          <li>斜向移動 1 單位（同時改變 x 與 y）</li>
+        </ul>
+        <p>請回傳走訪所有點所需的<strong>最少時間（秒數）</strong>。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>1 ≤ points.length ≤ 100</code></li>
+          <li><code>points[i].length == 2</code></li>
+          <li><code>-1000 ≤ xi, yi ≤ 1000</code></li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>這題的關鍵在於理解「<strong>斜向移動的效果</strong>」。</p>
+        <p>因為每一秒可以同時改變 <code>x</code> 與 <code>y</code> 各 1 單位，所以在移動兩個點 <code>(x1, y1) → (x2, y2)</code> 時：</p>
+        <ul>
+          <li>可以盡量用「斜向移動」同時縮小 <code>x</code> 與 <code>y</code> 的距離</li>
+          <li>當其中一個方向對齊後，再用直線移動補齊剩下的距離</li>
+        </ul>
+        <p>因此，從一個點移動到下一個點的最少時間，其實只和 <strong>x 距離與 y 距離的最大值</strong> 有關。</p>
+        <hr />
+
+        <h3>關鍵觀察</h3>
+        <p>假設目前在 <code>(x, y)</code>，要移動到 <code>(nx, ny)</code>：</p>
+        <ul>
+          <li><code>dx = |nx - x|</code></li>
+          <li><code>dy = |ny - y|</code></li>
+        </ul>
+        <p>最佳策略是：</p>
+        <ul>
+          <li>先用 <code>min(dx, dy)</code> 次斜向移動</li>
+          <li>剩下 <code>|dx - dy|</code> 次只能用水平或垂直移動</li>
+        </ul>
+        <p>所以總時間為：<code>max(dx, dy)</code></p>
+        <p>這也是為什麼不需要真的模擬每一步移動，只要計算距離即可。</p>
+        <hr />
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>n</code>：點的總數</li>
+          <li><code>now</code>：目前要前往的點的索引（從 <code>1</code> 開始）</li>
+          <li><code>x, y</code>：目前所在點的座標</li>
+          <li><code>dx, dy</code>：目前點與下一個點在 x、y 方向的距離</li>
+          <li><code>ans</code>：累積的最少移動時間</li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+        <h3>初始狀態</h3>
+        <ul>
+          <li>一開始位置設為 <code>points[0]</code></li>
+          <li>從第二個點開始，依序走訪後面的點</li>
+        </ul>
+        <hr />
+
+        <h3>每一次移動的計算方式</h3>
+        <p>對於「目前點 → 下一個點」：</p>
+        <ol>
+          <li>計算 <code>dx</code> 與 <code>dy</code></li>
+          <li>本次最少需要的時間為 <code>max(dx, dy)</code></li>
+          <li>把這個時間加進 <code>ans</code></li>
+          <li>更新目前位置為下一個點</li>
+        </ol>
+        <p>這樣一路累加，直到走訪完所有點。</p>
+        <hr />
+
+        <h3>為什麼可以直接相加？</h3>
+        <ul>
+          <li>必須依序走訪所有點</li>
+          <li>每一段移動都是獨立的</li>
+          <li>沒有回頭或路線選擇的問題</li>
+        </ul>
+        <p>所以只要把每一段的最少時間加起來，就是整體的最少時間。</p>
+        <hr />
+
+        <h3>整體邏輯總結</h3>
+        <ul>
+          <li>斜向移動 = 同時減少 x 與 y 距離</li>
+          <li>每一段移動的最少時間 = <code>max(dx, dy)</code></li>
+          <li>問題可以拆成「相鄰兩點之間」的距離計算</li>
+        </ul>
+        <p>因此整體只需要一次線性掃描即可完成。</p>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    int minTimeToVisitAllPoints(vector&lt;vector&lt;int&gt;&gt;&amp; points) {
+        int n = points.size();
+        int now = 1;
+        int x = points[0][0], y = points[0][1];
+        int ans = 0;
+        while (now &lt; n) {
+            int dx = abs(points[now][0] - x), dy = abs(points[now][1] - y);
+            ans += max(dx, dy);
+            x = points[now][0], y = points[now][1];
+            now += 1;
+        }
+        return ans;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/minimum-time-visiting-all-points/description/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-01-12</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value">
+            <span class="post-tags">
+              <span class="post-tag">Math</span>
+              <span class="post-tag">Greedy</span>
+              <span class="post-tag">Geometry</span>
+              <span class="post-tag">Easy</span>
+            </span>
+          </span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/all%20problems/1266-minimum-time-visiting-all-points.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
