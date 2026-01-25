@@ -822,6 +822,10 @@ pre code[class*="language-"] {
   column-gap: 8px;
 }
 
+.meta-field--full .post-tags {
+  align-self: center;
+}
+
 .meta-field--date {
   justify-self: center;
 }
