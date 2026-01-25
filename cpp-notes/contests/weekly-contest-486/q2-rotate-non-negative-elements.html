@@ -1,0 +1,183 @@
+<!-- contests/weekly-contest-486/q2-rotate-non-negative-elements.html: Weekly Contest 486 Q2 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Q2. Rotate Non-Negative Elements</title>
+  <link rel="stylesheet" href="../../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../../index.html">主頁</a>
+        <a href="../../../courses.html">修課紀錄</a>
+        <a href="../../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="../index.html">Contests</a>
+      <span aria-hidden="true">/</span>
+      <a href="../weekly-contest-486.html">Weekly Contest 486</a>
+      <span aria-hidden="true">/</span>
+      <span>Q2. Rotate Non-Negative Elements</span>
+    </nav>
+
+    <section class="hero">
+      <h1>Q2. Rotate Non-Negative Elements</h1>
+      <p><strong>練習日期：</strong>2026-01-25</p>
+      <p><strong>類型：</strong>Weekly Contest 486</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給你一個整數陣列 <code>nums</code> 與一個整數 <code>k</code>。</p>
+        <p>請你只針對陣列中的「非負數元素（<code>&gt;= 0</code>）」做旋轉操作：把這些非負數元素<strong>向左</strong>循環旋轉 <code>k</code> 個位置。</p>
+        <p>同時必須滿足：</p>
+        <ul>
+          <li>所有負數元素都必須保持在原本的位置，<strong>不能移動</strong></li>
+          <li>旋轉後，把非負數元素依照新順序放回陣列中，只填回原本是非負數的位置，遇到負數位置要跳過</li>
+        </ul>
+        <p>最後回傳旋轉後的陣列。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>1 &lt;= nums.length &lt;= 10^5</code></li>
+          <li><code>-10^5 &lt;= nums[i] &lt;= 10^5</code></li>
+          <li><code>0 &lt;= k &lt;= 10^5</code></li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>我的想法是把「負數位置完全不動」這件事拆開處理：我先把所有非負數抽出來，單獨做旋轉，最後再放回去原本那些非負數的位置。</p>
+        <p>這樣做的好處是：</p>
+        <ul>
+          <li>負數不用管，因為我根本不會去改它們的位置</li>
+          <li>我只在「原本非負數的位置」寫回新順序的數字</li>
+        </ul>
+
+        <h3 id="variables">所有變數</h3>
+        <ul>
+          <li><code>n</code>：<code>nums</code> 的長度</li>
+          <li><code>spos</code>：所有「非負數的位置索引」(positions)</li>
+          <li><code>snum</code>：依照出現順序收集到的「非負數值」(numbers)</li>
+          <li><code>m</code>：非負數的總數（也就是 <code>spos.size()</code>）</li>
+          <li><code>k</code>：要向左旋轉的步數（用 <code>% m</code> 做循環）</li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+        <h3>1. 先掃過整個陣列，把非負數抽出來</h3>
+        <ul>
+          <li>如果 <code>nums[i] &gt;= 0</code>：
+            <ul>
+              <li>把索引 <code>i</code> 存進 <code>spos</code></li>
+              <li>把數值 <code>nums[i]</code> 存進 <code>snum</code></li>
+            </ul>
+          </li>
+        </ul>
+        <p>這一步做完後：</p>
+        <ul>
+          <li><code>spos[j]</code> 代表第 <code>j</code> 個非負數原本在 <code>nums</code> 的哪個位置</li>
+          <li><code>snum[j]</code> 代表第 <code>j</code> 個非負數的值</li>
+        </ul>
+        <hr />
+        <h3>2. 將非負數做「向左旋轉 k」</h3>
+        <p>「向左旋轉」的意思是：原本第 <code>j</code> 個非負數，旋轉後會變成放到第 <code>j - k</code> 的位置（循環）。</p>
+        <p>我在寫回去的時候，用的是等價的索引轉換：</p>
+        <ul>
+          <li>對每個非負數位置 <code>spos[j]</code>（也就是要填回去的第 <code>j</code> 個槽位）</li>
+          <li>填入旋轉後該出現的值：<code>snum[(j + k) % m]</code></li>
+        </ul>
+        <p>這樣就完成了循環左旋（因為只在非負數序列內部重新排列）。</p>
+        <hr />
+        <h3>3. 把旋轉後的非負數放回原陣列</h3>
+        <ul>
+          <li>只寫回 <code>nums[spos[j]]</code></li>
+          <li>負數的位置根本不在 <code>spos</code> 裡，所以自然不會被改到</li>
+        </ul>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    vector&lt;int&gt; rotateElements(vector&lt;int&gt;&amp; nums, int k) {
+        int n = nums.size();
+        vector&lt;int&gt; spos;
+        vector&lt;int&gt; snum;
+        for (int i = 0; i &lt; n; i++) {
+            if (nums[i] &gt;= 0) {
+                spos.push_back(i);
+                snum.push_back(nums[i]);
+            }
+        }
+        int m = spos.size();
+        for (int j = 0; j &lt; m; j++) {
+            nums[spos[j]] = snum[(j + k) % m];
+        }
+        return nums;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/contest/weekly-contest-486/problems/rotate-non-negative-elements/description/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-01-25</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value">
+            <span class="post-tags">
+              <span class="post-tag">Weekly Contest 486</span>
+            </span>
+          </span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/contests/weekly-contest-486/q2-rotate-non-negative-elements.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../../script.js"></script>
+</body>
+</html>
