@@ -1,0 +1,204 @@
+<!-- contests/weekly-contest-486/q4-find-nth-smallest-integer-with-k-one-bits.html: Weekly Contest 486 Q4 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Q4. Find Nth Smallest Integer with K One Bits</title>
+  <link rel="stylesheet" href="../../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../../index.html">主頁</a>
+        <a href="../../../courses.html">修課紀錄</a>
+        <a href="../../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="../index.html">Contests</a>
+      <span aria-hidden="true">/</span>
+      <a href="../weekly-contest-486.html">Weekly Contest 486</a>
+      <span aria-hidden="true">/</span>
+      <span>Q4. Find Nth Smallest Integer with K One Bits</span>
+    </nav>
+
+    <section class="hero">
+      <h1>Q4. Find Nth Smallest Integer with K One Bits</h1>
+      <p><strong>練習日期：</strong>2026-01-25</p>
+      <p><strong>類型：</strong>Weekly Contest 486</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給你兩個正整數 <code>n</code> 和 <code>k</code>。</p>
+        <p>請回傳「二進位表示中 <strong>恰好有 <code>k</code> 個 1</strong>」的正整數裡，第 <code>n</code> 小的那一個。</p>
+        <p>題目保證答案 <strong>嚴格小於 <code>2^50</code></strong>。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>1 &lt;= n &lt;= 250</code></li>
+          <li><code>1 &lt;= k &lt;= 50</code></li>
+          <li>答案嚴格小於 <code>2^50</code></li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路（最後TLE）</h2>
+        <p>我的想法是：我先用一個 <code>bin</code>（bool 陣列）表示「目前這個數的二進位哪些位元是 1」，並且從最小的開始（也就是最低位連續放 <code>k</code> 個 1：<code>111...000</code>）。</p>
+        <p>接著我要做的事情就是重複 <code>n - 1</code> 次：<strong>把目前的 bitmask 變成「下一個更大的、但 1 的數量仍然是 k」的 bitmask</strong>。</p>
+        <p>這其實是在做「固定 1 的個數的下一個組合（next combination）」。</p>
+
+        <h3 id="variables">所有變數</h3>
+        <ul>
+          <li><code>n</code>, <code>k</code>：題目輸入，要找第 <code>n</code> 小、且有 <code>k</code> 個 1 的正整數</li>
+          <li><code>bin</code>：<code>vector&lt;bool&gt;</code>，<code>bin[t] = true</code> 代表第 <code>t</code> 個 bit 是 1（我用 <code>t = 0</code> 當最低位）</li>
+          <li><code>pos</code>：目前最高的 1 出現到哪個 bit（用來最後把 <code>bin</code> 轉回數字時的最高位）</li>
+          <li><code>ans</code>：最後要回傳的整數</li>
+          <li><code>count</code>：掃描過程中，累計「目前遇到的 1 的數量」（用來把低位重新塞回去）</li>
+          <li><code>i</code>, <code>j</code>, <code>l</code>：迴圈索引用</li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+        <h3>1) 初始化成「最小的那個」</h3>
+        <ul>
+          <li>最小的數一定是：最低位開始連續放 <code>k</code> 個 1，例如 <code>k = 3</code> → <code>0b111</code></li>
+          <li>所以我先做：
+            <ul>
+              <li><code>bin[0..k-1] = true</code></li>
+              <li>其餘都是 <code>false</code></li>
+            </ul>
+          </li>
+        </ul>
+        <hr />
+        <h3>2) 重複做 <code>n - 1</code> 次：產生下一個 bitmask（核心）</h3>
+        <p>我在每一次迭代裡，從低位往高位掃描，找「可以往左移動的一顆 1」。</p>
+        <h4>我在找的關鍵形狀</h4>
+        <ul>
+          <li>找到某個位置 <code>j</code> 滿足：</li>
+          <li><code>bin[j] == 1</code></li>
+          <li><code>bin[j + 1] == 0</code></li>
+        </ul>
+        <p>這代表這顆 1 可以「往更高位推一格」，讓整體數值變大，但仍保留 k 個 1。</p>
+        <h4>做法分兩步</h4>
+        <p><strong>(A) 把這顆 1 往左推</strong></p>
+        <ul>
+          <li><code>bin[j] = 0</code></li>
+          <li><code>bin[j + 1] = 1</code></li>
+          <li>同時更新 <code>pos = max(pos, j + 1)</code>（因為最高位可能變大了）</li>
+        </ul>
+        <p><strong>(B) 把 <code>j</code> 左邊的低位重新整理成「最小」</strong></p>
+        <ul>
+          <li>我會用 <code>count</code> 記錄我一路走來遇到多少個 1（包含要搬的那顆之前累積的）</li>
+          <li>當找到可搬動位置後，我就把 <code>0..j-1</code> 的 bit 重新排成：</li>
+          <li>從最低位開始塞回 <code>count</code> 顆 1，其餘補 0</li>
+          <li>這樣可以確保在「固定高位變大的前提下」，低位保持最小，才能得到「下一個最小的合法數」。</li>
+        </ul>
+        <hr />
+        <h3>3) 把 <code>bin</code> 轉回整數</h3>
+        <p>最後我從 <code>pos</code>（最高位）一路往 <code>0</code> 組回去：</p>
+        <ul>
+          <li>每一位做：<code>ans = ans * 2 + (bin[l] ? 1 : 0)</code></li>
+        </ul>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    long long nthSmallest(long long n, int k) {
+        long long int ans = 0;
+        int pos = k - 1;
+        vector&lt;bool&gt; bin(51, false);
+        for (int i = 0; i &lt; k; i++) {
+            bin[i] = true;
+        }
+        for (long long int i = 1; i &lt; n; i++) {
+            int count = 0;
+            for (int j = 0; j &lt; 50; j++) {
+                if (bin[j] &amp;&amp; !bin[j + 1]) {
+                    bin[j + 1] = true;
+                    bin[j] = false;
+                    pos = (pos &gt; j + 1) ? pos : (j + 1);
+                    for (int k = 0; k &lt; j; k++) {
+                        if (count &gt; 0) {
+                            bin[k] = true;
+                            count--;
+                        } else {
+                            bin[k] = false;
+                        }
+                    }
+                    break;
+                } else if (bin[j]) {
+                    count++;
+                }
+            }
+        }
+        for (int l = pos; l &gt;= 0; l--) {
+            ans = ans * 2 + (bin[l] ? 1 : 0);
+        }
+        return ans;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/contest/weekly-contest-486/problems/find-nth-smallest-integer-with-k-one-bits/description/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-01-25</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value">
+            <span class="post-tags">
+              <span class="post-tag">Weekly Contest 486</span>
+            </span>
+          </span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/contests/weekly-contest-486/q4-find-nth-smallest-integer-with-k-one-bits.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../../script.js"></script>
+</body>
+</html>
