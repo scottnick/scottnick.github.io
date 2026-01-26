@@ -386,6 +386,10 @@
     );
   }
 
+  function isCppNotesArticle(path) {
+    return (path || '').toLowerCase().startsWith('cpp-notes/');
+  }
+
   function isSiteArticle(path) {
     const normalized = (path || '').toLowerCase();
     if (normalized.includes('vendor/') || normalized.includes('assests/')) return false;
@@ -586,9 +590,10 @@
 
     try {
       const categories = await getCategoryIndex();
-      const scopedPosts = applyScopeFilter(categories[categoryName] || []).filter((post) =>
-        isAllProblemsArticle(post.url)
-      );
+      const scopedPosts = applyScopeFilter(categories[categoryName] || []).filter((post) => {
+        if (!isCppNotesArticle(post.url)) return true;
+        return isAllProblemsArticle(post.url);
+      });
       const searchInput = document.getElementById('searchInput');
 
       function render() {
