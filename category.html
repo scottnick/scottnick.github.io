@@ -58,16 +58,26 @@
     </section>
 
     <div class="search-bar">
-      <input
-        class="search-input"
-        type="search"
-        placeholder="Search in this category..."
-        aria-label="Search in this category"
-        data-filter-input
-        data-filter-target=".category-article"
-        data-count-display="#category-count"
-      >
-      <p class="category-meta-row" id="category-count">Showing 0 / 0</p>
+      <div class="search-row">
+        <input
+          id="searchInput"
+          class="search-input"
+          type="search"
+          placeholder="在此類別搜尋..."
+          aria-label="在此類別搜尋"
+        >
+        <div class="sort-controls">
+          <button id="sortDirBtn" class="sort-dir-btn" type="button" aria-label="切換排序方向" title="切換排序方向">
+            <svg class="sort-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M7 10l5 5 5-5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+          <button id="sortModeBtn" class="sort-mode-btn" type="button" aria-label="切換排序方式" title="切換排序方式">
+            依照時間
+          </button>
+        </div>
+      </div>
+      <div id="countInfo" class="category-meta-row"></div>
     </div>
 
     <section>

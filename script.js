@@ -259,6 +259,73 @@
     });
   }
 
+  let sortMode = 'time';
+  let sortDir = 'desc';
+
+  function initSortControls(renderFn) {
+    const sortDirBtn = document.getElementById('sortDirBtn');
+    const sortModeBtn = document.getElementById('sortModeBtn');
+    if (!sortDirBtn || !sortModeBtn) return;
+
+    const upSvg = `
+      <svg class="sort-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M7 14l5-5 5 5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    `;
+
+    const downSvg = `
+      <svg class="sort-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M7 10l5 5 5-5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    `;
+
+    function syncUI() {
+      sortDirBtn.innerHTML = sortDir === 'desc' ? downSvg : upSvg;
+      sortModeBtn.textContent = sortMode === 'time' ? '依照時間' : '依照字母';
+    }
+
+    syncUI();
+
+    sortDirBtn.addEventListener('click', () => {
+      sortDir = sortDir === 'desc' ? 'asc' : 'desc';
+      syncUI();
+      renderFn();
+    });
+
+    sortModeBtn.addEventListener('click', () => {
+      sortMode = sortMode === 'time' ? 'alpha' : 'time';
+      syncUI();
+      renderFn();
+    });
+  }
+
+  function normalize(text) {
+    return (text || '').toString().trim().toLowerCase();
+  }
+
+  function sortItems(list) {
+    const items = [...list];
+
+    if (sortMode === 'time') {
+      items.sort((a, b) => (a.date || '').localeCompare(b.date || ''));
+    } else {
+      items.sort((a, b) =>
+        (a.title || '').localeCompare(b.title || '', 'en', { sensitivity: 'base' })
+      );
+    }
+
+    if (sortDir === 'desc') {
+      items.reverse();
+    }
+    return items;
+  }
+
+  function updateCount(shown, total) {
+    const countEl = document.getElementById('countInfo');
+    if (!countEl) return;
+    countEl.textContent = `顯示 ${shown} / ${total} 篇`;
+  }
+
   function initFilterInputs() {
     const inputs = document.querySelectorAll('[data-filter-input]');
     if (!inputs.length) return;
@@ -297,6 +364,20 @@
     return document.body?.dataset?.categoryRepo || 'scottnick/scottnick.github.io';
   }
 
+  function applyScopeFilter(posts) {
+    const prefixRaw = document.body?.dataset?.scopePrefix;
+    if (!prefixRaw) return posts;
+
+    const prefix1 = prefixRaw;
+    const prefix2 = prefixRaw.replaceAll(' ', '%20');
+    const prefix3 = prefixRaw.replaceAll('%20', ' ');
+
+    return posts.filter((post) => {
+      const url = post.url || '';
+      return url.startsWith(prefix1) || url.startsWith(prefix2) || url.startsWith(prefix3);
+    });
+  }
+
   async function fetchRepoHtmlPosts() {
     const repo = getCategoryRepo();
     const treeUrl = `https://api.github.com/repos/${repo}/git/trees/main?recursive=1`;
@@ -310,7 +391,6 @@
       .filter(
         (item) =>
           item.type === 'blob' &&
-          item.path.startsWith('cpp-notes/') &&
           item.path.endsWith('.html') &&
           !item.path.endsWith('index.html') &&
           !item.path.endsWith('categories.html') &&
@@ -418,46 +498,56 @@
     return `${count} 篇`;
   }
 
-  function sortPostsByDate(posts) {
-    return [...posts].sort((a, b) => {
-      const dateA = Date.parse(a.date || '') || 0;
-      const dateB = Date.parse(b.date || '') || 0;
-      return dateB - dateA;
-    });
-  }
-
   async function initCategoriesPage() {
     const grid = document.getElementById('category-grid');
     if (!grid) return;
 
     try {
-      const categories = await getCategoryIndex();
-      const names = Object.keys(categories).sort((a, b) => a.localeCompare(b));
-      grid.innerHTML = '';
-
-      names.forEach((name) => {
-        const card = document.createElement('a');
-        card.className = 'card category-card';
-        card.href = `category.html?name=${encodeURIComponent(name)}`;
-        card.dataset.filterText = name;
-
-        const label = document.createElement('span');
-        label.className = 'label';
-        label.textContent = name;
-
-        const meta = document.createElement('p');
-        meta.className = 'card-meta';
-        meta.textContent = formatCategoryCount(categories[name].length);
-
-        card.appendChild(label);
-        card.appendChild(meta);
-        grid.appendChild(card);
+      const categoryIndex = await getCategoryIndex();
+      const categoryItems = Object.entries(categoryIndex).map(([name, posts]) => {
+        const latestDate = posts.reduce((latest, post) => {
+          if (!post.date) return latest;
+          if (!latest) return post.date;
+          return post.date > latest ? post.date : latest;
+        }, '');
+        return {
+          title: name,
+          date: latestDate,
+          count: posts.length,
+        };
       });
 
-      const filterInput = document.querySelector('[data-filter-input][data-filter-target=".category-card"]');
-      if (filterInput) {
-        filterInput.dispatchEvent(new Event('input'));
+      const searchInput = document.getElementById('searchInput');
+
+      function render() {
+        const query = normalize(searchInput?.value);
+        let list = categoryItems.filter((item) => !query || normalize(item.title).includes(query));
+        list = sortItems(list);
+
+        grid.innerHTML = '';
+        list.forEach((item) => {
+          const card = document.createElement('a');
+          card.className = 'card category-card';
+          card.href = `category.html?name=${encodeURIComponent(item.title)}`;
+          card.dataset.filterText = item.title;
+
+          const label = document.createElement('span');
+          label.className = 'label';
+          label.textContent = item.title;
+
+          const meta = document.createElement('p');
+          meta.className = 'card-meta';
+          meta.textContent = formatCategoryCount(item.count);
+
+          card.appendChild(label);
+          card.appendChild(meta);
+          grid.appendChild(card);
+        });
       }
+
+      searchInput?.addEventListener('input', render);
+      initSortControls(render);
+      render();
     } catch (error) {
       grid.innerHTML = '<p class="page-subtitle">類別載入失敗，請稍後再試。</p>';
     }
@@ -482,37 +572,52 @@
 
     try {
       const categories = await getCategoryIndex();
-      const posts = categories[categoryName] || [];
-      const sorted = sortPostsByDate(posts);
+      const scopedPosts = applyScopeFilter(categories[categoryName] || []);
+      const searchInput = document.getElementById('searchInput');
 
-      list.innerHTML = '';
-      if (!sorted.length) {
-        list.innerHTML = '<li class="category-meta-row">目前沒有相關文章。</li>';
-        return;
+      function render() {
+        const query = normalize(searchInput?.value);
+        let listItems = scopedPosts
+          .filter((post) => !query || normalize(post.title).includes(query))
+          .map((post) => ({
+            title: post.title,
+            date: post.date,
+            url: post.url,
+          }));
+
+        listItems = sortItems(listItems);
+
+        list.innerHTML = '';
+        if (!listItems.length) {
+          list.innerHTML = '<li class="category-meta-row">目前沒有相關文章。</li>';
+          updateCount(0, scopedPosts.length);
+          return;
+        }
+
+        listItems.forEach((post) => {
+          const item = document.createElement('li');
+          item.className = 'category-article';
+          item.dataset.filterText = post.title;
+
+          const date = document.createElement('span');
+          date.className = 'category-article-date';
+          date.textContent = post.date || '未標註日期';
+
+          const link = document.createElement('a');
+          link.href = post.url;
+          link.textContent = post.title;
+
+          item.appendChild(date);
+          item.appendChild(link);
+          list.appendChild(item);
+        });
+
+        updateCount(listItems.length, scopedPosts.length);
       }
 
-      sorted.forEach((post) => {
-        const item = document.createElement('li');
-        item.className = 'category-article';
-        item.dataset.filterText = post.title;
-
-        const date = document.createElement('span');
-        date.className = 'category-article-date';
-        date.textContent = post.date || '未標註日期';
-
-        const link = document.createElement('a');
-        link.href = post.url;
-        link.textContent = post.title;
-
-        item.appendChild(date);
-        item.appendChild(link);
-        list.appendChild(item);
-      });
-
-      const filterInput = document.querySelector('[data-filter-input][data-filter-target=".category-article"]');
-      if (filterInput) {
-        filterInput.dispatchEvent(new Event('input'));
-      }
+      searchInput?.addEventListener('input', render);
+      initSortControls(render);
+      render();
     } catch (error) {
       list.innerHTML = '<li class="category-meta-row">文章載入失敗，請稍後再試。</li>';
     }

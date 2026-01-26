@@ -323,6 +323,67 @@ main {
   color: var(--primary);
 }
 
+/* 搜尋列：搜尋框 + 排序控制同一排 */
+.search-row{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.search-row input{
+  flex: 1;
+}
+
+/* 排序控制（右側） */
+.sort-controls{
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+
+/* 圓角 icon 按鈕：外觀像你圖二那種「獨立小方塊按鈕」 */
+.sort-dir-btn{
+  width:38px;
+  height:38px;
+  border-radius:12px;
+  border:1px solid rgba(0,0,0,0.08);
+  background:#fff;
+  cursor:pointer;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  transition:all .15s ease;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+}
+
+.sort-dir-btn:hover{
+  background: rgba(0,0,0,0.04);
+}
+
+/* SVG 尺寸（小箭頭） */
+.sort-icon{
+  width:18px;
+  height:18px;
+  color:#111;
+}
+
+/* 文字按鈕（依照時間/依照字母） */
+.sort-mode-btn{
+  height:38px;
+  padding:0 12px;
+  border-radius:12px;
+  border:1px solid rgba(0,0,0,0.08);
+  background:#fff;
+  cursor:pointer;
+  transition:all .15s ease;
+  white-space:nowrap;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+}
+
+.sort-mode-btn:hover{
+  background: rgba(0,0,0,0.04);
+}
+
 .contest-photo {
   display: block;
   max-width: 100%;
