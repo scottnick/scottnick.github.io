@@ -259,6 +259,39 @@
     });
   }
 
+  function initFilterInputs() {
+    const inputs = document.querySelectorAll('[data-filter-input]');
+    if (!inputs.length) return;
+
+    inputs.forEach((input) => {
+      const targetSelector = input.dataset.filterTarget;
+      if (!targetSelector) return;
+      const items = Array.from(document.querySelectorAll(targetSelector));
+      const countSelector = input.dataset.countDisplay;
+      const countDisplay = countSelector ? document.querySelector(countSelector) : null;
+      const total = items.length;
+
+      function update() {
+        const query = input.value.trim().toLowerCase();
+        let visibleCount = 0;
+        items.forEach((item) => {
+          const text = (item.dataset.filterText || item.textContent || '').toLowerCase();
+          const matches = !query || text.includes(query);
+          item.style.display = matches ? '' : 'none';
+          if (matches) {
+            visibleCount += 1;
+          }
+        });
+
+        if (countDisplay) {
+          countDisplay.textContent = `Showing ${visibleCount} / ${total}`;
+        }
+      }
+
+      input.addEventListener('input', update);
+      update();
+    });
+  }
 
   function setActiveNav() {
     const path = window.location.pathname.split('/').pop() || 'index.html';
@@ -331,6 +364,7 @@
     updateAccordionCounts();
     initArticleToc();
     initArticleTocToggle();
+    initFilterInputs();
     setActiveNav();
     initCodeHighlighting();
   });
