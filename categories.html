@@ -39,17 +39,7 @@
   <main>
     <section class="hero">
       <div class="page-header">
-        <h1 class="page-title">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-               width="20" height="20" aria-hidden="true" focusable="false"
-               style="display:inline-block; vertical-align:-3px; margin-right:6px;">
-            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
-            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
-            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
-            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
-          </svg>
-          類別
-        </h1>
+        <h1 class="page-title">類別</h1>
       </div>
       <p class="page-subtitle">依主題快速找到想看的筆記與文章。</p>
     </section>
@@ -69,35 +59,43 @@
       <div class="card-grid">
         <a class="card category-card" href="category-binary.html" data-filter-text="Binary">
           <span class="label">Binary</span>
-          <p class="card-meta">18 篇</p>
+          <p class="card-meta">
+            <span
+              class="category-count"
+              data-count-source="cpp-notes/all problems/index.html"
+              data-count-tag="Binary Search"
+            >載入中...</span>
+          </p>
         </a>
-        <a class="card category-card" href="category-graph.html" data-filter-text="Graph">
-          <span class="label">Graph</span>
-          <p class="card-meta">12 篇</p>
+        <a class="card category-card" href="cpp-notes/all problems/index.html" data-filter-text="C++ All Problems">
+          <span class="label">C++ 題庫總覽</span>
+          <p class="card-meta">
+            <span
+              class="category-count"
+              data-count-source="cpp-notes/all problems/index.html"
+              data-count-selector=".post-card"
+            >載入中...</span>
+          </p>
         </a>
-        <a class="card category-card" href="category-dp.html" data-filter-text="Dynamic Programming">
-          <span class="label">Dynamic Programming</span>
-          <p class="card-meta">20 篇</p>
+        <a class="card category-card" href="courses.html" data-filter-text="修課紀錄">
+          <span class="label">修課紀錄</span>
+          <p class="card-meta">
+            <span
+              class="category-count"
+              data-count-source="courses.html"
+              data-count-selector=".post-card"
+            >載入中...</span>
+          </p>
         </a>
-        <a class="card category-card" href="category-data-structure.html" data-filter-text="Data Structure">
-          <span class="label">Data Structure</span>
-          <p class="card-meta">15 篇</p>
-        </a>
-        <a class="card category-card" href="category-math.html" data-filter-text="Math">
-          <span class="label">Math</span>
-          <p class="card-meta">9 篇</p>
-        </a>
-        <a class="card category-card" href="category-greedy.html" data-filter-text="Greedy">
-          <span class="label">Greedy</span>
-          <p class="card-meta">11 篇</p>
-        </a>
-        <a class="card category-card" href="category-string.html" data-filter-text="String">
-          <span class="label">String</span>
-          <p class="card-meta">14 篇</p>
-        </a>
-        <a class="card category-card" href="category-sorting.html" data-filter-text="Sorting">
-          <span class="label">Sorting</span>
-          <p class="card-meta">7 篇</p>
+        <a class="card category-card" href="home/tutoring.html" data-filter-text="家教經驗">
+          <span class="label">家教經驗</span>
+          <p class="card-meta">
+            <span
+              class="category-count"
+              data-count-source="home/tutoring.html"
+              data-count-selector=".post-card"
+            >載入中...</span>
+          </p>
         </a>
       </div>
     </section>

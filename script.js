@@ -293,6 +293,52 @@
     });
   }
 
+  function initCategoryCounts() {
+    const items = Array.from(document.querySelectorAll('[data-count-source]'));
+    if (!items.length) return;
+
+    const parser = new DOMParser();
+    const docCache = new Map();
+
+    async function loadDocument(source) {
+      if (docCache.has(source)) return docCache.get(source);
+
+      const promise = fetch(encodeURI(source))
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error(`Failed to load ${source}`);
+          }
+          return response.text();
+        })
+        .then((html) => parser.parseFromString(html, 'text/html'))
+        .catch(() => null);
+
+      docCache.set(source, promise);
+      return promise;
+    }
+
+    items.forEach(async (item) => {
+      const source = item.dataset.countSource;
+      if (!source) return;
+      const doc = await loadDocument(source);
+      if (!doc) return;
+
+      const tag = item.dataset.countTag;
+      const selector = item.dataset.countSelector;
+      let count = 0;
+
+      if (tag) {
+        count = Array.from(doc.querySelectorAll('.post-tag')).filter(
+          (el) => el.textContent.trim() === tag
+        ).length;
+      } else if (selector) {
+        count = doc.querySelectorAll(selector).length;
+      }
+
+      item.textContent = `${count} 篇`;
+    });
+  }
+
   function setActiveNav() {
     const path = window.location.pathname.split('/').pop() || 'index.html';
     document.querySelectorAll('.nav-links a').forEach((link) => {
@@ -365,6 +411,7 @@
     initArticleToc();
     initArticleTocToggle();
     initFilterInputs();
+    initCategoryCounts();
     setActiveNav();
     initCodeHighlighting();
   });

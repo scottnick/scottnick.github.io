@@ -267,6 +267,26 @@ main {
   text-decoration: underline;
 }
 
+.back-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  box-shadow: var(--shadow);
+  transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition);
+}
+
+.back-button:hover {
+  transform: translateY(-1px);
+  border-color: var(--primary-soft);
+  box-shadow: 0 12px 22px rgba(0, 0, 0, 0.12);
+}
+
 .category-listing {
   list-style: none;
   padding: 0;
