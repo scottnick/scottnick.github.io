@@ -1,13 +1,12 @@
-<!-- index.html: 首頁，展示導覽卡片與近期更新，移除 footer 並修正結構 -->
 <!doctype html>
 <html lang="zh-Hant">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>scottnick 的主頁</title>
+  <title>類別總覽 | scottnick</title>
   <link rel="stylesheet" href="styles.css">
 </head>
-<body>
+<body data-category-repo="scottnick/scottnick.github.io">
   <header>
     <nav class="navbar">
       <a class="brand" href="personal.html">scottnick 個人網頁</a>
@@ -39,38 +38,37 @@
 
   <main>
     <section class="hero">
-      <h1>主頁</h1>
-      <p>這裡是我分享學習與生活紀錄的地方，包含家教心得、特選專題與日常筆記等主題。</p>
+      <div class="page-header">
+        <h1 class="page-title">類別</h1>
+      </div>
+      <p class="page-subtitle">依主題快速找到想看的筆記與文章。</p>
     </section>
 
-    <div class="course-terms">
-      <section class="term-block">
-        <h2>家教經驗</h2>
-        <div class="post-grid">
-          <a class="post-card" href="home/tutoring.html">
-            <h3>目前家教經驗</h3>
-            <p>整理現有的家教經歷與教學重點。</p>
-            <div class="post-tags">
-              <span class="post-tag">教學紀錄</span>
-            </div>
-          </a>
+    <div class="search-bar">
+      <div class="search-row">
+        <input
+          id="searchInput"
+          class="search-input"
+          type="search"
+          placeholder="搜尋類別..."
+          aria-label="搜尋類別"
+        >
+        <div class="sort-controls">
+          <button id="sortDirBtn" class="sort-dir-btn" type="button" aria-label="切換排序方向" title="切換排序方向">
+            <svg class="sort-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M7 10l5 5 5-5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+          <button id="sortModeBtn" class="sort-mode-btn" type="button" aria-label="切換排序方式" title="切換排序方式">
+            依照時間
+          </button>
         </div>
-      </section>
-      <section class="term-block">
-        <h2>台大數學系特殊選才</h2>
-        <div class="post-grid">
-          <a class="post-card" href="home/ntu-math-special.html">
-            <h3>準備與心得整理</h3>
-            <p>紀錄申請動機、準備歷程與面試反思，方便整理特選資料。</p>
-            <div class="post-tags">
-              <span class="post-tag">台大</span>
-              <span class="post-tag">數學系</span>
-              <span class="post-tag">經驗分享</span>
-            </div>
-          </a>
-        </div>
-      </section>
+      </div>
     </div>
+
+    <section>
+      <div class="card-grid" id="category-grid"></div>
+    </section>
   </main>
 
   <script src="script.js"></script>
