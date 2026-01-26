@@ -379,7 +379,11 @@
   }
 
   function isAllProblemsArticle(path) {
-    return (path || '').toLowerCase().includes('cpp-notes/all problems/');
+    const normalized = (path || '').toLowerCase();
+    return (
+      normalized.includes('cpp-notes/all problems/') ||
+      normalized.includes('cpp-notes/all%20problems/')
+    );
   }
 
   function isSiteArticle(path) {
