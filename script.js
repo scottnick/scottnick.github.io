@@ -259,6 +259,264 @@
     });
   }
 
+  function initFilterInputs() {
+    const inputs = document.querySelectorAll('[data-filter-input]');
+    if (!inputs.length) return;
+
+    inputs.forEach((input) => {
+      const targetSelector = input.dataset.filterTarget;
+      if (!targetSelector) return;
+      const countSelector = input.dataset.countDisplay;
+      const countDisplay = countSelector ? document.querySelector(countSelector) : null;
+
+      function update() {
+        const items = Array.from(document.querySelectorAll(targetSelector));
+        const total = items.length;
+        const query = input.value.trim().toLowerCase();
+        let visibleCount = 0;
+        items.forEach((item) => {
+          const text = (item.dataset.filterText || item.textContent || '').toLowerCase();
+          const matches = !query || text.includes(query);
+          item.style.display = matches ? '' : 'none';
+          if (matches) {
+            visibleCount += 1;
+          }
+        });
+
+        if (countDisplay) {
+          countDisplay.textContent = `Showing ${visibleCount} / ${total}`;
+        }
+      }
+
+      input.addEventListener('input', update);
+      update();
+    });
+  }
+
+  function getCategoryRepo() {
+    return document.body?.dataset?.categoryRepo || 'scottnick/scottnick.github.io';
+  }
+
+  async function fetchRepoHtmlPosts() {
+    const repo = getCategoryRepo();
+    const treeUrl = `https://api.github.com/repos/${repo}/git/trees/main?recursive=1`;
+    const response = await fetch(treeUrl);
+    if (!response.ok) {
+      throw new Error('Failed to load repo tree');
+    }
+
+    const data = await response.json();
+    const paths = (data.tree || [])
+      .filter(
+        (item) =>
+          item.type === 'blob' &&
+          item.path.startsWith('cpp-notes/') &&
+          item.path.endsWith('.html') &&
+          !item.path.endsWith('index.html') &&
+          !item.path.endsWith('categories.html') &&
+          !item.path.endsWith('category.html')
+      )
+      .map((item) => item.path);
+
+    const posts = [];
+    const parser = new DOMParser();
+    const batchSize = 6;
+
+    for (let i = 0; i < paths.length; i += batchSize) {
+      const batch = paths.slice(i, i + batchSize);
+      const batchPosts = await Promise.all(
+        batch.map(async (path) => {
+          const rawUrl = `https://raw.githubusercontent.com/${repo}/main/${path}`;
+          const htmlResponse = await fetch(rawUrl);
+          if (!htmlResponse.ok) return null;
+          const html = await htmlResponse.text();
+          return parsePostFromHtml(html, path, parser);
+        })
+      );
+      posts.push(...batchPosts.filter(Boolean));
+    }
+
+    return posts;
+  }
+
+  function parsePostFromHtml(html, path, parser) {
+    const doc = parser.parseFromString(html, 'text/html');
+    const title =
+      doc.querySelector('h1')?.textContent?.trim() ||
+      doc.querySelector('title')?.textContent?.trim() ||
+      'Untitled';
+    const date =
+      doc.querySelector('.meta-field--date .meta-value')?.textContent?.trim() || '';
+    const tags = Array.from(doc.querySelectorAll('.post-tag'))
+      .map((tag) => tag.textContent.trim())
+      .filter(Boolean);
+
+    if (!tags.length) return null;
+
+    return {
+      title,
+      date,
+      tags,
+      url: encodeURI(path),
+    };
+  }
+
+  function buildCategoryIndex(posts) {
+    return posts.reduce((acc, post) => {
+      post.tags.forEach((tag) => {
+        if (!acc[tag]) {
+          acc[tag] = [];
+        }
+        acc[tag].push(post);
+      });
+      return acc;
+    }, {});
+  }
+
+  function getCachedPosts() {
+    const cacheKey = 'category-index-cache-v1';
+    const ttl = 6 * 60 * 60 * 1000;
+    try {
+      const cached = JSON.parse(localStorage.getItem(cacheKey));
+      if (cached && cached.timestamp && Date.now() - cached.timestamp < ttl) {
+        return cached.posts || null;
+      }
+    } catch (error) {
+      return null;
+    }
+    return null;
+  }
+
+  function setCachedPosts(posts) {
+    const cacheKey = 'category-index-cache-v1';
+    localStorage.setItem(
+      cacheKey,
+      JSON.stringify({
+        timestamp: Date.now(),
+        posts,
+      })
+    );
+  }
+
+  async function getCategoryIndex() {
+    const cached = getCachedPosts();
+    if (cached) {
+      return buildCategoryIndex(cached);
+    }
+
+    const posts = await fetchRepoHtmlPosts();
+    setCachedPosts(posts);
+    return buildCategoryIndex(posts);
+  }
+
+  function getCategoryName() {
+    const params = new URLSearchParams(window.location.search);
+    return params.get('name')?.trim() || '';
+  }
+
+  function formatCategoryCount(count) {
+    return `${count} 篇`;
+  }
+
+  function sortPostsByDate(posts) {
+    return [...posts].sort((a, b) => {
+      const dateA = Date.parse(a.date || '') || 0;
+      const dateB = Date.parse(b.date || '') || 0;
+      return dateB - dateA;
+    });
+  }
+
+  async function initCategoriesPage() {
+    const grid = document.getElementById('category-grid');
+    if (!grid) return;
+
+    try {
+      const categories = await getCategoryIndex();
+      const names = Object.keys(categories).sort((a, b) => a.localeCompare(b));
+      grid.innerHTML = '';
+
+      names.forEach((name) => {
+        const card = document.createElement('a');
+        card.className = 'card category-card';
+        card.href = `category.html?name=${encodeURIComponent(name)}`;
+        card.dataset.filterText = name;
+
+        const label = document.createElement('span');
+        label.className = 'label';
+        label.textContent = name;
+
+        const meta = document.createElement('p');
+        meta.className = 'card-meta';
+        meta.textContent = formatCategoryCount(categories[name].length);
+
+        card.appendChild(label);
+        card.appendChild(meta);
+        grid.appendChild(card);
+      });
+
+      const filterInput = document.querySelector('[data-filter-input][data-filter-target=".category-card"]');
+      if (filterInput) {
+        filterInput.dispatchEvent(new Event('input'));
+      }
+    } catch (error) {
+      grid.innerHTML = '<p class="page-subtitle">類別載入失敗，請稍後再試。</p>';
+    }
+  }
+
+  async function initCategoryPage() {
+    const isCategoryPage = document.body?.dataset?.categoryPage;
+    const list = document.getElementById('category-list');
+    if (!isCategoryPage || !list) return;
+
+    const categoryName = getCategoryName();
+    const title = document.getElementById('category-title');
+    if (title) {
+      title.textContent = categoryName ? `類別 - ${categoryName}` : '類別';
+    }
+    document.title = categoryName ? `類別 - ${categoryName} | scottnick` : '類別 | scottnick';
+
+    if (!categoryName) {
+      list.innerHTML = '<li class="category-meta-row">尚未指定類別名稱。</li>';
+      return;
+    }
+
+    try {
+      const categories = await getCategoryIndex();
+      const posts = categories[categoryName] || [];
+      const sorted = sortPostsByDate(posts);
+
+      list.innerHTML = '';
+      if (!sorted.length) {
+        list.innerHTML = '<li class="category-meta-row">目前沒有相關文章。</li>';
+        return;
+      }
+
+      sorted.forEach((post) => {
+        const item = document.createElement('li');
+        item.className = 'category-article';
+        item.dataset.filterText = post.title;
+
+        const date = document.createElement('span');
+        date.className = 'category-article-date';
+        date.textContent = post.date || '未標註日期';
+
+        const link = document.createElement('a');
+        link.href = post.url;
+        link.textContent = post.title;
+
+        item.appendChild(date);
+        item.appendChild(link);
+        list.appendChild(item);
+      });
+
+      const filterInput = document.querySelector('[data-filter-input][data-filter-target=".category-article"]');
+      if (filterInput) {
+        filterInput.dispatchEvent(new Event('input'));
+      }
+    } catch (error) {
+      list.innerHTML = '<li class="category-meta-row">文章載入失敗，請稍後再試。</li>';
+    }
+  }
 
   function setActiveNav() {
     const path = window.location.pathname.split('/').pop() || 'index.html';
@@ -331,6 +589,9 @@
     updateAccordionCounts();
     initArticleToc();
     initArticleTocToggle();
+    initFilterInputs();
+    initCategoriesPage();
+    initCategoryPage();
     setActiveNav();
     initCodeHighlighting();
   });
