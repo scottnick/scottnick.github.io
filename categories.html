@@ -1,10 +1,9 @@
-<!-- index.html: 首頁，展示導覽卡片與近期更新，移除 footer 並修正結構 -->
 <!doctype html>
 <html lang="zh-Hant">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>scottnick 的主頁</title>
+  <title>類別總覽 | scottnick</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -39,36 +38,66 @@
 
   <main>
     <section class="hero">
-      <h1>scottnick 的主頁</h1>
-      <p>家教經驗、修課紀錄與 C++/LeetCode 筆記一次整理，方便追蹤成長軌跡。</p>
+      <div class="page-header">
+        <h1 class="page-title">類別</h1>
+      </div>
+      <p class="page-subtitle">依主題快速找到想看的筆記與文章。</p>
     </section>
+
+    <div class="search-bar">
+      <input
+        class="search-input"
+        type="search"
+        placeholder="搜尋類別..."
+        aria-label="搜尋類別"
+        data-filter-input
+        data-filter-target=".category-card"
+      >
+    </div>
 
     <section>
       <div class="card-grid">
-        <a class="card" href="index.html">
-          <span class="label">主頁</span>
-          <p>快速總覽與近期更新，一鍵回到起點。</p>
+        <a class="card category-card" href="category-binary.html" data-filter-text="Binary">
+          <span class="label">Binary</span>
+          <p class="card-meta">
+            <span
+              class="category-count"
+              data-count-source="cpp-notes/all problems/index.html"
+              data-count-tag="Binary Search"
+            >載入中...</span>
+          </p>
         </a>
-        <a class="card" href="home/tutoring.html">
-          <span class="label">家教經驗</span>
-          <p>紀錄我對教學、補習班與溝通的想法。</p>
+        <a class="card category-card" href="cpp-notes/all problems/index.html" data-filter-text="C++ All Problems">
+          <span class="label">C++ 題庫總覽</span>
+          <p class="card-meta">
+            <span
+              class="category-count"
+              data-count-source="cpp-notes/all problems/index.html"
+              data-count-selector=".post-card"
+            >載入中...</span>
+          </p>
         </a>
-        <a class="card" href="courses.html">
+        <a class="card category-card" href="courses.html" data-filter-text="修課紀錄">
           <span class="label">修課紀錄</span>
-          <p>依學期與主題整理修課足跡，輕鬆回顧。</p>
+          <p class="card-meta">
+            <span
+              class="category-count"
+              data-count-source="courses.html"
+              data-count-selector=".post-card"
+            >載入中...</span>
+          </p>
         </a>
-        <a class="card" href="cpp.html">
-          <span class="label">C++學習筆記</span>
-          <p>LeetCode 與 C++ 札記入口，收斂解題思路。</p>
+        <a class="card category-card" href="home/tutoring.html" data-filter-text="家教經驗">
+          <span class="label">家教經驗</span>
+          <p class="card-meta">
+            <span
+              class="category-count"
+              data-count-source="home/tutoring.html"
+              data-count-selector=".post-card"
+            >載入中...</span>
+          </p>
         </a>
       </div>
-    </section>
-
-    <section>
-      <h2 class="section-title">近期更新</h2>
-      <ul class="update-list" id="recent-updates" data-repo="scottnick/scottnick.github.io">
-        <li>正在載入最新更新...</li>
-      </ul>
     </section>
   </main>
 
