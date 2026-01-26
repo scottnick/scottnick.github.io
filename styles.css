@@ -384,6 +384,11 @@ main {
   background: rgba(0,0,0,0.04);
 }
 
+.showing-count{
+  margin-top: 10px;
+  margin-left: 16px;
+}
+
 .contest-photo {
   display: block;
   max-width: 100%;

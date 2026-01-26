@@ -323,7 +323,7 @@
   function updateCount(shown, total) {
     const countEl = document.getElementById('countInfo');
     if (!countEl) return;
-    countEl.textContent = `顯示 ${shown} / ${total} 篇`;
+    countEl.textContent = `已顯示 ${shown} / 共 ${total} 篇`;
   }
 
   function initFilterInputs() {
@@ -378,6 +378,16 @@
     });
   }
 
+  function isAllProblemsArticle(path) {
+    return (path || '').toLowerCase().includes('cpp-notes/all problems/');
+  }
+
+  function isSiteArticle(path) {
+    const normalized = (path || '').toLowerCase();
+    if (normalized.includes('vendor/') || normalized.includes('assests/')) return false;
+    return normalized.endsWith('.html');
+  }
+
   async function fetchRepoHtmlPosts() {
     const repo = getCategoryRepo();
     const treeUrl = `https://api.github.com/repos/${repo}/git/trees/main?recursive=1`;
@@ -391,7 +401,7 @@
       .filter(
         (item) =>
           item.type === 'blob' &&
-          item.path.endsWith('.html') &&
+          isSiteArticle(item.path) &&
           !item.path.endsWith('index.html') &&
           !item.path.endsWith('categories.html') &&
           !item.path.endsWith('category.html')
@@ -572,7 +582,9 @@
 
     try {
       const categories = await getCategoryIndex();
-      const scopedPosts = applyScopeFilter(categories[categoryName] || []);
+      const scopedPosts = applyScopeFilter(categories[categoryName] || []).filter((post) =>
+        isAllProblemsArticle(post.url)
+      );
       const searchInput = document.getElementById('searchInput');
 
       function render() {
