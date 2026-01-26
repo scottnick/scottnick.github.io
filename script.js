@@ -261,6 +261,7 @@
 
   let sortMode = 'time';
   let sortDir = 'desc';
+  const cacheKey = 'category-index-cache-v2';
 
   function initSortControls(renderFn) {
     const sortDirBtn = document.getElementById('sortDirBtn');
@@ -303,15 +304,27 @@
     return (text || '').toString().trim().toLowerCase();
   }
 
+  function extractLeadingNumber(title) {
+    const match = String(title || '').trim().match(/^(\d+)[\.\-]?\s*/);
+    return match ? Number(match[1]) : null;
+  }
+
   function sortItems(list) {
     const items = [...list];
 
     if (sortMode === 'time') {
       items.sort((a, b) => (a.date || '').localeCompare(b.date || ''));
     } else {
-      items.sort((a, b) =>
-        (a.title || '').localeCompare(b.title || '', 'en', { sensitivity: 'base' })
-      );
+      items.sort((a, b) => {
+        const numA = extractLeadingNumber(a.title);
+        const numB = extractLeadingNumber(b.title);
+        if (numA !== null && numB !== null && numA !== numB) {
+          return numA - numB;
+        }
+        if (numA !== null && numB === null) return -1;
+        if (numA === null && numB !== null) return 1;
+        return (a.title || '').localeCompare(b.title || '', 'en', { sensitivity: 'base' });
+      });
     }
 
     if (sortDir === 'desc') {
@@ -396,6 +409,13 @@
     return normalized.endsWith('.html');
   }
 
+  function filterPostsForCategories(posts) {
+    return posts.filter((post) => {
+      if (!isCppNotesArticle(post.url)) return true;
+      return isAllProblemsArticle(post.url);
+    });
+  }
+
   async function fetchRepoHtmlPosts() {
     const repo = getCategoryRepo();
     const treeUrl = `https://api.github.com/repos/${repo}/git/trees/main?recursive=1`;
@@ -472,7 +492,6 @@
   }
 
   function getCachedPosts() {
-    const cacheKey = 'category-index-cache-v1';
     const ttl = 6 * 60 * 60 * 1000;
     try {
       const cached = JSON.parse(localStorage.getItem(cacheKey));
@@ -486,7 +505,6 @@
   }
 
   function setCachedPosts(posts) {
-    const cacheKey = 'category-index-cache-v1';
     localStorage.setItem(
       cacheKey,
       JSON.stringify({
@@ -499,12 +517,12 @@
   async function getCategoryIndex() {
     const cached = getCachedPosts();
     if (cached) {
-      return buildCategoryIndex(cached);
+      return buildCategoryIndex(filterPostsForCategories(cached));
     }
 
     const posts = await fetchRepoHtmlPosts();
     setCachedPosts(posts);
-    return buildCategoryIndex(posts);
+    return buildCategoryIndex(filterPostsForCategories(posts));
   }
 
   function getCategoryName() {
@@ -590,10 +608,7 @@
 
     try {
       const categories = await getCategoryIndex();
-      const scopedPosts = applyScopeFilter(categories[categoryName] || []).filter((post) => {
-        if (!isCppNotesArticle(post.url)) return true;
-        return isAllProblemsArticle(post.url);
-      });
+      const scopedPosts = applyScopeFilter(categories[categoryName] || []);
       const searchInput = document.getElementById('searchInput');
 
       function render() {
