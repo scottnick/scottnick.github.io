@@ -1,13 +1,12 @@
-<!-- index.html: 首頁，展示導覽卡片與近期更新，移除 footer 並修正結構 -->
 <!doctype html>
 <html lang="zh-Hant">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>scottnick 的主頁</title>
+  <title>類別 | scottnick</title>
   <link rel="stylesheet" href="styles.css">
 </head>
-<body>
+<body data-category-page="true" data-category-repo="scottnick/scottnick.github.io">
   <header>
     <nav class="navbar">
       <a class="brand" href="personal.html">scottnick 個人網頁</a>
@@ -39,36 +38,50 @@
 
   <main>
     <section class="hero">
-      <h1>scottnick 的主頁</h1>
-      <p>家教經驗、修課紀錄與 C++/LeetCode 筆記一次整理，方便追蹤成長軌跡。</p>
-    </section>
-
-    <section>
-      <div class="card-grid">
-        <a class="card" href="index.html">
-          <span class="label">主頁</span>
-          <p>快速總覽與近期更新，一鍵回到起點。</p>
-        </a>
-        <a class="card" href="home/tutoring.html">
-          <span class="label">家教經驗</span>
-          <p>紀錄我對教學、補習班與溝通的想法。</p>
-        </a>
-        <a class="card" href="courses.html">
-          <span class="label">修課紀錄</span>
-          <p>依學期與主題整理修課足跡，輕鬆回顧。</p>
-        </a>
-        <a class="card" href="cpp.html">
-          <span class="label">C++學習筆記</span>
-          <p>LeetCode 與 C++ 札記入口，收斂解題思路。</p>
+      <div class="page-header">
+        <h1 class="page-title" id="category-title">類別</h1>
+        <a class="back-button" href="categories.html" aria-label="返回類別">
+          <svg xmlns="http://www.w3.org/2000/svg"
+               viewBox="0 0 24 24"
+               width="20" height="20"
+               aria-hidden="true">
+            <path d="M15 18l-6-6 6-6"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"/>
+          </svg>
         </a>
       </div>
+      <p class="page-subtitle" id="category-subtitle">彙整與此類別相關的筆記文章。</p>
     </section>
 
+    <div class="search-bar">
+      <div class="search-row">
+        <input
+          id="searchInput"
+          class="search-input"
+          type="search"
+          placeholder="在此類別搜尋..."
+          aria-label="在此類別搜尋"
+        >
+        <div class="sort-controls">
+          <button id="sortDirBtn" class="sort-dir-btn" type="button" aria-label="切換排序方向" title="切換排序方向">
+            <svg class="sort-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M7 10l5 5 5-5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+          <button id="sortModeBtn" class="sort-mode-btn" type="button" aria-label="切換排序方式" title="切換排序方式">
+            依照時間
+          </button>
+        </div>
+      </div>
+      <div id="countInfo" class="category-meta-row"></div>
+    </div>
+
     <section>
-      <h2 class="section-title">近期更新</h2>
-      <ul class="update-list" id="recent-updates" data-repo="scottnick/scottnick.github.io">
-        <li>正在載入最新更新...</li>
-      </ul>
+      <ul class="category-listing" id="category-list"></ul>
     </section>
   </main>
 

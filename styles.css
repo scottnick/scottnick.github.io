@@ -106,6 +106,24 @@ body.dark-mode header {
   gap: 10px;
 }
 
+.nav-action-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 6px 10px;
+  border-radius: 10px;
+  color: var(--text);
+  border: 1px solid transparent;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.nav-action-link:hover {
+  background: var(--primary-soft);
+  border-color: var(--border);
+  color: var(--text);
+}
+
 
 .toggle-btn, .menu-btn {
   border: 1px solid var(--border);
@@ -184,6 +202,186 @@ main {
 .hero p {
   margin: 0;
   color: var(--muted);
+}
+
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.page-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 28px;
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+
+.page-subtitle {
+  margin: 4px 0 0;
+  color: var(--muted);
+}
+
+.search-bar {
+  margin: 14px 0 22px;
+}
+
+.search-input {
+  width: min(100%, 420px);
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  box-shadow: var(--shadow);
+  font-size: 15px;
+}
+
+.search-input::placeholder {
+  color: var(--muted);
+}
+
+.card-meta {
+  margin: 8px 0 0;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.category-meta-row {
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.category-link {
+  font-size: 14px;
+  color: var(--primary);
+}
+
+.category-link:hover {
+  color: var(--primary);
+  text-decoration: underline;
+}
+
+.back-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  box-shadow: var(--shadow);
+  transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition);
+}
+
+.back-button:hover {
+  transform: translateY(-1px);
+  border-color: var(--primary-soft);
+  box-shadow: 0 12px 22px rgba(0, 0, 0, 0.12);
+}
+
+.category-listing {
+  list-style: none;
+  padding: 0;
+  margin: 16px 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.category-article {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  box-shadow: var(--shadow);
+  flex-wrap: wrap;
+}
+
+.category-article-date {
+  font-size: 14px;
+  color: var(--muted);
+  min-width: 90px;
+}
+
+.category-article a {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.category-article a:hover {
+  color: var(--primary);
+}
+
+/* 搜尋列：搜尋框 + 排序控制同一排 */
+.search-row{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.search-row input{
+  flex: 1;
+}
+
+/* 排序控制（右側） */
+.sort-controls{
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+
+/* 圓角 icon 按鈕：外觀像你圖二那種「獨立小方塊按鈕」 */
+.sort-dir-btn{
+  width:38px;
+  height:38px;
+  border-radius:12px;
+  border:1px solid rgba(0,0,0,0.08);
+  background:#fff;
+  cursor:pointer;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  transition:all .15s ease;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+}
+
+.sort-dir-btn:hover{
+  background: rgba(0,0,0,0.04);
+}
+
+/* SVG 尺寸（小箭頭） */
+.sort-icon{
+  width:18px;
+  height:18px;
+  color:#111;
+}
+
+/* 文字按鈕（依照時間/依照字母） */
+.sort-mode-btn{
+  height:38px;
+  padding:0 12px;
+  border-radius:12px;
+  border:1px solid rgba(0,0,0,0.08);
+  background:#fff;
+  cursor:pointer;
+  transition:all .15s ease;
+  white-space:nowrap;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+}
+
+.sort-mode-btn:hover{
+  background: rgba(0,0,0,0.04);
 }
 
 .contest-photo {
