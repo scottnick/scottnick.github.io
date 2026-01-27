@@ -1,0 +1,258 @@
+<!-- all problems/1877-minimize-maximum-pair-sum-in-array.html: All problems 文章 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>1877. Minimize Maximum Pair Sum in Array</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+               width="18" height="18" aria-hidden="true" focusable="false"
+               style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="index.html">All problems</a>
+      <span aria-hidden="true">/</span>
+      <span>1877. Minimize Maximum Pair Sum in Array</span>
+    </nav>
+
+    <section class="hero">
+      <h1>1877. Minimize Maximum Pair Sum in Array</h1>
+      <p><strong>練習日期：</strong>2026-01-24</p>
+      <p><strong>難度：</strong>Medium</p>
+      <p><strong>類型：</strong>Array、Two Pointers、Greedy、Sorting</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach-1">🧠 解題思路（一）最後TLE</a></li>
+          <li><a href="#code-tle">💻 程式碼實作（TLE）</a></li>
+          <li><a href="#approach-2">🧠 解題思路（二）用 sort</a></li>
+          <li><a href="#code">💻 程式碼實作（用sort）</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給定一個長度為偶數的整數陣列 <code>nums</code>。你需要把 <code>nums</code> 裡的元素兩兩配對成 <code>n/2</code> 組，且每個元素剛好只能被用一次。</p>
+        <p>一組 pair <code>(a, b)</code> 的 pair sum 定義為 <code>a + b</code>，所有 pairs 中最大的那個 pair sum 稱為 maximum pair sum。</p>
+        <p>請你找一種配對方式，使得 maximum pair sum 最小，並回傳這個最小值。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>n == nums.length</code></li>
+          <li><code>2 &lt;= n &lt;= 10^5</code></li>
+          <li><code>n</code> 一定是偶數</li>
+          <li><code>1 &lt;= nums[i] &lt;= 10^5</code></li>
+        </ul>
+
+        <h2 id="approach-1">🧠 解題思路（一）最後TLE</h2>
+        <p>直覺是把最小的和最大的配在一起，避免大數相加讓最大值更大。</p>
+        <ul>
+          <li>每一輪找最小值位置 <code>ps</code> 與最大值位置 <code>pb</code></li>
+          <li>把這一對記下來，再從 <code>nums</code> 中刪掉</li>
+          <li>重複直到配完，再取所有 pair sum 的最大值</li>
+        </ul>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>nums</code>：原本的陣列（會一直 <code>erase</code>）</li>
+          <li><code>small</code>：每次選到的最小值</li>
+          <li><code>big</code>：每次選到的最大值</li>
+          <li><code>ps</code>：目前最小值的位置</li>
+          <li><code>pb</code>：目前最大值的位置</li>
+          <li><code>mps</code>：最大 pair sum</li>
+          <li><code>n</code>：陣列長度</li>
+        </ul>
+
+        <h3>🪜 主要流程步驟</h3>
+
+        <h4>1. 反覆配對：每次抓最小和最大</h4>
+        <ul>
+          <li>只要 <code>nums.size() &gt; 0</code> 就配對一次</li>
+          <li>線性掃描找到最小值 <code>ps</code> 與最大值 <code>pb</code></li>
+          <li>把這一對放進 <code>small</code> 與 <code>big</code></li>
+        </ul>
+
+        <h4>2. 從 nums 刪掉這一對</h4>
+        <ul>
+          <li>為了避免 index 錯亂，先刪掉較大的 index 再刪較小的</li>
+        </ul>
+
+        <h4>3. 配對完成後，算最大的 pair sum</h4>
+        <ul>
+          <li>掃過所有 <code>small[k] + big[k]</code>，取最大值回傳</li>
+        </ul>
+
+        <h2 id="code-tle">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    int minPairSum(vector&lt;int&gt;&amp; nums) {
+        vector&lt;int&gt; small;
+        vector&lt;int&gt; big;
+        int ps, pb;
+        while (nums.size() &gt; 0) {
+            ps = 0, pb = 0;
+            for (int i = 0; i &lt; nums.size(); i++) {
+                if (nums[ps] &gt; nums[i]) {
+                    ps = i;
+                }
+                if (nums[pb] &lt; nums[i]) {
+                    pb = i;
+                }
+            }
+            small.push_back(nums[ps]);
+            big.push_back(nums[pb]);
+            if (ps &gt; pb) {
+                nums.erase(nums.begin() + ps);
+                nums.erase(nums.begin() + pb);
+            } else {
+                nums.erase(nums.begin() + pb);
+                nums.erase(nums.begin() + ps);
+            }
+        }
+        int mps = small[0] + big[0];
+        for (int j = 0; j &lt; small.size(); j++) {
+            if (mps &lt; small[j] + big[j]) {
+                mps = small[j] + big[j];
+            }
+        }
+        return mps;
+    }
+};
+</code></pre>
+
+        <h2 id="approach-2">🧠 解題思路（二）用 sort</h2>
+        <p>核心想法是把最大值和最小值配對，避免大數相加造成最大值過大。</p>
+        <ol>
+          <li>先排序 <code>nums</code></li>
+          <li>用雙指標：左邊最小與右邊最大配對</li>
+          <li>每次更新最大配對和 <code>ans</code></li>
+        </ol>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>nums</code>：題目給的整數陣列</li>
+          <li><code>n</code>：陣列長度</li>
+          <li><code>l</code>：左指標</li>
+          <li><code>r</code>：右指標</li>
+          <li><code>ans</code>：目前最大配對和</li>
+        </ul>
+
+        <h3>🪜 主要流程步驟</h3>
+
+        <h4>1. 先排序</h4>
+        <ul>
+          <li><code>sort(nums.begin(), nums.end())</code></li>
+        </ul>
+
+        <hr />
+
+        <h4>2. 雙指標配對（最小 + 最大）</h4>
+        <ul>
+          <li>在 <code>while (l &lt; r)</code> 中計算 <code>nums[l] + nums[r]</code></li>
+          <li><code>ans = max(ans, nums[l] + nums[r])</code></li>
+          <li>指標往內縮：<code>l++</code>、<code>r--</code></li>
+        </ul>
+
+        <hr />
+
+        <h4>3. 回傳答案</h4>
+        <ul>
+          <li>迴圈結束後，<code>ans</code> 即為最小可能的最大 pair sum</li>
+        </ul>
+
+        <h2 id="code">💻 程式碼實作（用sort）</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    int minPairSum(vector&lt;int&gt;&amp; nums) {
+        sort(nums.begin(), nums.end());
+        int n = nums.size();
+        int l = 0, r = n - 1;
+        int ans = 0;
+        while (l &lt; r) {
+            ans = max(ans, nums[l] + nums[r]);
+            l++;
+            r--;
+        }
+        return ans;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/minimize-maximum-pair-sum-in-array/description/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-01-24</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value">
+            <span class="post-tags">
+              <span class="post-tag">Array</span>
+              <span class="post-tag">Two Pointers</span>
+              <span class="post-tag">Greedy</span>
+              <span class="post-tag">Sorting</span>
+              <span class="post-tag">Medium</span>
+            </span>
+          </span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/all%20problems/1877-minimize-maximum-pair-sum-in-array.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
