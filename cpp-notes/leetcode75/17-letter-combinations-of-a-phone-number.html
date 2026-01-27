@@ -1,0 +1,280 @@
+<!-- leetcode75/17-letter-combinations-of-a-phone-number.html: LeetCode 75 文章 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>17. Letter Combinations of a Phone Number</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+               width="18" height="18" aria-hidden="true" focusable="false"
+               style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="../leetcode75/index.html">LeetCode 75</a>
+      <span aria-hidden="true">/</span>
+      <span>17. Letter Combinations of a Phone Number</span>
+    </nav>
+
+    <section class="hero">
+      <h1>17. Letter Combinations of a Phone Number</h1>
+      <p><strong>練習日期：</strong>2026-01-23</p>
+      <p><strong>難度：</strong>Medium</p>
+      <p><strong>類型：</strong>Backtracking、String、Array</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給定一個只包含數字 <code>2-9</code> 的字串 <code>digits</code>，請回傳所有可能的字母組合（依電話按鍵對應）。</p>
+
+        <p>數字與字母對應如下：</p>
+        <ul>
+          <li><code>2</code>：<code>abc</code></li>
+          <li><code>3</code>：<code>def</code></li>
+          <li><code>4</code>：<code>ghi</code></li>
+          <li><code>5</code>：<code>jkl</code></li>
+          <li><code>6</code>：<code>mno</code></li>
+          <li><code>7</code>：<code>pqrs</code></li>
+          <li><code>8</code>：<code>tuv</code></li>
+          <li><code>9</code>：<code>wxyz</code></li>
+        </ul>
+
+        <p>回傳答案可以是任意順序。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>1 ≤ digits.length ≤ 4</code></li>
+          <li><code>digits[i]</code> 只會是 <code>2</code> 到 <code>9</code></li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>我這題沒有用遞迴 backtracking，而是把它想成「<strong>多進位制枚舉</strong>」。</p>
+
+        <p>概念是：</p>
+        <ul>
+          <li>每一個 digit 對應一個字母集合（例如 <code>2 -&gt; abc</code> 有 3 個選擇）</li>
+          <li>如果 digits 長度是 <code>n</code>，那我就要做 <code>n</code> 個位置的組合</li>
+          <li>我用一個陣列 <code>comb</code> 來記錄「每個位置目前選到第幾個字母」</li>
+          <li>例如 <code>comb = [0, 1, 2]</code> 表示：
+            <ul>
+              <li>第 0 位選第 0 個字母</li>
+              <li>第 1 位選第 1 個字母</li>
+              <li>第 2 位選第 2 個字母</li>
+            </ul>
+          </li>
+        </ul>
+
+        <p>每生成一組字串後，我就讓 <code>comb</code> 像「進位」一樣往前推：</p>
+        <ul>
+          <li>先 <code>comb[n-1]++</code></li>
+          <li>如果某一位超出該 digit 的字母數量，就把它歸零並讓前一位 <code>+1</code></li>
+        </ul>
+
+        <p>最後用 <code>comb[0]</code> 是否爆掉（超出第一位可選範圍）來當作停止條件。</p>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>digit</code>：把 <code>digits</code> 字元轉成整數後的陣列，例如 <code>'2' -&gt; 2</code></li>
+          <li><code>n</code>：<code>digits</code> 的長度（幾個數字就代表幾個位置要選字母）</li>
+          <li><code>eng</code>：電話按鍵的對照表，<code>eng[x]</code> 是數字 <code>x</code> 對應的字母列表</li>
+          <li><code>comb</code>：核心！用來記錄每一個位置目前選到 <code>eng[digit[i]]</code> 的第幾個字母（索引）</li>
+          <li><code>letter</code>：最後要回傳的所有組合結果</li>
+          <li><code>s</code>：每一輪用 <code>comb</code> 組出的一個字串</li>
+        </ul>
+
+        <h3>🪜 主要流程步驟</h3>
+        <h4>1. 先把 digits 轉成整數陣列 digit</h4>
+        <ul>
+          <li>因為 <code>digits[i]</code> 是字元，我先做：
+            <ul>
+              <li><code>digit.push_back(digits[i] - '0')</code></li>
+            </ul>
+          </li>
+          <li>這樣後面查表 <code>eng[digit[j]]</code> 才方便</li>
+        </ul>
+
+        <hr />
+
+        <h4>2. 建立電話按鍵對照表 eng</h4>
+        <ul>
+          <li>我用 <code>vector&lt;vector&lt;char&gt;&gt; eng</code> 存：
+            <ul>
+              <li><code>eng[2] = {'a','b','c'}</code></li>
+              <li><code>eng[3] = {'d','e','f'}</code></li>
+              <li>...</li>
+            </ul>
+          </li>
+          <li><code>0</code>、<code>1</code> 沒有對應字母，所以放空 <code>{}</code></li>
+        </ul>
+
+        <hr />
+
+        <h4>3. 用 comb 當「多進位制計數器」枚舉所有組合</h4>
+        <h5>初始化</h5>
+        <ul>
+          <li><code>comb</code> 長度是 <code>n</code>，一開始全部是 <code>0</code></li>
+          <li>表示每一位都先選第一個字母</li>
+        </ul>
+
+        <h5>while 條件：看第一位有沒有爆掉</h5>
+        <ul>
+          <li>我用：
+            <ul>
+              <li><code>while (comb[0] &lt; eng[digit[0]].size())</code></li>
+            </ul>
+          </li>
+          <li>意思是：只要第一位的選擇索引還合法，就代表還有組合沒列完</li>
+          <li>只看第一個位置會爆的地方：因為後面每一位都會進位回到前面，最後一定是第一位先超出範圍，整個枚舉才結束</li>
+        </ul>
+
+        <hr />
+
+        <h4>4. 每一輪：用 comb 組出一個字串 s</h4>
+        <ul>
+          <li>我跑 <code>j = 0..n-1</code>：</li>
+          <li>第 <code>j</code> 位的字母就是 <code>eng[digit[j]][comb[j]]</code></li>
+          <li>把它們串起來就是一個合法組合 <code>s</code></li>
+          <li><code>letter.push_back(s)</code> 存進答案</li>
+        </ul>
+
+        <hr />
+
+        <h4>5. 更新 comb：從最後一位開始進位</h4>
+        <p>我用兩段邏輯完成「進位制」：</p>
+
+        <h5>第一步：先讓最後一位 +1</h5>
+        <ul>
+          <li><code>comb[n-1]++</code></li>
+        </ul>
+
+        <h5>第二步：處理進位（從右往左）</h5>
+        <ul>
+          <li>如果 <code>comb[k] &gt;= eng[digit[k]].size()</code>，代表第 k 位爆掉了：</li>
+          <li><code>comb[k] = 0</code>（歸零）</li>
+          <li><code>comb[k-1]++</code>（進位到前一位）</li>
+        </ul>
+
+        <p>這就跟「十進位」的 999 + 1 變 1000 一樣，只是每一位的基底不同（3 或 4）。</p>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    vector&lt;string&gt; letterCombinations(string digits) {
+        vector&lt;int&gt; digit;
+        int n = digits.size();
+        for (int i = 0; i &lt; n; i++) {
+            digit.push_back((int)digits[i] - (int)'0');
+        }
+        vector&lt;string&gt; letter;
+        vector&lt;vector&lt;char&gt;&gt; eng = {{},
+                                    {},
+                                    {'a', 'b', 'c'},
+                                    {'d', 'e', 'f'},
+                                    {'g', 'h', 'i'},
+                                    {'j', 'k', 'l'},
+                                    {'m', 'n', 'o'},
+                                    {'p', 'q', 'r', 's'},
+                                    {'t', 'u', 'v'},
+                                    {'w', 'x', 'y', 'z'}};
+        vector&lt;int&gt; comb(n, 0);
+        while (comb[0] &lt; eng[digit[0]].size()) {
+            string s = "";
+            for (int j = 0; j &lt; n; j++) {
+                s = s + eng[digit[j]][comb[j]];
+            }
+            letter.push_back(s);
+            comb[n - 1]++;
+            for (int k = n - 1; k &gt; 0; k--) {
+                if (comb[k] &gt;= eng[digit[k]].size()) {
+                    comb[k] = 0;
+                    comb[k - 1]++;
+                }
+            }
+        }
+        return letter;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/letter-combinations-of-a-phone-number/description/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-01-23</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value">
+            <span class="post-tags">
+              <span class="post-tag">Backtracking</span>
+              <span class="post-tag">String</span>
+              <span class="post-tag">Array</span>
+              <span class="post-tag">Medium</span>
+            </span>
+          </span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/leetcode75/17-letter-combinations-of-a-phone-number.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
