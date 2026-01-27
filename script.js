@@ -261,7 +261,7 @@
 
   let sortMode = 'time';
   let sortDir = 'desc';
-  const cacheKey = 'category-index-cache-v2';
+  const cacheKey = 'category-index-cache-v3';
 
   function initSortControls(renderFn) {
     const sortDirBtn = document.getElementById('sortDirBtn');
