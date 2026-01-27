@@ -1,0 +1,172 @@
+<!-- all problems/3818-minimum-prefix-removal-to-make-array-strictly-increasing.html: All problems 文章 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3818. Minimum Prefix Removal to Make Array Strictly Increasing</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+               width="18" height="18" aria-hidden="true" focusable="false"
+               style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="index.html">All problems</a>
+      <span aria-hidden="true">/</span>
+      <span>3818. Minimum Prefix Removal to Make Array Strictly Increasing</span>
+    </nav>
+
+    <section class="hero">
+      <h1>3818. Minimum Prefix Removal to Make Array Strictly Increasing</h1>
+      <p><strong>練習日期：</strong>2026-01-25</p>
+      <p><strong>難度：</strong>Medium</p>
+      <p><strong>類型：</strong>Weekly Contest 486</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給定一個整數陣列 <code>nums</code>。</p>
+        <p>你需要從 <code>nums</code> 中移除恰好一個前綴（prefix），這個前綴可以是空的。</p>
+        <p>請回傳一個整數，表示最少需要移除的前綴長度，使得剩下的陣列成為嚴格遞增（strictly increasing）。</p>
+        <p>如果一個陣列中對於所有合法的 <code>i</code> 都滿足 <code>nums[i] &lt; nums[i + 1]</code>，則稱該陣列為嚴格遞增。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>1 &lt;= nums.length &lt;= 10^5</code></li>
+          <li><code>-10^9 &lt;= nums[i] &lt;= 10^9</code></li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>我的想法是：只要找出「最後一次破壞嚴格遞增的位置」，那就是最短要移除的 prefix 長度。</p>
+        <ul>
+          <li>掃描時若出現 <code>nums[i] &lt;= last</code>，代表這個位置之前都不能保留</li>
+          <li>因此更新 <code>count = i</code> 作為最短要移除的長度</li>
+        </ul>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>last</code>：上一個掃描到的數字</li>
+          <li><code>count</code>：目前最短要移除的 prefix 長度</li>
+          <li><code>i</code>：掃描陣列的索引</li>
+        </ul>
+
+        <h3>🪜 主要流程步驟</h3>
+
+        <h4>1. 初始化</h4>
+        <ul>
+          <li><code>last = nums[0]</code></li>
+          <li><code>count = 0</code></li>
+        </ul>
+
+        <hr />
+
+        <h4>2. 從左到右掃描整個陣列</h4>
+        <ul>
+          <li>如果 <code>nums[i] &lt;= last</code>，更新 <code>count = i</code></li>
+          <li>更新 <code>last = nums[i]</code></li>
+        </ul>
+
+        <hr />
+
+        <h4>3. 回傳答案</h4>
+        <ul>
+          <li>掃描完後回傳 <code>count</code></li>
+        </ul>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    int minimumPrefixLength(vector&lt;int&gt;&amp; nums) {
+        int last = nums[0];
+        int count = 0;
+        for (int i = 0; i &lt; nums.size(); i++) {
+            if (nums[i] &lt;= last) {
+                count = i;
+            }
+            last = nums[i];
+        }
+        return count;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/minimum-prefix-removal-to-make-array-strictly-increasing/description/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-01-25</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value">
+            <span class="post-tags">
+              <span class="post-tag">Weekly Contest 486</span>
+              <span class="post-tag">Medium</span>
+            </span>
+          </span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/all%20problems/3818-minimum-prefix-removal-to-make-array-strictly-increasing.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
