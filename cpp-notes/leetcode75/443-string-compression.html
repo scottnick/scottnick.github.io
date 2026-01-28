@@ -1,0 +1,209 @@
+<!-- leetcode75/443-string-compression.html: LeetCode 75 文章 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>443. String Compression</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+               width="18" height="18" aria-hidden="true" focusable="false"
+               style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="../leetcode75/index.html">LeetCode 75</a>
+      <span aria-hidden="true">/</span>
+      <span>443. String Compression</span>
+    </nav>
+
+    <section class="hero">
+      <h1>443. String Compression</h1>
+      <p><strong>練習日期：</strong>2026-01-28</p>
+      <p><strong>難度：</strong>Medium</p>
+      <p><strong>類型：</strong>Two Pointers、String</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給定一個字元陣列 <code>chars</code>，請你使用 <strong>原地（in-place）</strong> 的方式壓縮它。</p>
+        <p>壓縮規則：</p>
+        <ul>
+          <li>對於每一段連續重複的字元：
+            <ul>
+              <li>先寫入該字元</li>
+              <li>若該字元連續出現的次數大於 <code>1</code>，再把次數（以字元形式）依序寫入</li>
+              <li>例如 <code>12</code> 會寫成 <code>'1'</code>、<code>'2'</code></li>
+            </ul>
+          </li>
+          <li>最後回傳壓縮後的新長度</li>
+          <li>你必須在輸入陣列 <code>chars</code> 上直接修改內容，且只能使用 <strong>常數額外空間</strong>。</li>
+        </ul>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>1 ≤ chars.length ≤ 2000</code></li>
+          <li><code>chars[i]</code> 是小寫英文字母、大寫英文字母、數字或符號</li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>我用的是「<strong>一邊掃描原本的 chars，一邊把壓縮結果寫回 chars 前面</strong>」的做法。</p>
+        <p>核心概念是：</p>
+        <ul>
+          <li>用 <code>now</code> 記錄「目前這一段在統計的字元是誰」</li>
+          <li>用 <code>count</code> 記錄「這個字元連續出現了幾次」</li>
+          <li>用 <code>all</code> 當作「寫入指標」：壓縮後的內容都寫回 <code>chars[0..all-1]</code></li>
+        </ul>
+        <p>一旦遇到新字元（<code>chars[i] != now</code>）：</p>
+        <ul>
+          <li>代表上一段結束，要把上一段的 <code>count</code>（如果 &gt; 1）寫回去</li>
+          <li>再開始新的段落</li>
+        </ul>
+        <p>最後迴圈跑完後，還要把「最後一段」補寫一次（因為不會再遇到新字元觸發結算）。</p>
+
+        <h3 id="variables">所有變數</h3>
+        <ul>
+          <li><code>all</code>：寫入位置（壓縮後結果寫回 <code>chars[all]</code>，寫完就 <code>all++</code>）</li>
+          <li><code>count</code>：目前這一段連續出現的次數</li>
+          <li><code>now</code>：目前正在統計的字元（上一段的代表字元）</li>
+          <li><code>i</code>：掃描原始 <code>chars</code> 的索引</li>
+          <li><code>s</code>：把 <code>count</code> 轉成字串後的結果（例如 <code>12 -&gt; "12"</code>），用來逐字寫入</li>
+        </ul>
+
+        <h3>🪜 主要流程步驟</h3>
+        <h4>1. 掃描 <code>chars</code>，偵測「段落」的切換</h4>
+        <ul>
+          <li>我從左到右掃描 <code>chars[i]</code></li>
+          <li>如果 <code>chars[i] != now</code>，代表：
+            <ul>
+              <li><strong>上一段結束</strong></li>
+              <li><strong>新的一段開始</strong></li>
+            </ul>
+          </li>
+        </ul>
+        <hr />
+
+        <h4>2. 當遇到新字元時：先結算上一段，再開始新段</h4>
+        <p>當 <code>now != chars[i]</code> 時，我做兩件事：</p>
+        <h5>(1) 結算上一段（若 <code>count &gt; 1</code> 才寫數字）</h5>
+        <ul>
+          <li>把 <code>count</code> 用 <code>to_string(count)</code> 變成字串</li>
+          <li>用 <code>for (char c : s)</code> 逐字把 <code>'1'</code>、<code>'2'</code> ... 寫回 <code>chars</code></li>
+        </ul>
+        <blockquote>
+          <p><code>for (char c : s)</code> 的意思：把字串 <code>s</code> 裡的每個字元依序取出來，放到變數 <code>c</code>。例如 <code>s = "12"</code>，迴圈會跑兩次：<code>c='1'</code>、<code>c='2'</code>。</p>
+        </blockquote>
+
+        <h5>(2) 開始新段</h5>
+        <ul>
+          <li>更新 <code>now = chars[i]</code></li>
+          <li>把這個字元先寫回 <code>chars[all]</code></li>
+          <li><code>count = 1</code>（新段剛開始）</li>
+        </ul>
+        <hr />
+
+        <h4>3. 當遇到相同字元：只累加次數</h4>
+        <ul>
+          <li>如果 <code>chars[i] == now</code></li>
+          <li>代表還在同一段</li>
+          <li>我就 <code>count++</code></li>
+        </ul>
+        <hr />
+
+        <h4>4. 迴圈結束後：補寫最後一段的次數</h4>
+        <p>因為最後一段不會再遇到「新字元」來觸發結算，所以要補做一次：</p>
+        <ul>
+          <li>若 <code>count &gt; 1</code>，同樣把次數轉成字串，逐字寫回</li>
+        </ul>
+        <hr />
+
+        <h4>5. 回傳壓縮後長度</h4>
+        <ul>
+          <li><code>all</code> 代表壓縮後寫了多少個字元</li>
+          <li>所以直接回傳 <code>all</code></li>
+        </ul>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    int compress(vector&lt;char&gt;&amp; chars) {
+        int all = 0, count = 0;
+        char now = ' ';
+        for (int i = 0; i &lt; chars.size(); i++) {
+            if (now != chars[i]) {
+                if (count &gt; 1) {
+                    string s = to_string(count);
+                    for (char c : s) {
+                        chars[all++] = c;
+                    }
+                }
+                now = chars[i];
+                chars[all++] = now;
+                count = 1;
+            } else {
+                count++;
+            }
+        }
+        if (count &gt; 1) {
+            string s = to_string(count);
+            for (char c : s) {
+                chars[all++] = c;
+            }
+        }
+        return all;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p><a href="https://leetcode.com/problems/string-compression/description/">https://leetcode.com/problems/string-compression/description/</a></p>
+      </section>
+    </div>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
