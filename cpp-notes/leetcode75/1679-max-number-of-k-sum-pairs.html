@@ -1,0 +1,219 @@
+<!-- leetcode75/1679-max-number-of-k-sum-pairs.html: LeetCode 75 文章 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>1679. Max Number of K-Sum Pairs</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+               width="18" height="18" aria-hidden="true" focusable="false"
+               style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="../leetcode75/index.html">LeetCode 75</a>
+      <span aria-hidden="true">/</span>
+      <span>1679. Max Number of K-Sum Pairs</span>
+    </nav>
+
+    <section class="hero">
+      <h1>1679. Max Number of K-Sum Pairs</h1>
+      <p><strong>練習日期：</strong>2026-01-28</p>
+      <p><strong>難度：</strong>Medium</p>
+      <p><strong>類型：</strong>Two Pointers、Sorting</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給定一個整數陣列 <code>nums</code> 與一個整數 <code>k</code>。</p>
+        <p>你每次可以選擇 <strong>兩個數</strong>（必須是不同索引），且它們的總和剛好等於 <code>k</code>，然後把這兩個數從陣列中移除。</p>
+        <p>請回傳你最多可以做幾次這樣的操作（也就是最多能移除幾組「和為 k」的配對）。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>1 &lt;= nums.length &lt;= 10^5</code></li>
+          <li><code>1 &lt;= nums[i] &lt;= 10^9</code></li>
+          <li><code>1 &lt;= k &lt;= 10^9</code></li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>我的做法是：</p>
+        <ol>
+          <li><strong>先排序</strong> <code>nums</code>（讓大小有順序）</li>
+          <li>用兩個指標：
+            <ul>
+              <li><code>l</code> 指向最左邊（最小值）</li>
+              <li><code>r</code> 指向最右邊（最大值）</li>
+            </ul>
+          </li>
+          <li>每次看 <code>nums[l] + nums[r]</code> 跟 <code>k</code> 的關係來決定怎麼移動指標：</li>
+        </ol>
+        <ul>
+          <li>如果剛好等於 <code>k</code>：找到一組配對，<code>count++</code>，然後 <code>l++</code>、<code>r--</code></li>
+          <li>如果大於 <code>k</code>：代表右邊太大，<code>r--</code></li>
+          <li>如果小於 <code>k</code>：代表左邊太小，<code>l++</code></li>
+        </ul>
+        <p>另外我在一開始多做了一步：</p>
+        <ul>
+          <li>因為 <code>nums[i]</code> 都是正數，如果 <code>nums[r] &gt; k</code>，那它不可能跟任何正數加出 <code>k</code></li>
+          <li>所以可以先把 <code>r</code> 往左移到 <code>nums[r] &lt;= k</code> 的位置，減少後續判斷範圍</li>
+        </ul>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>nums</code>：輸入陣列（我會先排序）</li>
+          <li><code>k</code>：目標和</li>
+          <li><code>l</code>：左指標（從小的開始）</li>
+          <li><code>r</code>：右指標（從大的開始）</li>
+          <li><code>count</code>：目前找到的合法配對數量（答案）</li>
+        </ul>
+
+        <h3>🪜 主要流程步驟</h3>
+        <h4>1. 排序</h4>
+        <ul>
+          <li>排序後才能用「左右夾逼」快速判斷目前和是太大還太小</li>
+        </ul>
+        <hr />
+
+        <h4>2. 先把不可能用到的右端排除（我的小優化）</h4>
+        <ul>
+          <li>當 <code>nums[r] &gt; k</code> 時：</li>
+          <li>因為所有數都是正數，所以 <code>nums[l] + nums[r] &gt;= nums[r] &gt; k</code></li>
+          <li>代表 <code>nums[r]</code> 不可能出現在任何合法配對中</li>
+          <li>所以我先做：</li>
+          <li>一直 <code>r--</code> 直到 <code>nums[r] &lt;= k</code>（或 <code>r</code> 到最左邊）</li>
+        </ul>
+        <hr />
+
+        <h4>3. 兩指標掃描找配對</h4>
+        <p>只要 <code>l &lt; r</code>，就重複：</p>
+        <ul>
+          <li><strong>情況一：<code>nums[l] + nums[r] == k</code></strong>
+            <ul>
+              <li>找到一組配對，可以「移除」兩個數</li>
+              <li><code>count++</code>，並且兩邊都往內縮：<code>l++</code>、<code>r--</code></li>
+            </ul>
+          </li>
+          <li><strong>情況二：<code>nums[l] + nums[r] &gt; k</code></strong>
+            <ul>
+              <li>和太大，代表右邊數字太大</li>
+              <li><code>r--</code> 嘗試用更小的右邊數字</li>
+            </ul>
+          </li>
+          <li><strong>情況三：<code>nums[l] + nums[r] &lt; k</code></strong>
+            <ul>
+              <li>和太小，代表左邊數字太小</li>
+              <li><code>l++</code> 嘗試用更大的左邊數字</li>
+            </ul>
+          </li>
+        </ul>
+        <p>最後 <code>count</code> 就是最多可以取到的配對數量。</p>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    int maxOperations(vector&lt;int&gt;&amp; nums, int k) {
+        sort(nums.begin(), nums.end());
+        int l = 0, r = nums.size() - 1;
+        int count = 0;
+
+        while (nums[r] &gt; k &amp;&amp; r &gt; 0) {
+            r--;
+        }
+
+        while (l &lt; r) {
+            if (nums[l] + nums[r] == k) {
+                count++;
+                l++;
+                r--;
+            } else if (nums[l] + nums[r] &gt; k) {
+                r--;
+            } else {
+                l++;
+            }
+        }
+        return count;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p><a href="https://leetcode.com/problems/max-number-of-k-sum-pairs/description/">https://leetcode.com/problems/max-number-of-k-sum-pairs/description/</a></p>
+      </section>
+    </div>
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-01-28</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value">
+            <span class="post-tags">
+              <span class="post-tag">Two Pointers</span>
+              <span class="post-tag">Sorting</span>
+              <span class="post-tag">Medium</span>
+            </span>
+          </span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/leetcode75/1679-max-number-of-k-sum-pairs.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
