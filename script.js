@@ -261,7 +261,8 @@
 
   let sortMode = 'time';
   let sortDir = 'desc';
-  const cacheKey = 'category-index-cache-v3';
+  const INDEX_VERSION = '2026-01-28-01';
+  const CACHE_KEY = `categoriesIndex_${INDEX_VERSION}`;
 
   function initSortControls(renderFn) {
     const sortDirBtn = document.getElementById('sortDirBtn');
@@ -492,21 +493,17 @@
   }
 
   function getCachedPosts() {
-    const ttl = 6 * 60 * 60 * 1000;
     try {
-      const cached = JSON.parse(localStorage.getItem(cacheKey));
-      if (cached && cached.timestamp && Date.now() - cached.timestamp < ttl) {
-        return cached.posts || null;
-      }
+      const cached = JSON.parse(localStorage.getItem(CACHE_KEY));
+      return cached?.posts || null;
     } catch (error) {
       return null;
     }
-    return null;
   }
 
   function setCachedPosts(posts) {
     localStorage.setItem(
-      cacheKey,
+      CACHE_KEY,
       JSON.stringify({
         timestamp: Date.now(),
         posts,
