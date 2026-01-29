@@ -26,6 +26,13 @@ def to_url_path(fs_rel_path: str) -> str:
     return "/".join(parts)
 
 
+def extract_folder(fs_rel_path: str) -> str:
+    normalized = fs_rel_path.replace("\\", "/")
+    if "/" not in normalized:
+        return ""
+    return normalized.rsplit("/", 1)[0]
+
+
 def is_article_html(content: str) -> bool:
     if 'class="post-tag"' not in content:
         return False
@@ -92,6 +99,7 @@ def main():
                     "title": extract_title(content),
                     "date": extract_date(content),
                     "tags": extract_tags(content),
+                    "folder": extract_folder(rel_path_norm),
                 }
             )
 

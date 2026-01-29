@@ -161,7 +161,6 @@
 
     contents.forEach((content) => {
       const id = content.dataset.countId;
-      const selector = content.dataset.countSelector || 'a, li';
       const target = document.querySelector(`.accordion__count[data-count-for="${id}"]`);
       if (!target) return;
 
@@ -176,8 +175,7 @@
         }
       }
 
-      const count = content.querySelectorAll(selector).length;
-      target.textContent = count.toString();
+      target.textContent = '0';
     });
   }
 
@@ -402,17 +400,20 @@
     return normalized.endsWith('.html');
   }
 
-  function filterPostsForCategories(posts) {
+  function filterPostsForCategorySystem(posts) {
     return posts.filter((post) => {
-      const url = post.url || post.path || '';
-      if (!isCppNotesArticle(url)) return true;
-      return isAllProblemsArticle(url);
+      const url = post.path || post.url || '';
+      if (!url) return false;
+      if (isCppNotesArticle(url)) {
+        return isAllProblemsArticle(url);
+      }
+      return true;
     });
   }
 
   async function getCategoryIndex(scope = 'all') {
     const siteIndex = await getSiteIndex();
-    const scopedPosts = filterPostsForCategories(siteIndex.posts || [], scope);
+    const scopedPosts = filterPostsForCategorySystem(siteIndex.posts || []);
     const categoryIndex = {};
 
     scopedPosts.forEach((post) => {
