@@ -1,0 +1,14 @@
+[
+  {
+    "date": "2026-01",
+    "title": "主頁加入里程碑與內容型近期更新",
+    "desc": "把 GitHub commits 替換成站內文章更新，讓主頁更像前導章節。",
+    "link": "personal.html"
+  },
+  {
+    "date": "2025-12",
+    "title": "開始系統化整理 LeetCode 筆記",
+    "desc": "把解題從做過變成可回顧的筆記，方便自己也方便他人參考。",
+    "link": "cpp-notes/all%20problems/index.html"
+  }
+]

@@ -1740,3 +1740,69 @@ code.hljs {
 .hljs-ln-code {
   padding-left: 12px !important;
 }
+
+/* ===== Home: Timeline + Recent actions ===== */
+.muted {
+  color: var(--muted);
+}
+
+.recent-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+
+.muted-link {
+  color: var(--muted);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.muted-link:hover {
+  text-decoration: underline;
+}
+
+.timeline-section {
+  margin-top: 26px;
+}
+
+.timeline-list {
+  display: grid;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.timeline-item {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  gap: 12px;
+  padding: 14px;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  box-shadow: var(--shadow);
+}
+
+.timeline-date {
+  font-weight: 800;
+  color: var(--muted);
+}
+
+.timeline-title {
+  font-weight: 800;
+  margin-bottom: 4px;
+}
+
+.timeline-desc {
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.timeline-link {
+  display: inline-block;
+  margin-top: 8px;
+  text-decoration: none;
+  font-weight: 700;
+}
