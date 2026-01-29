@@ -2,14 +2,10 @@
 
 ---
 
-## 1) 更新版本號（必做）
-- 修改類別索引使用的版本號（例如：INDEX_VERSION）
-- 確保 cache key 包含版本號
-  - 範例：categoriesIndex_2026-01-28-01
-
-目的：
-- 確保使用者在改版後會自動重建類別索引
-- 避免舊的類別數量或文章清單殘留
+## 1) 類別/計數索引更新（必做）
+- 確認 GitHub Actions：Build site index 成功
+- 確認 repo 根目錄的 `site-index.json` 已更新（buildId 變更、posts 數量合理）
+- 上線後若數字未更新：先硬重新整理（Ctrl+F5）或清除站台快取
 
 ---
 
@@ -49,5 +45,4 @@
   - 若是 C++ 解題文章：
     - 預設需新增到 `cpp-notes/all problems/`（除非明確說不要）
     - 若 all problems 已有相同題號文章，則不重複新增
-  - 更新版本號（INDEX_VERSION）
   - 重新檢查 categories / category 頁

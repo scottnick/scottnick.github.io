@@ -120,7 +120,30 @@
 
 ---
 
-## 6) 快取與版本控制（重要）
+## 6) 類別與計數索引（自動化規則）
+
+### 1) 索引來源（唯一真相）
+- 全站類別與文章計數的資料來源為：`/site-index.json`
+- 前端頁面（categories.html / category.html / cpp.html）只讀取 `site-index.json` 來計算，不再於 runtime 呼叫 GitHub API 掃描 repo。
+
+### 2) 自動更新時機（改版更新一次）
+- `site-index.json` 由 GitHub Actions 在每次 push 到 main 後自動重新產生並提交更新。
+- 因此：新增/修改文章後，只要成功推到 main 並完成 Actions，類別與數量就會自動更新。
+
+### 3) 文章被索引的必要條件（類別標準）
+- 文章頁面必須包含 `.post-tag` 類別標籤（文章資訊區塊顯示用的那些 tags）。
+- 沒有 `.post-tag` 的頁面不視為可索引文章。
+
+### 4) C++ 學習筆記的特殊範圍規則
+- 全站類別計算：包含所有文章頁面（如 home/xxx.html 也算）。
+- 但「C++ 學習筆記」相關的類別/文章計數（scope=cpp-notes）僅計算 `cpp-notes/all problems/` 內的文章。
+
+---
+
+## 7) 舊版快取規則（Deprecated，保留紀錄）
+
+> 以下規則為舊版類別索引快取策略，現已停用。
+> 新版以 `site-index.json` 為唯一索引來源，請以第 6 節為準。
 
 - 類別索引使用 localStorage 快取
 - cache key **必須包含版本號**
