@@ -29,8 +29,6 @@ def to_url_path(fs_rel_path: str) -> str:
 def is_article_html(content: str) -> bool:
     if 'class="post-tag"' not in content:
         return False
-    if "article-info" not in content and "article-content" not in content:
-        return False
     return True
 
 

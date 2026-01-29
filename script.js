@@ -379,7 +379,7 @@
     const prefix3 = prefixRaw.replaceAll('%20', ' ');
 
     return posts.filter((post) => {
-      const url = post.url || '';
+      const url = post.url || post.path || '';
       return url.startsWith(prefix1) || url.startsWith(prefix2) || url.startsWith(prefix3);
     });
   }
