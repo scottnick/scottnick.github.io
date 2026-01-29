@@ -1,0 +1,194 @@
+<!-- all problems/3507-minimum-pair-removal-to-sort-array-i.html: All problems 文章 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3507. Minimum Pair Removal to Sort Array I</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+               width="18" height="18" aria-hidden="true" focusable="false"
+               style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="index.html">All problems</a>
+      <span aria-hidden="true">/</span>
+      <span>3507. Minimum Pair Removal to Sort Array I</span>
+    </nav>
+
+    <section class="hero">
+      <h1>3507. Minimum Pair Removal to Sort Array I</h1>
+      <p><strong>練習日期：</strong>2026-01-22</p>
+      <p><strong>難度：</strong>Easy</p>
+      <p><strong>類型：</strong>Array、Greedy</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給定一個整數陣列 <code>nums</code>，你可以重複做以下操作任意次：</p>
+        <ul>
+          <li>選擇 <code>nums</code> 中「相鄰且和最小」的那一對數字</li>
+          <li>若有多組相同的最小和，選<strong>最左邊</strong>那一組</li>
+          <li>把這一對相鄰數字用它們的總和取代（陣列長度 -1）</li>
+        </ul>
+        <p>請回傳最少需要幾次操作，才能讓 <code>nums</code> 變成 <strong>non-decreasing</strong>（單調不下降）。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>1 &lt;= nums.length &lt;= 50</code></li>
+          <li><code>-1000 &lt;= nums[i] &lt;= 1000</code></li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>我的想法是模擬題目的操作規則：每一步都選相鄰最小和（同和取最左），直到陣列已經 non-decreasing。</p>
+        <p>只要還存在 <code>nums[i] &gt; nums[i + 1]</code>，就持續合併最小相鄰和的那一對並累加次數。</p>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>time</code>：目前做了幾次合併（最後要回傳的答案）</li>
+          <li><code>check</code>：判斷陣列是否仍然不是 non-decreasing</li>
+          <li><code>count</code>：這一輪掃描時的最小相鄰和</li>
+          <li><code>pos</code>：最小相鄰和對應的左端索引（要合併的位置）</li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+        <h3>1. 反覆進行「掃描 + 合併」直到陣列變成 non-decreasing</h3>
+        <ul>
+          <li>用 <code>while (check)</code> 控制主流程，每一輪都先掃描再視情況合併</li>
+        </ul>
+        <hr />
+
+        <h3>2. 掃描陣列找最小相鄰和並檢查是否已排序</h3>
+        <ul>
+          <li>只要看到 <code>nums[i] &gt; nums[i + 1]</code>，就表示還沒排序好</li>
+          <li>同時更新最小相鄰和的位置（同和保留最左邊）</li>
+        </ul>
+        <hr />
+
+        <h3>3. 若還沒排序好，合併最小相鄰和的那一對</h3>
+        <ul>
+          <li>用總和覆蓋左邊元素，刪掉右邊元素</li>
+          <li>操作次數 <code>time++</code></li>
+        </ul>
+        <hr />
+
+        <h3>4. 若已排序好則停止</h3>
+        <ul>
+          <li>當整個陣列已經 non-decreasing，回傳 <code>time</code></li>
+        </ul>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    int minimumPairRemoval(vector&lt;int&gt;&amp; nums) {
+        bool check = true;
+        int time = 0;
+        while (check) {
+            int count = 2147483647;
+            int pos = 0;
+            if (nums.size() &lt; 2) {
+                return time;
+            }
+            check = false;
+            for (int i = 0; i &lt; nums.size() - 1; i++) {
+                if (nums[i] &gt; nums[i + 1]) {
+                    check = true;
+                }
+                if (nums[i] + nums[i + 1] &lt; count) {
+                    pos = i;
+                    count = nums[i] + nums[i + 1];
+                }
+            }
+            if (check) {
+                nums[pos] = nums[pos] + nums[pos + 1];
+                nums.erase(nums.begin() + pos + 1);
+                time++;
+            }
+        }
+        return time;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p><a href="https://leetcode.com/problems/minimum-pair-removal-to-sort-array-i/description/">https://leetcode.com/problems/minimum-pair-removal-to-sort-array-i/description/</a></p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-01-22</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value">
+            <span class="post-tags">
+              <span class="post-tag">Array</span>
+              <span class="post-tag">Greedy</span>
+              <span class="post-tag">Easy</span>
+            </span>
+          </span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/all%20problems/3507-minimum-pair-removal-to-sort-array-i.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
