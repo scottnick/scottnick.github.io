@@ -1,23 +1,14 @@
 [
   {
     "date": "2026-01",
-    "type": "site",
-    "title": "主頁改成「內容型近期更新」",
-    "desc": "近期更新改抓 site-index.json，並加入里程碑區塊，讓主頁更像網站前導。",
+    "title": "主頁加入里程碑與內容型近期更新",
+    "desc": "把 GitHub commits 替換成站內文章更新，讓主頁更像前導章節。",
     "link": "personal.html"
   },
   {
-    "date": "2026-01",
-    "type": "site",
-    "title": "加入分類入口與搜尋導覽",
-    "desc": "用類別頁統一入口，之後新增生活/修課/筆記都能自然擴充。",
-    "link": "categories.html"
-  },
-  {
     "date": "2025-12",
-    "type": "life",
     "title": "開始系統化整理 LeetCode 筆記",
-    "desc": "把解題從「做過」變成「寫得出來、找得到」。",
-    "link": "cpp.html"
+    "desc": "把解題從做過變成可回顧的筆記，方便自己也方便他人參考。",
+    "link": "cpp-notes/all%20problems/index.html"
   }
 ]
