@@ -495,30 +495,50 @@
   function getCachedPosts() {
     try {
       const cached = JSON.parse(localStorage.getItem(CACHE_KEY));
-      return cached?.posts || null;
+      if (!cached?.posts) return null;
+      return cached;
     } catch (error) {
       return null;
     }
   }
 
-  function setCachedPosts(posts) {
+  function setCachedPosts(posts, sha) {
     localStorage.setItem(
       CACHE_KEY,
       JSON.stringify({
         timestamp: Date.now(),
+        sha: sha || '',
         posts,
       })
     );
   }
 
+  async function fetchLatestRepoSha() {
+    const repo = getCategoryRepo();
+    const response = await fetch(`https://api.github.com/repos/${repo}/commits?per_page=1`);
+    if (!response.ok) {
+      return '';
+    }
+    const data = await response.json();
+    return data?.[0]?.sha || '';
+  }
+
   async function getCategoryIndex() {
     const cached = getCachedPosts();
     if (cached) {
-      return buildCategoryIndex(filterPostsForCategories(cached));
+      try {
+        const latestSha = await fetchLatestRepoSha();
+        if (!latestSha || cached.sha === latestSha) {
+          return buildCategoryIndex(filterPostsForCategories(cached.posts));
+        }
+      } catch (error) {
+        return buildCategoryIndex(filterPostsForCategories(cached.posts));
+      }
     }
 
+    const latestSha = await fetchLatestRepoSha();
     const posts = await fetchRepoHtmlPosts();
-    setCachedPosts(posts);
+    setCachedPosts(posts, latestSha);
     return buildCategoryIndex(filterPostsForCategories(posts));
   }
 
