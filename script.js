@@ -119,68 +119,66 @@
       });
   }
 
-  function getNextLink(linkHeader) {
-    if (!linkHeader) return null;
-    const matches = linkHeader.split(',');
-    for (const match of matches) {
-      const nextMatch = match.match(/<([^>]+)>;\s*rel="next"/);
-      if (nextMatch) {
-        return nextMatch[1];
-      }
+  function safeJsonParse(value) {
+    if (!value) return null;
+    try {
+      return JSON.parse(value);
+    } catch (error) {
+      return null;
     }
-    return null;
   }
 
-  async function fetchGithubHtmlCount(repo, path) {
-    let url = `https://api.github.com/repos/${repo}/contents/${encodeURI(path)}?per_page=100`;
-    let total = 0;
+  const SITE_INDEX_URL = 'site-index.json';
+  const SITE_INDEX_CACHE_KEY = 'site_index_cache_v1';
 
-    while (url) {
-      const response = await fetch(url);
+  async function getSiteIndex() {
+    const cached = safeJsonParse(localStorage.getItem(SITE_INDEX_CACHE_KEY));
+
+    try {
+      const response = await fetch(`${SITE_INDEX_URL}?v=${Date.now()}`, { cache: 'no-store' });
       if (!response.ok) {
-        return null;
+        throw new Error(`Failed to fetch ${SITE_INDEX_URL}: ${response.status}`);
       }
       const data = await response.json();
-      if (!Array.isArray(data)) {
-        return null;
-      }
-      total += data.filter(
-        (item) => item.type === 'file' && item.name.endsWith('.html') && item.name !== 'index.html'
-      ).length;
-      url = getNextLink(response.headers.get('Link'));
+      localStorage.setItem(SITE_INDEX_CACHE_KEY, JSON.stringify(data));
+      return data;
+    } catch (error) {
+      if (cached) return cached;
+      throw error;
     }
-
-    return total;
   }
 
   async function updateAccordionCounts() {
-    const repo = document.body?.dataset.countRepo || 'scottnick/scottnick.github.io';
     const contents = Array.from(document.querySelectorAll('.accordion__content[data-count-id]'));
+    if (!contents.length) return;
 
-    await Promise.all(
-      contents.map(async (content) => {
-        const id = content.dataset.countId;
-        const selector = content.dataset.countSelector || 'a, li';
-        const target = document.querySelector(`.accordion__count[data-count-for="${id}"]`);
-        if (!target) return;
+    let siteIndex = null;
+    try {
+      siteIndex = await getSiteIndex();
+    } catch (error) {
+      siteIndex = null;
+    }
 
-        const path = content.dataset.countPath;
-        if (path) {
-          try {
-            const count = await fetchGithubHtmlCount(repo, path);
-            if (typeof count === 'number') {
-              target.textContent = count.toString();
-              return;
-            }
-          } catch (error) {
-            console.warn('Failed to load GitHub counts', error);
-          }
+    contents.forEach((content) => {
+      const id = content.dataset.countId;
+      const selector = content.dataset.countSelector || 'a, li';
+      const target = document.querySelector(`.accordion__count[data-count-for="${id}"]`);
+      if (!target) return;
+
+      const path = content.dataset.countPath;
+      if (siteIndex?.folderCounts && path) {
+        const normalizedPath = path.replace(/\/+$/, '');
+        const key = encodeURI(`${normalizedPath}/index.html`);
+        const count = siteIndex.folderCounts[key];
+        if (typeof count === 'number') {
+          target.textContent = count.toString();
+          return;
         }
+      }
 
-        const count = content.querySelectorAll(selector).length;
-        target.textContent = count.toString();
-      })
-    );
+      const count = content.querySelectorAll(selector).length;
+      target.textContent = count.toString();
+    });
   }
 
   function initArticleToc() {
@@ -261,8 +259,6 @@
 
   let sortMode = 'time';
   let sortDir = 'desc';
-  const INDEX_VERSION = '2026-01-28-01';
-  const CACHE_KEY = `categoriesIndex_${INDEX_VERSION}`;
 
   function initSortControls(renderFn) {
     const sortDirBtn = document.getElementById('sortDirBtn');
@@ -374,10 +370,6 @@
     });
   }
 
-  function getCategoryRepo() {
-    return document.body?.dataset?.categoryRepo || 'scottnick/scottnick.github.io';
-  }
-
   function applyScopeFilter(posts) {
     const prefixRaw = document.body?.dataset?.scopePrefix;
     if (!prefixRaw) return posts;
@@ -412,134 +404,39 @@
 
   function filterPostsForCategories(posts) {
     return posts.filter((post) => {
-      if (!isCppNotesArticle(post.url)) return true;
-      return isAllProblemsArticle(post.url);
+      const url = post.url || post.path || '';
+      if (!isCppNotesArticle(url)) return true;
+      return isAllProblemsArticle(url);
     });
   }
 
-  async function fetchRepoHtmlPosts() {
-    const repo = getCategoryRepo();
-    const treeUrl = `https://api.github.com/repos/${repo}/git/trees/main?recursive=1`;
-    const response = await fetch(treeUrl);
-    if (!response.ok) {
-      throw new Error('Failed to load repo tree');
-    }
+  async function getCategoryIndex(scope = 'all') {
+    const siteIndex = await getSiteIndex();
+    const scopedPosts = filterPostsForCategories(siteIndex.posts || [], scope);
+    const categoryIndex = {};
 
-    const data = await response.json();
-    const paths = (data.tree || [])
-      .filter(
-        (item) =>
-          item.type === 'blob' &&
-          isSiteArticle(item.path) &&
-          !item.path.endsWith('index.html') &&
-          !item.path.endsWith('categories.html') &&
-          !item.path.endsWith('category.html')
-      )
-      .map((item) => item.path);
-
-    const posts = [];
-    const parser = new DOMParser();
-    const batchSize = 6;
-
-    for (let i = 0; i < paths.length; i += batchSize) {
-      const batch = paths.slice(i, i + batchSize);
-      const batchPosts = await Promise.all(
-        batch.map(async (path) => {
-          const rawUrl = `https://raw.githubusercontent.com/${repo}/main/${path}`;
-          const htmlResponse = await fetch(rawUrl);
-          if (!htmlResponse.ok) return null;
-          const html = await htmlResponse.text();
-          return parsePostFromHtml(html, path, parser);
-        })
-      );
-      posts.push(...batchPosts.filter(Boolean));
-    }
-
-    return posts;
-  }
-
-  function parsePostFromHtml(html, path, parser) {
-    const doc = parser.parseFromString(html, 'text/html');
-    const title =
-      doc.querySelector('h1')?.textContent?.trim() ||
-      doc.querySelector('title')?.textContent?.trim() ||
-      'Untitled';
-    const date =
-      doc.querySelector('.meta-field--date .meta-value')?.textContent?.trim() || '';
-    const tags = Array.from(doc.querySelectorAll('.post-tag'))
-      .map((tag) => tag.textContent.trim())
-      .filter(Boolean);
-
-    if (!tags.length) return null;
+    scopedPosts.forEach((post) => {
+      const tags = Array.isArray(post.tags) ? post.tags : [];
+      tags.forEach((tag) => {
+        const key = tag || '';
+        if (!key) return;
+        if (!categoryIndex[key]) {
+          categoryIndex[key] = [];
+        }
+        categoryIndex[key].push({
+          title: post.title || '',
+          date: post.date || '',
+          url: post.path || '',
+          tags,
+        });
+      });
+    });
 
     return {
-      title,
-      date,
-      tags,
-      url: encodeURI(path),
+      builtAt: siteIndex.generatedAt || '',
+      sha: siteIndex.buildId || '',
+      index: categoryIndex,
     };
-  }
-
-  function buildCategoryIndex(posts) {
-    return posts.reduce((acc, post) => {
-      post.tags.forEach((tag) => {
-        if (!acc[tag]) {
-          acc[tag] = [];
-        }
-        acc[tag].push(post);
-      });
-      return acc;
-    }, {});
-  }
-
-  function getCachedPosts() {
-    try {
-      const cached = JSON.parse(localStorage.getItem(CACHE_KEY));
-      if (!cached?.posts) return null;
-      return cached;
-    } catch (error) {
-      return null;
-    }
-  }
-
-  function setCachedPosts(posts, sha) {
-    localStorage.setItem(
-      CACHE_KEY,
-      JSON.stringify({
-        timestamp: Date.now(),
-        sha: sha || '',
-        posts,
-      })
-    );
-  }
-
-  async function fetchLatestRepoSha() {
-    const repo = getCategoryRepo();
-    const response = await fetch(`https://api.github.com/repos/${repo}/commits?per_page=1`);
-    if (!response.ok) {
-      return '';
-    }
-    const data = await response.json();
-    return data?.[0]?.sha || '';
-  }
-
-  async function getCategoryIndex() {
-    const cached = getCachedPosts();
-    if (cached) {
-      try {
-        const latestSha = await fetchLatestRepoSha();
-        if (!latestSha || cached.sha === latestSha) {
-          return buildCategoryIndex(filterPostsForCategories(cached.posts));
-        }
-      } catch (error) {
-        return buildCategoryIndex(filterPostsForCategories(cached.posts));
-      }
-    }
-
-    const latestSha = await fetchLatestRepoSha();
-    const posts = await fetchRepoHtmlPosts();
-    setCachedPosts(posts, latestSha);
-    return buildCategoryIndex(filterPostsForCategories(posts));
   }
 
   function getCategoryName() {
@@ -556,7 +453,8 @@
     if (!grid) return;
 
     try {
-      const categoryIndex = await getCategoryIndex();
+      const categoryData = await getCategoryIndex();
+      const categoryIndex = categoryData.index || {};
       const categoryItems = Object.entries(categoryIndex).map(([name, posts]) => {
         const latestDate = posts.reduce((latest, post) => {
           if (!post.date) return latest;
@@ -624,7 +522,8 @@
     }
 
     try {
-      const categories = await getCategoryIndex();
+      const categoryData = await getCategoryIndex();
+      const categories = categoryData.index || {};
       const scopedPosts = applyScopeFilter(categories[categoryName] || []);
       const searchInput = document.getElementById('searchInput');
 
