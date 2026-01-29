@@ -64,12 +64,32 @@
       </div>
     </section>
 
-    <section>
-      <h2 class="section-title">近期更新</h2>
-      <ul class="update-list" id="recent-updates" data-repo="scottnick/scottnick.github.io">
-        <li>正在載入最新更新...</li>
-      </ul>
-    </section>
+<section id="timeline" class="timeline-section">
+  <h2 class="section-title">里程碑</h2>
+  <p class="muted">不是每次更新都重要，但每個階段都值得被記下來。</p>
+
+  <div id="timelineList" class="timeline-list">
+    <div class="timeline-loading">正在載入里程碑...</div>
+  </div>
+</section>
+
+<section>
+  <h2 class="section-title">近期更新</h2>
+  <ul class="update-list" id="recent-updates">
+    <li>正在載入最新更新...</li>
+  </ul>
+
+  <div class="recent-actions">
+    <a class="btn primary" href="categories.html">看全部內容</a>
+    <a class="btn" href="#timeline">看里程碑</a>
+
+    <a class="muted-link"
+       href="https://github.com/scottnick/scottnick.github.io/commits/main/"
+       target="_blank" rel="noopener">
+      開發紀錄（GitHub）
+    </a>
+  </div>
+</section>
   </main>
 
   <script src="script.js"></script>
