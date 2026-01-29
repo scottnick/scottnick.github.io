@@ -73,50 +73,94 @@
     });
   }
 
-  function initRecentUpdates() {
+  async function initRecentUpdates() {
     const list = document.getElementById('recent-updates');
     if (!list) return;
 
-    const repo = list.dataset.repo;
-    if (!repo) return;
+    try {
+      const siteIndex = await getSiteIndex();
+      const posts = Array.isArray(siteIndex?.posts) ? siteIndex.posts : [];
 
-    fetch(`https://api.github.com/repos/${repo}/commits?per_page=3`)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error('Failed to load updates');
-        }
-        return response.json();
-      })
-      .then((commits) => {
-        if (!Array.isArray(commits) || commits.length === 0) {
-          list.innerHTML = '<li>目前沒有可顯示的更新。</li>';
-          return;
-        }
+      const dated = posts.filter((post) => post && post.path && post.title && post.date);
+      dated.sort((a, b) => (b.date || '').localeCompare(a.date || ''));
 
-        const formatter = new Intl.DateTimeFormat('zh-TW', {
-          year: 'numeric',
-          month: '2-digit',
-          day: '2-digit',
-        });
+      const unique = [];
+      const seen = new Set();
+      for (const post of dated) {
+        const key = post.title;
+        if (seen.has(key)) continue;
+        seen.add(key);
+        unique.push(post);
+        if (unique.length >= 5) break;
+      }
 
-        list.innerHTML = commits
-          .map((commit) => {
-            const message = commit?.commit?.message?.split('\n')[0] || '更新內容';
-            const date = commit?.commit?.author?.date
-              ? formatter.format(new Date(commit.commit.author.date))
-              : '日期未知';
-            return `
-              <li>
-                <strong>${date}</strong> — 更新：${message}<br>
-                <small>最新更新資訊</small>
-              </li>
-            `;
-          })
-          .join('');
-      })
-      .catch(() => {
-        list.innerHTML = '<li>更新載入失敗，請稍後再試。</li>';
+      if (!unique.length) {
+        list.innerHTML = '<li>目前沒有可顯示的更新。</li>';
+        return;
+      }
+
+      const formatter = new Intl.DateTimeFormat('zh-TW', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
       });
+
+      list.innerHTML = unique
+        .map((post) => {
+          const dateText = formatter.format(new Date(post.date));
+          const tags = Array.isArray(post.tags) ? post.tags.slice(0, 3) : [];
+          const tagText = tags.length ? ` · ${tags.join(' / ')}` : '';
+          return `
+            <li>
+              <a href="${post.path}"><strong>${post.title}</strong></a><br>
+              <small>${dateText}${tagText}</small>
+            </li>
+          `;
+        })
+        .join('');
+    } catch (error) {
+      list.innerHTML = '<li>更新載入失敗（請確認 site-index.json 存在）。</li>';
+    }
+  }
+
+  async function initTimeline() {
+    const box = document.getElementById('timelineList');
+    if (!box) return;
+
+    try {
+      const res = await fetch(`timeline.json?v=${Date.now()}`, { cache: 'no-store' });
+      if (!res.ok) throw new Error('Failed to fetch timeline.json');
+      const data = await res.json();
+
+      if (!Array.isArray(data) || data.length === 0) {
+        box.innerHTML = '<div class="timeline-loading">目前沒有里程碑。</div>';
+        return;
+      }
+
+      data.sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+
+      box.innerHTML = data
+        .slice(0, 6)
+        .map(
+          (item) => `
+            <div class="timeline-item">
+              <div class="timeline-date">${item.date || ''}</div>
+              <div class="timeline-content">
+                <div class="timeline-title">${item.title || ''}</div>
+                <div class="timeline-desc">${item.desc || ''}</div>
+                ${
+                  item.link
+                    ? `<a class="timeline-link" href="${item.link}">查看相關內容 →</a>`
+                    : ''
+                }
+              </div>
+            </div>
+          `,
+        )
+        .join('');
+    } catch (error) {
+      box.innerHTML = '<div class="timeline-loading">里程碑載入失敗（請確認 timeline.json 路徑）。</div>';
+    }
   }
 
   function safeJsonParse(value) {
@@ -644,6 +688,7 @@
     initNavToggle();
     initNoteTocToggle();
     initRecentUpdates();
+    initTimeline();
     updateAccordionCounts();
     initArticleToc();
     initArticleTocToggle();
