@@ -416,6 +416,12 @@ main {
   margin-top: 22px;
 }
 
+.related-section .section-title {
+  font-size: 18px;
+  margin: 18px 0 10px;
+  letter-spacing: -0.01em;
+}
+
 .category-article {
   display: flex;
   align-items: center;
