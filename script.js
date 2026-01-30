@@ -91,7 +91,7 @@
         if (seen.has(key)) continue;
         seen.add(key);
         unique.push(post);
-        if (unique.length >= 5) break;
+        if (unique.length >= 3) break;
       }
 
       if (!unique.length) {
@@ -121,6 +121,39 @@
     } catch (error) {
       list.innerHTML = '<li>更新載入失敗（請確認 site-index.json 存在）。</li>';
     }
+  }
+
+  function initHeroSlideshow() {
+    const hero = document.querySelector('.hero.hero-cover');
+    const layers = Array.from(document.querySelectorAll('.hero-bg'));
+    if (!hero || layers.length === 0) return;
+
+    const images = [
+      'assets/hero-1.jpg',
+      'assets/hero-2.jpg',
+      'assets/hero-3.jpg',
+    ];
+
+    images.forEach((src) => {
+      const img = new Image();
+      img.src = src;
+    });
+
+    layers.forEach((layer, index) => {
+      layer.style.backgroundImage = `url('${images[index % images.length]}')`;
+    });
+
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let currentIndex = 0;
+    layers[currentIndex].classList.add('is-active');
+
+    if (prefersReducedMotion) return;
+
+    window.setInterval(() => {
+      layers[currentIndex].classList.remove('is-active');
+      currentIndex = (currentIndex + 1) % layers.length;
+      layers[currentIndex].classList.add('is-active');
+    }, 10000);
   }
 
   async function initTimeline() {
@@ -696,6 +729,7 @@
     initThemeToggle();
     initNavToggle();
     initNoteTocToggle();
+    initHeroSlideshow();
     initRecentUpdates();
     initTimeline();
     updateAccordionCounts();
