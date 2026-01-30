@@ -50,8 +50,8 @@
           id="searchInput"
           class="search-input"
           type="search"
-          placeholder="搜尋類別..."
-          aria-label="搜尋類別"
+          placeholder="搜尋類別與文章..."
+          aria-label="搜尋類別與文章"
         >
         <div class="sort-controls">
           <button id="sortDirBtn" class="sort-dir-btn" type="button" aria-label="切換排序方向" title="切換排序方向">
@@ -68,6 +68,12 @@
 
     <section>
       <div class="card-grid" id="category-grid"></div>
+    </section>
+
+    <section id="related-articles-section" class="related-section hidden">
+      <h2 class="section-title">相關文章</h2>
+      <div id="relatedCountInfo" class="category-meta-row"></div>
+      <ul class="category-listing" id="related-articles"></ul>
     </section>
   </main>
 

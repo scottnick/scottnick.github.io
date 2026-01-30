@@ -385,6 +385,11 @@
     return (text || '').toString().trim().toLowerCase();
   }
 
+  function toSearchKey(text) {
+    const s = normalize(text);
+    return s.replace(/[^\p{L}\p{N}]+/gu, '');
+  }
+
   function extractLeadingNumber(title) {
     const match = String(title || '').trim().match(/^(\d+)[\.\-]?\s*/);
     return match ? Number(match[1]) : null;
@@ -541,6 +546,14 @@
 
     try {
       const categoryData = await getCategoryIndex();
+      const siteIndex = await getSiteIndex();
+      const scopedPosts = filterPostsForCategorySystem(siteIndex.posts || []);
+      const allPosts = scopedPosts.map((post) => ({
+        title: post.title || '',
+        date: post.date || '',
+        url: post.path || '',
+        tags: Array.isArray(post.tags) ? post.tags : [],
+      }));
       const categoryIndex = categoryData.index || {};
       const categoryItems = Object.entries(categoryIndex).map(([name, posts]) => {
         const latestDate = posts.reduce((latest, post) => {
@@ -556,10 +569,13 @@
       });
 
       const searchInput = document.getElementById('searchInput');
+      const relatedSection = document.getElementById('related-articles-section');
+      const relatedList = document.getElementById('related-articles');
+      const relatedCountInfo = document.getElementById('relatedCountInfo');
 
       function render() {
-        const query = normalize(searchInput?.value);
-        let list = categoryItems.filter((item) => !query || normalize(item.title).includes(query));
+        const query = toSearchKey(searchInput?.value);
+        let list = categoryItems.filter((item) => !query || toSearchKey(item.title).includes(query));
         list = sortItems(list);
 
         grid.innerHTML = '';
@@ -580,6 +596,60 @@
           card.appendChild(label);
           card.appendChild(meta);
           grid.appendChild(card);
+        });
+
+        if (!relatedSection || !relatedList) return;
+
+        if (!query) {
+          relatedSection.classList.add('hidden');
+          relatedList.innerHTML = '';
+          if (relatedCountInfo) relatedCountInfo.textContent = '';
+          return;
+        }
+
+        let related = allPosts.filter((post) => {
+          const titleKey = toSearchKey(post.title);
+          if (titleKey.includes(query)) return true;
+          return (post.tags || []).some((tag) => toSearchKey(tag).includes(query));
+        });
+
+        related = sortItems(
+          related.map((post) => ({
+            title: post.title,
+            date: post.date,
+            url: post.url,
+          }))
+        );
+
+        const MAX_SHOW = 30;
+        const shown = related.slice(0, MAX_SHOW);
+
+        relatedSection.classList.remove('hidden');
+        if (relatedCountInfo) {
+          relatedCountInfo.textContent = `已顯示 ${shown.length} / 共 ${related.length} 篇`;
+        }
+
+        relatedList.innerHTML = '';
+        if (!shown.length) {
+          relatedList.innerHTML = '<li class="category-meta-row">目前沒有相關文章。</li>';
+          return;
+        }
+
+        shown.forEach((post) => {
+          const item = document.createElement('li');
+          item.className = 'category-article';
+
+          const date = document.createElement('span');
+          date.className = 'category-article-date';
+          date.textContent = post.date || '未標註日期';
+
+          const link = document.createElement('a');
+          link.href = post.url;
+          link.textContent = post.title;
+
+          item.appendChild(date);
+          item.appendChild(link);
+          relatedList.appendChild(item);
         });
       }
 
@@ -615,9 +685,9 @@
       const searchInput = document.getElementById('searchInput');
 
       function render() {
-        const query = normalize(searchInput?.value);
+        const query = toSearchKey(searchInput?.value);
         let listItems = scopedPosts
-          .filter((post) => !query || normalize(post.title).includes(query))
+          .filter((post) => !query || toSearchKey(post.title).includes(query))
           .map((post) => ({
             title: post.title,
             date: post.date,

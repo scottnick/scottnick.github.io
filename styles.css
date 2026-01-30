@@ -408,6 +408,14 @@ main {
   gap: 12px;
 }
 
+.hidden {
+  display: none !important;
+}
+
+.related-section {
+  margin-top: 22px;
+}
+
 .category-article {
   display: flex;
   align-items: center;
@@ -778,8 +786,9 @@ main {
 }
 
 .section-title {
-  font-size: 20px;
-  margin: 0 0 10px;
+  font-size: 18px;
+  margin: 18px 0 10px;
+  letter-spacing: -0.01em;
 }
 
 .section-heading {
