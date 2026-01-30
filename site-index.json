@@ -484,6 +484,18 @@
       "folder": "cpp-notes/leetcode75"
     },
     {
+      "path": "cpp-notes/leetcode75/1004-max-consecutive-ones-iii.html",
+      "title": "1004. Max Consecutive Ones III",
+      "date": "2026-01-30",
+      "tags": [
+        "Sliding Window",
+        "Two Pointers",
+        "Array",
+        "Medium"
+      ],
+      "folder": "cpp-notes/leetcode75"
+    },
+    {
       "path": "cpp-notes/leetcode75/345-reverse-vowels-of-a-string.html",
       "title": "345. Reverse Vowels of a String",
       "date": "2026-01-11",
@@ -601,6 +613,18 @@
       "tags": [
         "String",
         "Sliding Window",
+        "Medium"
+      ],
+      "folder": "cpp-notes/leetcode75"
+    },
+    {
+      "path": "cpp-notes/leetcode75/1493-longest-subarray-of-1s-after-deleting-one-element.html",
+      "title": "1493. Longest Subarray of 1's After Deleting One Element",
+      "date": "2026-01-30",
+      "tags": [
+        "Sliding Window",
+        "Two Pointers",
+        "Array",
         "Medium"
       ],
       "folder": "cpp-notes/leetcode75"
@@ -1076,6 +1100,18 @@
       "folder": "cpp-notes/all problems"
     },
     {
+      "path": "cpp-notes/all%20problems/1004-max-consecutive-ones-iii.html",
+      "title": "1004. Max Consecutive Ones III",
+      "date": "2026-01-30",
+      "tags": [
+        "Sliding Window",
+        "Two Pointers",
+        "Array",
+        "Medium"
+      ],
+      "folder": "cpp-notes/all problems"
+    },
+    {
       "path": "cpp-notes/all%20problems/189-rotate-array.html",
       "title": "189. Rotate Array",
       "date": "2026-01-16",
@@ -1329,6 +1365,18 @@
       "tags": [
         "String",
         "Sliding Window",
+        "Medium"
+      ],
+      "folder": "cpp-notes/all problems"
+    },
+    {
+      "path": "cpp-notes/all%20problems/1493-longest-subarray-of-1s-after-deleting-one-element.html",
+      "title": "1493. Longest Subarray of 1's After Deleting One Element",
+      "date": "2026-01-30",
+      "tags": [
+        "Sliding Window",
+        "Two Pointers",
+        "Array",
         "Medium"
       ],
       "folder": "cpp-notes/all problems"
