@@ -484,6 +484,18 @@
       "folder": "cpp-notes/leetcode75"
     },
     {
+      "path": "cpp-notes/leetcode75/1004-max-consecutive-ones-iii.html",
+      "title": "1004. Max Consecutive Ones III",
+      "date": "2026-01-30",
+      "tags": [
+        "Sliding Window",
+        "Two Pointers",
+        "Array",
+        "Medium"
+      ],
+      "folder": "cpp-notes/leetcode75"
+    },
+    {
       "path": "cpp-notes/leetcode75/345-reverse-vowels-of-a-string.html",
       "title": "345. Reverse Vowels of a String",
       "date": "2026-01-11",
@@ -1071,6 +1083,18 @@
         "Array",
         "BFS",
         "Matrix",
+        "Medium"
+      ],
+      "folder": "cpp-notes/all problems"
+    },
+    {
+      "path": "cpp-notes/all%20problems/1004-max-consecutive-ones-iii.html",
+      "title": "1004. Max Consecutive Ones III",
+      "date": "2026-01-30",
+      "tags": [
+        "Sliding Window",
+        "Two Pointers",
+        "Array",
         "Medium"
       ],
       "folder": "cpp-notes/all problems"

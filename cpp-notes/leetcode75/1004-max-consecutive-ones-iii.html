@@ -1,0 +1,211 @@
+<!-- leetcode75/1004-max-consecutive-ones-iii.html: LeetCode 75 文章 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>1004. Max Consecutive Ones III</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+               width="18" height="18" aria-hidden="true" focusable="false"
+               style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="../leetcode75/index.html">LeetCode 75</a>
+      <span aria-hidden="true">/</span>
+      <span>1004. Max Consecutive Ones III</span>
+    </nav>
+
+    <section class="hero">
+      <h1>1004. Max Consecutive Ones III</h1>
+      <p><strong>練習日期：</strong>2026-01-30</p>
+      <p><strong>難度：</strong>Medium</p>
+      <p><strong>類型：</strong>Sliding Window、Two Pointers、Array</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#variables">所有變數</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#complexity">複雜度</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給定一個二元陣列 <code>nums</code>（只包含 <code>0</code> 與 <code>1</code>）以及整數 <code>k</code>。你最多可以把 <code>k</code> 個 <code>0</code> 翻成 <code>1</code>，請回傳翻完後「連續 <code>1</code> 的最長長度」。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>1 &lt;= nums.length &lt;= 10^5</code></li>
+          <li><code>nums[i]</code> 是 <code>0</code> 或 <code>1</code></li>
+          <li><code>0 &lt;= k &lt;= nums.length</code></li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>這題我的核心想法是「<strong>維護一個滑動視窗 <code>[l, r]</code></strong>」：</p>
+        <ul>
+          <li>視窗內允許最多出現 <code>k</code> 個 <code>0</code>（代表：這些 <code>0</code> 都可以被當作翻成 <code>1</code>）</li>
+          <li>只要視窗內 <code>0</code> 的數量 <code>&gt; k</code>，就代表「這個視窗不合法」
+            <ul>
+              <li>這時要移動左指標 <code>l</code>，把視窗縮小到重新合法</li>
+            </ul>
+          </li>
+          <li>每當視窗合法時，就用 <code>r - l + 1</code> 更新答案</li>
+        </ul>
+        <p>簡單說，我找的是「<strong>最多包含 k 個 0 的最長子陣列長度</strong>」，因為那 k 個 0 就是可以翻掉的。</p>
+
+        <h3 id="variables">所有變數</h3>
+        <ul>
+          <li><code>l</code>：滑動視窗的左端點（left pointer）</li>
+          <li><code>r</code>：滑動視窗的右端點（right pointer），用 <code>for</code> 逐步往右擴張</li>
+          <li><code>count</code>：目前視窗內的 <code>0</code> 的數量</li>
+          <li><code>ans</code>：目前找到的最長合法視窗長度</li>
+          <li><code>nums</code>：輸入的二元陣列</li>
+          <li><code>k</code>：最多允許翻轉的 <code>0</code> 數量（也就是視窗內最多允許的 <code>0</code> 數）</li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+
+        <h3>1. 右指標 <code>r</code> 往右擴張視窗</h3>
+        <ul>
+          <li>每次把 <code>nums[r]</code> 納入視窗</li>
+          <li>如果 <code>nums[r] == 0</code>，就讓 <code>count++</code>（表示多了一個要翻的 0）</li>
+        </ul>
+        <hr />
+
+        <h3>2. 視窗不合法就縮小（重點）</h3>
+        <p>當 <code>count &gt; k</code> 時，代表：</p>
+        <ul>
+          <li>視窗內的 <code>0</code> 太多了</li>
+          <li>就算把 <code>k</code> 個 <code>0</code> 翻掉，還會剩下 <code>0</code>，所以這段不可能全部變成連續 <code>1</code></li>
+        </ul>
+        <p>因此我用：</p>
+        <ul>
+          <li><code>while (count &gt; k)</code> 不斷移動 <code>l</code></li>
+          <li>如果移出去的 <code>nums[l] == 0</code>，代表少了一個 <code>0</code>，所以 <code>count--</code></li>
+          <li><code>l++</code>，直到 <code>count &lt;= k</code>（視窗重新合法）</li>
+        </ul>
+        <hr />
+
+        <h3>3. 視窗合法就更新答案</h3>
+        <ul>
+          <li>當 <code>count &lt;= k</code> 時，這個視窗 <code>[l, r]</code> 就是一段「最多含 k 個 0」的區間</li>
+          <li>翻掉裡面的 <code>0</code> 後就能變成一段連續 <code>1</code></li>
+          <li>用 <code>ans = max(ans, r - l + 1)</code> 更新最長長度</li>
+        </ul>
+        <hr />
+
+        <h3>4. 為什麼這樣一定不會漏掉答案？</h3>
+        <ul>
+          <li><code>r</code> 從左到右走過每個位置，每個元素最多進視窗一次</li>
+          <li><code>l</code> 也只會往右移，每個元素最多被移出一次</li>
+          <li>對每個 <code>r</code>，我都維持「<strong>以 r 結尾的最長合法視窗</strong>」</li>
+          <li>所以全程取最大值，答案一定被涵蓋</li>
+        </ul>
+
+        <h2 id="complexity">複雜度</h2>
+        <ul>
+          <li>時間：<code>O(n)</code>（因為 <code>l</code>、<code>r</code> 都只會單調往右走）</li>
+          <li>空間：<code>O(1)</code></li>
+        </ul>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    int longestOnes(vector&lt;int&gt;&amp; nums, int k) {
+        int l = 0;
+        int count = 0;
+        int ans = 0;
+        for (int r = 0; r &lt; nums.size(); r++) {
+            if (nums[r] == 0)
+                count++;
+            while (count &gt; k) {
+                if (nums[l] == 0)
+                    count--;
+                l++;
+            }
+            ans = max(ans, r - l + 1);
+        }
+        return ans;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p><a href="https://leetcode.com/problems/max-consecutive-ones-iii/description/" target="_blank" rel="noopener">https://leetcode.com/problems/max-consecutive-ones-iii/description/</a></p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-01-30</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value">
+            <span class="post-tags">
+              <span class="post-tag">Sliding Window</span>
+              <span class="post-tag">Two Pointers</span>
+              <span class="post-tag">Array</span>
+              <span class="post-tag">Medium</span>
+            </span>
+          </span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/leetcode75/1004-max-consecutive-ones-iii.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
