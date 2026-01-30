@@ -595,6 +595,17 @@
       "folder": "cpp-notes/leetcode75"
     },
     {
+      "path": "cpp-notes/leetcode75/1456-maximum-number-of-vowels-in-a-substring-of-given-length.html",
+      "title": "1456. Maximum Number of Vowels in a Substring of Given Length",
+      "date": "2026-01-30",
+      "tags": [
+        "String",
+        "Sliding Window",
+        "Medium"
+      ],
+      "folder": "cpp-notes/leetcode75"
+    },
+    {
       "path": "cpp-notes/neetcode150/70-climbing-stairs.html",
       "title": "70. Climbing Stairs",
       "date": "2026-01-15",
@@ -1308,6 +1319,17 @@
       "tags": [
         "Array",
         "Easy"
+      ],
+      "folder": "cpp-notes/all problems"
+    },
+    {
+      "path": "cpp-notes/all%20problems/1456-maximum-number-of-vowels-in-a-substring-of-given-length.html",
+      "title": "1456. Maximum Number of Vowels in a Substring of Given Length",
+      "date": "2026-01-30",
+      "tags": [
+        "String",
+        "Sliding Window",
+        "Medium"
       ],
       "folder": "cpp-notes/all problems"
     },

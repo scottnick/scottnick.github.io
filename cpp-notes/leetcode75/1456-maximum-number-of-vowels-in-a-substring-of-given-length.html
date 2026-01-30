@@ -1,0 +1,182 @@
+<!-- leetcode75/1456-maximum-number-of-vowels-in-a-substring-of-given-length.html: LeetCode 75 文章 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>1456. Maximum Number of Vowels in a Substring of Given Length</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+               width="18" height="18" aria-hidden="true" focusable="false"
+               style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="../leetcode75/index.html">LeetCode 75</a>
+      <span aria-hidden="true">/</span>
+      <span>1456. Maximum Number of Vowels in a Substring of Given Length</span>
+    </nav>
+
+    <section class="hero">
+      <h1>1456. Maximum Number of Vowels in a Substring of Given Length</h1>
+      <p><strong>練習日期：</strong>2026-01-30</p>
+      <p><strong>難度：</strong>Medium</p>
+      <p><strong>類型：</strong>String、Sliding Window</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#variables">所有變數</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給定一個字串 <code>s</code> 與一個整數 <code>k</code>，請找出<strong>長度恰好為 <code>k</code> 的連續子字串</strong>中，母音（vowels）數量最多的那一個，並回傳該最大母音數量。</p>
+        <p>母音定義為：<code>'a'</code>、<code>'e'</code>、<code>'i'</code>、<code>'o'</code>、<code>'u'</code>。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>1 ≤ s.length ≤ 10^5</code></li>
+          <li><code>s</code> 只包含小寫英文字母</li>
+          <li><code>1 ≤ k ≤ s.length</code></li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>這題和 <strong>Maximum Average Subarray I</strong> 非常像，本質都是：</p>
+        <blockquote>
+          在固定長度 <code>k</code> 的連續區間中，找一個數值最大的區間。
+        </blockquote>
+        <p>只是這題不是算總和，而是算區間內<strong>母音的個數</strong>。</p>
+        <p>因此我同樣使用 <strong>Sliding Window（滑動視窗）</strong> 的方式：</p>
+        <ul>
+          <li>先計算第一個長度為 <code>k</code> 的子字串中有幾個母音</li>
+          <li>每次視窗往右移一格，就更新新進來與移出去的字元</li>
+        </ul>
+
+        <h3 id="variables">所有變數</h3>
+        <ul>
+          <li><code>vol</code>：目前為止找到的最大母音數量</li>
+          <li><code>nvol</code>：目前滑動視窗內的母音數量</li>
+          <li><code>k</code>：子字串固定長度</li>
+          <li><code>v</code>：長度為 5 的陣列，存所有母音字元 <code>{a, e, i, o, u}</code></li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+
+        <h3>第一步：計算第一個長度為 <code>k</code> 的子字串母音數量</h3>
+        <ul>
+          <li>掃描 <code>s[0] ~ s[k-1]</code></li>
+          <li>每個字元都和母音陣列 <code>v</code> 比對</li>
+          <li>若是母音，就把 <code>vol++</code></li>
+          <li>初始化完成後：<code>vol</code> 為第一個視窗的母音數，<code>nvol = vol</code></li>
+        </ul>
+        <hr />
+
+        <h3>第二步：滑動視窗並即時更新母音數量</h3>
+        <p>從索引 <code>l = k</code> 開始一路往右滑：</p>
+        <ul>
+          <li>新進來的字元 <code>s[l]</code> 若是母音 → <code>nvol++</code></li>
+          <li>被移出去的字元 <code>s[l - k]</code> 若是母音 → <code>nvol--</code></li>
+        </ul>
+        <p>這樣就完成一次視窗移動的更新。</p>
+        <hr />
+
+        <h3>第三步：更新最大母音數</h3>
+        <ul>
+          <li>每次更新完 <code>nvol</code> 後，比較 <code>nvol</code> 與目前最大值 <code>vol</code></li>
+          <li>若 <code>nvol &gt; vol</code>，就更新 <code>vol</code></li>
+        </ul>
+        <hr />
+
+        <h3>第四步：回傳結果</h3>
+        <ul>
+          <li>所有視窗都檢查完後，<code>vol</code> 就是長度為 <code>k</code> 的子字串中最多的母音數量</li>
+        </ul>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    int maxVowels(string s, int k) {
+        int vol = 0;
+        int nvol = 0;
+        char v[5] = {'a', 'e', 'i', 'o', 'u'};
+        for (int i = 0; i &lt; k; i++) {
+            for (int j = 0; j &lt; 5; j++) {
+                if (s[i] == v[j]) {
+                    vol++;
+                    break;
+                }
+            }
+        }
+        nvol = vol;
+        for (int l = k; l &lt; s.size(); l++) {
+            for (int j = 0; j &lt; 5; j++) {
+                if (s[l] == v[j]) {
+                    nvol++;
+                    break;
+                }
+            }
+            for (int j = 0; j &lt; 5; j++) {
+                if (s[l - k] == v[j]) {
+                    nvol--;
+                    break;
+                }
+            }
+            if (nvol &gt; vol) {
+                vol = nvol;
+            }
+        }
+        return vol;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p><a href="https://leetcode.com/problems/maximum-number-of-vowels-in-a-substring-of-given-length/description/" target="_blank" rel="noopener">https://leetcode.com/problems/maximum-number-of-vowels-in-a-substring-of-given-length/description/</a></p>
+      </section>
+    </div>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
