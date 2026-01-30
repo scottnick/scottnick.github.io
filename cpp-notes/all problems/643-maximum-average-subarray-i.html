@@ -1,0 +1,158 @@
+<!-- all problems/643-maximum-average-subarray-i.html: LeetCode 643 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>643. Maximum Average Subarray I</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+               width="18" height="18" aria-hidden="true" focusable="false"
+               style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="index.html">All problems</a>
+      <span aria-hidden="true">/</span>
+      <span>643. Maximum Average Subarray I</span>
+    </nav>
+
+    <section class="hero">
+      <h1>643. Maximum Average Subarray I</h1>
+      <p><strong>練習日期：</strong>2026-01-30</p>
+      <p><strong>難度：</strong>Easy</p>
+      <p><strong>類型：</strong>Array、Sliding Window</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#variables">所有變數</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給定一個整數陣列 <code>nums</code> 與一個整數 <code>k</code>，請找出<strong>長度恰好為 <code>k</code> 的連續子陣列</strong>中，平均值最大的那一個，並回傳該最大平均值。</p>
+        <p>答案允許誤差在 <code>10^-5</code> 以內。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>1 ≤ k ≤ nums.length ≤ 10^5</code></li>
+          <li><code>-10^4 ≤ nums[i] ≤ 10^4</code></li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>這題的核心關鍵是：</p>
+        <blockquote>
+          平均值最大 ⇔ 總和最大（因為長度 <code>k</code> 固定）
+        </blockquote>
+        <p>問題可以轉換成：在 <code>nums</code> 中找出<strong>長度為 <code>k</code> 的連續子陣列</strong>，其中總和最大的那一段，最後再用最大總和除以 <code>k</code> 得到最大平均值。</p>
+        <p>為了避免重複計算每一段長度為 <code>k</code> 的總和，我使用 <strong>Sliding Window（滑動視窗）</strong> 的想法。</p>
+
+        <h3 id="variables">所有變數</h3>
+        <ul>
+          <li><code>sum</code>：目前為止找到的最大子陣列總和</li>
+          <li><code>nsum</code>：目前滑動視窗（長度為 <code>k</code>）的即時總和</li>
+          <li><code>k</code>：子陣列固定長度</li>
+          <li><code>x</code>：最後計算出的最大平均值</li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+
+        <h3>第一步：計算第一個長度為 <code>k</code> 的子陣列總和</h3>
+        <ul>
+          <li>先用一個迴圈，把 <code>nums[0] ~ nums[k-1]</code> 加起來</li>
+          <li>這個值同時是第一個視窗的總和，也是目前已知的最大總和 <code>sum</code></li>
+        </ul>
+        <hr />
+
+        <h3>第二步：滑動視窗，更新總和</h3>
+        <p>從索引 <code>k</code> 開始一路往右滑動視窗：</p>
+        <ul>
+          <li>每次往右移一格：
+            <ul>
+              <li><strong>加上</strong> 新進來的元素 <code>nums[j]</code></li>
+              <li><strong>減掉</strong> 被移出視窗的元素 <code>nums[j - k]</code></li>
+            </ul>
+          </li>
+          <li>得到新的視窗總和 <code>nsum</code></li>
+          <li>用 <code>sum = max(sum, nsum)</code> 更新最大總和</li>
+        </ul>
+        <p>這樣每次視窗移動只做 <code>O(1)</code> 的運算，整體時間是線性的。</p>
+        <hr />
+
+        <h3>第三步：計算最大平均值</h3>
+        <ul>
+          <li>最後把最大總和 <code>sum</code> 除以 <code>k</code></li>
+          <li>轉成 <code>double</code> 回傳即可</li>
+        </ul>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    double findMaxAverage(vector&lt;int&gt;&amp; nums, int k) {
+        int sum = 0;
+        int nsum = 0;
+        double x;
+        for (int i = 0; i &lt; k; i++) {
+            sum += nums[i];
+        }
+        nsum = sum;
+        for (int j = k; j &lt; nums.size(); j++) {
+            nsum = nsum + nums[j] - nums[j - k];
+            sum = max(sum, nsum);
+        }
+        x = (double)sum / k;
+        return x;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p><a href="https://leetcode.com/problems/maximum-average-subarray-i/description/" target="_blank" rel="noopener">https://leetcode.com/problems/maximum-average-subarray-i/description/</a></p>
+      </section>
+    </div>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
