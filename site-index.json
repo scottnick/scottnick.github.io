@@ -551,6 +551,17 @@
       "folder": "cpp-notes/leetcode75"
     },
     {
+      "path": "cpp-notes/leetcode75/643-maximum-average-subarray-i.html",
+      "title": "643. Maximum Average Subarray I",
+      "date": "2026-01-30",
+      "tags": [
+        "Array",
+        "Sliding Window",
+        "Easy"
+      ],
+      "folder": "cpp-notes/leetcode75"
+    },
+    {
       "path": "cpp-notes/leetcode75/17-letter-combinations-of-a-phone-number.html",
       "title": "17. Letter Combinations of a Phone Number",
       "date": "2026-01-23",
@@ -1196,6 +1207,17 @@
       "tags": [
         "Array",
         "Greedy",
+        "Easy"
+      ],
+      "folder": "cpp-notes/all problems"
+    },
+    {
+      "path": "cpp-notes/all%20problems/643-maximum-average-subarray-i.html",
+      "title": "643. Maximum Average Subarray I",
+      "date": "2026-01-30",
+      "tags": [
+        "Array",
+        "Sliding Window",
         "Easy"
       ],
       "folder": "cpp-notes/all problems"
