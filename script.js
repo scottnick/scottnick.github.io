@@ -209,13 +209,22 @@
       if (!target) return;
 
       const path = content.dataset.countPath;
-      if (siteIndex?.folderCounts && path) {
-        const normalizedPath = path.replace(/\/+$/, '');
-        const key = encodeURI(`${normalizedPath}/index.html`);
-        const count = siteIndex.folderCounts[key];
-        if (typeof count === 'number') {
-          target.textContent = count.toString();
+      if (path) {
+        const countFromPosts = siteIndex?.posts
+          ?.filter((post) => post.folder === path).length;
+        if (typeof countFromPosts === 'number') {
+          target.textContent = countFromPosts.toString();
           return;
+        }
+
+        if (siteIndex?.folderCounts) {
+          const normalizedPath = path.replace(/\/+$/, '');
+          const key = encodeURI(`${normalizedPath}/index.html`);
+          const count = siteIndex.folderCounts[key];
+          if (typeof count === 'number') {
+            target.textContent = count.toString();
+            return;
+          }
         }
       }
 

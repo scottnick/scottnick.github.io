@@ -1,6 +1,6 @@
 {
-  "buildId": "20260129145045",
-  "generatedAt": "2026-01-29T14:50:45.819236Z",
+  "buildId": "20260130120000",
+  "generatedAt": "2026-01-30T12:00:00.000000Z",
   "posts": [
     {
       "path": "courses.html",
@@ -56,6 +56,17 @@
         "Array",
         "Two Pointers",
         "Easy"
+      ],
+      "folder": "cpp-notes/top-interview-150"
+    },
+    {
+      "path": "cpp-notes/top-interview-150/80-remove-duplicates-from-sorted-array-ii.html",
+      "title": "80. Remove Duplicates from Sorted Array II",
+      "date": "2026-01-30",
+      "tags": [
+        "Array",
+        "Two Pointers",
+        "Medium"
       ],
       "folder": "cpp-notes/top-interview-150"
     },
@@ -841,6 +852,17 @@
         "Array",
         "Two Pointers",
         "Easy"
+      ],
+      "folder": "cpp-notes/all problems"
+    },
+    {
+      "path": "cpp-notes/all%20problems/80-remove-duplicates-from-sorted-array-ii.html",
+      "title": "80. Remove Duplicates from Sorted Array II",
+      "date": "2026-01-30",
+      "tags": [
+        "Array",
+        "Two Pointers",
+        "Medium"
       ],
       "folder": "cpp-notes/all problems"
     },
