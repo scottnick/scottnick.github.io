@@ -71,6 +71,17 @@
       "folder": "cpp-notes/top-interview-150"
     },
     {
+      "path": "cpp-notes/top-interview-150/169-majority-element.html",
+      "title": "169. Majority Element",
+      "date": "2026-01-30",
+      "tags": [
+        "Array",
+        "Sorting",
+        "Easy"
+      ],
+      "folder": "cpp-notes/top-interview-150"
+    },
+    {
       "path": "cpp-notes/top-interview-150/238-product-of-array-except-self.html",
       "title": "238. Product of Array Except Self",
       "date": "2026-01-15",
@@ -863,6 +874,17 @@
         "Array",
         "Two Pointers",
         "Medium"
+      ],
+      "folder": "cpp-notes/all problems"
+    },
+    {
+      "path": "cpp-notes/all%20problems/169-majority-element.html",
+      "title": "169. Majority Element",
+      "date": "2026-01-30",
+      "tags": [
+        "Array",
+        "Sorting",
+        "Easy"
       ],
       "folder": "cpp-notes/all problems"
     },
