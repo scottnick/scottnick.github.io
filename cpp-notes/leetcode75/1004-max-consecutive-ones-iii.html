@@ -62,9 +62,7 @@
         <ul>
           <li><a href="#statement">📘 題目敘述</a></li>
           <li><a href="#approach">🧠 解題思路</a></li>
-          <li><a href="#variables">所有變數</a></li>
           <li><a href="#steps">🪜 主要流程步驟</a></li>
-          <li><a href="#complexity">複雜度</a></li>
           <li><a href="#code">💻 程式碼實作</a></li>
           <li><a href="#link">🔗 題目連結</a></li>
         </ul>
@@ -94,7 +92,7 @@
         </ul>
         <p>簡單說，我找的是「<strong>最多包含 k 個 0 的最長子陣列長度</strong>」，因為那 k 個 0 就是可以翻掉的。</p>
 
-        <h3 id="variables">所有變數</h3>
+        <h3>所有變數</h3>
         <ul>
           <li><code>l</code>：滑動視窗的左端點（left pointer）</li>
           <li><code>r</code>：滑動視窗的右端點（right pointer），用 <code>for</code> 逐步往右擴張</li>
@@ -143,7 +141,9 @@
           <li>所以全程取最大值，答案一定被涵蓋</li>
         </ul>
 
-        <h2 id="complexity">複雜度</h2>
+        <hr />
+
+        <h3>5. 複雜度</h3>
         <ul>
           <li>時間：<code>O(n)</code>（因為 <code>l</code>、<code>r</code> 都只會單調往右走）</li>
           <li>空間：<code>O(1)</code></li>

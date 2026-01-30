@@ -62,9 +62,7 @@
         <ul>
           <li><a href="#statement">📘 題目敘述</a></li>
           <li><a href="#approach">🧠 解題思路</a></li>
-          <li><a href="#variables">所有變數</a></li>
           <li><a href="#steps">🪜 主要流程步驟</a></li>
-          <li><a href="#complexity">複雜度</a></li>
           <li><a href="#code">💻 程式碼實作</a></li>
           <li><a href="#link">🔗 題目連結</a></li>
         </ul>
@@ -93,7 +91,7 @@
         </ul>
         <p>因此我在更新答案時，不是用 <code>r - l + 1</code>，而是用 <code>r - l</code>（等同於把視窗長度減 1，代表刪掉一個元素）。</p>
 
-        <h3 id="variables">所有變數</h3>
+        <h3>所有變數</h3>
         <ul>
           <li><code>l</code>：滑動視窗左端點</li>
           <li><code>r</code>：滑動視窗右端點（for 迴圈往右走）</li>
@@ -145,7 +143,9 @@
           <li>用 <code>r - l</code> 會自然得到 <code>n - 1</code>，剛好就是必須刪掉一個 <code>1</code> 的結果</li>
         </ul>
 
-        <h2 id="complexity">複雜度</h2>
+        <hr />
+
+        <h3>5. 複雜度</h3>
         <ul>
           <li>時間：<code>O(n)</code>（<code>l</code> 和 <code>r</code> 都只會往右走）</li>
           <li>空間：<code>O(1)</code></li>
