@@ -1,0 +1,215 @@
+<!-- 1493-longest-subarray-of-1s-after-deleting-one-element.html: All problems 文章 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>1493. Longest Subarray of 1's After Deleting One Element</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+               width="18" height="18" aria-hidden="true" focusable="false"
+               style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="index.html">All problems</a>
+      <span aria-hidden="true">/</span>
+      <span>1493. Longest Subarray of 1's After Deleting One Element</span>
+    </nav>
+
+    <section class="hero">
+      <h1>1493. Longest Subarray of 1's After Deleting One Element</h1>
+      <p><strong>練習日期：</strong>2026-01-30</p>
+      <p><strong>難度：</strong>Medium</p>
+      <p><strong>類型：</strong>Sliding Window、Two Pointers、Array</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#variables">所有變數</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#complexity">複雜度</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給定一個二元陣列 <code>nums</code>（只包含 <code>0</code> 和 <code>1</code>），你必須<strong>刪除恰好一個元素</strong>。</p>
+        <p>請回傳刪除後，陣列中「連續 <code>1</code>」的最長長度。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>1 &lt;= nums.length &lt;= 10^5</code></li>
+          <li><code>nums[i]</code> 是 <code>0</code> 或 <code>1</code></li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>這題我用滑動視窗（Two Pointers）去找一段區間 <code>[l, r]</code>，讓它滿足：</p>
+        <blockquote>
+          視窗內最多只能有 <strong>1 個 <code>0</code></strong>
+        </blockquote>
+        <p>因為題目規定「必須刪除 1 個元素」，所以：</p>
+        <ul>
+          <li>如果視窗內有 <code>1</code> 個 <code>0</code>：刪掉那個 <code>0</code>，剩下全是 <code>1</code></li>
+          <li>如果視窗內有 <code>0</code> 個 <code>0</code>（全部都是 <code>1</code>）：也得刪掉一個 <code>1</code>，所以答案會少 1</li>
+        </ul>
+        <p>因此我在更新答案時，不是用 <code>r - l + 1</code>，而是用 <code>r - l</code>（等同於把視窗長度減 1，代表刪掉一個元素）。</p>
+
+        <h3 id="variables">所有變數</h3>
+        <ul>
+          <li><code>l</code>：滑動視窗左端點</li>
+          <li><code>r</code>：滑動視窗右端點（for 迴圈往右走）</li>
+          <li><code>count</code>：目前視窗內 <code>0</code> 的數量</li>
+          <li><code>ans</code>：目前找到的最大答案長度</li>
+          <li><code>nums</code>：輸入的二元陣列</li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+
+        <h3>1. 右指標 <code>r</code> 往右擴張</h3>
+        <ul>
+          <li>每次把 <code>nums[r]</code> 加進視窗</li>
+          <li>若 <code>nums[r] == 0</code>，就讓 <code>count++</code></li>
+        </ul>
+        <hr />
+
+        <h3>2. 視窗不合法就縮小</h3>
+        <p>當 <code>count &gt; 1</code>，代表視窗內 <code>0</code> 超過 1 個：</p>
+        <ul>
+          <li>這樣就算只刪 1 個元素，也不可能讓剩下全是 <code>1</code></li>
+          <li>所以要移動左指標 <code>l</code> 把視窗縮小</li>
+        </ul>
+        <p>縮小時：</p>
+        <ul>
+          <li>如果 <code>nums[l] == 0</code>，代表移出去一個 <code>0</code>，所以 <code>count--</code></li>
+          <li>然後 <code>l++</code></li>
+          <li>直到 <code>count &lt;= 1</code> 視窗重新合法</li>
+        </ul>
+        <hr />
+
+        <h3>3. 用 <code>r - l</code> 更新答案（重點）</h3>
+        <p>視窗合法時 <code>[l, r]</code> 代表：</p>
+        <ul>
+          <li>裡面最多只有一個 <code>0</code></li>
+          <li>刪掉一個元素後，能得到的連續 <code>1</code> 長度就是「視窗長度 - 1」</li>
+          <li>視窗長度是 <code>r - l + 1</code></li>
+          <li>所以答案更新用 <code>r - l</code></li>
+        </ul>
+        <pre><code class="language-cpp">ans = max(ans, r - l);
+</code></pre>
+        <hr />
+
+        <h3>4. 為什麼全部都是 1 的情況也正確？</h3>
+        <p>如果整段都沒有 <code>0</code>，例如 <code>[1, 1, 1]</code>：</p>
+        <ul>
+          <li><code>count</code> 永遠是 0，不會進 <code>while</code></li>
+          <li>但是題目規定一定要刪 1 個元素</li>
+          <li>用 <code>r - l</code> 會自然得到 <code>n - 1</code>，剛好就是必須刪掉一個 <code>1</code> 的結果</li>
+        </ul>
+
+        <h2 id="complexity">複雜度</h2>
+        <ul>
+          <li>時間：<code>O(n)</code>（<code>l</code> 和 <code>r</code> 都只會往右走）</li>
+          <li>空間：<code>O(1)</code></li>
+        </ul>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    int longestSubarray(vector&lt;int&gt;&amp; nums) {
+        int l = 0;
+        int count = 0;
+        int ans = 0;
+        for (int r = 0; r &lt; nums.size(); r++) {
+            if (nums[r] == 0) {
+                count++;
+            }
+            while (count &gt; 1) {
+                if (nums[l] == 0) {
+                    count--;
+                }
+                l++;
+            }
+            ans = max(ans, r - l);
+        }
+        return ans;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p><a href="https://leetcode.com/problems/longest-subarray-of-1s-after-deleting-one-element/description/" target="_blank" rel="noopener">https://leetcode.com/problems/longest-subarray-of-1s-after-deleting-one-element/description/</a></p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-01-30</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value">
+            <span class="post-tags">
+              <span class="post-tag">Sliding Window</span>
+              <span class="post-tag">Two Pointers</span>
+              <span class="post-tag">Array</span>
+              <span class="post-tag">Medium</span>
+            </span>
+          </span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/all%20problems/1493-longest-subarray-of-1s-after-deleting-one-element.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>

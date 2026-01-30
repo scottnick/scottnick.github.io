@@ -618,6 +618,18 @@
       "folder": "cpp-notes/leetcode75"
     },
     {
+      "path": "cpp-notes/leetcode75/1493-longest-subarray-of-1s-after-deleting-one-element.html",
+      "title": "1493. Longest Subarray of 1's After Deleting One Element",
+      "date": "2026-01-30",
+      "tags": [
+        "Sliding Window",
+        "Two Pointers",
+        "Array",
+        "Medium"
+      ],
+      "folder": "cpp-notes/leetcode75"
+    },
+    {
       "path": "cpp-notes/neetcode150/70-climbing-stairs.html",
       "title": "70. Climbing Stairs",
       "date": "2026-01-15",
@@ -1353,6 +1365,18 @@
       "tags": [
         "String",
         "Sliding Window",
+        "Medium"
+      ],
+      "folder": "cpp-notes/all problems"
+    },
+    {
+      "path": "cpp-notes/all%20problems/1493-longest-subarray-of-1s-after-deleting-one-element.html",
+      "title": "1493. Longest Subarray of 1's After Deleting One Element",
+      "date": "2026-01-30",
+      "tags": [
+        "Sliding Window",
+        "Two Pointers",
+        "Array",
         "Medium"
       ],
       "folder": "cpp-notes/all problems"
