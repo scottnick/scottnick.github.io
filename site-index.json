@@ -677,6 +677,30 @@
       "folder": "cpp-notes/leetcode75"
     },
     {
+      "path": "cpp-notes/leetcode75/1657-determine-if-two-strings-are-close.html",
+      "title": "1657. Determine if Two Strings Are Close",
+      "date": "2026-01-31",
+      "tags": [
+        "Hash Table",
+        "String",
+        "Sorting",
+        "Medium"
+      ],
+      "folder": "cpp-notes/leetcode75"
+    },
+    {
+      "path": "cpp-notes/leetcode75/2352-equal-row-and-column-pairs.html",
+      "title": "2352. Equal Row and Column Pairs",
+      "date": "2026-02-01",
+      "tags": [
+        "Array",
+        "Matrix",
+        "Simulation",
+        "Medium"
+      ],
+      "folder": "cpp-notes/leetcode75"
+    },
+    {
       "path": "cpp-notes/neetcode150/70-climbing-stairs.html",
       "title": "70. Climbing Stairs",
       "date": "2026-01-15",
@@ -1207,6 +1231,18 @@
       "folder": "cpp-notes/all problems"
     },
     {
+      "path": "cpp-notes/all%20problems/2352-equal-row-and-column-pairs.html",
+      "title": "2352. Equal Row and Column Pairs",
+      "date": "2026-02-01",
+      "tags": [
+        "Array",
+        "Matrix",
+        "Simulation",
+        "Medium"
+      ],
+      "folder": "cpp-notes/all problems"
+    },
+    {
       "path": "cpp-notes/all%20problems/383-ransom-note.html",
       "title": "383. Ransom Note",
       "date": "2025-12-29",
@@ -1449,6 +1485,18 @@
         "Sliding Window",
         "Two Pointers",
         "Array",
+        "Medium"
+      ],
+      "folder": "cpp-notes/all problems"
+    },
+    {
+      "path": "cpp-notes/all%20problems/1657-determine-if-two-strings-are-close.html",
+      "title": "1657. Determine if Two Strings Are Close",
+      "date": "2026-01-31",
+      "tags": [
+        "Hash Table",
+        "String",
+        "Sorting",
         "Medium"
       ],
       "folder": "cpp-notes/all problems"
