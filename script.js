@@ -572,9 +572,134 @@
       const relatedSection = document.getElementById('related-articles-section');
       const relatedList = document.getElementById('related-articles');
       const relatedCountInfo = document.getElementById('relatedCountInfo');
+      const relatedPager = document.getElementById('related-pagination');
+      const PAGE_SIZE = 15;
+      let currentPage = 1;
+      let lastQueryKey = '';
+      let activeJumpKey = null;
+
+      function createPagerIcon(path) {
+        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        svg.setAttribute('viewBox', '0 0 24 24');
+        svg.setAttribute('aria-hidden', 'true');
+        svg.classList.add('pager-icon');
+        const pathEl = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        pathEl.setAttribute('d', path);
+        pathEl.setAttribute('fill', 'none');
+        pathEl.setAttribute('stroke', 'currentColor');
+        pathEl.setAttribute('stroke-width', '2');
+        pathEl.setAttribute('stroke-linecap', 'round');
+        pathEl.setAttribute('stroke-linejoin', 'round');
+        svg.appendChild(pathEl);
+        return svg;
+      }
+
+      function renderPagination(totalPages) {
+        if (!relatedPager) return;
+        if (totalPages <= 1) {
+          relatedPager.classList.add('hidden');
+          relatedPager.innerHTML = '';
+          return;
+        }
+
+        relatedPager.classList.remove('hidden');
+        relatedPager.innerHTML = '';
+
+        const prevButton = document.createElement('button');
+        prevButton.type = 'button';
+        prevButton.className = 'pager-btn';
+        prevButton.disabled = currentPage === 1;
+        prevButton.appendChild(createPagerIcon('M15 18l-6-6 6-6'));
+        prevButton.addEventListener('click', () => {
+          if (currentPage > 1) {
+            currentPage -= 1;
+            activeJumpKey = null;
+            render();
+          }
+        });
+        relatedPager.appendChild(prevButton);
+
+        const pages = new Set([1, totalPages]);
+        for (let page = currentPage - 2; page <= currentPage + 2; page += 1) {
+          if (page >= 1 && page <= totalPages) pages.add(page);
+        }
+        const sortedPages = Array.from(pages).sort((a, b) => a - b);
+
+        sortedPages.forEach((page, index) => {
+          const prevPage = sortedPages[index - 1];
+          if (prevPage && page - prevPage > 1) {
+            const ellipsisKey = `${prevPage}-${page}`;
+            if (activeJumpKey === ellipsisKey) {
+              const input = document.createElement('input');
+              input.type = 'text';
+              input.inputMode = 'numeric';
+              input.className = 'pager-input';
+              input.setAttribute('aria-label', '跳至頁碼');
+              input.addEventListener('keydown', (event) => {
+                if (event.key !== 'Enter') return;
+                const value = Number.parseInt(input.value, 10);
+                if (Number.isInteger(value) && value >= 1 && value <= totalPages) {
+                  currentPage = value;
+                }
+                activeJumpKey = null;
+                render();
+              });
+              input.addEventListener('blur', () => {
+                activeJumpKey = null;
+                render();
+              });
+              relatedPager.appendChild(input);
+              requestAnimationFrame(() => input.focus());
+            } else {
+              const ellipsisButton = document.createElement('button');
+              ellipsisButton.type = 'button';
+              ellipsisButton.className = 'pager-ellipsis';
+              ellipsisButton.textContent = '...';
+              ellipsisButton.addEventListener('click', () => {
+                activeJumpKey = ellipsisKey;
+                render();
+              });
+              relatedPager.appendChild(ellipsisButton);
+            }
+          }
+
+          const pageButton = document.createElement('button');
+          pageButton.type = 'button';
+          pageButton.className = 'pager-page';
+          if (page === currentPage) pageButton.classList.add('active');
+          pageButton.textContent = page;
+          pageButton.addEventListener('click', () => {
+            if (page !== currentPage) {
+              currentPage = page;
+              activeJumpKey = null;
+              render();
+            }
+          });
+          relatedPager.appendChild(pageButton);
+        });
+
+        const nextButton = document.createElement('button');
+        nextButton.type = 'button';
+        nextButton.className = 'pager-btn';
+        nextButton.disabled = currentPage === totalPages;
+        nextButton.appendChild(createPagerIcon('M9 6l6 6-6 6'));
+        nextButton.addEventListener('click', () => {
+          if (currentPage < totalPages) {
+            currentPage += 1;
+            activeJumpKey = null;
+            render();
+          }
+        });
+        relatedPager.appendChild(nextButton);
+      }
 
       function render() {
         const queryKey = toSearchKey(searchInput?.value);
+        if (queryKey !== lastQueryKey) {
+          currentPage = 1;
+          activeJumpKey = null;
+          lastQueryKey = queryKey;
+        }
         let list = categoryItems.filter(
           (item) => !queryKey || toSearchKey(item.title).includes(queryKey)
         );
@@ -606,6 +731,10 @@
           relatedSection.classList.add('hidden');
           relatedList.innerHTML = '';
           if (relatedCountInfo) relatedCountInfo.textContent = '';
+          if (relatedPager) {
+            relatedPager.classList.add('hidden');
+            relatedPager.innerHTML = '';
+          }
           return;
         }
 
@@ -619,8 +748,14 @@
           }))
         );
 
-        const MAX_SHOW = 30;
-        const shown = related.slice(0, MAX_SHOW);
+        const totalPages = Math.ceil(related.length / PAGE_SIZE);
+        if (totalPages === 0) {
+          currentPage = 1;
+        } else if (currentPage > totalPages) {
+          currentPage = totalPages;
+        }
+        const start = (currentPage - 1) * PAGE_SIZE;
+        const shown = related.slice(start, start + PAGE_SIZE);
 
         relatedSection.classList.remove('hidden');
         if (relatedCountInfo) {
@@ -630,6 +765,7 @@
         relatedList.innerHTML = '';
         if (!shown.length) {
           relatedList.innerHTML = '<li class="category-meta-row">目前沒有相關文章。</li>';
+          renderPagination(0);
           return;
         }
 
@@ -649,6 +785,8 @@
           item.appendChild(link);
           relatedList.appendChild(item);
         });
+
+        renderPagination(Math.ceil(related.length / PAGE_SIZE));
       }
 
       searchInput?.addEventListener('input', render);
