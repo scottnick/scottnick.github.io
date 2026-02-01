@@ -607,11 +607,7 @@
           return;
         }
 
-        let related = allPosts.filter((post) => {
-          const titleKey = toSearchKey(post.title);
-          if (titleKey.includes(query)) return true;
-          return (post.tags || []).some((tag) => toSearchKey(tag).includes(query));
-        });
+        let related = allPosts.filter((post) => toSearchKey(post.title).includes(query));
 
         related = sortItems(
           related.map((post) => ({
@@ -684,6 +680,8 @@
       const scopedPosts = applyScopeFilter(categories[categoryName] || []);
       const searchInput = document.getElementById('searchInput');
 
+      const totalAll = scopedPosts.length;
+
       function render() {
         const query = toSearchKey(searchInput?.value);
         let listItems = scopedPosts
@@ -699,7 +697,7 @@
         list.innerHTML = '';
         if (!listItems.length) {
           list.innerHTML = '<li class="category-meta-row">目前沒有相關文章。</li>';
-          updateCount(0, scopedPosts.length);
+          updateCount(0, totalAll);
           return;
         }
 
@@ -721,7 +719,7 @@
           list.appendChild(item);
         });
 
-        updateCount(listItems.length, scopedPosts.length);
+        updateCount(listItems.length, totalAll);
       }
 
       searchInput?.addEventListener('input', render);
