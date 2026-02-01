@@ -393,6 +393,12 @@ main {
   transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition);
 }
 
+body.page-article .page-header .back-button,
+body[data-category-page="true"] .page-header .back-button {
+  position: relative;
+  top: -40px;
+}
+
 .back-button:hover {
   transform: translateY(-1px);
   border-color: var(--primary-soft);
