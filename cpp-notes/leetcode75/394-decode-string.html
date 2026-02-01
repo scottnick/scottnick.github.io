@@ -1,0 +1,234 @@
+<!-- leetcode75/394-decode-string.html: LeetCode 75 文章 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>394. Decode String</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+               width="18" height="18" aria-hidden="true" focusable="false"
+               style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="../leetcode75/index.html">LeetCode 75</a>
+      <span aria-hidden="true">/</span>
+      <span>394. Decode String</span>
+    </nav>
+
+    <section class="hero">
+      <h1>394. Decode String</h1>
+      <p><strong>練習日期：</strong>2026-02-01</p>
+      <p><strong>難度：</strong>Medium</p>
+      <p><strong>類型：</strong>Stack、Recursion、String</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給你一個編碼過的字串 <code>s</code>，請回傳它解碼後的字串。</p>
+        <p>編碼規則為：<code>k[encoded_string]</code>
+        其中 <code>encoded_string</code> 會被<strong>重複</strong> <code>k</code> 次後接在一起，且 <code>k</code> 保證是正整數。</p>
+        <p>你可以假設輸入一定合法：不會有多餘空白、括號一定配對正確。</p>
+        <p>另外原始資料不包含任何數字，數字只會用來表示重複次數 <code>k</code>（例如不會出現 <code>3a</code> 或 <code>2[4]</code>）。</p>
+        <p>測資保證：解碼後的輸出長度不會超過 <code>10^5</code>。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>1 &lt;= s.length &lt;= 30</code></li>
+          <li><code>s</code> 只包含小寫英文字母、數字、以及中括號 <code>'[]'</code></li>
+          <li><code>s</code> 保證是合法輸入</li>
+          <li><code>s</code> 中所有整數都在範圍 <code>[1, 300]</code></li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>我用「遞迴 + 游標 <code>pos</code>」來解析字串。</p>
+        <ul>
+          <li>用成員變數 <code>as</code> 存整個字串，<code>pos</code> 表示目前解析到的位置。</li>
+          <li><code>rep(pos)</code> 的工作：
+            從目前 <code>pos</code> 開始，解析並回傳「這一層括號內（或整段）」解碼結果，直到遇到 <code>]</code> 才停。</li>
+        </ul>
+        <p>解析規則：</p>
+        <ol>
+          <li>如果遇到字母：直接加到目前答案字串 <code>r</code>。</li>
+          <li>如果遇到數字：把完整數字讀成 <code>k</code>（可能多位數）。</li>
+          <li>讀完 <code>k</code> 後一定會遇到 <code>[</code>：
+            <ul>
+              <li>先跳過 <code>[</code>，遞迴解出裡面那段字串 <code>in</code></li>
+              <li>回來後跳過 <code>]</code></li>
+              <li>把 <code>in</code> 重複 <code>k</code> 次接回 <code>r</code></li>
+            </ul>
+          </li>
+        </ol>
+        <p>這樣一層一層拆開，外層會接著從正確的 <code>pos</code> 繼續往後解析。</p>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>as</code>：把輸入字串 <code>s</code> 存起來，讓遞迴不用一直傳整條字串</li>
+          <li><code>pos</code>：目前解析到 <code>as</code> 的位置（游標）</li>
+          <li><code>r</code>：<code>rep</code> 這一層正在累積的解碼結果</li>
+          <li><code>k</code>：這次 <code>k[...]</code> 的重複次數（讀取連續數字組成）</li>
+          <li><code>in</code>：遞迴解出 <code>[...]</code> 內部的解碼字串</li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+        <h3>1. 初始化並從頭開始解析</h3>
+        <ul>
+          <li>在 <code>decodeString(s)</code>：
+            <ul>
+              <li><code>as = s</code></li>
+              <li>呼叫 <code>rep(pos)</code>，從 <code>pos = 0</code> 開始解碼</li>
+            </ul>
+          </li>
+        </ul>
+
+        <hr />
+
+        <h3>2. <code>rep(pos)</code>：一路解析到遇到 <code>]</code> 才結束</h3>
+        <ul>
+          <li>只要 <code>pos</code> 沒超出字串，且 <code>as[pos] != ']'</code> 就繼續：
+            <ul>
+              <li>如果是字母 → 加進 <code>r</code>，<code>pos++</code></li>
+              <li>如果是數字 → 進入下一步解析 <code>k[...]</code></li>
+            </ul>
+          </li>
+        </ul>
+
+        <hr />
+
+        <h3>3. 解析 <code>k[...]</code>：讀數字、遞迴括號內容、再重複拼接</h3>
+        <ul>
+          <li>讀出完整的 <code>k</code>（處理多位數）</li>
+          <li>跳過 <code>'['</code></li>
+          <li><code>in = rep(pos)</code> 解出括號內字串</li>
+          <li>回來後跳過 <code>']'</code></li>
+          <li>把 <code>in</code> 重複 <code>k</code> 次接到 <code>r</code></li>
+        </ul>
+
+        <hr />
+
+        <h3>4. 回傳本層結果</h3>
+        <ul>
+          <li>當遇到 <code>]</code>（或字串結束）就回傳 <code>r</code></li>
+          <li><code>pos</code> 會停在 <code>]</code> 上，交給外層去把 <code>]</code> 吃掉並繼續</li>
+        </ul>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    string as;
+    int pos = 0;
+
+    string rep(int&amp; pos) {
+        string r = "";
+        int k = 0;
+        while (pos &lt; as.size() &amp;&amp; as[pos] != ']') {
+            if (as[pos] &gt;= 'a' &amp;&amp; as[pos] &lt;= 'z') {
+                r.push_back(as[pos]);
+                pos++;
+            } else if (isdigit(as[pos])) {
+                k = 0;
+                while (pos &lt; (int)as.size() &amp;&amp; isdigit(as[pos])) {
+                    k = k * 10 + (as[pos] - '0');
+                    pos++;
+                }
+                pos++; // as[pos] == '['
+                string in = rep(pos);
+                pos++; // as[pos] == ']'
+                for (int i = 0; i &lt; k; i++) {
+                    r += in;
+                }
+            }
+        }
+        return r;
+    }
+
+    string decodeString(string s) {
+        as = s;
+        return rep(pos);
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/decode-string/description/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-02-01</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value">
+            <span class="post-tags">
+              <span class="post-tag">Stack</span>
+              <span class="post-tag">Recursion</span>
+              <span class="post-tag">String</span>
+              <span class="post-tag">Medium</span>
+            </span>
+          </span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/leetcode75/394-decode-string.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
