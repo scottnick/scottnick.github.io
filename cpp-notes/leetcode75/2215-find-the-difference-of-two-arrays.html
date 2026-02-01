@@ -1,0 +1,263 @@
+<!-- leetcode75/2215-find-the-difference-of-two-arrays.html: LeetCode 75 文章 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2215. Find the Difference of Two Arrays</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+               width="18" height="18" aria-hidden="true" focusable="false"
+               style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="../leetcode75/index.html">LeetCode 75</a>
+      <span aria-hidden="true">/</span>
+      <span>2215. Find the Difference of Two Arrays</span>
+    </nav>
+
+    <section class="hero">
+      <h1>2215. Find the Difference of Two Arrays</h1>
+      <p><strong>練習日期：</strong>2026-01-31</p>
+      <p><strong>難度：</strong>Easy</p>
+      <p><strong>類型：</strong>Array、Hash Table、Two Pointers、Sorting</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給定兩個整數陣列 <code>nums1</code> 與 <code>nums2</code>，請回傳一個長度為 2 的答案陣列 <code>ans</code>：</p>
+        <ul>
+          <li><code>ans[0]</code>：所有<strong>只出現在 <code>nums1</code>、但不出現在 <code>nums2</code></strong> 的不同整數</li>
+          <li><code>ans[1]</code>：所有<strong>只出現在 <code>nums2</code>、但不出現在 <code>nums1</code></strong> 的不同整數</li>
+        </ul>
+        <p>回傳的每個列表中元素順序不限，但必須是「不同的整數」（去重後）。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>1 &lt;= nums1.length, nums2.length &lt;= 1000</code></li>
+          <li><code>-1000 &lt;= nums1[i], nums2[i] &lt;= 1000</code></li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>我的做法是：</p>
+        <ol>
+          <li>先把 <code>nums1</code>、<code>nums2</code> 都排序</li>
+          <li>用兩個指標 <code>p1</code>、<code>p2</code> 同步掃過兩個排序後的陣列（類似 merge 的感覺）</li>
+          <li>當某邊的數比較小，表示那個數「目前在另一邊還沒出現」，可以先加入對應答案</li>
+          <li>若兩邊相等，表示兩邊都有這個數 → 兩邊都跳過</li>
+          <li>因為排序後會有重複值連在一起，所以我用 <code>b1</code>、<code>b2</code> 記錄「上一個已加入的值」，避免重複 push</li>
+        </ol>
+        <p>最後如果其中一個陣列先掃完，另一邊剩下的值就全部都是「只出現在自己這邊」的，繼續去重後加入即可。</p>
+
+        <h3>所有變數</h3>
+
+        <h3>（照你要求：所有變數是 <code>###</code>，裡面用 <code>-</code>）</h3>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>ans</code>：答案，<code>ans[0]</code> 放只在 <code>nums1</code> 的值，<code>ans[1]</code> 放只在 <code>nums2</code> 的值</li>
+          <li><code>b1</code>：記錄「最近一次加入 <code>ans[0]</code> 的值」，用來去重（避免同值重複加入）</li>
+          <li><code>b2</code>：記錄「最近一次加入 <code>ans[1]</code> 的值」，用來去重</li>
+          <li><code>p1</code>：掃描 <code>nums1</code> 的指標</li>
+          <li><code>p2</code>：掃描 <code>nums2</code> 的指標</li>
+          <li><code>n1</code>：<code>nums1</code> 長度</li>
+          <li><code>n2</code>：<code>nums2</code> 長度</li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+
+        <h3>第一步：排序</h3>
+        <ul>
+          <li>先 <code>sort(nums1)</code>、<code>sort(nums2)</code></li>
+          <li>這樣相同的值會黏在一起，方便去重</li>
+          <li>也能用 two pointers 直接比較大小前進</li>
+        </ul>
+        <hr />
+
+        <h3>第二步：雙指標同步掃描（主 while）</h3>
+        <p>在 <code>p1 &lt; n1 &amp;&amp; p2 &lt; n2</code> 時，分三種情況：</p>
+
+        <h4>情況一：<code>nums1[p1] &lt; nums2[p2]</code></h4>
+        <ul>
+          <li>代表 <code>nums1[p1]</code> 這個值「比 nums2 目前看到的值還小」</li>
+          <li>因此它不可能在 <code>nums2</code> 出現於 <code>p2</code> 之前（因為 nums2 已排序）</li>
+          <li>所以可以判定：這個值是「只出現在 nums1」的候選</li>
+          <li>為了避免重複（例如 nums1 有很多相同值），我用 <code>b1</code> 去重：</li>
+        </ul>
+        <ul>
+          <li>若 <code>b1 != nums1[p1]</code> 才加入 <code>ans[0]</code></li>
+        </ul>
+        <p>然後 <code>p1++</code> 前進</p>
+
+        <h4>情況二：<code>nums2[p2] &lt; nums1[p1]</code></h4>
+        <ul>
+          <li>完全對稱：這個值只會是「只出現在 nums2」的候選</li>
+          <li>用 <code>b2</code> 去重後加入 <code>ans[1]</code></li>
+          <li><code>p2++</code> 前進</li>
+        </ul>
+
+        <h4>情況三：<code>nums1[p1] == nums2[p2]</code></h4>
+        <ul>
+          <li>代表兩邊都出現這個值 → 不應該出現在答案任何一邊</li>
+          <li>所以兩邊都前進：<code>p1++</code>、<code>p2++</code></li>
+          <li>同時把 <code>b1</code>、<code>b2</code> 更新成這個值，避免後續同值又被加入</li>
+        </ul>
+        <hr />
+
+        <h3>第三步：處理剩下沒掃完的一邊（尾端 while）</h3>
+        <p>如果主 while 結束後：</p>
+
+        <h4><code>nums1</code> 還有剩</h4>
+        <ul>
+          <li>代表 <code>nums2</code> 已經掃完了</li>
+          <li>剩下的 <code>nums1[p1...]</code> 全部都不可能在 nums2 裡面出現</li>
+          <li>直接用 <code>b1</code> 去重後加入 <code>ans[0]</code></li>
+        </ul>
+
+        <h4><code>nums2</code> 還有剩</h4>
+        <ul>
+          <li>同理，用 <code>b2</code> 去重後加入 <code>ans[1]</code></li>
+        </ul>
+        <hr />
+
+        <h3>為什麼 <code>b1</code> / <code>b2</code> 可以用來去重？</h3>
+        <ul>
+          <li>因為排序後，相同數字一定是連續出現</li>
+          <li>只要記住「上一個加入的數」，就能避免同一個數被連續加入多次</li>
+        </ul>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    vector&lt;vector&lt;int&gt;&gt; findDifference(vector&lt;int&gt;&amp; nums1, vector&lt;int&gt;&amp; nums2) {
+        vector&lt;vector&lt;int&gt;&gt; ans(2);
+        int b1 = 10000, b2 = 10000;
+        int p1 = 0, p2 = 0;
+        int n1 = nums1.size();
+        int n2 = nums2.size();
+        sort(nums1.begin(), nums1.end());
+        sort(nums2.begin(), nums2.end());
+
+        while (p1 &lt; n1 &amp;&amp; p2 &lt; n2) {
+            if (nums1[p1] &lt; nums2[p2]) {
+                if (b1 != nums1[p1]) {
+                    b1 = nums1[p1];
+                    ans[0].push_back(b1);
+                }
+                p1++;
+            } else if (nums2[p2] &lt; nums1[p1]) {
+                if (b2 != nums2[p2]) {
+                    b2 = nums2[p2];
+                    ans[1].push_back(b2);
+                }
+                p2++;
+            } else {
+                b1 = nums1[p1];
+                b2 = nums2[p2];
+                p1++;
+                p2++;
+            }
+        }
+        while (p1 &lt; n1) {
+            if (b1 != nums1[p1]) {
+                b1 = nums1[p1];
+                ans[0].push_back(b1);
+            }
+            p1++;
+        }
+        while (p2 &lt; n2) {
+            if (b2 != nums2[p2]) {
+                b2 = nums2[p2];
+                ans[1].push_back(b2);
+            }
+            p2++;
+        }
+        return ans;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/find-the-difference-of-two-arrays/description/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-01-31</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value">
+            <span class="post-tags">
+              <span class="post-tag">Array</span>
+              <span class="post-tag">Hash Table</span>
+              <span class="post-tag">Two Pointers</span>
+              <span class="post-tag">Sorting</span>
+              <span class="post-tag">Easy</span>
+            </span>
+          </span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/leetcode75/2215-find-the-difference-of-two-arrays.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>

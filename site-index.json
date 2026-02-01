@@ -652,6 +652,55 @@
       "folder": "cpp-notes/leetcode75"
     },
     {
+      "path": "cpp-notes/leetcode75/2215-find-the-difference-of-two-arrays.html",
+      "title": "2215. Find the Difference of Two Arrays",
+      "date": "2026-01-31",
+      "tags": [
+        "Array",
+        "Hash Table",
+        "Two Pointers",
+        "Sorting",
+        "Easy"
+      ],
+      "folder": "cpp-notes/leetcode75"
+    },
+    {
+      "path": "cpp-notes/leetcode75/1207-unique-number-of-occurrences.html",
+      "title": "1207. Unique Number of Occurrences",
+      "date": "2026-01-31",
+      "tags": [
+        "Array",
+        "Hash Table",
+        "Sorting",
+        "Easy"
+      ],
+      "folder": "cpp-notes/leetcode75"
+    },
+    {
+      "path": "cpp-notes/leetcode75/1657-determine-if-two-strings-are-close.html",
+      "title": "1657. Determine if Two Strings Are Close",
+      "date": "2026-01-31",
+      "tags": [
+        "Hash Table",
+        "String",
+        "Sorting",
+        "Medium"
+      ],
+      "folder": "cpp-notes/leetcode75"
+    },
+    {
+      "path": "cpp-notes/leetcode75/2352-equal-row-and-column-pairs.html",
+      "title": "2352. Equal Row and Column Pairs",
+      "date": "2026-02-01",
+      "tags": [
+        "Array",
+        "Matrix",
+        "Simulation",
+        "Medium"
+      ],
+      "folder": "cpp-notes/leetcode75"
+    },
+    {
       "path": "cpp-notes/neetcode150/70-climbing-stairs.html",
       "title": "70. Climbing Stairs",
       "date": "2026-01-15",
@@ -1169,6 +1218,31 @@
       "folder": "cpp-notes/all problems"
     },
     {
+      "path": "cpp-notes/all%20problems/2215-find-the-difference-of-two-arrays.html",
+      "title": "2215. Find the Difference of Two Arrays",
+      "date": "2026-01-31",
+      "tags": [
+        "Array",
+        "Hash Table",
+        "Two Pointers",
+        "Sorting",
+        "Easy"
+      ],
+      "folder": "cpp-notes/all problems"
+    },
+    {
+      "path": "cpp-notes/all%20problems/2352-equal-row-and-column-pairs.html",
+      "title": "2352. Equal Row and Column Pairs",
+      "date": "2026-02-01",
+      "tags": [
+        "Array",
+        "Matrix",
+        "Simulation",
+        "Medium"
+      ],
+      "folder": "cpp-notes/all problems"
+    },
+    {
       "path": "cpp-notes/all%20problems/383-ransom-note.html",
       "title": "383. Ransom Note",
       "date": "2025-12-29",
@@ -1371,6 +1445,18 @@
       "folder": "cpp-notes/all problems"
     },
     {
+      "path": "cpp-notes/all%20problems/1207-unique-number-of-occurrences.html",
+      "title": "1207. Unique Number of Occurrences",
+      "date": "2026-01-31",
+      "tags": [
+        "Array",
+        "Hash Table",
+        "Sorting",
+        "Easy"
+      ],
+      "folder": "cpp-notes/all problems"
+    },
+    {
       "path": "cpp-notes/all%20problems/1431-kids-with-the-greatest-number-of-candies.html",
       "title": "1431. Kids With the Greatest Number of Candies",
       "date": "2026-01-09",
@@ -1399,6 +1485,18 @@
         "Sliding Window",
         "Two Pointers",
         "Array",
+        "Medium"
+      ],
+      "folder": "cpp-notes/all problems"
+    },
+    {
+      "path": "cpp-notes/all%20problems/1657-determine-if-two-strings-are-close.html",
+      "title": "1657. Determine if Two Strings Are Close",
+      "date": "2026-01-31",
+      "tags": [
+        "Hash Table",
+        "String",
+        "Sorting",
         "Medium"
       ],
       "folder": "cpp-notes/all problems"
