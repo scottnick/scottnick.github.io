@@ -1,6 +1,6 @@
 {
-  "buildId": "20260130120000",
-  "generatedAt": "2026-01-30T12:00:00.000000Z",
+  "buildId": "20260201000000",
+  "generatedAt": "2026-02-01T00:00:00.000000Z",
   "posts": [
     {
       "path": "courses.html",
@@ -626,6 +626,28 @@
         "Two Pointers",
         "Array",
         "Medium"
+      ],
+      "folder": "cpp-notes/leetcode75"
+    },
+    {
+      "path": "cpp-notes/leetcode75/1732-find-the-highest-altitude.html",
+      "title": "1732. Find the Highest Altitude",
+      "date": "2026-01-31",
+      "tags": [
+        "Array",
+        "Prefix Sum",
+        "Easy"
+      ],
+      "folder": "cpp-notes/leetcode75"
+    },
+    {
+      "path": "cpp-notes/leetcode75/724-find-pivot-index.html",
+      "title": "724. Find Pivot Index",
+      "date": "2026-01-31",
+      "tags": [
+        "Array",
+        "Prefix Sum",
+        "Easy"
       ],
       "folder": "cpp-notes/leetcode75"
     },
@@ -1413,6 +1435,50 @@
       "folder": "cpp-notes/all problems"
     },
     {
+      "path": "cpp-notes/all%20problems/724-find-pivot-index.html",
+      "title": "724. Find Pivot Index",
+      "date": "2026-01-31",
+      "tags": [
+        "Array",
+        "Prefix Sum",
+        "Easy"
+      ],
+      "folder": "cpp-notes/all problems"
+    },
+    {
+      "path": "cpp-notes/all%20problems/744-find-smallest-letter-greater-than-target.html",
+      "title": "744. Find Smallest Letter Greater Than Target",
+      "date": "2026-01-31",
+      "tags": [
+        "Array",
+        "Binary Search",
+        "Easy"
+      ],
+      "folder": "cpp-notes/all problems"
+    },
+    {
+      "path": "cpp-notes/all%20problems/1732-find-the-highest-altitude.html",
+      "title": "1732. Find the Highest Altitude",
+      "date": "2026-01-31",
+      "tags": [
+        "Array",
+        "Prefix Sum",
+        "Easy"
+      ],
+      "folder": "cpp-notes/all problems"
+    },
+    {
+      "path": "cpp-notes/all%20problems/3010-divide-an-array-into-subarrays-with-minimum-cost-i.html",
+      "title": "3010. Divide an Array Into Subarrays With Minimum Cost I",
+      "date": "2026-02-01",
+      "tags": [
+        "Array",
+        "Greedy",
+        "Easy"
+      ],
+      "folder": "cpp-notes/all problems"
+    },
+    {
       "path": "cpp-notes/contests/biweekly-contest-174.html",
       "title": "Biweekly Contest 174",
       "date": "",
@@ -1540,9 +1606,9 @@
   "folderCounts": {
     "cpp-notes/top-interview-150/index.html": 20,
     "cpp-notes/grind75/index.html": 13,
-    "cpp-notes/leetcode75/index.html": 15,
+    "cpp-notes/leetcode75/index.html": 17,
     "cpp-notes/neetcode150/index.html": 15,
-    "cpp-notes/all%20problems/index.html": 49,
+    "cpp-notes/all%20problems/index.html": 53,
     "cpp-notes/contests/index.html": 11
   }
 }

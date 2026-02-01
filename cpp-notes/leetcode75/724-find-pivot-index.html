@@ -1,0 +1,243 @@
+<!-- leetcode75/724-find-pivot-index.html: LeetCode 75 文章 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>724. Find Pivot Index</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+               width="18" height="18" aria-hidden="true" focusable="false"
+               style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="../leetcode75/index.html">LeetCode 75</a>
+      <span aria-hidden="true">/</span>
+      <span>724. Find Pivot Index</span>
+    </nav>
+
+    <section class="hero">
+      <h1>724. Find Pivot Index</h1>
+      <p><strong>練習日期：</strong>2026-01-31</p>
+      <p><strong>難度：</strong>Easy</p>
+      <p><strong>類型：</strong>Array、Prefix Sum</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給定一個整數陣列 <code>nums</code>，請找出<strong>樞紐索引（pivot index）</strong>。</p>
+        <p>樞紐索引的定義是：該索引左邊所有元素的總和，等於右邊所有元素的總和。</p>
+        <p>如果樞紐索引存在，請回傳<strong>最左邊</strong>的那一個。</p>
+        <p>如果不存在，回傳 <code>-1</code>。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>1 &lt;= nums.length &lt;= 10^4</code></li>
+          <li><code>-1000 &lt;= nums[i] &lt;= 1000</code></li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>我的想法是用兩個累加值去維護「左邊總和」與「右邊總和」：</p>
+        <ul>
+          <li><code>l</code>：目前 <code>pos</code> 左邊所有元素的總和</li>
+          <li><code>r</code>：目前 <code>pos</code> 右邊所有元素的總和</li>
+        </ul>
+        <p>我先把 <code>r</code> 初始化成「除了 <code>nums[0]</code> 以外的總和」，</p>
+        <p>這樣一開始 <code>pos = 0</code> 時：</p>
+        <ul>
+          <li>左邊沒有元素 → <code>l = 0</code></li>
+          <li>右邊是 <code>nums[1..]</code> → <code>r</code> 已經算好</li>
+        </ul>
+        <p>接著我用 while 迴圈讓 <code>pos</code> 從左到右掃過去：</p>
+        <ul>
+          <li>每一輪先檢查 <code>l == r</code>，如果成立就是 pivot</li>
+          <li>否則就把 <code>nums[pos]</code> 加進左邊、<code>pos++</code></li>
+          <li>再把新的 <code>nums[pos]</code> 從右邊扣掉（因為它不再在右邊了）</li>
+        </ul>
+        <p>這樣可以用 <code>O(n)</code> 的時間一路更新，不用每次都重新加總。</p>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>nums</code>：題目給的陣列（我在程式中有額外 <code>push_back(0)</code>）</li>
+          <li><code>l</code>：目前索引 <code>pos</code> 左側的總和</li>
+          <li><code>r</code>：目前索引 <code>pos</code> 右側的總和</li>
+          <li><code>pos</code>：目前正在檢查的索引位置</li>
+          <li><code>i</code>：用來先計算 <code>r</code> 的迴圈索引</li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+
+        <h3>第一步：處理超小陣列</h3>
+        <ul>
+          <li>如果 <code>nums.size() &lt; 2</code>，我直接回傳 <code>0</code>
+            <ul>
+              <li>因為只有一個元素時，左邊和右邊都是空集合，加總都是 <code>0</code></li>
+              <li>所以 pivot 就是 <code>0</code></li>
+            </ul>
+          </li>
+        </ul>
+        <hr />
+
+        <h3>第二步：先算出初始右邊總和 <code>r</code></h3>
+        <pre><code class="language-cpp">for (int i = 1; i &lt; nums.size(); i++) {
+    r += nums[i];
+}
+</code></pre>
+        <p>這樣設定後：</p>
+        <ul>
+          <li><code>pos = 0</code></li>
+          <li><code>l = 0</code>（左邊沒有）</li>
+          <li><code>r = nums[1] + nums[2] + ...</code>（右邊全部）</li>
+        </ul>
+        <hr />
+
+        <h3>第三步：補一個 <code>0</code> 防止越界（我這份寫法的關鍵小技巧）</h3>
+        <pre><code class="language-cpp">nums.push_back(0);
+</code></pre>
+        <p>因為我後面會做 <code>pos++</code> 然後立刻使用 <code>nums[pos]</code> 來更新 <code>r</code>：</p>
+        <pre><code class="language-cpp">pos++;
+r -= nums[pos];
+</code></pre>
+        <p>如果 <code>pos</code> 走到最後一個元素的位置，再 <code>pos++</code> 就會越界。</p>
+        <p>所以我在尾巴補一個 <code>0</code>，讓最後一次更新時仍然安全。</p>
+        <hr />
+
+        <h3>第四步：從左到右掃描找 pivot</h3>
+        <p>while 迴圈每輪做的事情：</p>
+        <ol>
+          <li><strong>檢查是否為 pivot</strong>
+            <ul>
+              <li>若 <code>l == r</code> → 直接回傳 <code>pos</code></li>
+            </ul>
+          </li>
+          <li><strong>更新左邊總和</strong>
+            <ul>
+              <li><code>l += nums[pos]</code></li>
+              <li>表示把目前這格納入左邊</li>
+            </ul>
+          </li>
+          <li><strong>索引往右移</strong>
+            <ul>
+              <li><code>pos++</code></li>
+            </ul>
+          </li>
+          <li><strong>更新右邊總和</strong>
+            <ul>
+              <li><code>r -= nums[pos]</code></li>
+              <li>因為新的 <code>pos</code> 位置不再算在右邊（它現在是「中心」）</li>
+            </ul>
+          </li>
+        </ol>
+        <hr />
+
+        <h3>第五步：找不到就回傳 -1</h3>
+        <p>如果掃完整個陣列都沒有 <code>l == r</code>，就回傳 <code>-1</code>。</p>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    int pivotIndex(vector&lt;int&gt;&amp; nums) {
+        if (nums.size() &lt; 2) {
+            return 0;
+        }
+        int l = 0, r = 0;
+        int pos = 0;
+        for (int i = 1; i &lt; nums.size(); i++) {
+            r += nums[i];
+        }
+        nums.push_back(0);
+        while (pos &lt; nums.size() - 1) {
+            if (l == r) {
+                return pos;
+            }
+            l += nums[pos];
+            pos++;
+            r -= nums[pos];
+        }
+        return -1;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/find-pivot-index/description/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-01-31</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value">
+            <span class="post-tags">
+              <span class="post-tag">Array</span>
+              <span class="post-tag">Prefix Sum</span>
+              <span class="post-tag">Easy</span>
+            </span>
+          </span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/leetcode75/724-find-pivot-index.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
