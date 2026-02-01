@@ -1,0 +1,193 @@
+<!-- all problems/744-find-smallest-letter-greater-than-target.html: 全部題單文章 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>744. Find Smallest Letter Greater Than Target</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+               width="18" height="18" aria-hidden="true" focusable="false"
+               style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="index.html">All problems</a>
+      <span aria-hidden="true">/</span>
+      <span>744. Find Smallest Letter Greater Than Target</span>
+    </nav>
+
+    <section class="hero">
+      <h1>744. Find Smallest Letter Greater Than Target</h1>
+      <p><strong>練習日期：</strong>2026-01-31</p>
+      <p><strong>難度：</strong>Easy</p>
+      <p><strong>類型：</strong>Array、Binary Search</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給定一個排序過的字元陣列 <code>letters</code>（只包含小寫英文字母），以及一個字元 <code>target</code>。</p>
+        <p>請找出 <code>letters</code> 中 <strong>嚴格大於 <code>target</code></strong> 的最小字母，並回傳它。</p>
+        <ul>
+          <li><code>letters</code> 會被視為「環狀」：
+            <ul>
+              <li>如果不存在比 <code>target</code> 更大的字母，就回傳 <code>letters[0]</code>。</li>
+            </ul>
+          </li>
+        </ul>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>2 &lt;= letters.length &lt;= 10^4</code></li>
+          <li><code>letters[i]</code> 是小寫英文字母</li>
+          <li><code>letters</code> 依照遞增排序</li>
+          <li><code>letters</code> 至少包含兩個不同的字母</li>
+          <li><code>target</code> 是小寫英文字母</li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>我的做法是用最直觀的線性掃描：</p>
+        <ol>
+          <li>先處理「環狀」的特例：如果 <code>target</code> 大於等於最後一個字母，那答案一定回到第一個字母</li>
+          <li>否則就從左到右掃描 <code>letters</code>，第一個滿足 <code>a &gt; target</code> 的字母就是答案（因為陣列已排序）</li>
+        </ol>
+        <p>這樣做的重點是：</p>
+        <ul>
+          <li>排序保證「第一個大於 target 的字母」就是最小的那個</li>
+        </ul>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>letters</code>：排序後的字元陣列</li>
+          <li><code>target</code>：要比較的目標字元</li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+        <h3>1. 先判斷是否需要環狀回到開頭</h3>
+        <ul>
+          <li>如果 <code>letters[n - 1] &lt;= target</code>
+            <ul>
+              <li>代表整個陣列裡最大的字母都沒有比 <code>target</code> 大</li>
+              <li>所以答案一定是 <code>letters[0]</code></li>
+            </ul>
+          </li>
+        </ul>
+        <hr />
+
+        <h3>2. 從左到右找第一個大於 <code>target</code> 的字母</h3>
+        <ul>
+          <li>依序掃描每個字母 <code>a</code></li>
+          <li>只要遇到 <code>a &gt; target</code>：
+            <ul>
+              <li>直接回傳 <code>a</code></li>
+              <li>因為它一定是「最小的可行答案」（排序性質）</li>
+            </ul>
+          </li>
+        </ul>
+        <hr />
+
+        <h3>3. 保底回傳</h3>
+        <ul>
+          <li>理論上前面已經處理完所有情況</li>
+          <li>最後 <code>return letters[0]</code> 是保底寫法（避免編譯器警告 / 防呆）</li>
+        </ul>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    char nextGreatestLetter(vector&lt;char&gt;&amp; letters, char target) {
+        int n = letters.size();
+        if (letters[n - 1] &lt;= target) {
+            return letters[0];
+        }
+        for (char a : letters) {
+            if (a &gt; target) {
+                return a;
+            }
+        }
+        return letters[0];
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/find-smallest-letter-greater-than-target/description/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-01-31</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value">
+            <span class="post-tags">
+              <span class="post-tag">Array</span>
+              <span class="post-tag">Binary Search</span>
+              <span class="post-tag">Easy</span>
+            </span>
+          </span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/all%20problems/744-find-smallest-letter-greater-than-target.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>

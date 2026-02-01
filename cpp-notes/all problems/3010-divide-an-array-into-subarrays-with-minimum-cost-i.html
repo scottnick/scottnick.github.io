@@ -1,0 +1,202 @@
+<!-- all problems/3010-divide-an-array-into-subarrays-with-minimum-cost-i.html: 全部題單文章 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3010. Divide an Array Into Subarrays With Minimum Cost I</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+               width="18" height="18" aria-hidden="true" focusable="false"
+               style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="index.html">All problems</a>
+      <span aria-hidden="true">/</span>
+      <span>3010. Divide an Array Into Subarrays With Minimum Cost I</span>
+    </nav>
+
+    <section class="hero">
+      <h1>3010. Divide an Array Into Subarrays With Minimum Cost I</h1>
+      <p><strong>練習日期：</strong>2026-02-01</p>
+      <p><strong>難度：</strong>Easy</p>
+      <p><strong>類型：</strong>Array、Greedy</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給你一個長度為 <code>n</code> 的整數陣列 <code>nums</code>。</p>
+        <p>定義一個陣列的 <strong>代價（cost）</strong> 為它的 <strong>第一個元素</strong>。</p>
+        <p>例如：</p>
+        <ul>
+          <li><code>[1,2,3]</code> 的代價是 <code>1</code></li>
+          <li><code>[3,4,1]</code> 的代價是 <code>3</code></li>
+        </ul>
+        <p>你需要把 <code>nums</code> <strong>切成 3 個連續且互不重疊</strong> 的子陣列（也就是用兩個切點把陣列分成三段，每段都要非空）。</p>
+        <p>請回傳這三個子陣列的 <strong>代價總和最小值</strong>。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>3 &lt;= n &lt;= 50</code></li>
+          <li><code>1 &lt;= nums[i] &lt;= 50</code></li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>這題切成三段後，三個子陣列的代價會是：</p>
+        <ul>
+          <li>第一段的代價一定是 <code>nums[0]</code>（因為第一段一定從 index 0 開始）</li>
+          <li>第二段的代價是「第二段起點」那個位置的值</li>
+          <li>第三段的代價是「第三段起點」那個位置的值</li>
+        </ul>
+        <p>所以整題其實等價於：</p>
+        <p><strong>固定一定要拿 <code>nums[0]</code>，然後再從 <code>nums[1..]</code> 裡挑兩個不同位置當切點起點，讓它們的值總和最小。</strong></p>
+        <p>因此我只要在 <code>nums[1] ~ nums[n-1]</code> 中找出 <strong>最小值</strong>與<strong>第二小值</strong>，答案就是：
+          <code>nums[0] + 最小值 + 第二小值</code></p>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>m</code>：<code>str1</code> 長度（你的程式中用 <code>m = str1.size()</code>；此題用不到）</li>
+          <li><code>n</code>：陣列 <code>nums</code> 的長度（你的程式中 <code>int n = nums.size();</code>）</li>
+          <li><code>fst</code>：在 <code>nums[1..]</code> 中掃到的「最小值」</li>
+          <li><code>snd</code>：在 <code>nums[1..]</code> 中掃到的「第二小值」</li>
+          <li><code>i</code>：掃描用索引（從 <code>1</code> 開始，因為 <code>nums[0]</code> 已固定必選）</li>
+        </ul>
+        <blockquote>
+          <p>你把 <code>fst</code> 初始設成 <code>70</code>、<code>snd</code> 設成 <code>100</code>，是利用題目 <code>nums[i] &lt;= 50</code>，確保一開始一定會被更新（也可以用 <code>INT_MAX</code> 更通用）。</p>
+        </blockquote>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+        <h3>1. 固定第一段代價</h3>
+        <ul>
+          <li>第一段一定從 <code>0</code> 開始，所以代價必定包含 <code>nums[0]</code></li>
+          <li>之後只需要處理「剩下兩段的起點值怎麼選最小」</li>
+        </ul>
+        <hr />
+
+        <h3>2. 在 <code>nums[1..]</code> 找最小與次小</h3>
+        <p>我從 <code>i = 1</code> 掃到結尾，維護兩個值：</p>
+        <ul>
+          <li>如果 <code>nums[i] &lt; fst</code>
+            <ul>
+              <li>代表出現新的最小值</li>
+              <li>原本的 <code>fst</code> 會被擠到第二小，所以：</li>
+              <li><code>snd = fst</code></li>
+              <li><code>fst = nums[i]</code></li>
+            </ul>
+          </li>
+          <li>否則如果 <code>nums[i] &lt; snd</code>
+            <ul>
+              <li>代表它介於最小與第二小之間</li>
+              <li>更新：<code>snd = nums[i]</code></li>
+            </ul>
+          </li>
+        </ul>
+        <hr />
+
+        <h3>3. 回傳最小總代價</h3>
+        <p>最後答案就是：</p>
+        <ul>
+          <li><code>nums[0] + fst + snd</code></li>
+        </ul>
+        <p>因為 <code>fst</code>、<code>snd</code> 對應到第二段、第三段的起點值（兩個切點），能讓總和最小。</p>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    int minimumCost(vector&lt;int&gt;&amp; nums) {
+        int fst = 70, snd = 100;
+        for (int i = 1; i &lt; nums.size(); i++) {
+            if (nums[i] &lt; fst) {
+                snd = fst;
+                fst = nums[i];
+            } else if (nums[i] &lt; snd) {
+                snd = nums[i];
+            }
+        }
+        return nums[0] + fst + snd;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/divide-an-array-into-subarrays-with-minimum-cost-i/description/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-02-01</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value">
+            <span class="post-tags">
+              <span class="post-tag">Array</span>
+              <span class="post-tag">Greedy</span>
+              <span class="post-tag">Easy</span>
+            </span>
+          </span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/all%20problems/3010-divide-an-array-into-subarrays-with-minimum-cost-i.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
