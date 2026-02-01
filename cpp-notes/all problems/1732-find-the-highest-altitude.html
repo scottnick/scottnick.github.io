@@ -1,0 +1,220 @@
+<!-- all problems/1732-find-the-highest-altitude.html: 全部題單文章 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>1732. Find the Highest Altitude</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+               width="18" height="18" aria-hidden="true" focusable="false"
+               style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="index.html">All problems</a>
+      <span aria-hidden="true">/</span>
+      <span>1732. Find the Highest Altitude</span>
+    </nav>
+
+    <section class="hero">
+      <h1>1732. Find the Highest Altitude</h1>
+      <p><strong>練習日期：</strong>2026-01-31</p>
+      <p><strong>難度：</strong>Easy</p>
+      <p><strong>類型：</strong>Array、Prefix Sum</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#why">💡 為什麼這樣做是正確的？</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>一位騎士從海拔 <code>0</code> 開始騎自行車。</p>
+        <p>給定一個整數陣列 <code>gain</code>，其中 <code>gain[i]</code> 代表從第 <code>i</code> 個點騎到第 <code>i + 1</code> 個點時，海拔的變化量。</p>
+        <p>請你回傳在整段騎行過程中，<strong>所能到達的最高海拔高度</strong>。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>1 &lt;= gain.length &lt;= 100</code></li>
+          <li><code>-100 &lt;= gain[i] &lt;= 100</code></li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>這題本質上就是在做一個「<strong>前綴和（prefix sum）</strong>」的過程：</p>
+        <ul>
+          <li>從海拔 <code>0</code> 開始</li>
+          <li>依序把每一段的高度變化 <code>gain[i]</code> 加上去</li>
+          <li>在過程中隨時記錄「目前最高的海拔」</li>
+        </ul>
+        <p>因為題目只在乎「最高到過哪裡」，</p>
+        <p>所以我們不需要存下所有高度，只要邊走邊更新最大值即可。</p>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>gain</code>：每一段路程的高度變化量</li>
+          <li><code>now</code>：
+            <ul>
+              <li>目前所在位置的海拔高度</li>
+              <li>初始為 <code>0</code></li>
+            </ul>
+          </li>
+          <li><code>ans</code>：
+            <ul>
+              <li>到目前為止出現過的最高海拔</li>
+              <li>初始為 <code>0</code></li>
+            </ul>
+          </li>
+          <li><code>i</code>：用來掃描 <code>gain</code> 陣列的索引</li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+
+        <h3>第一步：初始化高度</h3>
+        <ul>
+          <li><code>now = 0</code>
+            <ul>
+              <li>代表起點的海拔高度</li>
+            </ul>
+          </li>
+          <li><code>ans = 0</code>
+            <ul>
+              <li>因為起點本身也是一個可能的最高點</li>
+            </ul>
+          </li>
+        </ul>
+        <hr />
+
+        <h3>第二步：依序累加高度變化</h3>
+        <p>從左到右掃描 <code>gain</code>：</p>
+        <ul>
+          <li>每一輪：
+            <ul>
+              <li><code>now += gain[i]</code>
+                <ul>
+                  <li>→ 更新目前的海拔高度</li>
+                </ul>
+              </li>
+              <li><code>ans = max(ans, now)</code>
+                <ul>
+                  <li>→ 如果現在高度比之前都高，就更新答案</li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+        <p>這樣可以確保：</p>
+        <ul>
+          <li>所有經過的高度都被考慮過</li>
+          <li><code>ans</code> 永遠是目前為止的最高值</li>
+        </ul>
+        <hr />
+
+        <h3>第三步：回傳最高海拔</h3>
+        <ul>
+          <li>迴圈結束後</li>
+          <li><code>ans</code> 就是整趟騎行中能到達的最高海拔</li>
+          <li>直接回傳即可</li>
+        </ul>
+
+        <h2 id="why">💡 為什麼這樣做是正確的？</h2>
+        <ul>
+          <li>高度變化是「累積性」的 → 適合用前綴和</li>
+          <li>題目只要最大值，不需要保存整個高度序列</li>
+          <li>時間複雜度 <code>O(n)</code>、空間複雜度 <code>O(1)</code></li>
+          <li>寫法直觀、好理解，也很符合題意</li>
+        </ul>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    int largestAltitude(vector&lt;int&gt;&amp; gain) {
+        int now = 0;
+        int ans = 0;
+        for (int i = 0; i &lt; gain.size(); i++) {
+            now += gain[i];
+            ans = max(ans, now);
+        }
+        return ans;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/find-the-highest-altitude/description/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-01-31</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value">
+            <span class="post-tags">
+              <span class="post-tag">Array</span>
+              <span class="post-tag">Prefix Sum</span>
+              <span class="post-tag">Easy</span>
+            </span>
+          </span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/all%20problems/1732-find-the-highest-altitude.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
