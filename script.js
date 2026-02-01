@@ -574,8 +574,10 @@
       const relatedCountInfo = document.getElementById('relatedCountInfo');
 
       function render() {
-        const query = toSearchKey(searchInput?.value);
-        let list = categoryItems.filter((item) => !query || toSearchKey(item.title).includes(query));
+        const queryKey = toSearchKey(searchInput?.value);
+        let list = categoryItems.filter(
+          (item) => !queryKey || toSearchKey(item.title).includes(queryKey)
+        );
         list = sortItems(list);
 
         grid.innerHTML = '';
@@ -600,14 +602,14 @@
 
         if (!relatedSection || !relatedList) return;
 
-        if (!query) {
+        if (!queryKey) {
           relatedSection.classList.add('hidden');
           relatedList.innerHTML = '';
           if (relatedCountInfo) relatedCountInfo.textContent = '';
           return;
         }
 
-        let related = allPosts.filter((post) => toSearchKey(post.title).includes(query));
+        let related = allPosts.filter((post) => toSearchKey(post.title).includes(queryKey));
 
         related = sortItems(
           related.map((post) => ({
@@ -677,15 +679,15 @@
     try {
       const categoryData = await getCategoryIndex();
       const categories = categoryData.index || {};
-      const scopedPosts = applyScopeFilter(categories[categoryName] || []);
+      const categoryAllPosts = applyScopeFilter(categories[categoryName] || []);
       const searchInput = document.getElementById('searchInput');
 
-      const totalAll = scopedPosts.length;
+      const totalAll = categoryAllPosts.length;
 
       function render() {
-        const query = toSearchKey(searchInput?.value);
-        let listItems = scopedPosts
-          .filter((post) => !query || toSearchKey(post.title).includes(query))
+        const queryKey = toSearchKey(searchInput?.value);
+        let listItems = categoryAllPosts
+          .filter((post) => !queryKey || toSearchKey(post.title).includes(queryKey))
           .map((post) => ({
             title: post.title,
             date: post.date,
