@@ -1,0 +1,245 @@
+<!-- all problems/1207-unique-number-of-occurrences.html: 全部題單文章 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>1207. Unique Number of Occurrences</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+               width="18" height="18" aria-hidden="true" focusable="false"
+               style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="index.html">All problems</a>
+      <span aria-hidden="true">/</span>
+      <span>1207. Unique Number of Occurrences</span>
+    </nav>
+
+    <section class="hero">
+      <h1>1207. Unique Number of Occurrences</h1>
+      <p><strong>練習日期：</strong>2026-01-31</p>
+      <p><strong>難度：</strong>Easy</p>
+      <p><strong>類型：</strong>Array、Hash Table、Sorting</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給定一個整數陣列 <code>arr</code>，請判斷每個不同整數在陣列中出現的次數是否都「互不相同」。</p>
+        <ul>
+          <li>若所有不同整數的出現次數都不重複，回傳 <code>true</code></li>
+          <li>否則回傳 <code>false</code></li>
+        </ul>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>1 &lt;= arr.length &lt;= 1000</code></li>
+          <li><code>-1000 &lt;= arr[i] &lt;= 1000</code></li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>我的做法分成兩段：</p>
+        <ol>
+          <li><strong>先排序 <code>arr</code>，把相同數字集中在一起</strong>
+            <ul>
+              <li>這樣我就可以用一次掃描，把每個數字的出現次數算出來</li>
+              <li>並把每個數字的「出現次數」存到 <code>occ</code> 裡</li>
+            </ul>
+          </li>
+          <li><strong>再檢查 <code>occ</code> 裡的次數是否有重複</strong>
+            <ul>
+              <li>我把 <code>occ</code> 再排序一次</li>
+              <li>如果排序後有相鄰的兩個值一樣，代表有重複次數 → 回傳 <code>false</code></li>
+              <li>否則全部都不同 → 回傳 <code>true</code></li>
+            </ul>
+          </li>
+        </ol>
+        <p>這樣的好處是：</p>
+        <p>我完全不用 hash table，也能靠排序 + 線性掃描完成「計數」與「去重檢查」。</p>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>occ</code>：存每個不同數字的出現次數（例如某個值出現 3 次，就 push 3）</li>
+          <li><code>now</code>：
+            <ul>
+              <li><strong>第一段</strong>：記錄目前正在統計的數字值（用來判斷是否換數字）</li>
+              <li><strong>第二段</strong>：記錄 <code>occ</code> 排序後上一個出現次數（用來檢查是否重複）</li>
+            </ul>
+          </li>
+          <li><code>count</code>：目前這個數字累積出現了幾次</li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+
+        <h3>第一步：排序 <code>arr</code></h3>
+        <ul>
+          <li><code>sort(arr.begin(), arr.end());</code></li>
+          <li>讓相同數字排在一起，方便直接統計連續段長度</li>
+        </ul>
+        <hr />
+
+        <h3>第二步：掃描排序後的 <code>arr</code>，把每個數字的出現次數存進 <code>occ</code></h3>
+        <p>我用 <code>now</code> + <code>count</code> 來做「分段統計」：</p>
+
+        <h4>情況一：遇到新數字（<code>now != i</code>）</h4>
+        <ul>
+          <li>代表前一個數字的統計結束</li>
+          <li>把前一段的 <code>count</code> 放進 <code>occ</code></li>
+          <li>然後開始統計新數字：<code>count = 1</code>，<code>now = i</code></li>
+        </ul>
+
+        <h4>情況二：還是同一個數字（<code>now == i</code>）</h4>
+        <ul>
+          <li>代表還在同一段裡</li>
+          <li><code>count++</code> 繼續累加出現次數</li>
+        </ul>
+
+        <p>最後因為 for 迴圈結束時，最後一段還沒被 push，所以我用：</p>
+        <ul>
+          <li><code>if (count) occ.push_back(count);</code></li>
+        </ul>
+        <p>把最後一段補進去。</p>
+        <hr />
+
+        <h3>第三步：排序 <code>occ</code>，檢查出現次數是否重複</h3>
+        <ul>
+          <li>先 <code>sort(occ.begin(), occ.end());</code></li>
+          <li>然後掃描 <code>occ</code>，檢查是否出現相鄰重複：</li>
+        </ul>
+
+        <h4>如果 <code>now == j</code></h4>
+        <ul>
+          <li>代表這個次數和上一個次數一樣（重複）</li>
+          <li>直接回傳 <code>false</code></li>
+        </ul>
+
+        <h4>否則</h4>
+        <ul>
+          <li>更新 <code>now = j</code>，繼續檢查下一個</li>
+        </ul>
+
+        <p>全部掃完都沒重複，就回傳 <code>true</code>。</p>
+        <hr />
+
+        <h3>💡 為什麼「排序 occ 後看相鄰」就夠了？</h3>
+        <ul>
+          <li>若某個次數重複，例如 <code>2</code> 出現兩次</li>
+          <li>排序後它們一定會排在一起</li>
+          <li>所以只要檢查相鄰元素是否相同，就能抓到重複次數</li>
+        </ul>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    bool uniqueOccurrences(vector&lt;int&gt;&amp; arr) {
+        vector&lt;int&gt; occ;
+        int now = 10000, count = 0;
+        sort(arr.begin(), arr.end());
+        for (int i : arr) {
+            if (now != i) {
+                occ.push_back(count);
+                count = 1;
+                now = i;
+            } else {
+                count++;
+            }
+        }
+        if (count) {
+            occ.push_back(count);
+        }
+        sort(occ.begin(), occ.end());
+        now = 10000;
+        for (int j : occ) {
+            if (now == j) {
+                return false;
+            }
+            now = j;
+        }
+        return true;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/unique-number-of-occurrences/description/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-01-31</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value">
+            <span class="post-tags">
+              <span class="post-tag">Array</span>
+              <span class="post-tag">Hash Table</span>
+              <span class="post-tag">Sorting</span>
+              <span class="post-tag">Easy</span>
+            </span>
+          </span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/all%20problems/1207-unique-number-of-occurrences.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
