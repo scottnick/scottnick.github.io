@@ -1,0 +1,69 @@
+<!-- contests/biweekly-contest-175.html: Biweekly Contest 175 題單 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Biweekly Contest 175</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body>
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+               width="18" height="18" aria-hidden="true" focusable="false"
+               style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="index.html">Contests</a>
+      <span aria-hidden="true">/</span>
+      <span>Biweekly Contest 175</span>
+    </nav>
+
+    <section class="hero">
+      <h1>Biweekly Contest 175</h1>
+      <p>上週沒有準時參加到比賽（忘記了 😅），今天先用了行事曆提醒自己，是有準時參加 LeetCode 比賽的。</p>
+      <p class="spacer" aria-hidden="true">&nbsp;</p>
+      <p>今天題目我覺得第一題一樣順順的，在 15 分鐘左右 AC，就是寫 vector 跟 if 而已。</p>
+      <p>然後第二題比較麻煩，非常偏數學，我在想上界的時候卡了很久，原本直接用 count++ 的方式做，結果 TLE。最後是先計算上下界（上界隨便壓一個），再利用二分搜來做這題，最後成功 AC～～</p>
+      <img class="contest-photo" src="biweekly-175-problem2-ac.png" alt="Biweekly Contest 175 第二題 AC 截圖">
+      <p class="spacer" aria-hidden="true">&nbsp;</p>
+      <p>第三題居然是位元 AND 的問題，而且我一開始沒注意到它是要嚴格遞增的序列，而且不用連續，所以我就不能像迴文那樣架一個二維 vector 來 DP，最後就直接放棄了。</p>
+      <p class="spacer" aria-hidden="true">&nbsp;</p>
+      <p>第四題魔王 hard 完全沒做 😔</p>
+      <p class="spacer" aria-hidden="true">&nbsp;</p>
+      <p>總之今天的成績一樣是前兩題，算是平常發揮。只是今天在第二題一樣很手癢按了好幾次 submit，結果都是 WA，直接領了不少加時懲罰，之後要特別注意這個壞習慣……</p>
+      <img class="contest-photo" src="biweekly-175-ranking.png" alt="Biweekly Contest 175 排名截圖">
+      <p>感覺要繼續加油到可以嘗試做出第三題🙂</p>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
