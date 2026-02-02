@@ -1,6 +1,6 @@
 {
-  "buildId": "20260202093520",
-  "generatedAt": "2026-02-02T09:35:20.773827Z",
+  "buildId": "20260202095701",
+  "generatedAt": "2026-02-02T09:57:05.098757118Z",
   "posts": [
     {
       "path": "courses.html",
@@ -258,6 +258,24 @@
       "folder": "cpp-notes/contests/weekly-contest-487"
     },
     {
+      "path": "cpp-notes/contests/weekly-contest-487/q4-longest-alternating-subarray-after-removing-at-most-one-element.html",
+      "title": "Q4. Longest Alternating Subarray After Removing At Most One Element",
+      "date": "2026-02-01",
+      "tags": [
+        "Weekly Contest 487"
+      ],
+      "folder": "cpp-notes/contests/weekly-contest-487"
+    },
+    {
+      "path": "cpp-notes/contests/weekly-contest-487/q3-design-ride-sharing-system.html",
+      "title": "Q3. Design Ride Sharing System",
+      "date": "2026-02-01",
+      "tags": [
+        "Weekly Contest 487"
+      ],
+      "folder": "cpp-notes/contests/weekly-contest-487"
+    },
+    {
       "path": "cpp-notes/contests/weekly-contest-487/q1-count-monobit-integers.html",
       "title": "Q1. Count Monobit Integers",
       "date": "2026-02-01",
@@ -448,6 +466,26 @@
       "tags": [
         "Weekly Contest 487",
         "Medium"
+      ],
+      "folder": "cpp-notes/all problems"
+    },
+    {
+      "path": "cpp-notes/all%20problems/3829-design-ride-sharing-system.html",
+      "title": "3829. Design Ride Sharing System",
+      "date": "2026-02-01",
+      "tags": [
+        "Weekly Contest 487",
+        "Medium"
+      ],
+      "folder": "cpp-notes/all problems"
+    },
+    {
+      "path": "cpp-notes/all%20problems/3830-longest-alternating-subarray-after-removing-at-most-one-element.html",
+      "title": "3830. Longest Alternating Subarray After Removing At Most One Element",
+      "date": "2026-02-01",
+      "tags": [
+        "Weekly Contest 487",
+        "Hard"
       ],
       "folder": "cpp-notes/all problems"
     },
