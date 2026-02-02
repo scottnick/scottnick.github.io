@@ -1,0 +1,235 @@
+<!-- leetcode75/649-dota2-senate.html: LeetCode 75 文章 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>649. Dota2 Senate</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+               width="18" height="18" aria-hidden="true" focusable="false"
+               style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="../leetcode75/index.html">LeetCode 75</a>
+      <span aria-hidden="true">/</span>
+      <span>649. Dota2 Senate</span>
+    </nav>
+
+    <section class="hero">
+      <h1>649. Dota2 Senate</h1>
+      <p><strong>練習日期：</strong>2026-02-01</p>
+      <p><strong>難度：</strong>Medium</p>
+      <p><strong>類型：</strong>Greedy、Queue、Simulation</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>Dota2 參議院由兩個陣營的參議員組成：Radiant 與 Dire。現在參議院想要決定是否要對 Dota2 遊戲做出改動。投票採用「以輪為單位」的流程，在每一輪中，每位參議員都可以行使下列兩種權利中的其中一種：</p>
+        <ol>
+          <li><strong>禁止一位參議員的權利</strong>：讓另一位參議員在這一輪以及之後所有輪次中失去所有權利。</li>
+          <li><strong>宣布勝利</strong>：如果某位參議員發現仍然擁有投票權利的參議員全部都屬於同一個陣營，他可以宣布勝利並決定遊戲改動。</li>
+        </ol>
+        <p>給你一個字串 <code>senate</code> 代表每位參議員所屬的陣營：</p>
+        <p><code>'R'</code> 代表 Radiant，<code>'D'</code> 代表 Dire。若有 <code>n</code> 位參議員，則 <code>senate.length == n</code>。</p>
+        <p>投票流程會依照字串順序從第一位參議員走到最後一位參議員，並且會持續進行直到投票結束。所有已失去權利的參議員在流程中會被跳過。</p>
+        <p>假設每位參議員都足夠聰明，會為自己的陣營採取最佳策略。請你預測最後哪個陣營會宣布勝利。輸出應為 <code>"Radiant"</code> 或 <code>"Dire"</code>。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>n == senate.length</code></li>
+          <li><code>1 &lt;= n &lt;= 10^4</code></li>
+          <li><code>senate[i]</code> 只會是 <code>'R'</code> 或 <code>'D'</code></li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>我的寫法是用「直接模擬」，每次都拿目前字串最前面的參議員來行動：</p>
+        <ul>
+          <li>如果最前面是 <code>R</code>：我就往後找<strong>第一個</strong> <code>D</code>，把那個 <code>D</code> 刪掉（代表被 ban），再把最前面的 <code>R</code> 也移掉，最後把 <code>R</code> 丟到字串尾端（代表下一輪又會出現）。</li>
+          <li>如果最前面是 <code>D</code>：同理，往後找第一個 <code>R</code> 來 ban，然後把自己移掉，再把 <code>D</code> 丟到尾端。</li>
+          <li>如果往後找不到對方陣營：</li>
+        </ul>
+        <ul>
+          <li>代表剩下的人全都是同一邊，當下就能直接宣布勝利。</li>
+        </ul>
+        <blockquote>
+          <p>這份 code 的「重點直覺」：</p>
+          <p><strong>每次輪到最前面的人，他會 ban 掉「接下來最早會遇到的敵方」</strong>，讓自己延續到下一輪。</p>
+        </blockquote>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>senate</code>：目前還在場上（尚未被刪掉）的參議員序列（用字串直接存）</li>
+          <li><code>n</code>：<code>senate.size()</code>（用來判斷最後一個字元 / 是否還有人）</li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+        <h3>1. 只要場上還不只 1 人，就持續模擬</h3>
+        <ul>
+          <li><code>while (senate.size() &gt; 1)</code></li>
+          <li>代表：只要還有可能互 ban，就繼續跑回合。</li>
+        </ul>
+
+        <hr />
+
+        <h3>2. 看最前面的參議員是哪一邊，決定要找誰來 ban</h3>
+        <ul>
+          <li>若 <code>senate.front() == 'R'</code>：往後找第一個 <code>'D'</code></li>
+          <li>否則（<code>'D'</code>）：往後找第一個 <code>'R'</code></li>
+        </ul>
+
+        <hr />
+
+        <h3>3. 找到敵方就「刪敵方 + 刪自己 + 自己排到最後」</h3>
+        <p>以最前面是 <code>R</code> 為例（<code>D</code> 同理）：</p>
+        <ul>
+          <li>找到第一個 <code>'D'</code>：</li>
+        </ul>
+        <ul>
+          <li><code>erase(敵方位置)</code>：敵方被 ban</li>
+          <li><code>erase(begin())</code>：自己這次行動完離開隊首</li>
+          <li><code>push_back('R')</code>：自己進入下一輪（排到最後）</li>
+        </ul>
+
+        <hr />
+
+        <h3>4. 如果一路找不到敵方，直接回傳勝利方</h3>
+        <ul>
+          <li>代表整個字串剩下的人都同陣營，立即宣布勝利：</li>
+        </ul>
+        <ul>
+          <li>找不到 <code>'D'</code> → <code>"Radiant"</code></li>
+          <li>找不到 <code>'R'</code> → <code>"Dire"</code></li>
+        </ul>
+
+        <hr />
+
+        <h3>5. while 結束後（只剩 1 人），看他是誰就回傳誰</h3>
+        <ul>
+          <li>若 <code>senate == "R"</code> → <code>"Radiant"</code></li>
+          <li>否則 → <code>"Dire"</code></li>
+        </ul>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    string predictPartyVictory(string senate) {
+        while (senate.size() &gt; 1) {
+            if (senate.front() == 'R') {
+                for (int i = 1; i &lt; senate.size(); i++) {
+                    if (senate[i] == 'D') {
+                        senate.erase(senate.begin() + i);
+                        senate.erase(senate.begin());
+                        senate.push_back('R');
+                        break;
+                    }
+                    if (i == senate.size() - 1) {
+                        return "Radiant";
+                    }
+                }
+            } else {
+                for (int i = 1; i &lt; senate.size(); i++) {
+                    if (senate[i] == 'R') {
+                        senate.erase(senate.begin() + i);
+                        senate.erase(senate.begin());
+                        senate.push_back('D');
+                        break;
+                    }
+                    if (i == senate.size() - 1) {
+                        return "Dire";
+                    }
+                }
+            }
+        }
+        if (senate == "R") {
+            return "Radiant";
+        } else {
+            return "Dire";
+        }
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/dota2-senate/description/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-02-01</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value">
+            <span class="post-tags">
+              <span class="post-tag">Greedy</span>
+              <span class="post-tag">Queue</span>
+              <span class="post-tag">Simulation</span>
+              <span class="post-tag">Medium</span>
+            </span>
+          </span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/leetcode75/649-dota2-senate.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>

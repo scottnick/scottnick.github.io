@@ -1,6 +1,6 @@
 {
-  "buildId": "20260202102446",
-  "generatedAt": "2026-02-02T10:24:46.236474Z",
+  "buildId": "20260202151139",
+  "generatedAt": "2026-02-02T15:11:43.595440Z",
   "posts": [
     {
       "path": "courses.html",
@@ -691,6 +691,30 @@
         "Array",
         "Sliding Window",
         "Easy"
+      ],
+      "folder": "cpp-notes/leetcode75"
+    },
+    {
+      "path": "cpp-notes/leetcode75/933-number-of-recent-calls.html",
+      "title": "933. Number of Recent Calls",
+      "date": "2026-02-01",
+      "tags": [
+        "Design",
+        "Queue",
+        "Data Stream",
+        "Easy"
+      ],
+      "folder": "cpp-notes/leetcode75"
+    },
+    {
+      "path": "cpp-notes/leetcode75/649-dota2-senate.html",
+      "title": "649. Dota2 Senate",
+      "date": "2026-02-01",
+      "tags": [
+        "Greedy",
+        "Queue",
+        "Simulation",
+        "Medium"
       ],
       "folder": "cpp-notes/leetcode75"
     },
@@ -1487,6 +1511,30 @@
       "tags": [
         "Array",
         "Sliding Window",
+        "Easy"
+      ],
+      "folder": "cpp-notes/all problems"
+    },
+    {
+      "path": "cpp-notes/all%20problems/649-dota2-senate.html",
+      "title": "649. Dota2 Senate",
+      "date": "2026-02-01",
+      "tags": [
+        "Greedy",
+        "Queue",
+        "Simulation",
+        "Medium"
+      ],
+      "folder": "cpp-notes/all problems"
+    },
+    {
+      "path": "cpp-notes/all%20problems/933-number-of-recent-calls.html",
+      "title": "933. Number of Recent Calls",
+      "date": "2026-02-01",
+      "tags": [
+        "Design",
+        "Queue",
+        "Data Stream",
         "Easy"
       ],
       "folder": "cpp-notes/all problems"

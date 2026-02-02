@@ -1,0 +1,194 @@
+<!-- leetcode75/933-number-of-recent-calls.html: LeetCode 75 文章 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>933. Number of Recent Calls</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+               width="18" height="18" aria-hidden="true" focusable="false"
+               style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="../leetcode75/index.html">LeetCode 75</a>
+      <span aria-hidden="true">/</span>
+      <span>933. Number of Recent Calls</span>
+    </nav>
+
+    <section class="hero">
+      <h1>933. Number of Recent Calls</h1>
+      <p><strong>練習日期：</strong>2026-02-01</p>
+      <p><strong>難度：</strong>Easy</p>
+      <p><strong>類型：</strong>Design、Queue、Data Stream</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>你有一個 <code>RecentCounter</code> 類別，用來計算在某個時間範圍內「最近的請求數量」。</p>
+        <p>請你實作 <code>RecentCounter</code> 類別：</p>
+        <ul>
+          <li><code>RecentCounter()</code>：用 0 個最近請求初始化計數器。</li>
+          <li><code>int ping(int t)</code>：在時間 <code>t</code> 新增一個請求，其中 <code>t</code> 代表某個時間點（毫秒），並回傳在過去 <code>3000</code> 毫秒內（包含這個新請求）發生的請求數量。更精確地說，回傳在區間 <code>[t - 3000, t]</code>（包含兩端）內發生的請求數量。</li>
+        </ul>
+        <p>題目保證：每次呼叫 <code>ping</code> 時使用的 <code>t</code> 都會<strong>嚴格大於</strong>前一次呼叫的 <code>t</code>。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>1 &lt;= t &lt;= 10^9</code></li>
+          <li>每個測資會用嚴格遞增的 <code>t</code> 呼叫 <code>ping</code></li>
+          <li>每個測資最多呼叫 <code>ping</code> <code>10^4</code> 次</li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>我把這題當成一個固定長度的「滑動時間窗」：</p>
+        <ul>
+          <li>我只在乎最近 3000 毫秒內的呼叫時間點。</li>
+          <li>因為 <code>t</code> <strong>嚴格遞增</strong>，所以所有呼叫時間會「越來越大」地進來。</li>
+          <li>這種「新的時間一直加入、舊的時間一直過期」的結構，最適合用 <strong>queue（FIFO）</strong>：</li>
+        </ul>
+        <ul>
+          <li>新的 <code>t</code> 從尾端 <code>push</code></li>
+          <li>太舊的時間（小於 <code>t-3000</code>）會從前端 <code>pop</code></li>
+        </ul>
+        <blockquote>
+          <p><strong>核心不變式</strong>：queue 裡永遠只留著落在 <code>[t-3000, t]</code> 的所有呼叫時間。</p>
+          <p>所以 queue 的大小就是答案。</p>
+        </blockquote>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>calls</code>：<code>queue&lt;int&gt;</code>，存目前「還在 3000ms 視窗內」的所有呼叫時間（由小到大）</li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+        <h3>1. 先把本次呼叫時間放進 queue</h3>
+        <ul>
+          <li><code>calls.push(t)</code></li>
+          <li>代表：這次 <code>ping</code> 一定要被計入 <code>[t-3000, t]</code>。</li>
+        </ul>
+
+        <hr />
+
+        <h3>2. 把過期的時間從 queue 前端丟掉</h3>
+        <ul>
+          <li>只要 <code>calls.front() &lt; t - 3000</code> 就 <code>pop()</code></li>
+          <li>因為 <code>front()</code> 是目前最早的呼叫時間，如果它都過期了，那它前面也不可能還有有效的（queue 只會更舊）</li>
+        </ul>
+        <p>做完這段後，queue 裡就只剩下合法區間內的呼叫。</p>
+
+        <hr />
+
+        <h3>3. 回傳 queue 目前大小</h3>
+        <ul>
+          <li><code>return calls.size();</code></li>
+          <li>因為這就是區間 <code>[t-3000, t]</code> 的呼叫次數。</li>
+        </ul>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class RecentCounter {
+public:
+    queue&lt;int&gt; calls;
+    RecentCounter() {
+        
+    }
+
+    int ping(int t) {
+        calls.push(t);
+        while (calls.front() &lt; t - 3000) {
+            calls.pop();
+        }
+        return calls.size();
+    }
+};
+
+/**
+ * Your RecentCounter object will be instantiated and called as such:
+ * RecentCounter* obj = new RecentCounter();
+ * int param_1 = obj-&gt;ping(t);
+ */
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/number-of-recent-calls/description/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-02-01</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value">
+            <span class="post-tags">
+              <span class="post-tag">Design</span>
+              <span class="post-tag">Queue</span>
+              <span class="post-tag">Data Stream</span>
+              <span class="post-tag">Easy</span>
+            </span>
+          </span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/leetcode75/933-number-of-recent-calls.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
