@@ -1,0 +1,234 @@
+<!-- all problems/3823-reverse-letters-then-special-characters-in-a-string.html: 3823. Reverse Letters Then Special Characters in a String -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3823. Reverse Letters Then Special Characters in a String</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+               width="18" height="18" aria-hidden="true" focusable="false"
+               style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="index.html">All problems</a>
+      <span aria-hidden="true">/</span>
+      <span>3823. Reverse Letters Then Special Characters in a String</span>
+    </nav>
+
+    <section class="hero">
+      <h1>3823. Reverse Letters Then Special Characters in a String</h1>
+      <p><strong>練習日期：</strong>2026-01-31</p>
+      <p><strong>難度：</strong>Easy</p>
+      <p><strong>類型：</strong>Biweekly Contest 175</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>你會得到一個字串 <code>s</code>，其中只包含 <strong>小寫英文字母</strong> 與 <strong>特殊字元</strong>。</p>
+        <p>你的任務是依序做以下兩件事：</p>
+        <ol>
+          <li><strong>把所有小寫字母反轉</strong>，並把它們放回原本「字母所佔的位置」上。</li>
+          <li><strong>把所有特殊字元反轉</strong>，並把它們放回原本「特殊字元所佔的位置」上。</li>
+        </ol>
+        <p>完成上述兩次反轉後，回傳最後得到的字串。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>1 &lt;= s.length &lt;= 100</code></li>
+          <li><code>s</code> 只會包含小寫英文字母，以及 <code>"!@#$%^&amp;*()"</code> 這些特殊字元。</li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>這題其實是在做「<strong>同類型字元各自反轉，但位置類型不變</strong>」。</p>
+        <p>我的做法是：</p>
+        <ul>
+          <li>先掃一次字串，把
+            <ul>
+              <li>所有 <strong>字母的位置 index</strong> 收集到 <code>low</code></li>
+              <li>所有 <strong>特殊字元的位置 index</strong> 收集到 <code>spe</code></li>
+            </ul>
+          </li>
+          <li>先複製一份字串 <code>ns = s</code> 當作答案容器（保留原長度與所有位置）</li>
+          <li>接著分兩次把字元「倒著塞回去」：
+            <ol>
+              <li>對 <code>low</code>：用 <code>ns[low[nl-1-j]] = s[low[j]]</code>
+                代表「把第 j 個字母，放到倒數第 j 個字母的位置」</li>
+              <li>對 <code>spe</code>：用 <code>ns[spe[np-1-k]] = s[spe[k]]</code>
+                代表「把第 k 個特殊字元，放到倒數第 k 個特殊字元的位置」</li>
+            </ol>
+          </li>
+        </ul>
+        <p>這樣就能同時達成：</p>
+        <ul>
+          <li>字母只會回到字母的位置</li>
+          <li>特殊字元只會回到特殊字元的位置</li>
+          <li>兩群各自完成反轉</li>
+        </ul>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>n</code>：字串 <code>s</code> 的長度</li>
+          <li><code>low</code>：存放「小寫字母」在 <code>s</code> 裡的 index</li>
+          <li><code>spe</code>：存放「特殊字元」在 <code>s</code> 裡的 index</li>
+          <li><code>ns</code>：答案字串（先複製 <code>s</code>，再把反轉後的字元塞回去）</li>
+          <li><code>nl</code>：<code>low.size()</code>，字母的數量</li>
+          <li><code>np</code>：<code>spe.size()</code>，特殊字元的數量</li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+        <h3>1. 掃描字串，把位置分成兩類</h3>
+        <ul>
+          <li>走訪 <code>s</code> 的每個位置 <code>i</code></li>
+          <li>如果 <code>s[i]</code> 是 <code>'a' ~ 'z'</code>：
+            <ul>
+              <li>把 <code>i</code> 加進 <code>low</code></li>
+            </ul>
+          </li>
+          <li>否則：
+            <ul>
+              <li>把 <code>i</code> 加進 <code>spe</code></li>
+            </ul>
+          </li>
+        </ul>
+
+        <h3>2. 初始化答案字串</h3>
+        <ul>
+          <li>用 <code>string ns = s;</code>
+            先把所有字元原樣放著，等等只要「覆寫」要反轉的那些位置即可</li>
+        </ul>
+
+        <h3>3. 只反轉字母（回填到字母位置）</h3>
+        <ul>
+          <li><code>nl = low.size()</code></li>
+          <li>對 <code>j = 0 .. nl-1</code>：
+            <ul>
+              <li><code>ns[low[nl - 1 - j]] = s[low[j]]</code></li>
+            </ul>
+          </li>
+        </ul>
+
+        <h3>4. 只反轉特殊字元（回填到特殊字元位置）</h3>
+        <ul>
+          <li><code>np = spe.size()</code></li>
+          <li>對 <code>k = 0 .. np-1</code>：
+            <ul>
+              <li><code>ns[spe[np - 1 - k]] = s[spe[k]]</code></li>
+            </ul>
+          </li>
+        </ul>
+
+        <h3>5. 回傳結果</h3>
+        <ul>
+          <li>回傳 <code>ns</code></li>
+        </ul>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    string reverseByType(string s) {
+        int n = s.size();
+        vector&lt;int&gt; low;
+        vector&lt;int&gt; spe;
+        string ns = s;
+        for (int i = 0; i &lt; n; i++) {
+            if (s[i] &gt;= 'a' &amp;&amp; s[i] &lt;= 'z') {
+                low.push_back(i);
+            } else {
+                spe.push_back(i);
+            }
+        }
+        int nl = low.size();
+        for (int j = 0; j &lt; nl; j++) {
+            ns[low[nl - 1 - j]] = s[low[j]];
+        }
+        int np = spe.size();
+        for (int k = 0; k &lt; np; k++) {
+            ns[spe[np - 1 - k]] = s[spe[k]];
+        }
+        return ns;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/reverse-letters-then-special-characters-in-a-string/description/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-01-31</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value">
+            <span class="post-tags">
+              <span class="post-tag">Biweekly Contest 175</span>
+              <span class="post-tag">Easy</span>
+            </span>
+          </span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/all%20problems/3823-reverse-letters-then-special-characters-in-a-string.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>

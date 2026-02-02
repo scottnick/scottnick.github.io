@@ -1,6 +1,6 @@
 {
-  "buildId": "20260201000000",
-  "generatedAt": "2026-02-01T00:00:00.000000Z",
+  "buildId": "20260201000001",
+  "generatedAt": "2026-02-01T00:00:01.000000Z",
   "posts": [
     {
       "path": "courses.html",
@@ -1641,6 +1641,26 @@
         "Array",
         "Greedy",
         "Easy"
+      ],
+      "folder": "cpp-notes/all problems"
+    },
+    {
+      "path": "cpp-notes/all%20problems/3823-reverse-letters-then-special-characters-in-a-string.html",
+      "title": "3823. Reverse Letters Then Special Characters in a String",
+      "date": "2026-01-31",
+      "tags": [
+        "Biweekly Contest 175",
+        "Easy"
+      ],
+      "folder": "cpp-notes/all problems"
+    },
+    {
+      "path": "cpp-notes/all%20problems/3824-minimum-k-to-reduce-array-within-limit.html",
+      "title": "3824. Minimum K to Reduce Array Within Limit",
+      "date": "2026-02-01",
+      "tags": [
+        "Biweekly Contest 175",
+        "Medium"
       ],
       "folder": "cpp-notes/all problems"
     },
