@@ -396,7 +396,7 @@ main {
 
 .page-header .back-button {
   position: relative;
-  top: -40px;
+  top: 0;
 }
 
 .back-button:hover {
