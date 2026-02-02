@@ -849,7 +849,7 @@
       const categoryAllPosts = applyScopeFilter(categories[categoryName] || []);
       const searchInput = document.getElementById('searchInput');
       const categoryPager = document.getElementById('category-pager');
-      const PAGE_SIZE = 4;
+      const PAGE_SIZE = 10;
       let currentPage = 1;
       let activeJumpKey = null;
 
