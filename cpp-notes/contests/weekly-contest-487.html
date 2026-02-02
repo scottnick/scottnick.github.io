@@ -1,0 +1,73 @@
+<!-- contests/weekly-contest-487.html: Weekly Contest 487 題單 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Weekly Contest 487</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body>
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+               width="18" height="18" aria-hidden="true" focusable="false"
+               style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="index.html">Contests</a>
+      <span aria-hidden="true">/</span>
+      <span>Weekly Contest 487</span>
+    </nav>
+
+    <section class="hero">
+      <h1>Weekly Contest 487</h1>
+      <p>今天早上直接準時跳起來參加比賽，邊吃菠蘿麵包邊打 code 的部分 🤣🤣🤣</p>
+      <p class="spacer" aria-hidden="true">&nbsp;</p>
+      <p>第一題是二進位問題，數字不大，我就直接建表來做，順利 AC，沒有花太多時間（？</p>
+      <p class="spacer" aria-hidden="true">&nbsp;</p>
+      <p>第二題是策略問題，結果答案異常地簡單。我想了蠻久，不知道最佳策略是怎樣，到底要怎樣才能讓自己拿到最大？後來發現其實只要想到：只要對手行動，我的數值就只會變小，那還不如不讓他行動。</p>
+      <p>老實說這個策略我也不太確定是不是最佳，只能先用 submit 來測試，結果居然 AC 了＝＝傻爆眼的一行解。</p>
+      <img class="contest-photo" src="weekly-contest-487-problem2-ac.png" alt="Weekly Contest 487 第二題 AC 截圖">
+      <p>（結果後來發現題目 hint 也是這樣寫的...）</p>
+      <p class="spacer" aria-hidden="true">&nbsp;</p>
+      <p>第三題跟上週比賽的 hard 題目很像，就是那種超級麻煩的操作題。不過這次剛好可以用 deque 來做，所以我反而覺得不難，很意外地拿下第三題（如果是上次用 vector 的話應該就會 TLE，有點幸運）</p>
+      <p class="spacer" aria-hidden="true">&nbsp;</p>
+      <p>比較誇張的是第四題 Hard，是一題 DP 問題。一開始其實就有想法，而且發現題目不算難，只是邏輯跟變數有點多，需要花時間整理。最後在比賽結束前幾分鐘成功把它做出來了~~</p>
+      <img class="contest-photo" src="weekly-contest-487-problem4-ac.png" alt="Weekly Contest 487 第四題 AC 截圖">
+      <p class="spacer" aria-hidden="true">&nbsp;</p>
+      <p>我覺得今天這場比賽真的太意外了，沒想到可以一次把四題全部做出來 😮😮。而且今天在 run 的時候只要發現問題就直接修正，也沒有加時懲罰，真的非常意外也非常開心。不過我覺得也是因為今天的題目整體不難，剛好想到 dp 的方法才能這麼幸運 w</p>
+      <img class="contest-photo" src="weekly-contest-487-ranking.png" alt="Weekly Contest 487 排名截圖">
+      <p>之後要花點功夫在演算法上了，才有機會挑戰三、四題~~</p>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
