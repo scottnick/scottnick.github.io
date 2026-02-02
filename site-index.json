@@ -684,6 +684,28 @@
       "folder": "cpp-notes/leetcode75"
     },
     {
+      "path": "cpp-notes/leetcode75/643-maximum-average-subarray-i.html",
+      "title": "643. Maximum Average Subarray I",
+      "date": "2026-01-30",
+      "tags": [
+        "Array",
+        "Sliding Window",
+        "Easy"
+      ],
+      "folder": "cpp-notes/leetcode75"
+    },
+    {
+      "path": "cpp-notes/leetcode75/1456-maximum-number-of-vowels-in-a-substring-of-given-length.html",
+      "title": "1456. Maximum Number of Vowels in a Substring of Given Length",
+      "date": "2026-01-30",
+      "tags": [
+        "String",
+        "Sliding Window",
+        "Medium"
+      ],
+      "folder": "cpp-notes/leetcode75"
+    },
+    {
       "path": "cpp-notes/leetcode75/1004-max-consecutive-ones-iii.html",
       "title": "1004. Max Consecutive Ones III",
       "date": "2026-01-30",
@@ -1459,6 +1481,17 @@
       "folder": "cpp-notes/all problems"
     },
     {
+      "path": "cpp-notes/all%20problems/643-maximum-average-subarray-i.html",
+      "title": "643. Maximum Average Subarray I",
+      "date": "2026-01-30",
+      "tags": [
+        "Array",
+        "Sliding Window",
+        "Easy"
+      ],
+      "folder": "cpp-notes/all problems"
+    },
+    {
       "path": "cpp-notes/all%20problems/1877-minimize-maximum-pair-sum-in-array.html",
       "title": "1877. Minimize Maximum Pair Sum in Array",
       "date": "2026-01-24",
@@ -1641,6 +1674,17 @@
       "tags": [
         "Array",
         "Easy"
+      ],
+      "folder": "cpp-notes/all problems"
+    },
+    {
+      "path": "cpp-notes/all%20problems/1456-maximum-number-of-vowels-in-a-substring-of-given-length.html",
+      "title": "1456. Maximum Number of Vowels in a Substring of Given Length",
+      "date": "2026-01-30",
+      "tags": [
+        "String",
+        "Sliding Window",
+        "Medium"
       ],
       "folder": "cpp-notes/all problems"
     },
@@ -1861,8 +1905,8 @@
     "cpp-notes/top-interview-150/index.html": 22,
     "cpp-notes/grind75/index.html": 13,
     "cpp-notes/neetcode150/index.html": 15,
-    "cpp-notes/leetcode75/index.html": 26,
+    "cpp-notes/leetcode75/index.html": 28,
     "cpp-notes/contests/index.html": 19,
-    "cpp-notes/all%20problems/index.html": 70
+    "cpp-notes/all%20problems/index.html": 72
   }
 }
