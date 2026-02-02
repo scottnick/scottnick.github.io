@@ -1,0 +1,267 @@
+<!-- all problems/872-leaf-similar-trees.html: All problems 文章 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>872. Leaf-Similar Trees</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+               width="18" height="18" aria-hidden="true" focusable="false"
+               style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="index.html">All problems</a>
+      <span aria-hidden="true">/</span>
+      <span>872. Leaf-Similar Trees</span>
+    </nav>
+
+    <section class="hero">
+      <h1>872. Leaf-Similar Trees</h1>
+      <p><strong>練習日期：</strong>2026-02-01</p>
+      <p><strong>難度：</strong>Easy</p>
+      <p><strong>類型：</strong>Tree、Depth-First Search</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述（依 LeetCode 官網翻譯）</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述（依 LeetCode 官網翻譯）</h2>
+        <p>給定兩棵二元樹，分別由根節點 <code>root1</code> 與 <code>root2</code> 表示。</p>
+        <p>一棵二元樹的 <strong>葉節點序列（leaf value sequence）</strong> 定義如下：</p>
+        <ul>
+          <li>由左到右列出該樹中所有的葉節點值。</li>
+        </ul>
+        <p>如果兩棵樹的葉節點序列完全相同，請回傳 <code>true</code>；</p>
+        <p>否則回傳 <code>false</code>。</p>
+        <hr />
+
+        <h3>條件限制（依 LeetCode 官網）</h3>
+        <ul>
+          <li>每棵樹的節點數介於 <code>1</code> 到 <code>200</code> 之間</li>
+          <li><code>0 &lt;= Node.val &lt;= 200</code></li>
+        </ul>
+        <hr />
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>我的做法是把這題拆成兩個明確的步驟：</p>
+        <ol>
+          <li>分別對 <code>root1</code> 和 <code>root2</code> 做 DFS
+            <ul>
+              <li>只在遇到「葉節點」時，才把節點值存進對應的 vector</li>
+            </ul>
+          </li>
+          <li>最後比較兩棵樹得到的「葉節點序列」是否完全一致</li>
+        </ol>
+        <p>因為 DFS 本身就是「先左後右」，</p>
+        <p>所以葉節點被收集進 vector 的順序，自然就是題目要求的「由左到右」。</p>
+        <hr />
+
+        <h3>所有變數</h3>
+        <h4>類別成員</h4>
+        <ul>
+          <li><code>v1</code>：儲存 <code>root1</code> 的葉節點序列</li>
+          <li><code>v2</code>：儲存 <code>root2</code> 的葉節點序列</li>
+        </ul>
+
+        <h4>函式相關</h4>
+        <ul>
+          <li><code>find(TreeNode* root, int n)</code>
+            <ul>
+              <li><code>root</code>：目前 DFS 走到的節點</li>
+              <li><code>n</code>：
+                <ul>
+                  <li><code>1</code> → 表示正在處理第一棵樹，結果存進 <code>v1</code></li>
+                  <li><code>2</code> → 表示正在處理第二棵樹，結果存進 <code>v2</code></li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+          <li><code>r1</code>、<code>r2</code>：暫存葉節點的數值後再 push 進 vector</li>
+          <li><code>i</code>：最後比較兩個葉節點序列時使用的索引</li>
+        </ul>
+        <hr />
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+        <h3>1️⃣ DFS 收集葉節點（<code>find</code> 函式）</h3>
+        <h4>情況一：<code>root == nullptr</code></h4>
+        <ul>
+          <li>代表走到空節點</li>
+          <li>直接結束遞迴，避免錯誤</li>
+        </ul>
+        <hr />
+
+        <h4>情況二：目前節點是葉節點</h4>
+        <p>判斷條件：</p>
+        <pre><code>root-&gt;left == nullptr &amp;&amp; root-&gt;right == nullptr
+</code></pre>
+        <p>處理方式：</p>
+        <ul>
+          <li>若 <code>n == 1</code> → 將 <code>root-&gt;val</code> 存入 <code>v1</code></li>
+          <li>若 <code>n == 2</code> → 將 <code>root-&gt;val</code> 存入 <code>v2</code></li>
+        </ul>
+        <hr />
+
+        <h4>情況三：目前節點不是葉節點</h4>
+        <ul>
+          <li>繼續遞迴左子樹</li>
+          <li>再遞迴右子樹</li>
+        </ul>
+        <p>這樣可以確保葉節點的收集順序是「由左到右」。</p>
+        <hr />
+
+        <h3>2️⃣ 收集兩棵樹的葉節點序列</h3>
+        <ul>
+          <li><code>find(root1, 1)</code> → 收集第一棵樹的葉節點到 <code>v1</code></li>
+          <li><code>find(root2, 2)</code> → 收集第二棵樹的葉節點到 <code>v2</code></li>
+        </ul>
+        <hr />
+
+        <h3>3️⃣ 比較兩個葉節點序列</h3>
+        <h4>步驟一：比長度</h4>
+        <ul>
+          <li>若 <code>v1.size() != v2.size()</code>
+            → 葉節點數量不同，直接回傳 <code>false</code></li>
+        </ul>
+
+        <h4>步驟二：逐一比值</h4>
+        <ul>
+          <li>從左到右逐一比較</li>
+          <li>只要有任一位置的值不同 → 回傳 <code>false</code></li>
+        </ul>
+        <p>若全部相同，回傳 <code>true</code>。</p>
+        <hr />
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left),
+ * right(right) {}
+ * };
+ */
+class Solution {
+public:
+    vector&lt;int&gt; v1;
+    vector&lt;int&gt; v2;
+
+    void find(TreeNode* root, int n) {
+        if (root == nullptr) {
+            return;
+        }
+        if (root-&gt;left == nullptr &amp;&amp; root-&gt;right == nullptr) {
+            if (n == 1) {
+                v1.push_back(root-&gt;val);
+            } else {
+                v2.push_back(root-&gt;val);
+            }
+        } else {
+            find(root-&gt;left, n);
+            find(root-&gt;right, n);
+        }
+    }
+
+    bool leafSimilar(TreeNode* root1, TreeNode* root2) {
+        find(root1, 1);
+        find(root2, 2);
+
+        if (v1.size() != v2.size()) {
+            return false;
+        }
+        for (int i = 0; i &lt; v1.size(); i++) {
+            if (v1[i] != v2[i]) {
+                return false;
+            }
+        }
+        return true;
+    }
+};
+</code></pre>
+        <hr />
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p><a href="https://leetcode.com/problems/leaf-similar-trees/description/">https://leetcode.com/problems/leaf-similar-trees/description/</a></p>
+        <hr />
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-02-01</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value">
+            <span class="post-tags">
+              <span class="post-tag">Tree</span>
+              <span class="post-tag">Depth-First Search</span>
+              <span class="post-tag">Easy</span>
+            </span>
+          </span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/all%20problems/872-leaf-similar-trees.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>

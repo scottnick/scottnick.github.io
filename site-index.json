@@ -1,6 +1,6 @@
 {
-  "buildId": "20260202151139",
-  "generatedAt": "2026-02-02T15:11:43.595440Z",
+  "buildId": "20260202152715",
+  "generatedAt": "2026-02-02T15:27:18.545967Z",
   "posts": [
     {
       "path": "courses.html",
@@ -662,6 +662,30 @@
       "folder": "cpp-notes/leetcode75"
     },
     {
+      "path": "cpp-notes/leetcode75/104-maximum-depth-of-binary-tree.html",
+      "title": "104. Maximum Depth of Binary Tree",
+      "date": "2026-02-01",
+      "tags": [
+        "Tree",
+        "Depth-First Search",
+        "Breadth-First Search",
+        "Binary Tree",
+        "Easy"
+      ],
+      "folder": "cpp-notes/leetcode75"
+    },
+    {
+      "path": "cpp-notes/leetcode75/872-leaf-similar-trees.html",
+      "title": "872. Leaf-Similar Trees",
+      "date": "2026-02-01",
+      "tags": [
+        "Tree",
+        "Depth-First Search",
+        "Easy"
+      ],
+      "folder": "cpp-notes/leetcode75"
+    },
+    {
       "path": "cpp-notes/leetcode75/392-is-subsequence.html",
       "title": "392. Is Subsequence",
       "date": "2026-01-17",
@@ -1151,12 +1175,36 @@
       "folder": "cpp-notes/all problems"
     },
     {
+      "path": "cpp-notes/all%20problems/104-maximum-depth-of-binary-tree.html",
+      "title": "104. Maximum Depth of Binary Tree",
+      "date": "2026-02-01",
+      "tags": [
+        "Tree",
+        "Depth-First Search",
+        "Breadth-First Search",
+        "Binary Tree",
+        "Easy"
+      ],
+      "folder": "cpp-notes/all problems"
+    },
+    {
       "path": "cpp-notes/all%20problems/796-rotate-string.html",
       "title": "796. Rotate String",
       "date": "2026-01-06",
       "tags": [
         "String",
         "String Matching",
+        "Easy"
+      ],
+      "folder": "cpp-notes/all problems"
+    },
+    {
+      "path": "cpp-notes/all%20problems/872-leaf-similar-trees.html",
+      "title": "872. Leaf-Similar Trees",
+      "date": "2026-02-01",
+      "tags": [
+        "Tree",
+        "Depth-First Search",
         "Easy"
       ],
       "folder": "cpp-notes/all problems"
