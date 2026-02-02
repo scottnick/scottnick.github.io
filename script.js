@@ -265,58 +265,6 @@
     });
   }
 
-  function initBackButton() {
-    const hero = document.querySelector('main .hero');
-    if (!hero) return;
-    if (hero.querySelector('.back-button')) return;
-
-    const path = window.location.pathname;
-    const isArticlePage =
-      document.body.classList.contains('page-article') ||
-      path.includes('/cpp-notes/') ||
-      path.includes('/courses/') ||
-      path.includes('/home/');
-    if (!isArticlePage) return;
-
-    const title = hero.querySelector('h1');
-    if (!title) return;
-
-    let header = hero.querySelector('.page-header');
-    if (!header) {
-      header = document.createElement('div');
-      header.className = 'page-header';
-      hero.insertBefore(header, title);
-      header.appendChild(title);
-    }
-
-    const button = document.createElement('button');
-    button.type = 'button';
-    button.className = 'back-button';
-    button.setAttribute('aria-label', '返回上一頁');
-    button.innerHTML = `
-      <svg xmlns="http://www.w3.org/2000/svg"
-           viewBox="0 0 24 24"
-           width="20" height="20"
-           aria-hidden="true">
-        <path d="M15 18l-6-6 6-6"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"/>
-      </svg>
-    `;
-    button.addEventListener('click', () => {
-      if (window.history.length > 1) {
-        window.history.back();
-        return;
-      }
-      window.location.href = 'index.html';
-    });
-
-    header.appendChild(button);
-  }
-
   function initArticleToc() {
     const toc = document.querySelector('.article-toc');
     if (!toc) return;
@@ -1065,7 +1013,6 @@
     initNavToggle();
     initNoteTocToggle();
     initHeroSlideshow();
-    initBackButton();
     initRecentUpdates();
     initTimeline();
     updateAccordionCounts();
@@ -1074,6 +1021,7 @@
     initFilterInputs();
     initCategoriesPage();
     initCategoryPage();
+    // Back button is only rendered on category pages via markup.
     setActiveNav();
     initCodeHighlighting();
   });

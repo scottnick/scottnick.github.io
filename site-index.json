@@ -1735,6 +1735,24 @@
       "folder": "cpp-notes/contests/weekly-contest-486"
     },
     {
+      "path": "cpp-notes/contests/biweekly-contest-175/q1-reverse-letters-then-special-characters-in-a-string.html",
+      "title": "Q1. Reverse Letters Then Special Characters in a String",
+      "date": "2026-01-31",
+      "tags": [
+        "Biweekly Contest 175"
+      ],
+      "folder": "cpp-notes/contests/biweekly-contest-175"
+    },
+    {
+      "path": "cpp-notes/contests/biweekly-contest-175/q2-minimum-k-to-reduce-array-within-limit.html",
+      "title": "Q2. Minimum K to Reduce Array Within Limit",
+      "date": "2026-02-01",
+      "tags": [
+        "Biweekly Contest 175"
+      ],
+      "folder": "cpp-notes/contests/biweekly-contest-175"
+    },
+    {
       "path": "cpp-notes/contests/biweekly-contest-174/q1.html",
       "title": "Q1. Best Reachable Tower",
       "date": "2026-01-17",
@@ -1784,6 +1802,6 @@
     "cpp-notes/leetcode75/index.html": 20,
     "cpp-notes/neetcode150/index.html": 15,
     "cpp-notes/all%20problems/index.html": 56,
-    "cpp-notes/contests/index.html": 11
+    "cpp-notes/contests/index.html": 13
   }
 }
