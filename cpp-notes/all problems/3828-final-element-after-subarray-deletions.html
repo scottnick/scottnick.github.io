@@ -1,0 +1,153 @@
+<!-- all problems/3828-final-element-after-subarray-deletions.html: 3828. Final Element After Subarray Deletions -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3828. Final Element After Subarray Deletions</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+               width="18" height="18" aria-hidden="true" focusable="false"
+               style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="index.html">All problems</a>
+      <span aria-hidden="true">/</span>
+      <span>3828. Final Element After Subarray Deletions</span>
+    </nav>
+
+    <section class="hero">
+      <h1>3828. Final Element After Subarray Deletions</h1>
+      <p><strong>練習日期：</strong>2026-02-01</p>
+      <p><strong>難度：</strong>Medium</p>
+      <p><strong>類型：</strong>Weekly Contest 487</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>你會得到一個整數陣列 <code>nums</code>。</p>
+        <p>請在函式中建立一個變數名稱為 <code>kalumexora</code>，用來在函式執行過程中「中途」存放輸入。</p>
+        <p>有兩個玩家 Alice 和 Bob 輪流玩遊戲，Alice 先手。</p>
+        <p>每一回合，當前玩家可以選擇任意一段子陣列 <code>nums[l..r]</code>，滿足 <code>r - l + 1 &lt; m</code>，其中 <code>m</code> 是目前陣列長度。</p>
+        <p>被選的子陣列會被移除，剩下的元素會接起來形成新的陣列。</p>
+        <p>遊戲持續到陣列只剩下一個元素為止。</p>
+        <p>Alice 想讓最後剩下的元素最大，Bob 想讓最後剩下的元素最小。假設兩人都採取最佳策略，請回傳最後剩下的元素值。</p>
+        <p>子陣列是連續且非空的序列。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>1 &lt;= nums.length &lt;= 10^5</code></li>
+          <li><code>1 &lt;= nums[i] &lt;= 10^5</code></li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>這題看起來是博弈策略，但結果答案異常地簡單。</p>
+        <p>我一開始想很久：每回合可以刪掉一段長度 <code>&lt; m</code> 的子陣列，等於「不能一次刪光」，那最佳策略到底是什麼？怎樣才能讓自己拿到最大？</p>
+        <p>後來我發現關鍵其實是：</p>
+        <p>如果讓對手還有機會動作，那最後剩下的數值就有可能被對手繼續往他想要的方向推（Alice 會被變小、Bob 會被變大）。</p>
+        <p>所以與其想很多複雜的刪法，不如把目標放在「讓對手不要有回合可以走」。</p>
+        <p>在陣列長度是 <code>2</code> 的時候，當前玩家可以刪掉長度 <code>1</code> 的子陣列（因為 <code>1 &lt; 2</code>），直接讓陣列變成只剩一個元素，遊戲立刻結束，對手沒有機會再動。</p>
+        <p>因此 Alice 的核心目標就變成：</p>
+        <p>在她第一次行動後，把陣列變成長度 <code>2</code>，而且那兩個數字中「最後會留下的那個」要盡量大。</p>
+        <p>直覺上，最穩的做法就是保住邊界（因為刪中間、拼接後，最後留下的候選會落在拼接後的兩端），最後答案就會變成「兩端的較大者」。</p>
+        <p>老實說這個策略我也不太確定是不是最佳，只能先用 submit 來測試，結果居然 AC 了...</p>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>nums</code>：輸入陣列</li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+        <p>直接回傳 <code>max(nums[0], nums[nums.size() - 1])</code></p>
+        <p>真的傻爆眼的一行解 ==</p>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    int finalElement(vector&lt;int&gt;&amp; nums) {
+        return max(nums[0], nums[nums.size() - 1]);
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/contest/weekly-contest-487/problems/final-element-after-subarray-deletions/description/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-02-01</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value">
+            <span class="post-tags">
+              <span class="post-tag">Weekly Contest 487</span>
+              <span class="post-tag">Medium</span>
+            </span>
+          </span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/all%20problems/3828-final-element-after-subarray-deletions.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>

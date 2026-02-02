@@ -1,0 +1,183 @@
+<!-- all problems/3827-count-monobit-integers.html: 3827. Count Monobit Integers -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3827. Count Monobit Integers</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+               width="18" height="18" aria-hidden="true" focusable="false"
+               style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="index.html">All problems</a>
+      <span aria-hidden="true">/</span>
+      <span>3827. Count Monobit Integers</span>
+    </nav>
+
+    <section class="hero">
+      <h1>3827. Count Monobit Integers</h1>
+      <p><strong>練習日期：</strong>2026-02-01</p>
+      <p><strong>難度：</strong>Easy</p>
+      <p><strong>類型：</strong>Weekly Contest 487</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>你會得到一個整數 <code>n</code>。</p>
+        <p>如果一個整數的二進位表示法中，所有 bit 都相同，則稱它為 <strong>Monobit</strong>。</p>
+        <p>請回傳在區間 <code>[0, n]</code>（包含 0 與 n）中，Monobit 整數的數量。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>0 &lt;= n &lt;= 1000</code></li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>Monobit 的意思是「二進位表示裡全部都是同一種 bit」。</p>
+        <p>在 <code>0 &lt;= n &lt;= 1000</code> 這個範圍內，我直接把所有可能是 Monobit 的數字先標記出來，再去數 <code>[0, n]</code> 裡有幾個被標記。</p>
+        <p>在這個範圍中會出現的 Monobit 數字其實很少：</p>
+        <ul>
+          <li><code>0</code> 的二進位是 <code>"0"</code>，所有 bit 相同，所以是 Monobit</li>
+          <li><code>1</code> 的二進位是 <code>"1"</code>，所有 bit 相同，所以是 Monobit</li>
+          <li>其他 Monobit（全部都是 <code>1</code> 的那種）會長得像：
+            <ul>
+              <li><code>3  = (11)_2</code></li>
+              <li><code>7  = (111)_2</code></li>
+              <li><code>15 = (1111)_2</code></li>
+              <li>…</li>
+              <li>也就是 <code>2^k - 1</code></li>
+            </ul>
+          </li>
+        </ul>
+        <p>因此我用一個迴圈從 <code>3</code> 開始，不斷做 <code>i = 2*i + 1</code>，就會依序得到 <code>3, 7, 15, 31, ...</code>，把它們標記成 Monobit，直接建立一個表。</p>
+        <p>最後再從 <code>0</code> 到 <code>n</code> 掃一次，把被標記的數量加總就是答案。</p>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>mon</code>：長度 1001 的布林陣列，用來標記 <code>0..1000</code> 中哪些數是 Monobit</li>
+          <li><code>count</code>：統計 <code>[0, n]</code> 範圍內 Monobit 的個數</li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+        <h3>1. 先建立 Monobit 標記表</h3>
+        <ul>
+          <li>建立 <code>mon[0..1000]</code>，先全部設成 <code>false</code></li>
+          <li>把 <code>mon[0]</code>、<code>mon[1]</code> 設成 <code>true</code></li>
+          <li>從 <code>3</code> 開始，一直用 <code>i = 2*i + 1</code> 生成 <code>3, 7, 15, ...</code>，只要 <code>i &lt; 1001</code> 就把 <code>mon[i] = true</code></li>
+        </ul>
+
+        <h3>2. 統計 [0, n] 內有幾個被標記</h3>
+        <ul>
+          <li>從 <code>0</code> 掃到 <code>n</code></li>
+          <li>如果 <code>mon[j] == true</code>，就把 <code>count++</code></li>
+        </ul>
+
+        <h3>3. 回傳答案</h3>
+        <ul>
+          <li>回傳 <code>count</code></li>
+        </ul>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    int countMonobit(int n) {
+        vector&lt;bool&gt; mon(1001, false);
+        mon[0] = true;
+        mon[1] = true;
+        int count = 0;
+        for (int i = 3; i &lt; 1001; i = 2 * i + 1) {
+            mon[i] = true;
+        }
+        for (int j = 0; j &lt;= n; j++) {
+            if (mon[j]) {
+                count++;
+            }
+        }
+        return count;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/contest/weekly-contest-487/problems/count-monobit-integers/description/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-02-01</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value">
+            <span class="post-tags">
+              <span class="post-tag">Weekly Contest 487</span>
+              <span class="post-tag">Easy</span>
+            </span>
+          </span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/all%20problems/3827-count-monobit-integers.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
