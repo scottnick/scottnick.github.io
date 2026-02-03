@@ -1,0 +1,216 @@
+<!-- leetcode75/206-reverse-linked-list.html: LeetCode 75 文章 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>206. Reverse Linked List</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+               width="18" height="18" aria-hidden="true" focusable="false"
+               style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="../leetcode75/index.html">LeetCode 75</a>
+      <span aria-hidden="true">/</span>
+      <span>206. Reverse Linked List</span>
+    </nav>
+
+    <section class="hero">
+      <h1>206. Reverse Linked List</h1>
+      <p><strong>練習日期：</strong>2026-02-04</p>
+      <p><strong>難度：</strong>Easy</p>
+      <p><strong>類型：</strong>Linked List、Stack</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給你一個單向 linked list 的頭節點 <code>head</code>，請你把 linked list 反轉，並回傳反轉後的 linked list。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li>linked list 的節點數量在範圍 <code>[0, 5000]</code>。</li>
+          <li><code>-5000 &lt;= Node.val &lt;= 5000</code>。</li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>我的做法是分成兩段：</p>
+        <ol>
+          <li>
+            先走訪原本的 linked list，把每個節點的數值依序丟進 <code>stack</code>。
+            <ul>
+              <li>因為 <code>stack</code> 是後進先出，所以最後 <code>stack.top()</code> 會是原本 linked list 的最後一個值。</li>
+            </ul>
+          </li>
+          <li>
+            再用 <code>dummy</code> 當假頭、<code>tail</code> 當尾巴指標，從 <code>stack</code> 一個一個拿出來建新節點接到尾端。
+            <ul>
+              <li>這樣建出來的新 linked list 順序就會是反過來的。</li>
+            </ul>
+          </li>
+        </ol>
+        <p>最後回傳 <code>dummy.next</code>，就能得到反轉後的新 linked list。</p>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>head</code>：走訪原 linked list 用的指標（一路往後移動）</li>
+          <li><code>nums</code>：<code>stack&lt;int&gt;</code>，存放走訪到的所有節點數值</li>
+          <li><code>dummy</code>：答案 linked list 的假頭節點</li>
+          <li><code>tail</code>：答案 linked list 目前的尾巴指標（用來接新節點）</li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+        <h3>1. 把原 linked list 的值全部推進 stack</h3>
+        <ul>
+          <li>用 <code>while (head)</code> 走完整條串列</li>
+          <li>
+            每次：
+            <ul>
+              <li><code>nums.push(head-&gt;val)</code></li>
+              <li><code>head = head-&gt;next</code></li>
+            </ul>
+          </li>
+        </ul>
+
+        <hr />
+
+        <h3>2. 建立答案串列的假頭與尾巴指標</h3>
+        <ul>
+          <li><code>ListNode dummy(0);</code></li>
+          <li><code>ListNode* tail = &amp;dummy;</code></li>
+        </ul>
+
+        <hr />
+
+        <h3>3. 從 stack 取值，依序建立新節點接到尾端</h3>
+        <ul>
+          <li>
+            <code>while (!nums.empty())</code>：
+            <ul>
+              <li><code>tail-&gt;next = new ListNode(nums.top());</code></li>
+              <li><code>tail = tail-&gt;next;</code></li>
+              <li><code>nums.pop();</code></li>
+            </ul>
+          </li>
+        </ul>
+
+        <hr />
+
+        <h3>4. 回傳反轉後的新串列頭</h3>
+        <ul>
+          <li><code>return dummy.next;</code></li>
+        </ul>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* reverseList(ListNode* head) {
+        stack&lt;int&gt; nums;
+        while (head) {
+            nums.push(head-&gt;val);
+            head = head-&gt;next;
+        }
+        ListNode dummy(0);
+        ListNode* tail = &amp;dummy;
+        while (!nums.empty()) {
+            tail-&gt;next = new ListNode(nums.top());
+            tail = tail-&gt;next;
+            nums.pop();
+        }
+        return dummy.next;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/reverse-linked-list/description/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-02-04</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value">
+            <span class="post-tags">
+              <span class="post-tag">Linked List</span>
+              <span class="post-tag">Stack</span>
+              <span class="post-tag">Easy</span>
+            </span>
+          </span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/leetcode75/206-reverse-linked-list.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
