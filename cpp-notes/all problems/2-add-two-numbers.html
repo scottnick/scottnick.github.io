@@ -1,0 +1,243 @@
+<!-- all problems/2-add-two-numbers.html: 全部題單文章 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2. Add Two Numbers</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+               width="18" height="18" aria-hidden="true" focusable="false"
+               style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="index.html">All problems</a>
+      <span aria-hidden="true">/</span>
+      <span>2. Add Two Numbers</span>
+    </nav>
+
+    <section class="hero">
+      <h1>2. Add Two Numbers</h1>
+      <p><strong>練習日期：</strong>2026-02-03</p>
+      <p><strong>難度：</strong>Medium</p>
+      <p><strong>類型：</strong>Linked List、Math、Recursion</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給你兩個<strong>非空</strong>的 linked list <code>l1</code> 與 <code>l2</code>，它們分別代表兩個<strong>非負整數</strong>。</p>
+        <p>數字的每一位會以<strong>反向順序</strong>儲存，且每個節點都只包含<strong>一個數字</strong>。</p>
+        <p>請把這兩個數字相加，並把總和以 linked list 的形式回傳。</p>
+        <p>你可以假設這兩個數字<strong>不包含任何前導零</strong>，除非這個數字本身就是 <code>0</code>。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li>每個 linked list 的節點數量在範圍 <code>[1, 100]</code></li>
+          <li><code>0 &lt;= Node.val &lt;= 9</code></li>
+          <li>保證 linked list 所代表的數字不會有前導零</li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>我用「直式加法」的概念，一位一位加，並用新 linked list 存答案。</p>
+        <ul>
+          <li>因為位數是反著存（最低位在最前面），所以可以從 <code>l1</code>、<code>l2</code> 的頭開始同步往後加。</li>
+          <li>每一輪加法都會用到：
+            <ul>
+              <li><code>i1</code>：本輪從 <code>l1</code> 拿到的數字（如果 <code>l1</code> 走完就當 0）</li>
+              <li><code>i2</code>：本輪從 <code>l2</code> 拿到的數字（如果 <code>l2</code> 走完就當 0）</li>
+              <li><code>carry</code>：上一輪留下來的進位</li>
+            </ul>
+          </li>
+          <li>我用一個 <code>dummy</code> 當假頭，再用 <code>tail</code> 指向目前答案串列的尾巴，方便一直把新節點接在尾端。</li>
+          <li>迴圈條件用 <code>while (l1 || l2 || carry != 0)</code>：
+            <ul>
+              <li>只要任一邊還有節點，或還有進位，就表示答案還沒算完。</li>
+            </ul>
+          </li>
+        </ul>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>l1</code>：第一個輸入 linked list 的目前節點指標</li>
+          <li><code>l2</code>：第二個輸入 linked list 的目前節點指標</li>
+          <li><code>dummy</code>：答案 linked list 的假頭節點（用來簡化接串列）</li>
+          <li><code>tail</code>：答案 linked list 目前的尾巴節點指標</li>
+          <li><code>carry</code>：進位（每輪更新成下一輪要用的進位）</li>
+          <li><code>i1</code>：本輪取自 <code>l1</code> 的數字（沒有就 0）</li>
+          <li><code>i2</code>：本輪取自 <code>l2</code> 的數字（沒有就 0）</li>
+          <li><code>sum</code>：本輪相加總和 <code>i1 + i2 + carry</code></li>
+          <li><code>digit</code>：本輪要放進答案節點的數字（<code>sum % 10</code>）</li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+        <h3>1. 建立答案串列的假頭與尾巴指標</h3>
+        <ul>
+          <li><code>dummy</code> 先當一個固定的起點</li>
+          <li><code>tail</code> 一開始指向 <code>dummy</code></li>
+          <li><code>carry</code> 初始化為 0</li>
+        </ul>
+        <hr />
+
+        <h3>2. 每一輪處理一個位數（直到兩邊都結束且沒有進位）</h3>
+        <ul>
+          <li>先把 <code>i1</code>、<code>i2</code> 設成 0</li>
+          <li>如果 <code>l1</code> 還存在，就令 <code>i1 = l1-&gt;val</code></li>
+          <li>如果 <code>l2</code> 還存在，就令 <code>i2 = l2-&gt;val</code></li>
+        </ul>
+        <hr />
+
+        <h3>3. 算出本輪 digit 與下一輪 carry</h3>
+        <ul>
+          <li><code>sum = i1 + i2 + carry</code></li>
+          <li><code>carry = sum / 10</code></li>
+          <li><code>digit = sum % 10</code></li>
+        </ul>
+        <hr />
+
+        <h3>4. 用 <code>new</code> 建立新節點接到答案尾端，並更新尾巴</h3>
+        <ul>
+          <li><code>tail-&gt;next = new ListNode(digit)</code></li>
+          <li><code>tail = tail-&gt;next</code></li>
+        </ul>
+        <hr />
+
+        <h3>5. 推進 <code>l1</code>、<code>l2</code>（如果它們還沒走完）</h3>
+        <ul>
+          <li>若 <code>l1</code> 存在：<code>l1 = l1-&gt;next</code></li>
+          <li>若 <code>l2</code> 存在：<code>l2 = l2-&gt;next</code></li>
+        </ul>
+        <hr />
+
+        <h3>6. 回傳真正的答案頭</h3>
+        <ul>
+          <li>因為 <code>dummy</code> 是假頭，所以回傳 <code>dummy.next</code></li>
+        </ul>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+
+class Solution {
+public:
+    ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
+        ListNode dummy(0);
+        ListNode* tail = &amp;dummy;
+        int carry = 0;
+        while (l1 || l2 || carry != 0) {
+            int i1 = 0, i2 = 0;
+            if (l1) {
+                i1 = l1-&gt;val;
+            }
+            if (l2) {
+                i2 = l2-&gt;val;
+            }
+            int sum = i1 + i2 + carry;
+            carry = sum / 10;
+            int digit = sum % 10;
+
+            tail-&gt;next = new ListNode(digit); // 只像這位指標
+            tail = tail-&gt;next; // 改尾巴
+
+            if (l1) {
+                l1 = l1-&gt;next;
+            }
+            if (l2) {
+                l2 = l2-&gt;next;
+            }
+        }
+        return dummy.next;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/add-two-numbers/description/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-02-03</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value">
+            <span class="post-tags">
+              <span class="post-tag">Linked List</span>
+              <span class="post-tag">Math</span>
+              <span class="post-tag">Recursion</span>
+              <span class="post-tag">Medium</span>
+            </span>
+          </span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/all%20problems/2-add-two-numbers.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
