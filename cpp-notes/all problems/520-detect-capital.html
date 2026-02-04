@@ -1,0 +1,225 @@
+<!-- all problems/520-detect-capital.html: 全部題單文章 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>520. Detect Capital</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+               width="18" height="18" aria-hidden="true" focusable="false"
+               style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="index.html">All problems</a>
+      <span aria-hidden="true">/</span>
+      <span>520. Detect Capital</span>
+    </nav>
+
+    <section class="hero">
+      <h1>520. Detect Capital</h1>
+      <p><strong>練習日期：</strong>2026-02-04</p>
+      <p><strong>難度：</strong>Easy</p>
+      <p><strong>類型：</strong>String</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>我們定義一個單字使用大寫（capitals）的方式是正確的，當且僅當符合以下其中一種情況：</p>
+        <ol>
+          <li>這個單字的所有字母都是大寫，例如 <code>"USA"</code></li>
+          <li>這個單字的所有字母都不是大寫（也就是全小寫），例如 <code>"leetcode"</code></li>
+          <li>只有第一個字母是大寫，其餘字母都是小寫，例如 <code>"Google"</code></li>
+        </ol>
+        <p>給你一個字串 <code>word</code>，如果它使用大寫的方式正確就回傳 <code>true</code>，否則回傳 <code>false</code>。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>1 &lt;= word.length &lt;= 100</code></li>
+          <li><code>word</code> 只由英文大小寫字母組成</li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>我用一次掃描，同時維護兩個「目前還有可能成立的規則」：</p>
+        <ul>
+          <li>
+            <p><code>low</code>：目前看起來是否還可能是「只有第一個字母大寫，其餘小寫」</p>
+            <ul>
+              <li>一旦我在第 2 個字母之後看到大寫，就不可能是這個規則了</li>
+            </ul>
+          </li>
+          <li>
+            <p><code>upp</code>：目前看起來是否還可能是「全部大寫」</p>
+            <ul>
+              <li>一旦我看到任何小寫，就不可能是全部大寫了</li>
+            </ul>
+          </li>
+        </ul>
+        <p>掃描過程中只要同時變成：</p>
+        <ul>
+          <li><code>low == false</code> 且 <code>upp == false</code>
+            代表三種情況都不可能了（也不可能是全小寫），可以直接回傳 <code>false</code>。</li>
+        </ul>
+        <p>最後只要 <code>low</code> 或 <code>upp</code> 其中一個還成立，就回傳 <code>true</code>。
+（全小寫的情況會讓 <code>low</code> 一直維持 <code>true</code>，所以也會被正確接受。）</p>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>word</code>：輸入字串</li>
+          <li><code>low</code>：是否仍可能符合「只有第一個字母大寫，其餘小寫」</li>
+          <li><code>upp</code>：是否仍可能符合「全部大寫」</li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+        <h3>1. 長度小於 2 直接回傳 true</h3>
+        <ul>
+          <li>單一字母不管大寫或小寫都符合規則</li>
+        </ul>
+        <hr />
+
+        <h3>2. 初始化兩種可能性</h3>
+        <ul>
+          <li><code>low = true</code></li>
+          <li><code>upp = true</code></li>
+        </ul>
+        <hr />
+
+        <h3>3. 一次掃描字串，逐字排除不可能的規則</h3>
+        <p>對每個索引 <code>i</code>：</p>
+        <ul>
+          <li>
+            <p>若 <code>word[i]</code> 是大寫且 <code>i &gt; 0</code></p>
+            <ul>
+              <li>代表不是「只有第一個字母大寫，其餘小寫」</li>
+              <li><code>low = false</code></li>
+            </ul>
+          </li>
+          <li>
+            <p>若 <code>word[i]</code> 是小寫</p>
+            <ul>
+              <li>代表不是「全部大寫」</li>
+              <li><code>upp = false</code></li>
+            </ul>
+          </li>
+          <li>
+            <p>若同時 <code>low == false</code> 且 <code>upp == false</code></p>
+            <ul>
+              <li>代表沒有任何合法形式能成立，直接回傳 <code>false</code></li>
+            </ul>
+          </li>
+        </ul>
+        <hr />
+
+        <h3>4. 迴圈結束後檢查是否仍有合法形式</h3>
+        <ul>
+          <li>若 <code>low || upp</code> 為真，回傳 <code>true</code></li>
+          <li>否則回傳 <code>false</code></li>
+        </ul>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    bool detectCapitalUse(string word) {
+        if (word.size() &lt; 2) {
+            return true;
+        }
+        bool low = true, upp = true;
+        for (int i = 0; i &lt; word.size(); i++) {
+            if (isupper(word[i]) &amp;&amp; i &gt; 0) {
+                low = false;
+            } else if (islower(word[i])) {
+                upp = false;
+            }
+            if (!low &amp;&amp; !upp) {
+                return false;
+            }
+        }
+        if (low || upp) {
+            return true;
+        }
+        return false;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/detect-capital/description/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-02-04</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value">
+            <span class="post-tags">
+              <span class="post-tag">String</span>
+              <span class="post-tag">Easy</span>
+            </span>
+          </span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/all%20problems/520-detect-capital.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
