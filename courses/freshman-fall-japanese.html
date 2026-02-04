@@ -6,7 +6,7 @@
   <title>日文上</title>
   <link rel="stylesheet" href="../styles.css">
 </head>
-<body>
+<body class="page-article">
   <header>
     <nav class="navbar">
       <a class="brand" href="../personal.html">scottnick 個人網頁</a>
@@ -37,9 +37,173 @@
   </header>
 
   <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../courses.html">修課紀錄</a>
+      <span aria-hidden="true">/</span>
+      <span>日文上</span>
+    </nav>
+
     <section class="hero">
       <h1>日文上</h1>
-      <p>內容待補。</p>
+      <p>從五十音起步、把日文基礎打穩的一學期完整紀錄，適合想要扎實練習的人參考。</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#course-info">課程基本資訊</a></li>
+          <li><a href="#course-review">一句話總評</a></li>
+          <li><a href="#course-content">這門課主要在學什麼</a></li>
+          <li><a href="#course-grading">考試與評分方式</a></li>
+          <li><a href="#course-fit">甜涼程度＆適合誰</a></li>
+          <li><a href="#course-rules">出席規定＆課程規範</a></li>
+          <li><a href="#course-add">加簽方式</a></li>
+          <li><a href="#course-advice">給新生的建議</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <section id="course-info">
+          <h2>課程基本資訊</h2>
+          <div class="info-grid">
+            <div class="info-card">
+              課名
+              <span>日文上</span>
+            </div>
+            <div class="info-card">
+              學期
+              <span>114-1（全年課的上學期）</span>
+            </div>
+            <div class="info-card">
+              對象
+              <span>理學院（限非日文系；日籍或日語母語者不可修）</span>
+            </div>
+            <div class="info-card">
+              教師
+              <span>劉沅華</span>
+            </div>
+            <div class="info-card">
+              學分
+              <span>3</span>
+            </div>
+            <div class="info-card">
+              時間地點
+              <span>週一 3,4,5（10:20–13:10）／共307</span>
+            </div>
+            <div class="info-card">
+              教材
+              <span>《大学の日本語 初級 ともだち Vol.1》（尚昂文化）</span>
+            </div>
+          </div>
+        </section>
+
+        <section id="course-review">
+          <h2>一句話總評</h2>
+          <p>難度不低、不算輕鬆，但學習成效很明顯。老師很有耐心，願意帶你把基礎打穩；但因為小考＋期中＋期末占比高，想拿好成績需要穩定投入，不能靠最後臨時抱佛腳。</p>
+        </section>
+
+        <section id="course-content">
+          <h2>這門課主要在學什麼</h2>
+          <p>課綱其實很務實，從五十音到能在生活情境中「說得出來、用得上」。上學期（這學期）大致內容如下：</p>
+          <ol>
+            <li>假名發音（數字、招呼語、發音規則等）</li>
+            <li>自我介紹、詢問姓名／國籍／專長</li>
+            <li>場所表達、購物、點餐</li>
+            <li>描述日常作息</li>
+            <li>喜好、行程安排</li>
+            <li>時間表達、對事物的感想</li>
+            <li>人／物的位置、各種量詞</li>
+          </ol>
+          <p>簡單說：從「會念、會寫」到「能用日文完成基本生活對話」。</p>
+        </section>
+
+        <section id="course-grading">
+          <h2>考試與評分方式（最重要）</h2>
+          <ul>
+            <li>平時成績 10%（出席、上課態度等）</li>
+            <li>小考 30%</li>
+            <li>期中考 30%</li>
+            <li>期末考 30%</li>
+            <li>額外加分：加分作業 5%</li>
+          </ul>
+          <p>因為有加分補救，最後不會再因個人因素另外調分。</p>
+          <h3>小考請假規則（很關鍵）</h3>
+          <p>小考當天若請假：考卷會改成回家作業，但分數 8 折（限一次）。</p>
+        </section>
+
+        <section id="course-fit">
+          <h2>甜涼程度＆適合誰</h2>
+          <h3>甜涼／難度</h3>
+          <p>難度偏難（或至少不甜）。因為小考＋期中＋期末就佔了 90%，所以分數通常反映你平常有沒有跟上。</p>
+          <h3>適合的人</h3>
+          <ul>
+            <li>想把日文基礎打穩、願意每週固定複習的人</li>
+            <li>目標是「真的會用」而不是只拿學分的人</li>
+            <li>願意配合課程節奏、把小考當成固定檢核的人</li>
+          </ul>
+          <h3>不適合的人</h3>
+          <ul>
+            <li>想輕鬆過、很常缺課的人</li>
+            <li>習慣期末才抱佛腳的人（這門課會比較痛苦）</li>
+          </ul>
+        </section>
+
+        <section id="course-rules">
+          <h2>出席規定＆課程規範（務必看）</h2>
+          <ul>
+            <li>無故曠課達 3 次：不予學分</li>
+            <li>請假需寄信給老師（建議附假單／藥單等）</li>
+            <li>禁止交換授權碼、不可換班（會核對加選者是否本人）</li>
+          </ul>
+          <p>簡單說：出席真的重要，而且規定是會認真執行的那種。</p>
+        </section>
+
+        <section id="course-add">
+          <h2>加簽方式</h2>
+          <p>開學第 1、2 週上課視缺額抽籤。老師公告：不要寄信直接要授權碼。</p>
+        </section>
+
+        <section id="course-advice">
+          <h2>我給新生的建議（超實用）</h2>
+          <p>開學前先上 NTU COOL 看「日語五十音預備課程影片」，不然一開始會很吃力。</p>
+          <p>這門課建議把學習拆成固定節奏：</p>
+          <ul>
+            <li><strong>每週課前：</strong>把本週句型先看過＋先背基本單字。</li>
+            <li><strong>每週課後：</strong>整理文法筆記＋把小考範圍練熟（不用爆讀，但要規律）。</li>
+          </ul>
+        </section>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2/4</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value">
+            <span class="post-tags">
+              <span class="post-tag">外文</span>
+              <span class="post-tag">修課紀錄</span>
+            </span>
+          </span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/courses/freshman-fall-japanese.html</span>
+        </div>
+      </div>
     </section>
   </main>
 
