@@ -1,0 +1,298 @@
+<!-- all problems/3640-trionic-array-ii.html: All problems 文章 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3640. Trionic Array II</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+               width="18" height="18" aria-hidden="true" focusable="false"
+               style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="index.html">All problems</a>
+      <span aria-hidden="true">/</span>
+      <span>3640. Trionic Array II</span>
+    </nav>
+
+    <section class="hero">
+      <h1>3640. Trionic Array II</h1>
+      <p><strong>練習日期：</strong>2026-02-04</p>
+      <p><strong>難度：</strong>Hard</p>
+      <p><strong>類型：</strong>Array、Dynamic Programming</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給你一個長度為 <code>n</code> 的整數陣列 <code>nums</code>。</p>
+        <p>一個 <strong>trionic subarray</strong> 是一個連續子陣列 <code>nums[l...r]</code>（滿足 <code>0 &lt;= l &lt; r &lt; n</code>），並且存在索引 <code>l &lt; p &lt; q &lt; r</code> 使得：</p>
+        <ul>
+          <li><code>nums[l...p]</code> 是嚴格遞增</li>
+          <li><code>nums[p...q]</code> 是嚴格遞減</li>
+          <li><code>nums[q...r]</code> 是嚴格遞增</li>
+        </ul>
+        <p>請回傳 <code>nums</code> 中任意 trionic subarray 的<strong>最大總和</strong>。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>4 &lt;= n = nums.length &lt;= 10^5</code></li>
+          <li><code>-10^9 &lt;= nums[i] &lt;= 10^9</code></li>
+          <li>保證至少存在一個 trionic subarray。</li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>trionic 的型態一定是：</p>
+        <p><strong>上升（一段） → 下降（一段） → 上升（一段）</strong>，而且三段都必須「至少包含一個相鄰關係」（也就是每段都要真的發生嚴格上升/下降）。</p>
+        <p>我這份 code 用 <strong>一次掃描 + 三個 DP 狀態</strong>，每次只看相鄰的 <code>(nums[i-1], nums[i])</code>，把「以 <code>nums[i]</code> 當結尾」的最佳 trionic 前綴總和更新出來。</p>
+
+        <h3>三個狀態在代表什麼（都以「目前走到的最後一個元素 = y」為結尾）</h3>
+        <p>令 <code>y = nums[i]</code>，<code>x = nums[i-1]</code>。</p>
+        <ul>
+          <li><code>up1</code>：目前正在「第一段嚴格遞增」的最佳總和（至少要有一個上升步驟）
+            <ul>
+              <li>也就是形狀像 <code>... &lt; x &lt; y</code>，最後一步是上升</li>
+            </ul>
+          </li>
+          <li><code>down</code>：目前正在「第二段嚴格遞減」的最佳總和（前面必須已經完成第一段上升）
+            <ul>
+              <li>也就是形狀像 <code>上升完後 ... &gt; y</code>，最後一步是下降</li>
+            </ul>
+          </li>
+          <li><code>up2</code>：目前正在「第三段嚴格遞增」的最佳總和（前面必須已經經過上升+下降）
+            <ul>
+              <li>也就是已經形成 trionic，最後一步再上升，<code>up2</code> 一旦成立就可以拿來更新答案</li>
+            </ul>
+          </li>
+        </ul>
+        <p>另外：</p>
+        <ul>
+          <li>一旦遇到 <code>x == y</code>，嚴格遞增/遞減都不可能延續，所以三個狀態全部清空。</li>
+        </ul>
+
+        <h3>為什麼更新式長這樣</h3>
+        <p>每一步只分三種情況：</p>
+
+        <h4>1) <code>x &lt; y</code>（上升）</h4>
+        <ul>
+          <li>第一段上升可以延續，或從這個上升步驟重新開一段：
+            <ul>
+              <li><code>up1 = max(up1, x) + y</code>
+                <ul>
+                  <li><code>up1</code>：延續舊的上升段（把 <code>y</code> 接上去）</li>
+                  <li><code>x</code>：代表「從 x→y 這一步」新開一個上升段，總和就是 <code>x + y</code></li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+          <li>第三段上升也可以延續，或從「下降段」轉進第三段：
+            <ul>
+              <li><code>up2 = max(up2, down) + y</code>
+                <ul>
+                  <li><code>up2</code>：延續舊的第三段上升</li>
+                  <li><code>down</code>：把「下降段」接上這一步上升，正式進入第三段</li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+          <li>只要 <code>up2</code> 有值，就代表已形成 trionic subarray，可以更新答案：
+            <ul>
+              <li><code>ans = max(ans, up2)</code></li>
+            </ul>
+          </li>
+          <li>注意：上升時不能同時處在下降段，所以：
+            <ul>
+              <li><code>down = NEG</code></li>
+            </ul>
+          </li>
+        </ul>
+
+        <h4>2) <code>x &gt; y</code>（下降）</h4>
+        <ul>
+          <li>下降段可以延續，或從第一段上升轉進下降：
+            <ul>
+              <li><code>down = max(down, up1) + y</code>
+                <ul>
+                  <li><code>down</code>：延續舊的下降段</li>
+                  <li><code>up1</code>：從第一段轉入下降段（開始第二段）</li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+          <li>一旦開始下降，就不能還保留「正在上升」的狀態（段落順序會亂掉），所以：
+            <ul>
+              <li><code>up1 = NEG</code></li>
+              <li><code>up2 = NEG</code></li>
+            </ul>
+          </li>
+        </ul>
+
+        <h4>3) <code>x == y</code>（相等）</h4>
+        <ul>
+          <li>嚴格遞增/遞減都不成立，直接清空：
+            <ul>
+              <li><code>up1 = down = up2 = NEG</code></li>
+            </ul>
+          </li>
+        </ul>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>nums</code>：輸入陣列</li>
+          <li><code>NEG</code>：極小值（代表「這個狀態目前不可能成立」）</li>
+          <li><code>up1</code>：第一段嚴格遞增的最佳總和（以目前元素結尾）</li>
+          <li><code>down</code>：第二段嚴格遞減的最佳總和（以目前元素結尾）</li>
+          <li><code>up2</code>：第三段嚴格遞增的最佳總和（以目前元素結尾）</li>
+          <li><code>ans</code>：目前找到的最大 trionic subarray 總和</li>
+          <li><code>x</code>：<code>nums[i-1]</code>（上一個元素）</li>
+          <li><code>y</code>：<code>nums[i]</code>（目前元素）</li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+        <h3>1. 初始化 DP 狀態</h3>
+        <ul>
+          <li>全部設成不可能：<code>NEG</code></li>
+          <li><code>ans</code> 也先設成 <code>NEG</code></li>
+        </ul>
+        <hr />
+
+        <h3>2. 由左到右掃描相鄰的 <code>(x, y)</code></h3>
+        <p>對每個 <code>i = 1 ... n-1</code>：</p>
+        <ul>
+          <li>若 <code>x &lt; y</code>：
+            <ul>
+              <li>更新 <code>up1</code></li>
+              <li>更新 <code>up2</code></li>
+              <li>用 <code>up2</code> 更新 <code>ans</code></li>
+              <li>清空 <code>down</code></li>
+            </ul>
+          </li>
+          <li>若 <code>x &gt; y</code>：
+            <ul>
+              <li>更新 <code>down</code></li>
+              <li>清空 <code>up1</code>、<code>up2</code></li>
+            </ul>
+          </li>
+          <li>若 <code>x == y</code>：
+            <ul>
+              <li>清空 <code>up1</code>、<code>down</code>、<code>up2</code></li>
+            </ul>
+          </li>
+        </ul>
+        <hr />
+
+        <h3>3. 回傳答案</h3>
+        <ul>
+          <li><code>return ans</code></li>
+        </ul>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    long long maxSumTrionic(vector&lt;int&gt;&amp; nums) {
+        const long long NEG = LLONG_MIN / 2;
+        long long up1 = NEG, down = NEG, up2 = NEG;
+        long long ans = NEG;
+        int n = nums.size();
+        for (int i = 1; i &lt; n; i++) {
+            long long x = nums[i - 1], y = nums[i];
+            if (x &lt; y) { // 上升
+                up1 = max(up1, x) + y;
+                up2 = max(up2, down) + y;
+                ans = max(ans, up2);
+                down = NEG;
+            } else if (nums[i - 1] &gt; nums[i]) { // 下降
+                down = max(down, up1) + y;
+                up1 = NEG;
+                up2 = NEG;
+            } else { // 相等
+                up1 = down = up2 = NEG;
+            }
+        }
+        return ans;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/trionic-array-ii/description/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-02-04</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value">
+            <span class="post-tags">
+              <span class="post-tag">Array</span>
+              <span class="post-tag">Dynamic Programming</span>
+              <span class="post-tag">Hard</span>
+            </span>
+          </span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/all%20problems/3640-trionic-array-ii.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
