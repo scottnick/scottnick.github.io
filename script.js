@@ -130,7 +130,7 @@
 
     const images = [
       'assets/hero-1.jpg',
-      'assets/hero-2.jpg',
+      'assets/hero-2.png',
       'assets/hero-3.jpg',
     ];
 
