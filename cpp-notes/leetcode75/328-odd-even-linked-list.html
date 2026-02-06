@@ -1,0 +1,341 @@
+<!-- leetcode75/328-odd-even-linked-list.html: LeetCode 75 文章 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>328. Odd Even Linked List</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+               width="18" height="18" aria-hidden="true" focusable="false"
+               style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="../leetcode75/index.html">LeetCode 75</a>
+      <span aria-hidden="true">/</span>
+      <span>328. Odd Even Linked List</span>
+    </nav>
+
+    <section class="hero">
+      <h1>328. Odd Even Linked List</h1>
+      <p><strong>練習日期：</strong>2026-02-06</p>
+      <p><strong>難度：</strong>Medium</p>
+      <p><strong>類型：</strong>Linked List、Two Pointers</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給定一個單向鏈結串列 <code>head</code>，請將所有位於<strong>奇數位置</strong>的節點放在前面，所有位於<strong>偶數位置</strong>的節點放在後面，並回傳重新排列後的鏈結串列。</p>
+        <p>這裡的「奇數 / 偶數」指的是<strong>節點在鏈結串列中的位置（1-indexed）</strong>，而不是節點的值。</p>
+        <p>請注意：奇數節點與偶數節點內部的相對順序要保持不變。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li>節點數量範圍為 <code>[0, 10^4]</code>。</li>
+          <li><code>-10^6 ≤ Node.val ≤ 10^6</code>。</li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路（一）建立dummy</h2>
+        <p>我的做法是「分兩次掃描原本的 linked list」，把結果依序接到一條新的 linked list 上：</p>
+        <ol>
+          <li><strong>先走奇數位置</strong>：<code>head (第1個) -&gt; 第3個 -&gt; 第5個 -&gt; ...</code></li>
+          <li><strong>再走偶數位置</strong>：<code>head-&gt;next (第2個) -&gt; 第4個 -&gt; 第6個 -&gt; ...</code></li>
+        </ol>
+        <p>每走到一個節點，我就把它的值 <code>val</code> 用 <code>new ListNode(...)</code> 建一個新節點，接到結果串列的尾端。</p>
+        <p>這樣做可以很直觀地達到：</p>
+        <ul>
+          <li>奇數位置全部先接完</li>
+          <li>偶數位置再接在後面</li>
+          <li>並且保持原本的相對順序</li>
+        </ul>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>head</code>：輸入鏈結串列的頭節點</li>
+          <li><code>dummy</code>：結果鏈結串列的虛擬頭（方便接節點，不用特判第一個）</li>
+          <li><code>tail</code>：結果鏈結串列的尾巴指標（每次都把新節點接在尾巴後面）</li>
+          <li><code>h</code>：用來掃描原鏈結串列的指標（第一次掃奇數位置，第二次掃偶數位置）</li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+        <h3>1. 前置判斷：長度太短直接回傳</h3>
+        <pre><code class="language-cpp">if (!head || !(head-&gt;next)) {
+    return head;
+}</code></pre>
+        <ul>
+          <li>如果 <code>head == nullptr</code>：空串列。</li>
+          <li>或 <code>head-&gt;next == nullptr</code>：只有一個節點。這兩種情況本來就已經符合題意，不需要重排。</li>
+        </ul>
+
+        <hr />
+
+        <h3>2. 建立結果串列的起點（dummy + tail）</h3>
+        <pre><code class="language-cpp">ListNode dummy(0);
+ListNode* tail = &amp;dummy;</code></pre>
+        <ul>
+          <li><code>dummy</code> 是一個不重要的節點（值是 0 只是佔位）。</li>
+          <li>真正答案會從 <code>dummy.next</code> 開始。</li>
+          <li><code>tail</code> 一開始指向 <code>dummy</code>，代表結果串列目前是空的。</li>
+        </ul>
+
+        <hr />
+
+        <h3>3. 第一段 while：掃「奇數位置」節點並接到結果</h3>
+        <pre><code class="language-cpp">ListNode* h = head;
+while (h) {
+    tail-&gt;next = new ListNode(h-&gt;val);
+    tail = tail-&gt;next;
+    if (h-&gt;next) {
+        h = h-&gt;next-&gt;next;
+    } else {
+        break;
+    }
+}</code></pre>
+        <p>這段的意思是：</p>
+        <ul>
+          <li><code>h</code> 從 <code>head</code> 開始（第 1 個節點，奇數位置）。</li>
+          <li>每次把 <code>h-&gt;val</code> 複製成新節點接到結果尾端。</li>
+          <li>然後 <code>h</code> 嘗試跳兩步 <code>h = h-&gt;next-&gt;next</code>，這樣就會走到下一個奇數位置（1→3→5→...）。</li>
+        </ul>
+        <p>為什麼要 <code>if (h-&gt;next)</code>？</p>
+        <ul>
+          <li>因為要跳兩步之前，至少要確保 <code>h-&gt;next</code> 存在。</li>
+          <li>否則 <code>h-&gt;next-&gt;next</code> 會出錯。</li>
+        </ul>
+
+        <hr />
+
+        <h3>4. 第二段 while：掃「偶數位置」節點並接到結果尾端</h3>
+        <pre><code class="language-cpp">h = head-&gt;next;
+while (h) {
+    tail-&gt;next = new ListNode(h-&gt;val);
+    tail = tail-&gt;next;
+    if (h-&gt;next) {
+        h = h-&gt;next-&gt;next;
+    } else {
+        break;
+    }
+}</code></pre>
+        <p>這段跟上一段完全一樣，只是起點變成 <code>head-&gt;next</code>（第 2 個節點，偶數位置）。</p>
+        <p>所以會走：第2個 → 第4個 → 第6個 → ...，最後就把偶數位置節點全部接在奇數位置後面。</p>
+
+        <hr />
+
+        <h3>5. 回傳答案</h3>
+        <pre><code class="language-cpp">return dummy.next;</code></pre>
+        <p>因為 <code>dummy</code> 只是虛擬頭，真正串列的頭是 <code>dummy.next</code>。</p>
+
+        <h2 id="code">💻 程式碼實作（一）</h2>
+        <pre><code class="language-cpp">/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* oddEvenList(ListNode* head) {
+        if (!head || !(head-&gt;next)) {
+            return head;
+        }
+        ListNode dummy(0);
+        ListNode* tail = &amp;dummy;
+        ListNode* h = head;
+        while (h) {
+            tail-&gt;next = new ListNode(h-&gt;val);
+            tail = tail-&gt;next;
+            if (h-&gt;next) {
+                h = h-&gt;next-&gt;next;
+            } else {
+                break;
+            }
+        }
+        h = head-&gt;next;
+        while (h) {
+            tail-&gt;next = new ListNode(h-&gt;val);
+            tail = tail-&gt;next;
+            if (h-&gt;next) {
+                h = h-&gt;next-&gt;next;
+            } else {
+                break;
+            }
+        }
+        return dummy.next;
+    }
+};</code></pre>
+
+        <h2>🧠 解題思路（二）奇偶指標</h2>
+        <p>我這份寫法是「把原串列拆成兩條鏈，再接起來」，全程只改 <code>next</code> 指標，不建新節點。</p>
+        <p>核心想法：</p>
+        <ul>
+          <li><code>odd</code> 指向目前「奇數鏈」最後一個節點。</li>
+          <li><code>even</code> 指向目前「偶數鏈」最後一個節點。</li>
+          <li><code>ehead</code> 保留偶數鏈的頭（原本的第二個節點），最後要把它接回奇數鏈尾端。</li>
+        </ul>
+        <p>重點是：每次都把下一個奇數節點接到 odd 後面，再把下一個偶數節點接到 even 後面，這樣相對順序就會自然保持原樣。</p>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>head</code>：輸入 linked list 的頭節點，也是最後回傳的頭。</li>
+          <li><code>odd</code>：目前奇數鏈的尾巴指標（一路往後推進）。</li>
+          <li><code>even</code>：目前偶數鏈的尾巴指標（一路往後推進）。</li>
+          <li><code>ehead</code>：偶數鏈的頭指標（用來在最後接回去）。</li>
+        </ul>
+
+        <h2>🪜 主要流程步驟</h2>
+        <h3>1. 特例：長度 0 或 1 直接回傳</h3>
+        <ul>
+          <li>如果 <code>!head</code> 或 <code>!head-&gt;next</code>，代表節點不夠分奇偶，原樣回傳即可。</li>
+        </ul>
+
+        <hr />
+
+        <h3>2. 初始化奇偶兩條鏈的起點</h3>
+        <ul>
+          <li><code>odd = head</code>：第一個節點（奇數）。</li>
+          <li><code>even = head-&gt;next</code>：第二個節點（偶數）。</li>
+          <li><code>ehead = even</code>：記住偶數鏈的頭，最後要接回去。</li>
+        </ul>
+
+        <hr />
+
+        <h3>3. 交替重接指標，把奇數節點串成一條、偶數節點串成一條</h3>
+        <p>迴圈條件用 <code>while (even &amp;&amp; even-&gt;next)</code>，因為要把「下一個奇數節點」接到 odd 後面，這個節點就是 <code>even-&gt;next</code>，所以 <code>even-&gt;next</code> 必須存在。</p>
+        <p>每一輪做兩次接法：</p>
+        <ol>
+          <li>接奇數鏈：<code>odd-&gt;next = even-&gt;next</code>，再 <code>odd = odd-&gt;next</code>（odd 往前走到新的尾巴）。</li>
+          <li>接偶數鏈：<code>even-&gt;next = odd-&gt;next</code>，再 <code>even = even-&gt;next</code>（even 往前走到新的尾巴）。</li>
+        </ol>
+
+        <hr />
+
+        <h3>4. 把偶數鏈接到奇數鏈尾端</h3>
+        <ul>
+          <li>迴圈結束後，奇數鏈已經在前面串好了。</li>
+          <li><code>odd-&gt;next = ehead</code> 把偶數鏈整條接到後面。</li>
+        </ul>
+
+        <hr />
+
+        <h3>5. 回傳 <code>head</code></h3>
+        <ul>
+          <li>因為是原地改指標，頭不變，回傳 <code>head</code>。</li>
+        </ul>
+
+        <h2>💻 程式碼實作（二）</h2>
+        <pre><code class="language-cpp">/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* oddEvenList(ListNode* head) {
+        if (!head || !head-&gt;next) {
+            return head;
+        }
+        ListNode* odd = head;        // 奇數
+        ListNode* even = head-&gt;next; // 偶數
+        ListNode* ehead = even;
+        while (even &amp;&amp; even-&gt;next) {
+            odd-&gt;next = even-&gt;next;
+            odd = odd-&gt;next;
+            even-&gt;next = odd-&gt;next;
+            even = even-&gt;next;
+        }
+        odd-&gt;next = ehead;
+        return head;
+    }
+};</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/odd-even-linked-list/description/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-02-06</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value">
+            <span class="post-tags">
+              <span class="post-tag">Linked List</span>
+              <span class="post-tag">Two Pointers</span>
+              <span class="post-tag">Medium</span>
+            </span>
+          </span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/leetcode75/328-odd-even-linked-list.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
