@@ -1,0 +1,193 @@
+<!-- all problems/141-linked-list-cycle.html: 全部題單文章 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>141. Linked List Cycle</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+               width="18" height="18" aria-hidden="true" focusable="false"
+               style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="../all%20problems/index.html">All problems</a>
+      <span aria-hidden="true">/</span>
+      <span>141. Linked List Cycle</span>
+    </nav>
+
+    <section class="hero">
+      <h1>141. Linked List Cycle</h1>
+      <p><strong>練習日期：</strong>2026-02-06</p>
+      <p><strong>難度：</strong>Easy</p>
+      <p><strong>類型：</strong>Hash Table、Linked List、Two Pointers</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給你一個 linked list 的頭節點 <code>head</code>，判斷這個 linked list 中是否存在 cycle。</p>
+        <p>如果 linked list 中存在某個節點可以再一次被走到（也就是沿著 <code>next</code> 指標走下去會回到之前出現過的節點），則該 linked list 存在 cycle。</p>
+        <p>內部用 <code>pos</code> 代表 tail 連回去的那個節點索引（0-based）。注意：<code>pos</code> <strong>不會</strong>作為參數傳入。</p>
+        <p>如果 linked list 中存在 cycle，回傳 <code>true</code>；否則回傳 <code>false</code>。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li>linked list 的節點數量在範圍 <code>[0, 10^4]</code></li>
+          <li><code>-10^5 &lt;= Node.val &lt;= 10^5</code></li>
+          <li><code>pos</code> 介於 <code>-1</code> 到 <code>n-1</code></li>
+          <li><code>pos == -1</code> 代表沒有 cycle</li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>這份寫法是用「改節點值當作走訪標記」來判斷是否走回來。</p>
+        <p>我用一個不會出現的數字 <code>1000000</code> 當成標記：</p>
+        <ul>
+          <li>走訪每個節點時：</li>
+          <li>如果我發現某個節點的 <code>val</code> 已經被改成 <code>1000000</code>
+            <ul>
+              <li>代表我之前走過這個節點，又回來了 → 一定有 cycle</li>
+            </ul>
+          </li>
+          <li>否則我就把它的 <code>val</code> 改成 <code>1000000</code>，表示「這個節點我走過了」</li>
+          <li>然後繼續往 <code>next</code> 走</li>
+        </ul>
+        <p>如果一路走到 <code>nullptr</code>，代表能走到尾巴且不會回到舊節點 → 沒有 cycle。</p>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>head</code>：目前走訪到的節點指標（一路往後移）</li>
+          <li><code>1000000</code>：我用來標記「走過」的特殊值</li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+        <h3>1. 從 head 開始一路往下走</h3>
+        <ul>
+          <li><code>while (head)</code>：只要還沒走到 <code>nullptr</code> 就繼續</li>
+        </ul>
+        <hr />
+
+        <h3>2. 如果這個節點已經被標記過，代表有 cycle</h3>
+        <ul>
+          <li><code>if (head-&gt;val == 1000000) return true;</code></li>
+        </ul>
+        <hr />
+
+        <h3>3. 否則標記它，並前進到下一個節點</h3>
+        <ul>
+          <li><code>head-&gt;val = 1000000;</code></li>
+          <li><code>head = head-&gt;next;</code></li>
+        </ul>
+        <hr />
+
+        <h3>4. 走到 nullptr 代表沒有 cycle</h3>
+        <ul>
+          <li><code>return false;</code></li>
+        </ul>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    bool hasCycle(ListNode* head) {
+        while (head) {
+            if (head-&gt;val == 1000000) {
+                return true;
+            }
+            head-&gt;val = 1000000;
+            head = head-&gt;next;
+        }
+        return false;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/linked-list-cycle/description/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-02-06</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value">
+            <span class="post-tags">
+              <span class="post-tag">Hash Table</span>
+              <span class="post-tag">Linked List</span>
+              <span class="post-tag">Two Pointers</span>
+              <span class="post-tag">Easy</span>
+            </span>
+          </span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/all%20problems/141-linked-list-cycle.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
