@@ -61,9 +61,12 @@
         <strong>目錄</strong>
         <ul>
           <li><a href="#statement">📘 題目敘述</a></li>
-          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#approach">🧠 解題思路（一）建立dummy</a></li>
           <li><a href="#steps">🪜 主要流程步驟</a></li>
-          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#code">💻 程式碼實作（一）</a></li>
+          <li><a href="#approach-2">🧠 解題思路（二）奇偶指標</a></li>
+          <li><a href="#steps-2">🪜 主要流程步驟</a></li>
+          <li><a href="#code-2">💻 程式碼實作（二）</a></li>
           <li><a href="#link">🔗 題目連結</a></li>
         </ul>
       </aside>
@@ -213,7 +216,7 @@ public:
     }
 };</code></pre>
 
-        <h2>🧠 解題思路（二）奇偶指標</h2>
+        <h2 id="approach-2">🧠 解題思路（二）奇偶指標</h2>
         <p>我這份寫法是「把原串列拆成兩條鏈，再接起來」，全程只改 <code>next</code> 指標，不建新節點。</p>
         <p>核心想法：</p>
         <ul>
@@ -231,7 +234,7 @@ public:
           <li><code>ehead</code>：偶數鏈的頭指標（用來在最後接回去）。</li>
         </ul>
 
-        <h2>🪜 主要流程步驟</h2>
+        <h2 id="steps-2">🪜 主要流程步驟</h2>
         <h3>1. 特例：長度 0 或 1 直接回傳</h3>
         <ul>
           <li>如果 <code>!head</code> 或 <code>!head-&gt;next</code>，代表節點不夠分奇偶，原樣回傳即可。</li>
@@ -271,7 +274,7 @@ public:
           <li>因為是原地改指標，頭不變，回傳 <code>head</code>。</li>
         </ul>
 
-        <h2>💻 程式碼實作（二）</h2>
+        <h2 id="code-2">💻 程式碼實作（二）</h2>
         <pre><code class="language-cpp">/**
  * Definition for singly-linked list.
  * struct ListNode {
