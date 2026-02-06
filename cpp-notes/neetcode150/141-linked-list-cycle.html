@@ -61,9 +61,13 @@
         <strong>目錄</strong>
         <ul>
           <li><a href="#statement">📘 題目敘述</a></li>
-          <li><a href="#approach">🧠 解題思路</a></li>
-          <li><a href="#steps">🪜 主要流程步驟</a></li>
-          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#approach-1">🧠 解題思路（一）直接改數字</a></li>
+          <li><a href="#steps-1">🪜 主要流程步驟（一）</a></li>
+          <li><a href="#code-1">💻 程式碼實作（一）</a></li>
+          <li><a href="#approach-2">🧠 解題思路（二）快慢指標</a></li>
+          <li><a href="#steps-2">🪜 主要流程步驟（二）</a></li>
+          <li><a href="#why-correct">💡 為什麼這個方法一定正確？</a></li>
+          <li><a href="#code-2">💻 程式碼實作（二）</a></li>
           <li><a href="#link">🔗 題目連結</a></li>
         </ul>
       </aside>
@@ -71,8 +75,11 @@
       <section class="term-block article-content">
         <h2 id="statement">📘 題目敘述</h2>
         <p>給你一個 linked list 的頭節點 <code>head</code>，判斷這個 linked list 中是否存在 cycle。</p>
+
         <p>如果 linked list 中存在某個節點可以再一次被走到（也就是沿著 <code>next</code> 指標走下去會回到之前出現過的節點），則該 linked list 存在 cycle。</p>
+
         <p>內部用 <code>pos</code> 代表 tail 連回去的那個節點索引（0-based）。注意：<code>pos</code> <strong>不會</strong>作為參數傳入。</p>
+
         <p>如果 linked list 中存在 cycle，回傳 <code>true</code>；否則回傳 <code>false</code>。</p>
 
         <h3>條件限制</h3>
@@ -83,9 +90,11 @@
           <li><code>pos == -1</code> 代表沒有 cycle</li>
         </ul>
 
-        <h2 id="approach">🧠 解題思路</h2>
+        <h2 id="approach-1">🧠 解題思路（一）直接改數字</h2>
         <p>這份寫法是用「改節點值當作走訪標記」來判斷是否走回來。</p>
+
         <p>我用一個不會出現的數字 <code>1000000</code> 當成標記：</p>
+
         <ul>
           <li>走訪每個節點時：</li>
           <li>如果我發現某個節點的 <code>val</code> 已經被改成 <code>1000000</code>
@@ -96,6 +105,7 @@
           <li>否則我就把它的 <code>val</code> 改成 <code>1000000</code>，表示「這個節點我走過了」</li>
           <li>然後繼續往 <code>next</code> 走</li>
         </ul>
+
         <p>如果一路走到 <code>nullptr</code>，代表能走到尾巴且不會回到舊節點 → 沒有 cycle。</p>
 
         <h3>所有變數</h3>
@@ -104,17 +114,20 @@
           <li><code>1000000</code>：我用來標記「走過」的特殊值</li>
         </ul>
 
-        <h2 id="steps">🪜 主要流程步驟</h2>
+        <h2 id="steps-1">🪜 主要流程步驟</h2>
+
         <h3>1. 從 head 開始一路往下走</h3>
         <ul>
           <li><code>while (head)</code>：只要還沒走到 <code>nullptr</code> 就繼續</li>
         </ul>
+
         <hr />
 
         <h3>2. 如果這個節點已經被標記過，代表有 cycle</h3>
         <ul>
           <li><code>if (head-&gt;val == 1000000) return true;</code></li>
         </ul>
+
         <hr />
 
         <h3>3. 否則標記它，並前進到下一個節點</h3>
@@ -122,6 +135,7 @@
           <li><code>head-&gt;val = 1000000;</code></li>
           <li><code>head = head-&gt;next;</code></li>
         </ul>
+
         <hr />
 
         <h3>4. 走到 nullptr 代表沒有 cycle</h3>
@@ -129,7 +143,7 @@
           <li><code>return false;</code></li>
         </ul>
 
-        <h2 id="code">💻 程式碼實作</h2>
+        <h2 id="code-1">💻 程式碼實作（一）</h2>
         <pre><code class="language-cpp">/**
  * Definition for singly-linked list.
  * struct ListNode {
@@ -147,6 +161,143 @@ public:
             }
             head-&gt;val = 1000000;
             head = head-&gt;next;
+        }
+        return false;
+    }
+};
+</code></pre>
+
+        <h2 id="approach-2">🧠 解題思路（二）快慢指標</h2>
+
+        <p>這題我使用的是經典的 <strong>快慢指標（Floyd Cycle Detection Algorithm）</strong>。</p>
+
+        <p>核心想法是：</p>
+
+        <blockquote>
+          <p>如果鏈結串列中存在環，那麼一個走得快、一個走得慢的指標，
+          最後一定會在環內某個位置「相遇」。</p>
+        </blockquote>
+
+        <p>反過來說：</p>
+
+        <ul>
+          <li>如果鏈結串列沒有環</li>
+          <li>那快指標一定會先走到 <code>nullptr</code></li>
+          <li>迴圈自然結束，代表沒有環</li>
+        </ul>
+
+        <p>這個方法的好處是：</p>
+
+        <ul>
+          <li><strong>不需要額外空間</strong></li>
+          <li><strong>時間複雜度 O(n)，空間複雜度 O(1)</strong></li>
+        </ul>
+
+        <h3>所有變數</h3>
+
+        <ul>
+          <li><code>slow</code>：慢指標，每次往前走 <strong>一步</strong></li>
+          <li><code>fast</code>：快指標，每次往前走 <strong>兩步</strong></li>
+          <li><code>head</code>：鏈結串列的起始節點</li>
+        </ul>
+
+        <h2 id="steps-2">🪜 主要流程步驟</h2>
+
+        <h3>第一步：初始化快慢指標</h3>
+
+        <ul>
+          <li>一開始，<code>slow</code> 與 <code>fast</code> 都指向 <code>head</code></li>
+          <li>代表兩個人從同一個起點出發</li>
+        </ul>
+
+        <hr />
+
+        <h3>第二步：同步前進（關鍵）</h3>
+
+        <p>只要滿足以下條件，就可以繼續走：</p>
+
+        <ul>
+          <li><code>fast != nullptr</code></li>
+          <li><code>fast-&gt;next != nullptr</code></li>
+        </ul>
+
+        <p>每一輪迴圈中：</p>
+
+        <ul>
+          <li><code>slow</code> 往前走 <strong>1 步</strong></li>
+          <li><code>fast</code> 往前走 <strong>2 步</strong></li>
+        </ul>
+
+        <pre><code class="language-cpp">slow = slow-&gt;next;
+fast = fast-&gt;next-&gt;next;
+</code></pre>
+
+        <hr />
+
+        <h3>第三步：判斷是否相遇</h3>
+
+        <p>在每一輪移動後：</p>
+
+        <ul>
+          <li>如果 <code>slow == fast</code></li>
+          <li>代表快慢指標在某個節點相遇</li>
+          <li><strong>一定存在環</strong></li>
+          <li>立刻回傳 <code>true</code></li>
+        </ul>
+
+        <hr />
+
+        <h3>第四步：迴圈結束仍未相遇</h3>
+
+        <p>如果跳出 <code>while</code> 迴圈，代表：</p>
+
+        <ul>
+          <li><code>fast</code> 或 <code>fast-&gt;next</code> 為 <code>nullptr</code></li>
+          <li>鏈結串列有尾端</li>
+          <li><strong>不存在環</strong></li>
+        </ul>
+
+        <p>此時回傳 <code>false</code></p>
+
+        <h2 id="why-correct">💡 為什麼這個方法一定正確？</h2>
+
+        <ul>
+          <li>若沒有環：
+            <ul>
+              <li><code>fast</code> 會先走到 <code>nullptr</code></li>
+              <li>不可能與 <code>slow</code> 相遇</li>
+            </ul>
+          </li>
+          <li>若有環：
+            <ul>
+              <li><code>fast</code> 每輪比 <code>slow</code> 多走一步</li>
+              <li>在環中相對距離會不斷縮小</li>
+              <li>最終一定會在某個節點相遇</li>
+            </ul>
+          </li>
+        </ul>
+
+        <h2 id="code-2">💻 程式碼實作（二）</h2>
+
+        <pre><code class="language-cpp">/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    bool hasCycle(ListNode* head) {
+        ListNode* slow = head;
+        ListNode* fast = head;
+        while (fast &amp;&amp; fast-&gt;next) {
+            slow = slow-&gt;next;       // slow 走 1 步
+            fast = fast-&gt;next-&gt;next; // fast 走 2 步
+            if (slow == fast) {
+                return true; // 在環中相遇
+            }
         }
         return false;
     }
