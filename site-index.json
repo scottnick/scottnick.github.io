@@ -16,28 +16,28 @@
       "folder": ""
     },
     {
-      "path": "courses/freshman-fall-japanese.html",
-      "title": "日文上",
-      "date": "2026-02-04",
+      "path": "cpp-notes/all%20problems/5-longest-palindromic-substring.html",
+      "title": "5. Longest Palindromic Substring",
+      "date": "2025-12-30",
       "tags": [
-        "外文",
-        "修課紀錄"
+        "Two Pointers",
+        "String",
+        "Dynamic Programming",
+        "Medium"
       ],
-      "folder": "courses"
+      "folder": "cpp-notes/all problems"
     },
     {
       "path": "home/tutoring.html",
       "title": "家教經驗",
       "date": "",
       "tags": [
-        "現任學生",
-        "數學",
-        "階段性",
-        "英文",
-        "學習管理",
-        "習慣養成"
+        "Sliding Window",
+        "Two Pointers",
+        "Array",
+        "Medium"
       ],
-      "folder": "home"
+      "folder": "cpp-notes/all problems"
     },
     {
       "path": "home/ntu-math-special.html",
@@ -61,7 +61,7 @@
         "Sorting",
         "Easy"
       ],
-      "folder": "cpp-notes/leetcode75"
+      "folder": "cpp-notes/all problems"
     },
     {
       "path": "cpp-notes/leetcode75/17-letter-combinations-of-a-phone-number.html",
@@ -73,7 +73,7 @@
         "Array",
         "Medium"
       ],
-      "folder": "cpp-notes/leetcode75"
+      "folder": "cpp-notes/all problems"
     },
     {
       "path": "cpp-notes/leetcode75/1071-greatest-common-divisor-of-strings.html",
@@ -84,7 +84,7 @@
         "String",
         "Easy"
       ],
-      "folder": "cpp-notes/leetcode75"
+      "folder": "cpp-notes/all problems"
     },
     {
       "path": "cpp-notes/leetcode75/2352-equal-row-and-column-pairs.html",
@@ -96,7 +96,7 @@
         "Simulation",
         "Medium"
       ],
-      "folder": "cpp-notes/leetcode75"
+      "folder": "cpp-notes/all problems"
     },
     {
       "path": "cpp-notes/leetcode75/104-maximum-depth-of-binary-tree.html",
@@ -109,7 +109,7 @@
         "Binary Tree",
         "Easy"
       ],
-      "folder": "cpp-notes/leetcode75"
+      "folder": "cpp-notes/all problems"
     },
     {
       "path": "cpp-notes/leetcode75/151-reverse-words-in-a-string.html",
@@ -120,7 +120,7 @@
         "Two Pointers",
         "Medium"
       ],
-      "folder": "cpp-notes/leetcode75"
+      "folder": "cpp-notes/all problems"
     },
     {
       "path": "cpp-notes/leetcode75/872-leaf-similar-trees.html",
@@ -131,7 +131,7 @@
         "Depth-First Search",
         "Easy"
       ],
-      "folder": "cpp-notes/leetcode75"
+      "folder": "cpp-notes/all problems"
     },
     {
       "path": "cpp-notes/leetcode75/394-decode-string.html",
@@ -143,7 +143,7 @@
         "String",
         "Medium"
       ],
-      "folder": "cpp-notes/leetcode75"
+      "folder": "cpp-notes/all problems"
     },
     {
       "path": "cpp-notes/leetcode75/1657-determine-if-two-strings-are-close.html",
@@ -155,7 +155,7 @@
         "Sorting",
         "Medium"
       ],
-      "folder": "cpp-notes/leetcode75"
+      "folder": "cpp-notes/all problems"
     },
     {
       "path": "cpp-notes/leetcode75/1207-unique-number-of-occurrences.html",
@@ -167,7 +167,7 @@
         "Sorting",
         "Easy"
       ],
-      "folder": "cpp-notes/leetcode75"
+      "folder": "cpp-notes/all problems"
     },
     {
       "path": "cpp-notes/leetcode75/392-is-subsequence.html",
@@ -201,19 +201,19 @@
         "Array",
         "Medium"
       ],
-      "folder": "cpp-notes/leetcode75"
+      "folder": "cpp-notes/all problems"
     },
     {
-      "path": "cpp-notes/leetcode75/649-dota2-senate.html",
-      "title": "649. Dota2 Senate",
+      "path": "cpp-notes/all%20problems/933-number-of-recent-calls.html",
+      "title": "933. Number of Recent Calls",
       "date": "2026-02-01",
       "tags": [
-        "Greedy",
+        "Design",
         "Queue",
-        "Simulation",
-        "Medium"
+        "Data Stream",
+        "Easy"
       ],
-      "folder": "cpp-notes/leetcode75"
+      "folder": "cpp-notes/all problems"
     },
     {
       "path": "cpp-notes/leetcode75/345-reverse-vowels-of-a-string.html",
@@ -224,7 +224,7 @@
         "String",
         "Easy"
       ],
-      "folder": "cpp-notes/leetcode75"
+      "folder": "cpp-notes/all problems"
     },
     {
       "path": "cpp-notes/leetcode75/1431-kids-with-the-greatest-number-of-candies.html",
@@ -234,7 +234,7 @@
         "Array",
         "Easy"
       ],
-      "folder": "cpp-notes/leetcode75"
+      "folder": "cpp-notes/all problems"
     },
     {
       "path": "cpp-notes/leetcode75/11-container-with-most-water.html",
@@ -246,19 +246,18 @@
         "Greedy",
         "Medium"
       ],
-      "folder": "cpp-notes/leetcode75"
+      "folder": "cpp-notes/all problems"
     },
     {
-      "path": "cpp-notes/leetcode75/933-number-of-recent-calls.html",
-      "title": "933. Number of Recent Calls",
+      "path": "cpp-notes/all%20problems/3010-divide-an-array-into-subarrays-with-minimum-cost-i.html",
+      "title": "3010. Divide an Array Into Subarrays With Minimum Cost I",
       "date": "2026-02-01",
       "tags": [
-        "Design",
-        "Queue",
-        "Data Stream",
+        "Array",
+        "Greedy",
         "Easy"
       ],
-      "folder": "cpp-notes/leetcode75"
+      "folder": "cpp-notes/all problems"
     },
     {
       "path": "cpp-notes/leetcode75/283-move-zeroes.html",
@@ -269,7 +268,7 @@
         "Two Pointers",
         "Easy"
       ],
-      "folder": "cpp-notes/leetcode75"
+      "folder": "cpp-notes/all problems"
     },
     {
       "path": "cpp-notes/leetcode75/238-product-of-array-except-self.html",
@@ -280,7 +279,7 @@
         "Prefix Sum",
         "Medium"
       ],
-      "folder": "cpp-notes/leetcode75"
+      "folder": "cpp-notes/all problems"
     },
     {
       "path": "cpp-notes/leetcode75/1679-max-number-of-k-sum-pairs.html",
@@ -291,7 +290,7 @@
         "Sorting",
         "Medium"
       ],
-      "folder": "cpp-notes/leetcode75"
+      "folder": "cpp-notes/all problems"
     },
     {
       "path": "cpp-notes/leetcode75/2095-delete-the-middle-node-of-a-linked-list.html",
@@ -302,7 +301,7 @@
         "Two Pointers",
         "Medium"
       ],
-      "folder": "cpp-notes/leetcode75"
+      "folder": "cpp-notes/all problems"
     },
     {
       "path": "cpp-notes/leetcode75/206-reverse-linked-list.html",
@@ -313,7 +312,7 @@
         "Stack",
         "Easy"
       ],
-      "folder": "cpp-notes/leetcode75"
+      "folder": "cpp-notes/all problems"
     },
     {
       "path": "cpp-notes/leetcode75/1732-find-the-highest-altitude.html",
@@ -324,7 +323,7 @@
         "Prefix Sum",
         "Easy"
       ],
-      "folder": "cpp-notes/leetcode75"
+      "folder": "cpp-notes/all problems"
     },
     {
       "path": "cpp-notes/leetcode75/1004-max-consecutive-ones-iii.html",
@@ -336,18 +335,17 @@
         "Array",
         "Medium"
       ],
-      "folder": "cpp-notes/leetcode75"
+      "folder": "cpp-notes/all problems"
     },
     {
-      "path": "cpp-notes/leetcode75/605-can-place-flowers.html",
-      "title": "605. Can Place Flowers",
-      "date": "2026-01-10",
+      "path": "cpp-notes/all%20problems/6-zigzag-conversion.html",
+      "title": "6. Zigzag Conversion",
+      "date": "2026-01-06",
       "tags": [
-        "Array",
-        "Greedy",
-        "Easy"
+        "String",
+        "Medium"
       ],
-      "folder": "cpp-notes/leetcode75"
+      "folder": "cpp-notes/all problems"
     },
     {
       "path": "cpp-notes/leetcode75/1456-maximum-number-of-vowels-in-a-substring-of-given-length.html",
@@ -358,7 +356,7 @@
         "Sliding Window",
         "Medium"
       ],
-      "folder": "cpp-notes/leetcode75"
+      "folder": "cpp-notes/all problems"
     },
     {
       "path": "cpp-notes/leetcode75/2390-removing-stars-from-a-string.html",
@@ -369,7 +367,7 @@
         "String",
         "Medium"
       ],
-      "folder": "cpp-notes/leetcode75"
+      "folder": "cpp-notes/all problems"
     },
     {
       "path": "cpp-notes/leetcode75/643-maximum-average-subarray-i.html",
@@ -387,10 +385,9 @@
       "title": "994. Rotting Oranges",
       "date": "2026-01-01",
       "tags": [
-        "Array",
-        "BFS",
-        "Matrix",
-        "Medium"
+        "Math",
+        "Bit Manipulation",
+        "Easy"
       ],
       "folder": "cpp-notes/leetcode75"
     },
@@ -401,6 +398,8 @@
       "tags": [
         "Array",
         "Greedy",
+        "Queue",
+        "Simulation",
         "Medium"
       ],
       "folder": "cpp-notes/leetcode75"
@@ -807,6 +806,7 @@
       "date": "2026-02-04",
       "tags": [
         "String",
+        "String Matching",
         "Easy"
       ],
       "folder": "cpp-notes/all problems"
@@ -945,7 +945,7 @@
         "Array",
         "Medium"
       ],
-      "folder": "cpp-notes/all problems"
+      "folder": "cpp-notes/contests"
     },
     {
       "path": "cpp-notes/all%20problems/70-climbing-stairs.html",
@@ -956,7 +956,7 @@
         "Math",
         "Easy"
       ],
-      "folder": "cpp-notes/all problems"
+      "folder": "cpp-notes/contests"
     },
     {
       "path": "cpp-notes/all%20problems/649-dota2-senate.html",
@@ -968,7 +968,7 @@
         "Simulation",
         "Medium"
       ],
-      "folder": "cpp-notes/all problems"
+      "folder": "cpp-notes/contests"
     },
     {
       "path": "cpp-notes/all%20problems/3010-divide-an-array-into-subarrays-with-minimum-cost-i.html",
@@ -979,7 +979,7 @@
         "Greedy",
         "Easy"
       ],
-      "folder": "cpp-notes/all problems"
+      "folder": "cpp-notes/contests"
     },
     {
       "path": "cpp-notes/all%20problems/345-reverse-vowels-of-a-string.html",
@@ -990,7 +990,7 @@
         "String",
         "Easy"
       ],
-      "folder": "cpp-notes/all problems"
+      "folder": "cpp-notes/contests"
     },
     {
       "path": "cpp-notes/all%20problems/3830-longest-alternating-subarray-after-removing-at-most-one-element.html",
@@ -1000,7 +1000,7 @@
         "Weekly Contest 487",
         "Hard"
       ],
-      "folder": "cpp-notes/all problems"
+      "folder": "cpp-notes/contests/biweekly-contest-175"
     },
     {
       "path": "cpp-notes/all%20problems/1431-kids-with-the-greatest-number-of-candies.html",
@@ -1010,7 +1010,7 @@
         "Array",
         "Easy"
       ],
-      "folder": "cpp-notes/all problems"
+      "folder": "cpp-notes/contests/biweekly-contest-175"
     },
     {
       "path": "cpp-notes/all%20problems/141-linked-list-cycle.html",
@@ -1022,7 +1022,7 @@
         "Two Pointers",
         "Easy"
       ],
-      "folder": "cpp-notes/all problems"
+      "folder": "cpp-notes/contests/weekly-contest-486"
     },
     {
       "path": "cpp-notes/all%20problems/1344-angle-between-hands-of-a-clock.html",
@@ -1032,7 +1032,7 @@
         "Math",
         "Medium"
       ],
-      "folder": "cpp-notes/all problems"
+      "folder": "cpp-notes/contests/weekly-contest-486"
     },
     {
       "path": "cpp-notes/all%20problems/11-container-with-most-water.html",
@@ -1044,7 +1044,7 @@
         "Greedy",
         "Medium"
       ],
-      "folder": "cpp-notes/all problems"
+      "folder": "cpp-notes/contests/weekly-contest-486"
     },
     {
       "path": "cpp-notes/all%20problems/3814-maximum-capacity-within-budget.html",
@@ -1054,7 +1054,7 @@
         "Weekly Contest 485",
         "Medium"
       ],
-      "folder": "cpp-notes/all problems"
+      "folder": "cpp-notes/contests/weekly-contest-485"
     },
     {
       "path": "cpp-notes/all%20problems/933-number-of-recent-calls.html",
@@ -1066,7 +1066,7 @@
         "Data Stream",
         "Easy"
       ],
-      "folder": "cpp-notes/all problems"
+      "folder": "cpp-notes/contests/weekly-contest-485"
     },
     {
       "path": "cpp-notes/all%20problems/704-binary-search.html",
@@ -1077,7 +1077,7 @@
         "Binary Search",
         "Easy"
       ],
-      "folder": "cpp-notes/all problems"
+      "folder": "cpp-notes/contests/biweekly-contest-174"
     },
     {
       "path": "cpp-notes/all%20problems/66-plus-one.html",
@@ -1088,7 +1088,7 @@
         "Math",
         "Easy"
       ],
-      "folder": "cpp-notes/all problems"
+      "folder": "cpp-notes/contests/biweekly-contest-174"
     },
     {
       "path": "cpp-notes/all%20problems/283-move-zeroes.html",
@@ -1099,7 +1099,7 @@
         "Two Pointers",
         "Easy"
       ],
-      "folder": "cpp-notes/all problems"
+      "folder": "cpp-notes/contests/weekly-contest-487"
     },
     {
       "path": "cpp-notes/all%20problems/3821-find-nth-smallest-integer-with-k-one-bits.html",
@@ -1109,7 +1109,7 @@
         "Weekly Contest 486",
         "Hard"
       ],
-      "folder": "cpp-notes/all problems"
+      "folder": "cpp-notes/contests/weekly-contest-487"
     },
     {
       "path": "cpp-notes/all%20problems/238-product-of-array-except-self.html",
@@ -1120,7 +1120,7 @@
         "Prefix Sum",
         "Medium"
       ],
-      "folder": "cpp-notes/all problems"
+      "folder": "cpp-notes/contests/weekly-contest-487"
     },
     {
       "path": "cpp-notes/all%20problems/796-rotate-string.html",
@@ -1131,7 +1131,7 @@
         "String Matching",
         "Easy"
       ],
-      "folder": "cpp-notes/all problems"
+      "folder": "cpp-notes/contests/weekly-contest-487"
     },
     {
       "path": "cpp-notes/all%20problems/1679-max-number-of-k-sum-pairs.html",
@@ -1142,7 +1142,7 @@
         "Sorting",
         "Medium"
       ],
-      "folder": "cpp-notes/all problems"
+      "folder": "cpp-notes/grind75"
     },
     {
       "path": "cpp-notes/all%20problems/2095-delete-the-middle-node-of-a-linked-list.html",
@@ -1153,7 +1153,7 @@
         "Two Pointers",
         "Medium"
       ],
-      "folder": "cpp-notes/all problems"
+      "folder": "cpp-notes/grind75"
     },
     {
       "path": "cpp-notes/all%20problems/1200-minimum-absolute-difference.html",
@@ -1164,7 +1164,7 @@
         "Sorting",
         "Easy"
       ],
-      "folder": "cpp-notes/all problems"
+      "folder": "cpp-notes/grind75"
     },
     {
       "path": "cpp-notes/all%20problems/206-reverse-linked-list.html",
@@ -1175,18 +1175,20 @@
         "Stack",
         "Easy"
       ],
-      "folder": "cpp-notes/all problems"
+      "folder": "cpp-notes/grind75"
     },
     {
       "path": "cpp-notes/all%20problems/1732-find-the-highest-altitude.html",
       "title": "1732. Find the Highest Altitude",
       "date": "2026-01-31",
       "tags": [
+        "Dynamic Programming",
+        "Breadth-First Search",
         "Array",
         "Prefix Sum",
         "Easy"
       ],
-      "folder": "cpp-notes/all problems"
+      "folder": "cpp-notes/grind75"
     },
     {
       "path": "cpp-notes/all%20problems/3640-trionic-array-ii.html",
@@ -1197,7 +1199,7 @@
         "Dynamic Programming",
         "Hard"
       ],
-      "folder": "cpp-notes/all problems"
+      "folder": "cpp-notes/grind75"
     },
     {
       "path": "cpp-notes/all%20problems/3809-best-reachable-tower.html",
@@ -1207,7 +1209,7 @@
         "Biweekly Contest 174",
         "Medium"
       ],
-      "folder": "cpp-notes/all problems"
+      "folder": "cpp-notes/grind75"
     },
     {
       "path": "cpp-notes/all%20problems/169-majority-element.html",
@@ -1218,7 +1220,7 @@
         "Sorting",
         "Easy"
       ],
-      "folder": "cpp-notes/all problems"
+      "folder": "cpp-notes/grind75"
     },
     {
       "path": "cpp-notes/all%20problems/1004-max-consecutive-ones-iii.html",
@@ -1230,17 +1232,18 @@
         "Array",
         "Medium"
       ],
-      "folder": "cpp-notes/all problems"
+      "folder": "cpp-notes/grind75"
     },
     {
       "path": "cpp-notes/all%20problems/6-zigzag-conversion.html",
       "title": "6. Zigzag Conversion",
       "date": "2026-01-06",
       "tags": [
+        "Stack",
         "String",
         "Medium"
       ],
-      "folder": "cpp-notes/all problems"
+      "folder": "cpp-notes/grind75"
     },
     {
       "path": "cpp-notes/all%20problems/7-reverse-integer.html",
@@ -1250,7 +1253,7 @@
         "Math",
         "Medium"
       ],
-      "folder": "cpp-notes/all problems"
+      "folder": "cpp-notes/grind75"
     },
     {
       "path": "cpp-notes/all%20problems/8-string-to-integer-atoi.html",
@@ -1260,7 +1263,7 @@
         "String",
         "Medium"
       ],
-      "folder": "cpp-notes/all problems"
+      "folder": "cpp-notes/grind75"
     },
     {
       "path": "cpp-notes/all%20problems/342-power-of-four.html",
@@ -1271,7 +1274,7 @@
         "Bit Manipulation",
         "Easy"
       ],
-      "folder": "cpp-notes/all problems"
+      "folder": "cpp-notes/grind75"
     },
     {
       "path": "cpp-notes/all%20problems/3818-minimum-prefix-removal-to-make-array-strictly-increasing.html",
@@ -1281,7 +1284,7 @@
         "Weekly Contest 486",
         "Medium"
       ],
-      "folder": "cpp-notes/all problems"
+      "folder": "cpp-notes/grind75"
     },
     {
       "path": "cpp-notes/all%20problems/1877-minimize-maximum-pair-sum-in-array.html",
@@ -1294,7 +1297,7 @@
         "Sorting",
         "Medium"
       ],
-      "folder": "cpp-notes/all problems"
+      "folder": "cpp-notes/leetcode75"
     },
     {
       "path": "cpp-notes/all%20problems/3314-construct-the-minimum-bitwise-array-i.html",
@@ -1312,12 +1315,11 @@
       "title": "231. Power of Two",
       "date": "2026-02-04",
       "tags": [
-        "Math",
-        "Bit Manipulation",
-        "Recursion",
-        "Easy"
+        "String",
+        "Two Pointers",
+        "Medium"
       ],
-      "folder": "cpp-notes/all problems"
+      "folder": "cpp-notes/leetcode75"
     },
     {
       "path": "cpp-notes/all%20problems/3823-reverse-letters-then-special-characters-in-a-string.html",
@@ -1327,7 +1329,7 @@
         "Biweekly Contest 175",
         "Easy"
       ],
-      "folder": "cpp-notes/all problems"
+      "folder": "cpp-notes/leetcode75"
     },
     {
       "path": "cpp-notes/all%20problems/605-can-place-flowers.html",
@@ -1338,7 +1340,7 @@
         "Greedy",
         "Easy"
       ],
-      "folder": "cpp-notes/all problems"
+      "folder": "cpp-notes/leetcode75"
     },
     {
       "path": "cpp-notes/all%20problems/409-longest-palindrome.html",
@@ -1350,7 +1352,7 @@
         "Greedy",
         "Easy"
       ],
-      "folder": "cpp-notes/all problems"
+      "folder": "cpp-notes/leetcode75"
     },
     {
       "path": "cpp-notes/all%20problems/3-longest-substring-without-repeating-characters.html",
@@ -1362,7 +1364,7 @@
         "Sliding Window",
         "Medium"
       ],
-      "folder": "cpp-notes/all problems"
+      "folder": "cpp-notes/leetcode75"
     },
     {
       "path": "cpp-notes/all%20problems/125-valid-palindrome.html",
@@ -1373,7 +1375,7 @@
         "String",
         "Easy"
       ],
-      "folder": "cpp-notes/all problems"
+      "folder": "cpp-notes/leetcode75"
     },
     {
       "path": "cpp-notes/all%20problems/326-power-of-three.html",
@@ -1384,7 +1386,7 @@
         "Iteration",
         "Easy"
       ],
-      "folder": "cpp-notes/all problems"
+      "folder": "cpp-notes/leetcode75"
     },
     {
       "path": "cpp-notes/all%20problems/1456-maximum-number-of-vowels-in-a-substring-of-given-length.html",
@@ -1395,7 +1397,7 @@
         "Sliding Window",
         "Medium"
       ],
-      "folder": "cpp-notes/all problems"
+      "folder": "cpp-notes/leetcode75"
     },
     {
       "path": "cpp-notes/all%20problems/139-word-break.html",
@@ -1410,7 +1412,7 @@
         "Memoization",
         "Medium"
       ],
-      "folder": "cpp-notes/all problems"
+      "folder": "cpp-notes/leetcode75"
     },
     {
       "path": "cpp-notes/all%20problems/5-longest-palindromic-substring.html",
@@ -1422,7 +1424,7 @@
         "Dynamic Programming",
         "Medium"
       ],
-      "folder": "cpp-notes/all problems"
+      "folder": "cpp-notes/leetcode75"
     },
     {
       "path": "cpp-notes/all%20problems/2390-removing-stars-from-a-string.html",
@@ -1431,9 +1433,10 @@
       "tags": [
         "Stack",
         "String",
+        "Array",
         "Medium"
       ],
-      "folder": "cpp-notes/all problems"
+      "folder": "cpp-notes/leetcode75"
     },
     {
       "path": "cpp-notes/all%20problems/27-remove-element.html",
@@ -1646,16 +1649,15 @@
       "folder": "cpp-notes/neetcode150"
     },
     {
-      "path": "cpp-notes/neetcode150/longest-palindromic-substring.html",
-      "title": "5. Longest Palindromic Substring",
-      "date": "2025-12-30",
+      "path": "cpp-notes/leetcode75/392-is-subsequence.html",
+      "title": "392. Is Subsequence",
+      "date": "2026-01-17",
       "tags": [
         "Two Pointers",
         "String",
-        "Dynamic Programming",
-        "Medium"
+        "Easy"
       ],
-      "folder": "cpp-notes/neetcode150"
+      "folder": "cpp-notes/leetcode75"
     },
     {
       "path": "cpp-notes/neetcode150/2-add-two-numbers.html",
@@ -1733,10 +1735,10 @@
       "date": "2026-01-15",
       "tags": [
         "Array",
-        "Math",
+        "Two Pointers",
         "Easy"
       ],
-      "folder": "cpp-notes/neetcode150"
+      "folder": "cpp-notes/leetcode75"
     },
     {
       "path": "cpp-notes/neetcode150/238-product-of-array-except-self.html",
@@ -1760,12 +1762,12 @@
       "folder": "cpp-notes/neetcode150"
     },
     {
-      "path": "cpp-notes/neetcode150/125-valid-palindrome.html",
-      "title": "125. Valid Palindrome",
-      "date": "2026-01-11",
+      "path": "cpp-notes/neetcode150/704-binary-search.html",
+      "title": "704. Binary Search",
+      "date": "2026-01-02",
       "tags": [
-        "Two Pointers",
-        "String",
+        "Array",
+        "Binary Search",
         "Easy"
       ],
       "folder": "cpp-notes/neetcode150"
@@ -1919,12 +1921,31 @@
       "date": "2026-01-03",
       "tags": [
         "Array",
-        "Hash Table",
-        "String",
-        "Dynamic Programming",
-        "Trie",
-        "Memoization",
+        "Two Pointers",
+        "Greedy",
         "Medium"
+      ],
+      "folder": "cpp-notes/neetcode150"
+    },
+    {
+      "path": "cpp-notes/neetcode150/20-valid-parentheses.html",
+      "title": "20. Valid Parentheses",
+      "date": "2026-01-15",
+      "tags": [
+        "Stack",
+        "String",
+        "Easy"
+      ],
+      "folder": "cpp-notes/neetcode150"
+    },
+    {
+      "path": "cpp-notes/neetcode150/70-climbing-stairs.html",
+      "title": "70. Climbing Stairs",
+      "date": "2026-01-15",
+      "tags": [
+        "Dynamic Programming",
+        "Math",
+        "Easy"
       ],
       "folder": "cpp-notes/grind75"
     },
@@ -1966,9 +1987,9 @@
       "title": "17. Letter Combinations of a Phone Number",
       "date": "2026-01-23",
       "tags": [
-        "Backtracking",
+        "Two Pointers",
         "String",
-        "Array",
+        "Dynamic Programming",
         "Medium"
       ],
       "folder": "cpp-notes/top-interview-150"
@@ -2033,8 +2054,8 @@
       "title": "392. Is Subsequence",
       "date": "2026-01-17",
       "tags": [
+        "Array",
         "Two Pointers",
-        "String",
         "Easy"
       ],
       "folder": "cpp-notes/top-interview-150"
@@ -2051,14 +2072,13 @@
       "folder": "cpp-notes/top-interview-150"
     },
     {
-      "path": "cpp-notes/top-interview-150/11-container-with-most-water.html",
-      "title": "11. Container With Most Water",
-      "date": "2025-12-30",
+      "path": "cpp-notes/top-interview-150/28-find-the-index-of-the-first-occurrence-in-a-string.html",
+      "title": "28. Find the Index of the First Occurrence in a String",
+      "date": "2026-01-12",
       "tags": [
-        "Array",
+        "String",
         "Two Pointers",
-        "Greedy",
-        "Medium"
+        "Easy"
       ],
       "folder": "cpp-notes/top-interview-150"
     },
@@ -2129,16 +2149,24 @@
       "folder": "cpp-notes/top-interview-150"
     },
     {
-      "path": "cpp-notes/top-interview-150/139-word-break.html",
-      "title": "139. Word Break",
-      "date": "2026-01-03",
+      "path": "cpp-notes/top-interview-150/70-climbing-stairs.html",
+      "title": "70. Climbing Stairs",
+      "date": "2026-01-15",
       "tags": [
-        "Array",
+        "Dynamic Programming",
+        "Math",
+        "Easy"
+      ],
+      "folder": "cpp-notes/top-interview-150"
+    },
+    {
+      "path": "cpp-notes/top-interview-150/3-longest-substring-without-repeating-characters.html",
+      "title": "3. Longest Substring Without Repeating Characters",
+      "date": "2025-12-29",
+      "tags": [
         "Hash Table",
         "String",
-        "Dynamic Programming",
-        "Trie",
-        "Memoization",
+        "Sliding Window",
         "Medium"
       ],
       "folder": "cpp-notes/top-interview-150"
@@ -2208,7 +2236,17 @@
         "Two Pointers",
         "Medium"
       ],
-      "folder": "cpp-notes/top-interview-150"
+      "folder": "home"
+    },
+    {
+      "path": "courses/freshman-fall-japanese.html",
+      "title": "日文上",
+      "date": "2026-02-04",
+      "tags": [
+        "外文",
+        "修課紀錄"
+      ],
+      "folder": "courses"
     }
   ],
   "folderCounts": {
