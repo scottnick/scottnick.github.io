@@ -312,6 +312,8 @@
       "title": "605. Can Place Flowers",
       "date": "2026-01-10",
       "tags": [
+        "Backtracking",
+        "String",
         "Array",
         "Greedy",
         "Easy"
@@ -437,8 +439,9 @@
       "title": "345. Reverse Vowels of a String",
       "date": "2026-01-11",
       "tags": [
+        "Array",
         "Two Pointers",
-        "String",
+        "Sorting",
         "Easy"
       ],
       "folder": "cpp-notes/leetcode75"
@@ -506,8 +509,8 @@
       "title": "206. Reverse Linked List",
       "date": "2026-02-04",
       "tags": [
-        "Linked List",
-        "Stack",
+        "Array",
+        "Sorting",
         "Easy"
       ],
       "folder": "cpp-notes/leetcode75"
@@ -618,6 +621,8 @@
       "title": "643. Maximum Average Subarray I",
       "date": "2026-01-30",
       "tags": [
+        "Backtracking",
+        "String",
         "Array",
         "Sliding Window",
         "Easy"
@@ -767,7 +772,6 @@
       "title": "3. Longest Substring Without Repeating Characters",
       "date": "2025-12-29",
       "tags": [
-        "Hash Table",
         "String",
         "Sliding Window",
         "Medium"
@@ -838,7 +842,7 @@
       "tags": [
         "Two Pointers",
         "String",
-        "Easy"
+        "Medium"
       ],
       "folder": "cpp-notes/top-interview-150"
     },
@@ -902,7 +906,7 @@
       "date": "2026-01-16",
       "tags": [
         "Array",
-        "Two Pointers",
+        "Hash Table",
         "Sorting",
         "Easy"
       ],
@@ -940,22 +944,7 @@
         "Math",
         "Medium"
       ],
-      "folder": "cpp-notes/neetcode150"
-    },
-    {
-      "path": "cpp-notes/neetcode150/139-word-break.html",
-      "title": "139. Word Break",
-      "date": "2026-01-03",
-      "tags": [
-        "Array",
-        "Hash Table",
-        "String",
-        "Dynamic Programming",
-        "Trie",
-        "Memoization",
-        "Medium"
-      ],
-      "folder": "cpp-notes/neetcode150"
+      "folder": "cpp-notes/all problems"
     },
     {
       "path": "cpp-notes/neetcode150/longest-substring-without-repeating-characters.html",
@@ -996,12 +985,12 @@
       "title": "5. Longest Palindromic Substring",
       "date": "2025-12-30",
       "tags": [
-        "Two Pointers",
-        "String",
-        "Dynamic Programming",
-        "Medium"
+        "Design",
+        "Queue",
+        "Data Stream",
+        "Easy"
       ],
-      "folder": "cpp-notes/neetcode150"
+      "folder": "cpp-notes/all problems"
     },
     {
       "path": "cpp-notes/neetcode150/322-coin-change.html",
@@ -1011,9 +1000,11 @@
         "Dynamic Programming",
         "Breadth-First Search",
         "Array",
+        "Matrix",
+        "Simulation",
         "Medium"
       ],
-      "folder": "cpp-notes/neetcode150"
+      "folder": "cpp-notes/all problems"
     },
     {
       "path": "cpp-notes/neetcode150/17-letter-combinations-of-a-phone-number.html",
@@ -1025,18 +1016,18 @@
         "Array",
         "Medium"
       ],
-      "folder": "cpp-notes/neetcode150"
+      "folder": "cpp-notes/all problems"
     },
     {
-      "path": "cpp-notes/neetcode150/66-plus-one.html",
-      "title": "66. Plus One",
+      "path": "cpp-notes/all%20problems/151-reverse-words-in-a-string.html",
+      "title": "151. Reverse Words in a String",
       "date": "2026-01-15",
       "tags": [
-        "Array",
-        "Math",
-        "Easy"
+        "String",
+        "Two Pointers",
+        "Medium"
       ],
-      "folder": "cpp-notes/neetcode150"
+      "folder": "cpp-notes/all problems"
     },
     {
       "path": "cpp-notes/neetcode150/11-container-with-most-water.html",
@@ -1059,10 +1050,10 @@
         "String",
         "Easy"
       ],
-      "folder": "cpp-notes/neetcode150"
+      "folder": "cpp-notes/all problems"
     },
     {
-      "path": "cpp-notes/neetcode150/20-valid-parentheses.html",
+      "path": "cpp-notes/all%20problems/20-valid-parentheses.html",
       "title": "20. Valid Parentheses",
       "date": "2026-01-15",
       "tags": [
@@ -1070,18 +1061,7 @@
         "String",
         "Easy"
       ],
-      "folder": "cpp-notes/neetcode150"
-    },
-    {
-      "path": "cpp-notes/neetcode150/238-product-of-array-except-self.html",
-      "title": "238. Product of Array Except Self",
-      "date": "2026-01-15",
-      "tags": [
-        "Array",
-        "Prefix Sum",
-        "Medium"
-      ],
-      "folder": "cpp-notes/neetcode150"
+      "folder": "cpp-notes/all problems"
     },
     {
       "path": "cpp-notes/neetcode150/704-binary-search.html",
@@ -1092,7 +1072,7 @@
         "Binary Search",
         "Easy"
       ],
-      "folder": "cpp-notes/neetcode150"
+      "folder": "cpp-notes/all problems"
     },
     {
       "path": "cpp-notes/neetcode150/2-add-two-numbers.html",
@@ -1220,6 +1200,7 @@
       "title": "11. Container With Most Water",
       "date": "2025-12-30",
       "tags": [
+        "Stack",
         "Array",
         "Two Pointers",
         "Greedy",
@@ -1232,9 +1213,8 @@
       "title": "125. Valid Palindrome",
       "date": "2026-01-11",
       "tags": [
-        "Two Pointers",
-        "String",
-        "Easy"
+        "Weekly Contest 487",
+        "Medium"
       ],
       "folder": "cpp-notes/grind75"
     },
@@ -1638,8 +1618,19 @@
       "title": "70. Climbing Stairs",
       "date": "2026-01-15",
       "tags": [
+        "Array",
         "Dynamic Programming",
+        "Hard"
+      ],
+      "folder": "cpp-notes/all problems"
+    },
+    {
+      "path": "cpp-notes/all%20problems/342-power-of-four.html",
+      "title": "342. Power of Four",
+      "date": "2026-02-04",
+      "tags": [
         "Math",
+        "Bit Manipulation",
         "Easy"
       ],
       "folder": "cpp-notes/all problems"
@@ -1762,6 +1753,7 @@
       "title": "3. Longest Substring Without Repeating Characters",
       "date": "2025-12-29",
       "tags": [
+        "Array",
         "Hash Table",
         "String",
         "Sliding Window",
@@ -1853,6 +1845,8 @@
       "title": "66. Plus One",
       "date": "2026-01-15",
       "tags": [
+        "Dynamic Programming",
+        "Breadth-First Search",
         "Array",
         "Math",
         "Easy"
