@@ -1,0 +1,230 @@
+<!-- all problems/110-balanced-binary-tree.html: All problems 文章 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>110. Balanced Binary Tree</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+               width="18" height="18" aria-hidden="true" focusable="false"
+               style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="index.html">All problems</a>
+      <span aria-hidden="true">/</span>
+      <span>110. Balanced Binary Tree</span>
+    </nav>
+
+    <section class="hero">
+      <h1>110. Balanced Binary Tree</h1>
+      <p><strong>練習日期：</strong>2026-02-08</p>
+      <p><strong>難度：</strong>Easy</p>
+      <p><strong>類型：</strong>Tree、Depth-First Search、Binary Tree</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給你一棵二元樹 <code>root</code>，判斷它是否為高度平衡（height-balanced）的二元樹。</p>
+        <p>高度平衡的二元樹定義為：對於樹中的每一個節點，它的左右子樹高度差的絕對值不超過 <code>1</code>。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li>樹中節點的數量在範圍 <code>[0, 5000]</code></li>
+          <li><code>-10^4 &lt;= Node.val &lt;= 10^4</code></li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>我在思考這題時，先抓住一個最核心的問題：</p>
+        <blockquote>
+          <p><strong>只要我知道某個節點左右子樹的高度，就能立刻判斷這個節點是否平衡。</strong></p>
+        </blockquote>
+        <p>所以最直覺的方法就是用 DFS 遞迴去算高度，並且在算高度的同時順便檢查每個節點是否平衡。</p>
+        <p>為了避免重複計算，我讓 <code>check(x)</code> 這個函式同時做兩件事，而且用「回傳值」帶狀態：</p>
+        <ul>
+          <li>如果 <code>x</code> 這棵子樹是平衡的，<code>check(x)</code> 回傳它的高度（&gt;= 0）</li>
+          <li>如果 <code>x</code> 這棵子樹不平衡，<code>check(x)</code> 回傳 <code>-1</code></li>
+        </ul>
+        <p>這樣一來，只要某個地方已經不平衡，我就可以一路往上直接回傳 <code>-1</code>，不需要再算更多高度，等於提早結束。</p>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>root</code>：題目輸入的樹根節點</li>
+          <li><code>x</code>：<code>check</code> 函式目前要檢查的節點</li>
+          <li><code>l</code>：左子樹的結果（平衡時是高度，不平衡時是 <code>-1</code>）</li>
+          <li><code>r</code>：右子樹的結果（平衡時是高度，不平衡時是 <code>-1</code>）</li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+        <h3>1. 設計 <code>check(x)</code> 的回傳規則（高度 / -1）</h3>
+        <p><code>check(x)</code> 不是單純回傳高度，而是：</p>
+        <ul>
+          <li>平衡 → 回傳高度</li>
+          <li>不平衡 → 回傳 <code>-1</code></li>
+        </ul>
+        <p>這個 <code>-1</code> 的用意是「一旦下面不平衡，上面直接停」，不用再做多餘計算。</p>
+        <hr />
+
+        <h3>2. 空節點的高度視為 0</h3>
+        <p>如果 <code>x == nullptr</code>：</p>
+        <ul>
+          <li>代表是一棵空樹</li>
+          <li>高度直接當作 <code>0</code></li>
+        </ul>
+        <hr />
+
+        <h3>3. 遞迴拿左子樹結果，先檢查是否已經失敗</h3>
+        <p><code>l = check(x-&gt;left)</code>，如果 <code>l == -1</code>：</p>
+        <ul>
+          <li>代表左子樹已經不平衡</li>
+          <li>直接回傳 <code>-1</code>（不用再算右邊）</li>
+        </ul>
+        <hr />
+
+        <h3>4. 遞迴拿右子樹結果，先檢查是否已經失敗</h3>
+        <p><code>r = check(x-&gt;right)</code>，如果 <code>r == -1</code>：</p>
+        <ul>
+          <li>代表右子樹已經不平衡</li>
+          <li>直接回傳 <code>-1</code></li>
+        </ul>
+        <hr />
+
+        <h3>5. 檢查高度差是否超過 1，決定回傳高度或 -1</h3>
+        <p>如果 <code>abs(l - r) &gt; 1</code>：</p>
+        <ul>
+          <li>代表這個節點不平衡 → 回傳 <code>-1</code></li>
+        </ul>
+        <p>否則：</p>
+        <ul>
+          <li>代表這個節點平衡 → 回傳高度 <code>max(l, r) + 1</code></li>
+        </ul>
+        <hr />
+
+        <h3>6. <code>isBalanced(root)</code> 只要檢查根節點回傳值是否為 -1</h3>
+        <ul>
+          <li>如果 <code>check(root) != -1</code> → 回傳 <code>true</code></li>
+          <li>否則回傳 <code>false</code></li>
+        </ul>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left),
+ * right(right) {}
+ * };
+ */
+class Solution {
+public:
+    int check(TreeNode* x) {
+        if (!x) {
+            return 0;
+        }
+        int l = check(x-&gt;left);
+        if (l == -1) {
+            return -1;
+        }
+        int r = check(x-&gt;right);
+        if (r == -1) {
+            return -1;
+        }
+        if (abs(l - r) &gt; 1) {
+            return -1;
+        }
+        return max(l, r) + 1;
+    }
+
+    bool isBalanced(TreeNode* root) {
+        return (check(root) != -1);
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/balanced-binary-tree/description/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-02-08</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value">
+            <span class="post-tags">
+              <span class="post-tag">Tree</span>
+              <span class="post-tag">Depth-First Search</span>
+              <span class="post-tag">Binary Tree</span>
+              <span class="post-tag">Easy</span>
+            </span>
+          </span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/all%20problems/110-balanced-binary-tree.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
