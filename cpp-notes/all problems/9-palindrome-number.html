@@ -1,0 +1,125 @@
+<!-- all problems/9-palindrome-number.html: 9. Palindrome Number -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>9. Palindrome Number</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">類別</a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題"><span id="theme-icon" aria-hidden="true">☀️</span></button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a><span aria-hidden="true">/</span><a href="index.html">All problems</a><span aria-hidden="true">/</span><span>9. Palindrome Number</span>
+    </nav>
+
+    <section class="hero">
+      <h1>9. Palindrome Number</h1>
+      <p><strong>練習日期：</strong>2026-02-07</p>
+      <p><strong>難度：</strong>Easy</p>
+      <p><strong>類型：</strong>Math</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">目錄</button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給你一個整數 <code>x</code>，如果 <code>x</code> 是回文數（palindrome），回傳 <code>true</code>；否則回傳 <code>false</code>。</p>
+        <p>如果一個整數從左到右讀與從右到左讀都相同，那它就是回文數。例如：<code>121</code> 是回文數，而 <code>123</code> 不是。</p>
+        <h3>條件限制</h3>
+        <ul><li><code>-2^31 &lt;= x &lt;= 2^31 - 1</code></li></ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>先處理最明顯不可能的情況：如果 <code>x</code> 是負數，前面會有 <code>-</code>，反過來不可能一樣，所以直接回傳 <code>false</code>。</p>
+        <p>接著使用「把數字反轉」來檢查是否回文：先把原本的 <code>x</code> 存在 <code>x1</code>，再用迴圈把每一位數字取出來，組成反轉數字 <code>x2</code>。</p>
+        <ul>
+          <li>每次先讓 <code>x2 *= 10</code>，把舊數字往左移一位</li>
+          <li>再把 <code>x % 10</code>（最後一位）加進來</li>
+          <li>最後 <code>x /= 10</code>，丟掉最後一位繼續處理</li>
+        </ul>
+        <p>當 <code>x</code> 變成 0 時，<code>x2</code> 就是原數字的反轉。最後比較 <code>x1</code> 和 <code>x2</code> 是否相等即可。</p>
+        <p>使用 <code>long long</code> 儲存 <code>x1</code>、<code>x2</code>，可避免反轉過程超出 <code>int</code> 範圍。</p>
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>x</code>：題目輸入整數（在迴圈中會被除到 0）</li>
+          <li><code>x1</code>：原本的 <code>x</code>（用於最後比較）</li>
+          <li><code>x2</code>：反轉後的數字</li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+        <ul>
+          <li>如果 <code>x &lt; 0</code>，直接回傳 <code>false</code></li>
+          <li>把 <code>x</code> 存到 <code>x1</code>，並把 <code>x2</code> 初始化為 0</li>
+          <li>反轉 <code>x</code>：反覆取出最後一位加到 <code>x2</code>，同時讓 <code>x /= 10</code> 直到為 0</li>
+          <li>比較 <code>x1</code> 和 <code>x2</code>：相等回傳 <code>true</code>，否則回傳 <code>false</code></li>
+        </ul>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    bool isPalindrome(int x) {
+        if (x &lt; 0) {
+            return false;
+        }
+        long long x1 = 0, x2 = 0;
+        x1 = x;
+        while (x &gt; 0) {
+            x2 = x2 * 10;
+            x2 += x % 10;
+            x = x / 10;
+        }
+        if (x1 == x2) {
+            return true;
+        }
+        return false;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/palindrome-number/description/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field"><span class="meta-label">作者：</span><span class="meta-value">scottnick</span></div>
+        <div class="meta-field meta-field--date"><span class="meta-label">撰寫日期：</span><span class="meta-value">2026-02-07</span></div>
+        <div class="meta-field meta-field--full"><span class="meta-label">類別：</span><span class="meta-value"><span class="post-tags"><span class="post-tag">Math</span><span class="post-tag">Easy</span></span></span></div>
+        <div class="meta-field meta-field--full"><span class="meta-label">原文連結：</span><span class="meta-value">https://scottnick.github.io/cpp-notes/all%20problems/9-palindrome-number.html</span></div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
