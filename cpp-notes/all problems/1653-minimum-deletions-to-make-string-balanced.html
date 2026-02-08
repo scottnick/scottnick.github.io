@@ -1,0 +1,125 @@
+<!-- all problems/1653-minimum-deletions-to-make-string-balanced.html: 1653. Minimum Deletions to Make String Balanced -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>1653. Minimum Deletions to Make String Balanced</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">類別</a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題"><span id="theme-icon" aria-hidden="true">☀️</span></button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a><span aria-hidden="true">/</span><a href="index.html">All problems</a><span aria-hidden="true">/</span><span>1653. Minimum Deletions to Make String Balanced</span>
+    </nav>
+
+    <section class="hero">
+      <h1>1653. Minimum Deletions to Make String Balanced</h1>
+      <p><strong>練習日期：</strong>2026-02-07</p>
+      <p><strong>難度：</strong>Medium</p>
+      <p><strong>類型：</strong>String、Dynamic Programming、Greedy</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">目錄</button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#why-dp">為什麼這是一題動態規劃（DP）</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給你一個只包含 <code>'a'</code> 與 <code>'b'</code> 的字串 <code>s</code>。你可以刪除任意數量字元。</p>
+        <p>若不存在任何 <code>i &lt; j</code> 且 <code>s[i] == 'b'</code>、<code>s[j] == 'a'</code> 的配對，則字串稱為 <strong>balanced</strong>。請回傳最少刪除次數。</p>
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>1 &lt;= s.length &lt;= 10^5</code></li>
+          <li><code>s[i]</code> 是 <code>'a'</code> 或 <code>'b'</code></li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>核心觀察是：違規只會出現在 <code>b ... a</code>。因此每次遇到 <code>'a'</code>，其實只有兩種處理方式：</p>
+        <ul>
+          <li>刪掉這個 <code>'a'</code>（成本是目前答案 <code>ans + 1</code>）</li>
+          <li>刪掉前面所有 <code>'b'</code>（成本是前綴中的 <code>b</code> 數量）</li>
+        </ul>
+        <p>所以狀態轉移為：<code>ans = min(ans + 1, b)</code>。若遇到 <code>'b'</code>，只要 <code>b++</code>。</p>
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>s</code>：輸入字串</li>
+          <li><code>b</code>：前綴中出現過的 <code>'b'</code> 數量</li>
+          <li><code>ans</code>：目前前綴要變 balanced 的最少刪除次數</li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+        <ul>
+          <li>從左到右掃描字串，維護 <code>b</code> 與 <code>ans</code>。</li>
+          <li>遇到 <code>'b'</code>：執行 <code>b++</code>。</li>
+          <li>遇到 <code>'a'</code>：二選一，更新 <code>ans = min(ans + 1, b)</code>。</li>
+          <li>掃描完後回傳 <code>ans</code>。</li>
+        </ul>
+
+        <h2 id="why-dp">為什麼這是一題動態規劃（DP）</h2>
+        <p>這題可拆成「前綴最佳解」：每一步只依賴上一段前綴的最少刪除次數，因此是典型 DP。<code>ans</code> 是狀態，<code>min(ans + 1, b)</code> 是狀態轉移。</p>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    int minimumDeletions(string s) {
+        int b = 0;
+        int ans = 0;
+        for (char r : s) {
+            if (r == 'b') {
+                b++;
+            } else {
+                ans = min(ans + 1, b);
+            }
+        }
+        return ans;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/minimum-deletions-to-make-string-balanced/description/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field"><span class="meta-label">作者：</span><span class="meta-value">scottnick</span></div>
+        <div class="meta-field meta-field--date"><span class="meta-label">撰寫日期：</span><span class="meta-value">2026-02-07</span></div>
+        <div class="meta-field meta-field--full"><span class="meta-label">類別：</span><span class="meta-value"><span class="post-tags"><span class="post-tag">String</span><span class="post-tag">Dynamic Programming</span><span class="post-tag">Greedy</span><span class="post-tag">Medium</span></span></span></div>
+        <div class="meta-field meta-field--full"><span class="meta-label">原文連結：</span><span class="meta-value">https://scottnick.github.io/cpp-notes/all%20problems/1653-minimum-deletions-to-make-string-balanced.html</span></div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>

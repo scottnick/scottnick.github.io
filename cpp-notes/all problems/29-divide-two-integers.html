@@ -1,0 +1,139 @@
+<!-- all problems/29-divide-two-integers.html: 29. Divide Two Integers -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>29. Divide Two Integers</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">類別</a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題"><span id="theme-icon" aria-hidden="true">☀️</span></button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a><span aria-hidden="true">/</span><a href="index.html">All problems</a><span aria-hidden="true">/</span><span>29. Divide Two Integers</span>
+    </nav>
+
+    <section class="hero">
+      <h1>29. Divide Two Integers</h1>
+      <p><strong>練習日期：</strong>2026-02-06</p>
+      <p><strong>難度：</strong>Medium</p>
+      <p><strong>類型：</strong>Math、Bit Manipulation</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">目錄</button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給你兩個整數 <code>dividend</code> 和 <code>divisor</code>，請在<strong>不使用乘法、除法、取模運算子</strong>的情況下完成相除，並回傳商（quotient）。</p>
+        <p>整數除法需<strong>朝 0 截斷</strong>（truncate toward zero）。若超出 32-bit 有號整數範圍，回傳邊界值。</p>
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>-2^31 &lt;= dividend, divisor &lt;= 2^31 - 1</code></li>
+          <li><code>divisor != 0</code></li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>核心想法是使用「加倍（doubling）」加速減法：每輪找出最大的 <code>temp = b * 2^t</code>，使得 <code>temp &lt;= a</code>，再一次扣掉這大塊並把對應倍數加入答案。</p>
+        <p>兩個重點：</p>
+        <ol>
+          <li><strong>溢位特例</strong>：<code>INT_MIN / -1</code> 會超出 <code>INT_MAX</code>，直接回傳 <code>INT_MAX</code>。</li>
+          <li><strong>正負號</strong>：用 XOR 判斷答案是否為負數。</li>
+        </ol>
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>dividend</code>：被除數</li>
+          <li><code>divisor</code>：除數</li>
+          <li><code>sign</code>：答案是否為負數</li>
+          <li><code>a</code>：<code>dividend</code> 的絕對值（<code>long long</code>）</li>
+          <li><code>b</code>：<code>divisor</code> 的絕對值（<code>long long</code>）</li>
+          <li><code>ans</code>：累積商</li>
+          <li><code>temp</code>：當前可扣除的加倍除數</li>
+          <li><code>mul</code>：<code>temp</code> 對應倍數</li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+        <ol>
+          <li>先處理唯一溢位特例：<code>INT_MIN / -1</code> 直接回傳 <code>INT_MAX</code>。</li>
+          <li>計算正負號，並把被除數/除數轉成絕對值。</li>
+          <li>外層迴圈在 <code>a &gt;= b</code> 時持續進行：
+            <ul>
+              <li>內層用加倍找到最大的 <code>temp</code>（<code>temp + temp &lt;= a</code>）。</li>
+              <li>更新 <code>a -= temp</code>、<code>ans += mul</code>。</li>
+            </ul>
+          </li>
+          <li>依 <code>sign</code> 回傳 <code>-ans</code> 或 <code>ans</code>。</li>
+        </ol>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    int divide(int dividend, int divisor) {
+        if (dividend == INT_MIN && divisor == -1) {
+            return INT_MAX;
+        }
+        bool sign = (dividend &gt; 0) ^ (divisor &gt; 0); // XOR, true為負
+        long long a = llabs((long long)dividend);
+        long long b = llabs((long long)divisor);
+        long long ans = 0;
+        while (a &gt;= b) {
+            long long temp = b;
+            long long mul = 1;
+            while (temp + temp &lt;= a) {
+                temp += temp;
+                mul += mul;
+            }
+            a -= temp;
+            ans += mul;
+        }
+        return (sign ? -ans : ans);
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/divide-two-integers/description/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field"><span class="meta-label">作者：</span><span class="meta-value">scottnick</span></div>
+        <div class="meta-field meta-field--date"><span class="meta-label">撰寫日期：</span><span class="meta-value">2026-02-06</span></div>
+        <div class="meta-field meta-field--full"><span class="meta-label">類別：</span><span class="meta-value"><span class="post-tags"><span class="post-tag">Math</span><span class="post-tag">Bit Manipulation</span><span class="post-tag">Medium</span></span></span></div>
+        <div class="meta-field meta-field--full"><span class="meta-label">原文連結：</span><span class="meta-value">https://scottnick.github.io/cpp-notes/all%20problems/29-divide-two-integers.html</span></div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
