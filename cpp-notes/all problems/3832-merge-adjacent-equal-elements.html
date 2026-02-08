@@ -1,0 +1,147 @@
+<!-- all problems/3832-merge-adjacent-equal-elements.html: 3832. Merge Adjacent Equal Elements -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3832. Merge Adjacent Equal Elements</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false" style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題"><span id="theme-icon" aria-hidden="true">☀️</span></button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="index.html">All problems</a>
+      <span aria-hidden="true">/</span>
+      <span>3832. Merge Adjacent Equal Elements</span>
+    </nav>
+
+    <section class="hero">
+      <h1>3832. Merge Adjacent Equal Elements</h1>
+      <p><strong>練習日期：</strong>2026-02-08</p>
+      <p><strong>難度：</strong>Medium</p>
+      <p><strong>類型：</strong>Weekly Contest 488</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">目錄</button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給你一個整數陣列 <code>nums</code>。</p>
+        <p>你必須重複進行以下合併操作，直到再也無法產生變化為止：</p>
+        <p>如果目前陣列中存在任意一對相鄰且相等的元素，請選擇<strong>最左邊</strong>的那一對相鄰元素，並把它們替換成一個新元素，新元素的值等於它們的總和。</p>
+        <p>每次合併後，陣列長度會減少 1。你要在更新後的陣列上持續重複操作，直到無法再合併。</p>
+        <p>請回傳所有可能的合併完成後的最終陣列。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>1 &lt;= nums.length &lt;= 10^5</code></li>
+          <li><code>1 &lt;= nums[i] &lt;= 10^5</code></li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>若每一步都重掃整個陣列找「最左邊相鄰相等」，最壞情況下會很慢，容易 TLE。</p>
+        <p>我改用堆疊 <code>st</code> 來維護「目前前綴經過完整合併後的結果」。每次讀到新值 <code>now</code>，只需要看 <code>st</code> 末端是否和 <code>now</code> 相等：</p>
+        <ul>
+          <li>不相等：直接把 <code>now</code> push 進去。</li>
+          <li>相等：依規則合併，pop 末端後令 <code>now *= 2</code>。</li>
+        </ul>
+        <p>合併後的 <code>now</code> 可能再跟新的末端相等，所以用 <code>while</code> 連鎖處理到底，再 push 回去。</p>
+        <p>整個陣列掃完時，<code>st</code> 就是最終答案。</p>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>st</code>：模擬合併結果的堆疊（<code>vector&lt;long long&gt;</code>）</li>
+          <li><code>now</code>：目前元素，會在連鎖合併時翻倍</li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+        <h3>1. 初始化堆疊</h3>
+        <p>建立空的 <code>st</code>。</p>
+
+        <h3>2. 從左到右掃每個元素</h3>
+        <p>每次先把元素設為 <code>now</code>。</p>
+
+        <h3>3. while 連鎖合併</h3>
+        <p>只要 <code>st</code> 不空且 <code>st.back() == now</code>，就 pop 並令 <code>now *= 2</code>。</p>
+
+        <h3>4. 將結果放回堆疊</h3>
+        <p>合併不能再進行時，把 <code>now</code> push 回 <code>st</code>。</p>
+
+        <h3>5. 回傳最終陣列</h3>
+        <p>掃描結束後直接回傳 <code>st</code>。</p>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    vector&lt;long long&gt; mergeAdjacent(vector&lt;int&gt;&amp; nums) {
+        vector&lt;long long&gt; st;
+        for (int i : nums) {
+            long long now = i;
+            while (!st.empty() &amp;&amp; st.back() == now) {
+                st.pop_back();
+                now *= 2;
+            }
+            st.push_back(now);
+        }
+        return st;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/merge-adjacent-equal-elements/description/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field"><span class="meta-label">作者：</span><span class="meta-value">scottnick</span></div>
+        <div class="meta-field meta-field--date"><span class="meta-label">撰寫日期：</span><span class="meta-value">2026-02-08</span></div>
+        <div class="meta-field meta-field--full"><span class="meta-label">類別：</span><span class="meta-value"><span class="post-tags"><span class="post-tag">Weekly Contest 488</span><span class="post-tag">Medium</span></span></span></div>
+        <div class="meta-field meta-field--full"><span class="meta-label">原文連結：</span><span class="meta-value">https://scottnick.github.io/cpp-notes/all%20problems/3832-merge-adjacent-equal-elements.html</span></div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>

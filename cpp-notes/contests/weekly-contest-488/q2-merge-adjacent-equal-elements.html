@@ -1,0 +1,157 @@
+<!-- contests/weekly-contest-488-q2.html: Weekly Contest 488 Q2 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Q2. Merge Adjacent Equal Elements</title>
+  <link rel="stylesheet" href="../../../styles.css">
+</head>
+<body>
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../../index.html">主頁</a>
+        <a href="../../../courses.html">修課紀錄</a>
+        <a href="../../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false" style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題"><span id="theme-icon" aria-hidden="true">☀️</span></button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="../index.html">Contests</a>
+      <span aria-hidden="true">/</span>
+      <a href="../weekly-contest-488.html">Weekly Contest 488</a>
+      <span aria-hidden="true">/</span>
+      <span>Q2. Merge Adjacent Equal Elements</span>
+    </nav>
+
+    <section class="hero">
+      <h1>Q2. Merge Adjacent Equal Elements</h1>
+      <p><strong>練習日期：</strong>2026-02-08</p>
+      <p><strong>類型：</strong>Weekly Contest 488</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">目錄</button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給你一個整數陣列 <code>nums</code>。</p>
+        <p>你必須重複進行以下合併操作，直到再也無法產生變化為止：</p>
+        <p>如果目前陣列中存在任意一對相鄰且相等的元素，請選擇<strong>最左邊</strong>的那一對相鄰元素，並把它們替換成一個新元素，新元素的值等於它們的總和。</p>
+        <p>每次合併後，陣列長度會減少 1。你要在更新後的陣列上持續重複操作，直到無法再合併。</p>
+        <p>請回傳所有可能的合併完成後的最終陣列。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>1 &lt;= nums.length &lt;= 10^5</code></li>
+          <li><code>1 &lt;= nums[i] &lt;= 10^5</code></li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>題目規則有一個很麻煩的地方：它強調每次一定要合併最左邊那一對相鄰相等元素。如果真的照規則每次去找最左邊相等對、合併一次、再重找一次，最壞會變成很多次掃描，容易超時。</p>
+        <p>我這份寫法的想法是：用一個「堆疊」來模擬合併後的結果，而且可以自然保證最左邊優先的效果。</p>
+        <p>我從左到右讀 <code>nums</code>，把結果維護在 <code>st</code> 裡，讓 <code>st</code> 代表目前已處理完的前綴，在完整合併規則下會變成什麼樣子。</p>
+        <p>當我拿到一個新數字 <code>now</code>（一開始就是 <code>nums[i]</code>），我只需要看 <code>st</code> 的最後一個元素：</p>
+        <ul>
+          <li>如果 <code>st.back() != now</code>，代表新元素放進去不會立刻產生相鄰相等，就直接 push 進 <code>st</code>。</li>
+          <li>如果 <code>st.back() == now</code>，代表形成了相鄰相等這一對，所以我就把 <code>st.back()</code> pop 掉，並把 <code>now</code> 變成 <code>now * 2</code>，然後再繼續檢查連鎖合併。</li>
+        </ul>
+        <p>所以我用 <code>while (!st.empty() &amp;&amp; st.back() == now)</code> 來處理連鎖合併，一次把所有會連鎖的合併做完，再把最後的 <code>now</code> 放回 <code>st</code>。</p>
+        <p>最後整個 <code>nums</code> 掃完後，<code>st</code> 就是最終陣列。</p>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>nums</code>：題目輸入陣列</li>
+          <li><code>st</code>：用來模擬合併結果的堆疊（我用 <code>vector&lt;long long&gt;</code> 當 stack）</li>
+          <li><code>now</code>：目前正在處理、可能會一路翻倍合併的值</li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+        <h3>1. 用 st 維護目前處理到這裡的最終狀態</h3>
+        <p>我建立一個 <code>vector&lt;long long&gt; st</code>，把它當作堆疊使用。<code>st</code> 裡存的就是目前已經處理完的前綴，經過題目規則完整合併後留下的序列。</p>
+
+        <h3>2. 從左到右讀取每個元素，先把它當作 now</h3>
+        <p>每讀到一個 <code>nums[i]</code>，我把它放到 <code>now</code>（用 <code>long long</code> 是因為合併會變大）。</p>
+
+        <h3>3. 只要 now 跟 st 最後一個元素相等，就代表會合併</h3>
+        <p>如果 <code>st.back() == now</code>，就表示形成相鄰相等的一對，依規則要合併，所以先 <code>st.pop_back()</code>，再做 <code>now *= 2</code>。這一步做完後，新的 <code>now</code> 可能又和更前面的 <code>st.back()</code> 相等，所以要用 while 連鎖合併，直到不能合併為止。</p>
+
+        <h3>4. 連鎖合併結束後，把最後的 now 放回 st</h3>
+        <p>當 while 結束，代表 <code>st</code> 目前最後一個元素不等於 <code>now</code>（或 <code>st</code> 已空），此時把 <code>now</code> push 回 <code>st</code>。</p>
+
+        <h3>5. 全部處理完後回傳 st</h3>
+        <p>當整個陣列都掃完，<code>st</code> 就是題目要求的最終陣列。</p>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    vector&lt;long long&gt; mergeAdjacent(vector&lt;int&gt;&amp; nums) {
+        vector&lt;long long&gt; st;
+        for (int i : nums) {
+            long long now = i;
+            while (!st.empty() &amp;&amp; st.back() == now) {
+                st.pop_back();
+                now *= 2;
+            }
+            st.push_back(now);
+        }
+        return st;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/contest/weekly-contest-488/problems/merge-adjacent-equal-elements/description/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field"><span class="meta-label">作者：</span><span class="meta-value">scottnick</span></div>
+        <div class="meta-field meta-field--date"><span class="meta-label">撰寫日期：</span><span class="meta-value">2026-02-08</span></div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value"><span class="post-tags"><span class="post-tag">Weekly Contest 488</span></span></span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/contests/weekly-contest-488/q2-merge-adjacent-equal-elements.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../../script.js"></script>
+</body>
+</html>
