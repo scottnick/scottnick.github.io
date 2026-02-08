@@ -1,0 +1,180 @@
+<!-- all problems/13-roman-to-integer.html: 13. Roman to Integer -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>13. Roman to Integer</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+               width="18" height="18" aria-hidden="true" focusable="false"
+               style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="index.html">All problems</a>
+      <span aria-hidden="true">/</span>
+      <span>13. Roman to Integer</span>
+    </nav>
+
+    <section class="hero">
+      <h1>13. Roman to Integer</h1>
+      <p><strong>練習日期：</strong>2026-02-08</p>
+      <p><strong>難度：</strong>Easy</p>
+      <p><strong>類型：</strong>Hash Table、Math、String</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">目錄</button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給你一個羅馬數字字串 <code>s</code>，請把它轉換成整數並回傳。</p>
+        <p>羅馬數字使用下列七個不同的符號表示，並對應不同的數值：</p>
+        <ul>
+          <li><code>I</code> = 1</li>
+          <li><code>V</code> = 5</li>
+          <li><code>X</code> = 10</li>
+          <li><code>L</code> = 50</li>
+          <li><code>C</code> = 100</li>
+          <li><code>D</code> = 500</li>
+          <li><code>M</code> = 1000</li>
+        </ul>
+        <p>例如 <code>2</code> 寫成 <code>II</code>，也就是 2 個 1 相加。<code>12</code> 寫成 <code>XII</code>，也就是 <code>X + II</code>。</p>
+        <p>通常情況下，羅馬數字由左到右從大到小排列。但有六種特殊情況會用「減法表示」：</p>
+        <ul>
+          <li><code>I</code> 可以放在 <code>V</code>（5）和 <code>X</code>（10）前面，形成 <code>IV</code>（4）和 <code>IX</code>（9）</li>
+          <li><code>X</code> 可以放在 <code>L</code>（50）和 <code>C</code>（100）前面，形成 <code>XL</code>（40）和 <code>XC</code>（90）</li>
+          <li><code>C</code> 可以放在 <code>D</code>（500）和 <code>M</code>（1000）前面，形成 <code>CD</code>（400）和 <code>CM</code>（900）</li>
+        </ul>
+        <p>題目保證 <code>s</code> 是一個有效的羅馬數字，範圍在 <code>1</code> 到 <code>3999</code>。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>1 &lt;= s.length &lt;= 15</code></li>
+          <li><code>s</code> 只包含字元 <code>('I', 'V', 'X', 'L', 'C', 'D', 'M')</code></li>
+          <li>題目保證 <code>s</code> 是有效的羅馬數字，範圍在 <code>[1, 3999]</code></li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>這題最重要的地方是「減法表示」：像 <code>IV</code> 其實不是 <code>1 + 5</code>，而是 <code>5 - 1</code>。</p>
+        <p>我用從左到右掃描的方式處理，並且只記住「上一個符號的值」就夠了。</p>
+        <p>我用 <code>before</code> 表示上一個羅馬符號的數值，<code>now</code> 表示目前這個符號的數值。每次讀到一個新符號後：</p>
+        <ul>
+          <li>一般情況：<code>now &lt;= before</code><br>代表是正常的由大到小排列，我直接把 <code>now</code> 加到答案上。</li>
+          <li>減法情況：<code>now &gt; before</code><br>代表上一個符號其實應該要被減掉（例如 <code>IV</code> 讀到 <code>V</code> 時 <code>now=5</code>、<code>before=1</code>）。<br>但我前一步其實已經把 <code>before</code> 加進 <code>ans</code> 了，所以現在要把它修正回「減法」效果：<br>目標應該是：<code>ans</code> 這一段貢獻要變成 <code>now - before</code><br>但目前 <code>ans</code> 早就變成 <code>... + before + now</code><br>所以我要做的修正是：再加上 <code>-2 * before</code>，也就是：<br><code>ans = ans + now - 2 * before</code></li>
+        </ul>
+        <p>這就是你程式裡那行的由來。</p>
+        <p>至於怎麼把字元轉成數值，我用兩個陣列 <code>sym</code> / <code>val</code> 做對照，每次遇到字元就去找它是哪個符號，拿到對應的值。</p>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>now</code>：目前掃到的羅馬符號對應的數值</li>
+          <li><code>before</code>：上一個掃到的羅馬符號對應的數值</li>
+          <li><code>ans</code>：累加後的整數答案</li>
+          <li><code>val</code>：大小為 7 的陣列，依序存 <code>I,V,X,L,C,D,M</code> 的數值</li>
+          <li><code>sym</code>：大小為 7 的陣列，依序存羅馬符號 <code>I,V,X,L,C,D,M</code></li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+        <h3>1. 先準備羅馬符號對照表，並初始化狀態</h3>
+        <p>我先用 <code>sym</code> / <code>val</code> 建立符號到數值的對應。然後把 <code>ans</code> 初始化為 0，並用 <code>before = 10000</code> 當作一個「比所有符號都大」的初始值，避免一開始就被判成減法。</p>
+
+        <h3>2. 從左到右掃描字串，找出每個字元對應的數值 <code>now</code></h3>
+        <p>對每個字元 <code>c</code>，我用一個小迴圈去對照 <code>sym</code>，找到相同符號後就把 <code>now = val[i]</code> 設好，代表目前符號的數值。</p>
+
+        <h3>3. 根據 <code>now</code> 和 <code>before</code> 判斷是正常加法還是減法修正</h3>
+        <p>如果 <code>now &gt; before</code>，代表出現像 <code>IV</code>、<code>IX</code> 這種減法情況。因為上一輪已經把 <code>before</code> 加進 <code>ans</code> 了，所以我要用：<br><code>ans = ans + now - 2 * before</code><br>把 <code>+before</code> 修正成 <code>-before</code>。</p>
+        <p>如果 <code>now &lt;= before</code>，代表正常排列，直接做：<br><code>ans += now</code></p>
+
+        <h3>4. 更新 <code>before</code>，準備處理下一個字元</h3>
+        <p>每處理完一個字元，我就把 <code>before = now</code>，讓下一輪可以用它來判斷是否出現減法。</p>
+
+        <h3>5. 回傳 <code>ans</code></h3>
+        <p>掃描結束後回傳答案。</p>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    int romanToInt(string s) {
+        int now = 0, before = 10000;
+        int ans = 0;
+        int val[7] = {1, 5, 10, 50, 100, 500, 1000};
+        char sym[7] = {'I', 'V', 'X', 'L', 'C', 'D', 'M'};
+        for (char c : s) {
+            for (int i = 0; i &lt; 7; i++) {
+                if (c == sym[i]) {
+                    now = val[i];
+                    if (now &gt; before) {
+                        ans = ans + now - 2 * before;
+                    } else {
+                        ans += now;
+                    }
+                    before = now;
+                    break;
+                }
+            }
+        }
+        return ans;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/roman-to-integer/description/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field"><span class="meta-label">作者：</span><span class="meta-value">scottnick</span></div>
+        <div class="meta-field meta-field--date"><span class="meta-label">撰寫日期：</span><span class="meta-value">2026-02-08</span></div>
+        <div class="meta-field meta-field--full"><span class="meta-label">類別：</span><span class="meta-value"><span class="post-tags"><span class="post-tag">Hash Table</span><span class="post-tag">Math</span><span class="post-tag">String</span><span class="post-tag">Easy</span></span></span></div>
+        <div class="meta-field meta-field--full"><span class="meta-label">原文連結：</span><span class="meta-value">https://scottnick.github.io/cpp-notes/all%20problems/13-roman-to-integer.html</span></div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
