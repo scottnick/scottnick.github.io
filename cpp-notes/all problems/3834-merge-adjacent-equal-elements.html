@@ -77,36 +77,39 @@
         </ul>
 
         <h2 id="approach">🧠 解題思路</h2>
-        <p>若每一步都重掃整個陣列找「最左邊相鄰相等」，最壞情況下會很慢，容易 TLE。</p>
-        <p>我改用堆疊 <code>st</code> 來維護「目前前綴經過完整合併後的結果」。每次讀到新值 <code>now</code>，只需要看 <code>st</code> 末端是否和 <code>now</code> 相等：</p>
+        <p>題目規則有一個很麻煩的地方：它強調每次一定要合併最左邊那一對相鄰相等元素。如果真的照規則每次去找最左邊相等對、合併一次、再重找一次，最壞會變成很多次掃描，容易超時。</p>
+        <p>我這份寫法的想法是：用一個「堆疊」來模擬合併後的結果，而且可以自然保證最左邊優先的效果。</p>
+        <p>我從左到右讀 <code>nums</code>，把結果維護在 <code>st</code> 裡，讓 <code>st</code> 代表目前已處理完的前綴，在完整合併規則下會變成什麼樣子。</p>
+        <p>當我拿到一個新數字 <code>now</code>（一開始就是 <code>nums[i]</code>），我只需要看 <code>st</code> 的最後一個元素：</p>
         <ul>
-          <li>不相等：直接把 <code>now</code> push 進去。</li>
-          <li>相等：依規則合併，pop 末端後令 <code>now *= 2</code>。</li>
+          <li>如果 <code>st.back() != now</code>，代表新元素放進去不會立刻產生相鄰相等，就直接 push 進 <code>st</code>。</li>
+          <li>如果 <code>st.back() == now</code>，代表形成了相鄰相等這一對，所以我就把 <code>st.back()</code> pop 掉，並把 <code>now</code> 變成 <code>now * 2</code>，然後再繼續檢查連鎖合併。</li>
         </ul>
-        <p>合併後的 <code>now</code> 可能再跟新的末端相等，所以用 <code>while</code> 連鎖處理到底，再 push 回去。</p>
-        <p>整個陣列掃完時，<code>st</code> 就是最終答案。</p>
+        <p>所以我用 <code>while (!st.empty() &amp;&amp; st.back() == now)</code> 來處理連鎖合併，一次把所有會連鎖的合併做完，再把最後的 <code>now</code> 放回 <code>st</code>。</p>
+        <p>最後整個 <code>nums</code> 掃完後，<code>st</code> 就是最終陣列。</p>
 
         <h3>所有變數</h3>
         <ul>
-          <li><code>st</code>：模擬合併結果的堆疊（<code>vector&lt;long long&gt;</code>）</li>
-          <li><code>now</code>：目前元素，會在連鎖合併時翻倍</li>
+          <li><code>nums</code>：題目輸入陣列</li>
+          <li><code>st</code>：用來模擬合併結果的堆疊（我用 <code>vector&lt;long long&gt;</code> 當 stack）</li>
+          <li><code>now</code>：目前正在處理、可能會一路翻倍合併的值</li>
         </ul>
 
         <h2 id="steps">🪜 主要流程步驟</h2>
-        <h3>1. 初始化堆疊</h3>
-        <p>建立空的 <code>st</code>。</p>
+        <h3>1. 用 st 維護目前處理到這裡的最終狀態</h3>
+        <p>我建立一個 <code>vector&lt;long long&gt; st</code>，把它當作堆疊使用。<code>st</code> 裡存的就是目前已經處理完的前綴，經過題目規則完整合併後留下的序列。</p>
 
-        <h3>2. 從左到右掃每個元素</h3>
-        <p>每次先把元素設為 <code>now</code>。</p>
+        <h3>2. 從左到右讀取每個元素，先把它當作 now</h3>
+        <p>每讀到一個 <code>nums[i]</code>，我把它放到 <code>now</code>（用 <code>long long</code> 是因為合併會變大）。</p>
 
-        <h3>3. while 連鎖合併</h3>
-        <p>只要 <code>st</code> 不空且 <code>st.back() == now</code>，就 pop 並令 <code>now *= 2</code>。</p>
+        <h3>3. 只要 now 跟 st 最後一個元素相等，就代表會合併</h3>
+        <p>如果 <code>st.back() == now</code>，就表示形成相鄰相等的一對，依規則要合併，所以先 <code>st.pop_back()</code>，再做 <code>now *= 2</code>。這一步做完後，新的 <code>now</code> 可能又和更前面的 <code>st.back()</code> 相等，所以要用 while 連鎖合併，直到不能合併為止。</p>
 
-        <h3>4. 將結果放回堆疊</h3>
-        <p>合併不能再進行時，把 <code>now</code> push 回 <code>st</code>。</p>
+        <h3>4. 連鎖合併結束後，把最後的 now 放回 st</h3>
+        <p>當 while 結束，代表 <code>st</code> 目前最後一個元素不等於 <code>now</code>（或 <code>st</code> 已空），此時把 <code>now</code> push 回 <code>st</code>。</p>
 
-        <h3>5. 回傳最終陣列</h3>
-        <p>掃描結束後直接回傳 <code>st</code>。</p>
+        <h3>5. 全部處理完後回傳 st</h3>
+        <p>當整個陣列都掃完，<code>st</code> 就是題目要求的最終陣列。</p>
 
         <h2 id="code">💻 程式碼實作</h2>
         <pre><code class="language-cpp">class Solution {
@@ -127,7 +130,7 @@ public:
 </code></pre>
 
         <h2 id="link">🔗 題目連結</h2>
-        <p>https://leetcode.com/problems/merge-adjacent-equal-elements/description/</p>
+        <p>https://leetcode.com/contest/weekly-contest-488/problems/merge-adjacent-equal-elements/description/</p>
       </section>
     </div>
 

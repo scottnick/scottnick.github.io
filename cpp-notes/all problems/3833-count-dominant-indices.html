@@ -78,32 +78,35 @@
         </ul>
 
         <h2 id="approach">🧠 解題思路</h2>
-        <p>我在想這題時，先把題目的比較式換成比較好算的樣子，避免浮點數。</p>
-        <p>對每個 <code>i</code>，條件 <code>nums[i] &gt; average(nums[i+1 ... n-1])</code> 可改寫成 <code>nums[i] * cntRight &gt; sumRight</code>，其中 <code>cntRight = n - i - 1</code>、<code>sumRight</code> 是右側總和。</p>
-        <p>所以只要能快速拿到每個位置的右側總和，就能 O(1) 判斷。</p>
-        <p>我的作法是先求整體總和 <code>sum</code>，然後從左到右枚舉索引時，先做 <code>sum -= nums[i]</code>，此時的 <code>sum</code> 就是右側總和。</p>
+        <p>我在想這題時，先把題目的比較式換成「比較好算」的樣子。</p>
+        <p>題目要我檢查每個 <code>i</code> 是否滿足：<code>nums[i] &gt; average(nums[i+1 ... n-1])</code>。</p>
+        <p>如果直接算平均值，會出現除法和小數。我不想用浮點數，所以我把它改寫成整數比較。</p>
+        <p>假設右邊的總和是 <code>sumRight</code>，右邊元素個數是 <code>cntRight = n - i - 1</code>，那：</p>
+        <p><code>nums[i] &gt; sumRight / cntRight</code><br>等價於<br><code>nums[i] * cntRight &gt; sumRight</code></p>
+        <p>所以我只要能快速拿到每個 <code>i</code> 的右側總和 <code>sumRight</code>，就能用整數完成判斷。</p>
+        <p>我的做法是先算整個陣列的總和 <code>sum</code>，然後從左到右走時，把目前的 <code>nums[i]</code> 從 <code>sum</code> 扣掉。扣完之後的 <code>sum</code> 就剛好是右側子陣列總和，這樣每個位置都能 O(1) 取得右側總和。</p>
 
         <h3>所有變數</h3>
         <ul>
-          <li><code>sum</code>：目前右側子陣列總和</li>
-          <li><code>count</code>：dominant 索引數量</li>
+          <li><code>sum</code>：目前右側子陣列的總和（一開始是整體總和，之後一路扣掉左邊元素）</li>
+          <li><code>count</code>：dominant 的索引數量（最後回傳它）</li>
         </ul>
 
         <h2 id="steps">🪜 主要流程步驟</h2>
-        <h3>1. 特判長度為 1</h3>
-        <p>長度為 <code>1</code> 時最右邊元素不算 dominant，直接回傳 <code>0</code>。</p>
+        <h3>1. 處理最右邊元素不計算的規則</h3>
+        <p>題目說最右邊元素不是 dominant，所以我後面的檢查只會做到 <code>n - 2</code>。如果陣列長度只有 <code>1</code>，那沒有任何索引可以成為 dominant，直接回傳 <code>0</code>。</p>
 
-        <h3>2. 先算整體總和</h3>
-        <p>把 <code>nums</code> 全部加總到 <code>sum</code>。</p>
+        <h3>2. 先把整個陣列加總起來</h3>
+        <p>我先用一個迴圈把 <code>nums</code> 全部加起來存到 <code>sum</code>。這樣後面我就可以透過扣掉左邊元素，快速得到右邊的總和。</p>
 
-        <h3>3. 從左到右更新右側總和</h3>
-        <p>枚舉 <code>j = 0</code> 到 <code>n - 2</code>，每次先做 <code>sum -= nums[j]</code>，讓 <code>sum</code> 變成右側總和。</p>
+        <h3>3. 從左到右枚舉每個索引，更新右側總和</h3>
+        <p>我用 <code>j</code> 從 <code>0</code> 走到 <code>n - 2</code>。每次先做 <code>sum -= nums[j]</code>，做完後 <code>sum</code> 就代表 <code>nums[j+1] ... nums[n-1]</code> 的總和。</p>
 
-        <h3>4. 用整數比較判斷 dominant</h3>
-        <p>若 <code>(n - j - 1) * nums[j] &gt; sum</code>，就把 <code>count++</code>。</p>
+        <h3>4. 用整數形式比較是否大於右側平均</h3>
+        <p>右側子陣列長度是 <code>n - j - 1</code>。如果 <code>(n - j - 1) * nums[j] &gt; sum</code>，就代表 <code>nums[j]</code> 大於右側平均值，因此 <code>count++</code>。</p>
 
-        <h3>5. 回傳 count</h3>
-        <p>全部檢查完回傳 <code>count</code>。</p>
+        <h3>5. 回傳答案</h3>
+        <p>全部掃完後，回傳 <code>count</code>。</p>
 
         <h2 id="code">💻 程式碼實作</h2>
         <pre><code class="language-cpp">class Solution {
@@ -130,7 +133,7 @@ public:
 </code></pre>
 
         <h2 id="link">🔗 題目連結</h2>
-        <p>https://leetcode.com/problems/count-dominant-indices/description/</p>
+        <p>https://leetcode.com/contest/weekly-contest-488/problems/count-dominant-indices/description/</p>
       </section>
     </div>
 
