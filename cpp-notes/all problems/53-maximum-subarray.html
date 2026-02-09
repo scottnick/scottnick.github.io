@@ -1,0 +1,210 @@
+<!-- all problems/53-maximum-subarray.html: 53. Maximum Subarray -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>53. Maximum Subarray</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">類別</a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題"><span id="theme-icon" aria-hidden="true">☀️</span></button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a><span aria-hidden="true">/</span><a href="index.html">All problems</a><span aria-hidden="true">/</span><span>53. Maximum Subarray</span>
+    </nav>
+
+    <section class="hero">
+      <h1>53. Maximum Subarray</h1>
+      <p><strong>練習日期：</strong>2026-02-10</p>
+      <p><strong>難度：</strong>Medium</p>
+      <p><strong>類型：</strong>Array、Prefix Sum</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">目錄</button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach-prefix">🧠 解題思路（一）前綴和</a></li>
+          <li><a href="#steps-prefix">🪜 主要流程步驟（一）</a></li>
+          <li><a href="#code-prefix">💻 程式碼實作（一）</a></li>
+          <li><a href="#approach-dp">🧠 解題思路（二）DP</a></li>
+          <li><a href="#steps-dp">🪜 主要流程步驟（二）</a></li>
+          <li><a href="#code-dp">💻 程式碼實作（二）</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給你一個整數陣列 <code>nums</code>，請找出具有最大總和的<strong>連續子陣列</strong>（至少包含一個元素），並回傳這個最大總和。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>1 &lt;= nums.length &lt;= 10^5</code></li>
+          <li><code>-10^4 &lt;= nums[i] &lt;= 10^4</code></li>
+        </ul>
+
+        <h2 id="approach-prefix">🧠 解題思路（一）前綴和</h2>
+        <p>我的想法是用<strong>前綴和</strong>把「任意一段子陣列的總和」快速算出來。</p>
+        <p>我先建立一個前綴和陣列 <code>sum</code>，讓：</p>
+        <ul>
+          <li><code>sum[0] = 0</code></li>
+          <li><code>sum[t] = nums[0] + nums[1] + ... + nums[t-1]</code></li>
+        </ul>
+        <p>這樣一來，任何連續子陣列 <code>nums[j ... k-1]</code> 的總和就可以用：</p>
+        <p><code>sum[k] - sum[j]</code></p>
+        <p>所以我就把所有可能的 <code>(j, k)</code> 都枚舉一次，找最大的 <code>sum[k] - sum[j]</code>，更新到 <code>ans</code>。</p>
+        <p>這份寫法的重點是：<br>前綴和讓子陣列總和的計算變成 O(1)，但我仍然用雙迴圈枚舉所有區間，所以總時間會是 O(n^2)。</p>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>nums</code>：題目輸入陣列</li>
+          <li><code>sum</code>：前綴和陣列，<code>sum[t]</code> 代表前 <code>t</code> 個元素的總和</li>
+          <li><code>ans</code>：目前找到的最大子陣列總和</li>
+        </ul>
+
+        <h2 id="steps-prefix">🪜 主要流程步驟（一）</h2>
+
+        <h3>1. 建立前綴和陣列 <code>sum</code></h3>
+        <ul>
+          <li>先放一個 <code>0</code> 當作起點，表示「前 0 個元素總和」</li>
+          <li>依序把 <code>nums[i]</code> 加到 <code>sum.back()</code>，得到新的前綴和並 push 進 <code>sum</code></li>
+          <li>建完後 <code>sum</code> 長度會是 <code>nums.size() + 1</code></li>
+        </ul>
+
+        <h3>2. 枚舉所有子陣列，用 <code>sum[k] - sum[j]</code> 算總和</h3>
+        <ul>
+          <li><code>j</code> 從 <code>0</code> 走到 <code>sum.size() - 2</code></li>
+          <li><code>k</code> 從 <code>j + 1</code> 走到 <code>sum.size() - 1</code></li>
+          <li>這樣 <code>(j, k)</code> 就代表一段非空子陣列</li>
+          <li>用 <code>sum[k] - sum[j]</code> 得到該段子陣列總和，並用它更新 <code>ans</code></li>
+        </ul>
+
+        <h3>3. 回傳答案</h3>
+        <ul>
+          <li>雙迴圈跑完後，<code>ans</code> 就是最大連續子陣列總和</li>
+        </ul>
+
+        <h2 id="code-prefix">💻 程式碼實作（一）</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    int maxSubArray(vector&lt;int&gt;&amp; nums) {
+        if (nums.size() == 1) {
+            return nums[0];
+        }
+        vector&lt;int&gt; sum = {0};
+        int ans = INT_MIN;
+        for (int i = 0; i &lt; nums.size(); i++) {
+            sum.push_back(nums[i] + sum.back());
+        }
+        for (int j = 0; j &lt; sum.size() - 1; j++) {
+            for (int k = j + 1; k &lt; sum.size(); k++) {
+                ans = max(ans, sum[k] - sum[j]);
+            }
+        }
+        return ans;
+    }
+};
+</code></pre>
+
+        <h2 id="approach-dp">🧠 解題思路（二）DP</h2>
+        <p>這題我用的是很直觀的 DP 思考：</p>
+        <blockquote>
+          <p><strong>我走到某個位置時，我要嘛把它接在前面的子陣列後面，要嘛從這裡重新開一段。</strong><br>
+          <strong>哪一個比較好？看「前面的累積和是不是負的」。</strong></p>
+        </blockquote>
+        <p>我用 <code>now</code> 表示「目前這段連續子陣列的總和」，也就是我正在維護的一段候選解。</p>
+        <p>當我遇到下一個數字 <code>i</code>：</p>
+        <ul>
+          <li>如果 <code>now &lt; 0</code>，代表我目前這段的總和是負的<br>那把它接下去只會拖累未來的總和，所以我乾脆放棄它，改成從 <code>i</code> 重新開始一段：<code>now = i</code></li>
+          <li>如果 <code>now &gt;= 0</code>，代表目前這段總和是正的（或至少不負）<br>那接上 <code>i</code> 只會讓總和更大，所以直接累加：<code>now += i</code></li>
+        </ul>
+        <p>接著我用 <code>best</code> 來記錄「目前為止看過的最大子陣列總和」，每走一步就更新一次 <code>best = max(best, now)</code>。</p>
+        <p>這樣一次掃描就能得到答案。</p>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>now</code>：目前正在累積的連續子陣列總和（以「結尾在當前元素」的角度來看）</li>
+          <li><code>best</code>：目前為止的最大子陣列總和（最後回傳它）</li>
+        </ul>
+
+        <h2 id="steps-dp">🪜 主要流程步驟（二）</h2>
+
+        <h3>1. 初始化 now 與 best</h3>
+        <ul>
+          <li><code>now</code> 初始化成很小（<code>INT_MIN</code>），表示還沒開始累積</li>
+          <li><code>best</code> 也初始化成很小，表示答案還沒被更新過</li>
+        </ul>
+
+        <h3>2. 從左到右掃描每個元素，決定要不要重開一段</h3>
+        <p>每遇到一個元素 <code>i</code>：</p>
+        <ul>
+          <li>如果 <code>now &lt; 0</code><br>代表前面那段是負貢獻，直接丟掉，從 <code>i</code> 開始：<code>now = i</code></li>
+          <li>否則<br>代表前面那段不會拖累，接著加：<code>now += i</code></li>
+        </ul>
+
+        <h3>3. 每一步都更新 best</h3>
+        <ul>
+          <li><code>best = max(best, now)</code></li>
+          <li>代表我把「到目前為止所有可能連續子陣列的最大值」都記下來</li>
+        </ul>
+
+        <h3>4. 回傳 best</h3>
+        <p>掃描完後 <code>best</code> 就是最大連續子陣列總和。</p>
+
+        <h2 id="code-dp">💻 程式碼實作（二）</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    int maxSubArray(vector&lt;int&gt;&amp; nums) {
+        int now = INT_MIN, best = INT_MIN;
+        for (int i : nums) {
+            if (now &lt; 0) {
+                now = i;
+            } else {
+                now += i;
+            }
+            best = max(best, now);
+        }
+        return best;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/maximum-subarray/description/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field"><span class="meta-label">作者：</span><span class="meta-value">scottnick</span></div>
+        <div class="meta-field meta-field--date"><span class="meta-label">撰寫日期：</span><span class="meta-value">2026-02-10</span></div>
+        <div class="meta-field meta-field--full"><span class="meta-label">類別：</span><span class="meta-value"><span class="post-tags"><span class="post-tag">Array</span><span class="post-tag">Prefix Sum</span><span class="post-tag">Medium</span></span></span></div>
+        <div class="meta-field meta-field--full"><span class="meta-label">原文連結：</span><span class="meta-value">https://scottnick.github.io/cpp-notes/all%20problems/53-maximum-subarray.html</span></div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
