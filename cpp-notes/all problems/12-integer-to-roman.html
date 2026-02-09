@@ -1,0 +1,340 @@
+<!-- all problems/12-integer-to-roman.html: 12. Integer to Roman -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>12. Integer to Roman</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+               width="18" height="18" aria-hidden="true" focusable="false"
+               style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="index.html">All problems</a>
+      <span aria-hidden="true">/</span>
+      <span>12. Integer to Roman</span>
+    </nav>
+
+    <section class="hero">
+      <h1>12. Integer to Roman</h1>
+      <p><strong>練習日期：</strong>2026-02-09</p>
+      <p><strong>難度：</strong>Medium</p>
+      <p><strong>類型：</strong>Math、String</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">目錄</button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#if-else">🧠 解題思路（一）if else判斷</a></li>
+          <li><a href="#code-if-else">💻 程式碼實作（一）</a></li>
+          <li><a href="#greedy">🧠 解題思路（二）用Greedy</a></li>
+          <li><a href="#code-greedy">💻 程式碼實作（二）</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給你一個整數 <code>num</code>，請把它轉換成羅馬數字並回傳。</p>
+        <p>羅馬數字符號與數值如下：</p>
+        <ul>
+          <li><code>I</code> = 1</li>
+          <li><code>V</code> = 5</li>
+          <li><code>X</code> = 10</li>
+          <li><code>L</code> = 50</li>
+          <li><code>C</code> = 100</li>
+          <li><code>D</code> = 500</li>
+          <li><code>M</code> = 1000</li>
+        </ul>
+        <p>羅馬數字通常由大到小排列，並且用下列特殊規則表示減法：</p>
+        <ul>
+          <li><code>I</code> 可以放在 <code>V</code>（5）和 <code>X</code>（10）前面，形成 <code>IV</code>（4）和 <code>IX</code>（9）</li>
+          <li><code>X</code> 可以放在 <code>L</code>（50）和 <code>C</code>（100）前面，形成 <code>XL</code>（40）和 <code>XC</code>（90）</li>
+          <li><code>C</code> 可以放在 <code>D</code>（500）和 <code>M</code>（1000）前面，形成 <code>CD</code>（400）和 <code>CM</code>（900）</li>
+        </ul>
+        <p>題目保證輸入 <code>num</code> 會在 <code>1</code> 到 <code>3999</code> 的範圍內。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>1 &lt;= num &lt;= 3999</code></li>
+        </ul>
+
+        <h2 id="if-else">🧠 解題思路（一）if else判斷</h2>
+        <p>我的想法就是<strong>把數字拆成每一位（千、百、十、個），然後把每一位所有可能情況都判斷完</strong>。</p>
+        <p>因為羅馬數字的規則其實非常固定，每一位都只會遇到幾種形式：</p>
+        <ul>
+          <li>0：不加任何字</li>
+          <li>1~3：重複加 1 的符號（例如百位 <code>C</code>、十位 <code>X</code>、個位 <code>I</code>）</li>
+          <li>4：用減法寫成 <code>1</code> 在 <code>5</code> 前面（例如 <code>IV</code>、<code>XL</code>、<code>CD</code>）</li>
+          <li>5：直接加 <code>5</code> 的符號（例如 <code>V</code>、<code>L</code>、<code>D</code>）</li>
+          <li>6~8：先加 <code>5</code> 的符號，再補 1 的符號（例如 <code>VI</code>、<code>LXX</code>、<code>DCCC</code>）</li>
+          <li>9：用減法寫成 <code>1</code> 在 <code>10</code> 前面（例如 <code>IX</code>、<code>XC</code>、<code>CM</code>）</li>
+        </ul>
+        <p>所以我就按照「千位 → 百位 → 十位 → 個位」的順序，一段一段把字串加上去，最後得到完整羅馬數字。</p>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>num</code>：題目輸入的整數（我會一路用 <code>%=</code> 把已處理的高位扣掉）</li>
+          <li><code>s</code>：最後要回傳的羅馬數字字串（一邊處理一邊往後加）</li>
+          <li><code>digit</code>：目前處理那一位的數字（千位、百位、十位時用它）</li>
+        </ul>
+
+        <h3>🪜 主要流程步驟</h3>
+        <h4>1. 先處理千位：只會出現 M 的重複</h4>
+        <p>我先算 <code>digit = num / 1000</code>，代表千位是幾。千位的羅馬數字只有一種形式：重複 <code>M</code>，所以直接加 <code>digit</code> 次 <code>M</code>。處理完後我用 <code>num %= 1000</code> 把千位去掉，準備處理百位。</p>
+
+        <hr />
+
+        <h4>2. 再處理百位：把 4、9、5~8 這些特殊情況先判斷掉</h4>
+        <p>百位用 <code>digit = num / 100</code>。我先處理最特殊的兩種減法：</p>
+        <ul>
+          <li><code>digit == 4</code> → 加 <code>"CD"</code></li>
+          <li><code>digit == 9</code> → 加 <code>"CM"</code></li>
+        </ul>
+        <p>如果不是 4 或 9，接著處理大於等於 5 的情況：</p>
+        <ul>
+          <li><code>digit &gt; 4</code> → 先加 <code>'D'</code>，並讓 <code>digit -= 5</code></li>
+        </ul>
+        <p>剩下的 <code>digit</code> 就只會是 <code>0~3</code>，我再補上 <code>digit</code> 次 <code>'C'</code>。最後 <code>num %= 100</code>，進入十位。</p>
+
+        <hr />
+
+        <h4>3. 十位的寫法完全同百位，只是符號換成 X / L / C</h4>
+        <p>十位用 <code>digit = num / 10</code>。同樣先判斷：</p>
+        <ul>
+          <li><code>digit == 4</code> → <code>"XL"</code></li>
+          <li><code>digit == 9</code> → <code>"XC"</code></li>
+          <li><code>digit &gt; 4</code> → 先加 <code>'L'</code> 並 <code>digit -= 5</code></li>
+          <li>補上 <code>digit</code> 次 <code>'X'</code></li>
+        </ul>
+        <p>最後 <code>num %= 10</code>，剩下就是個位。</p>
+
+        <hr />
+
+        <h4>4. 個位同樣處理 4、9、5~8，再補 I</h4>
+        <p>個位直接用剩下的 <code>num</code>：</p>
+        <ul>
+          <li><code>num == 4</code> → <code>"IV"</code></li>
+          <li><code>num == 9</code> → <code>"IX"</code></li>
+          <li><code>num &gt; 4</code> → 先加 <code>'V'</code> 並 <code>num -= 5</code></li>
+          <li>最後補上 <code>num</code> 次 <code>'I'</code></li>
+        </ul>
+
+        <hr />
+
+        <h4>5. 回傳答案字串</h4>
+        <p>所有位數處理完後，回傳 <code>s</code>。</p>
+
+        <hr />
+
+        <h3>這個方法的優缺點</h3>
+        <p>這個方法用了一堆 if else 的條件判斷數字大小條件，但如果位數一多其實就會很麻煩，所以還有更好的方式來做。但也因為只有用條件判斷，其實速度很快而且記憶體大小也不大。</p>
+
+        <h2 id="code-if-else">💻 程式碼實作（一）</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    string intToRoman(int num) {
+        string s = "";
+        int digit = num / 1000; // 千位
+        if (digit &gt; 0) {
+            for (int i = 0; i &lt; digit; i++) {
+                s += 'M';
+            }
+            num %= 1000;
+        }
+        digit = num / 100; // 百位
+        if (digit &gt; 0) {
+            if (digit == 4) {
+                s += "CD";
+                digit = 0;
+            } else if (digit == 9) {
+                s += "CM";
+                digit = 0;
+            } else if (digit &gt; 4) {
+                s += 'D';
+                digit -= 5;
+            }
+            for (int j = 0; j &lt; digit; j++) {
+                s += 'C';
+            }
+            num %= 100;
+        }
+        digit = num / 10; // 十位
+        if (digit &gt; 0) {
+            if (digit == 4) {
+                s += "XL";
+                digit = 0;
+            } else if (digit == 9) {
+                s += "XC";
+                digit = 0;
+            } else if (digit &gt; 4) {
+                s += 'L';
+                digit -= 5;
+            }
+            for (int j = 0; j &lt; digit; j++) {
+                s += 'X';
+            }
+            num %= 10;
+        }
+        if (num &gt; 0) { // 個位
+            if (num == 4) {
+                s += "IV";
+                num = 0;
+            } else if (num == 9) {
+                s += "IX";
+                num = 0;
+            } else if (num &gt; 4) {
+                s += 'V';
+                num -= 5;
+            }
+            for (int j = 0; j &lt; num; j++) {
+                s += 'I';
+            }
+        }
+        return s;
+    }
+};
+</code></pre>
+
+        <h2 id="greedy">🧠 解題思路（二）用Greedy</h2>
+        <p>這份寫法我用的是「把所有可能的羅馬符號組合先列出來，然後從大到小貪心地扣」。</p>
+        <p>因為羅馬數字其實可以被視為一種「固定面額的表示法」：</p>
+        <ul>
+          <li>除了基本符號（M, D, C, L, X, V, I）以外</li>
+          <li>還有題目規則允許的減法符號（CM, CD, XC, XL, IX, IV）</li>
+        </ul>
+        <p>只要我把這些符號按數值從大到小排好，接下來就可以：</p>
+        <ul>
+          <li>只要 <code>num</code> 還大於等於目前的面額 <code>n[pos]</code>
+            <ul>
+              <li>就把對應符號 <code>a[pos]</code> 加進答案</li>
+              <li>並把 <code>num</code> 減掉這個面額</li>
+            </ul>
+          </li>
+          <li>如果 <code>num</code> 小於目前面額
+            <ul>
+              <li>就換下一個較小的面額</li>
+            </ul>
+          </li>
+        </ul>
+        <p>這樣做會得到正確羅馬數字，原因是題目允許的表示法本來就是由這些面額組成，而且「每次優先用最大面額」會讓字串自然維持由大到小的順序，也會自動處理 4、9、40、90、400、900 這些減法情況。</p>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>num</code>：題目輸入的整數（我會一路扣到 0）</li>
+          <li><code>a</code>：字串陣列，存每個面額對應的羅馬符號（已按數值由大到小排列）</li>
+          <li><code>n</code>：整數陣列，存每個羅馬符號對應的面額（與 <code>a</code> 同索引對齊）</li>
+          <li><code>s</code>：最後要回傳的羅馬數字字串</li>
+          <li><code>pos</code>：目前正在嘗試使用的面額索引（從 0 往後走，面額越來越小）</li>
+        </ul>
+
+        <h3>🪜 主要流程步驟</h3>
+        <h4>1. 先把所有「合法符號」按面額由大到小排好</h4>
+        <p>我用兩個陣列對齊存資料：</p>
+        <ul>
+          <li><code>n[pos]</code> 是面額（1000, 900, 500, ... , 1）</li>
+          <li><code>a[pos]</code> 是對應符號（"M", "CM", "D", ... , "I"）</li>
+        </ul>
+        <p>這裡把減法符號（例如 900 的 "CM"）也當作一種面額一起處理，後面就不用特判 4/9 這些情況。</p>
+
+        <hr />
+
+        <h4>2. 用 pos 從大面額一路往小面額掃</h4>
+        <p>我從 <code>pos = 0</code> 開始（面額最大），只要 <code>num</code> 還沒變成 0 就一直做：</p>
+        <ul>
+          <li>如果 <code>num &gt;= n[pos]</code>
+            <ul>
+              <li>代表目前面額可以用</li>
+              <li>把 <code>a[pos]</code> 加到答案字串 <code>s</code></li>
+              <li><code>num -= n[pos]</code>，把這一塊扣掉</li>
+              <li>注意這時 <code>pos</code> 不動，因為同一面額可能要用很多次（例如 3000 會用三次 "M"）</li>
+            </ul>
+          </li>
+          <li>否則（<code>num &lt; n[pos]</code>）
+            <ul>
+              <li>代表這個面額太大，不能用</li>
+              <li><code>pos++</code> 換下一個較小面額繼續試</li>
+            </ul>
+          </li>
+        </ul>
+
+        <hr />
+
+        <h4>3. num 扣到 0 就結束，答案字串完成</h4>
+        <p>當 <code>num</code> 變成 0，代表所有值都已經被表示完畢，回傳 <code>s</code>。</p>
+
+        <h2 id="code-greedy">💻 程式碼實作（二）</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    string intToRoman(int num) {
+        string a[] = {"M",  "CM", "D",  "CD", "C",  "XC", "L",
+                      "XL", "X",  "IX", "V",  "IV", "I"};
+        int n[] = {1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1};
+        string s = "";
+        int pos = 0;
+        while (num &gt; 0) {
+            if (num &gt;= n[pos]) {
+                s += a[pos];
+                num -= n[pos];
+            } else {
+                pos++;
+            }
+        }
+        return s;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/integer-to-roman/description/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field"><span class="meta-label">作者：</span><span class="meta-value">scottnick</span></div>
+        <div class="meta-field meta-field--date"><span class="meta-label">撰寫日期：</span><span class="meta-value">2026-02-09</span></div>
+        <div class="meta-field meta-field--full"><span class="meta-label">類別：</span><span class="meta-value"><span class="post-tags"><span class="post-tag">Math</span><span class="post-tag">String</span><span class="post-tag">Medium</span></span></span></div>
+        <div class="meta-field meta-field--full"><span class="meta-label">原文連結：</span><span class="meta-value">https://scottnick.github.io/cpp-notes/all%20problems/12-integer-to-roman.html</span></div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
