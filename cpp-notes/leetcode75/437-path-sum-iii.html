@@ -1,0 +1,217 @@
+<!-- leetcode75/437-path-sum-iii.html: LeetCode 75 文章 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>437. Path Sum III</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+               width="18" height="18" aria-hidden="true" focusable="false"
+               style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="../leetcode75/index.html">LeetCode 75</a>
+      <span aria-hidden="true">/</span>
+      <span>437. Path Sum III</span>
+    </nav>
+
+    <section class="hero">
+      <h1>437. Path Sum III</h1>
+      <p><strong>練習日期：</strong>2026-02-11</p>
+      <p><strong>難度：</strong>Medium</p>
+      <p><strong>類型：</strong>Tree、Depth-First Search、Binary Tree、Prefix Sum</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給你一棵二元樹的根節點 <code>root</code>，以及一個整數 <code>targetSum</code>。</p>
+        <p>請回傳路徑總和等於 <code>targetSum</code> 的路徑數量。</p>
+        <p>路徑不需要從根節點開始，也不需要在葉節點結束，但路徑方向必須是往下走（只能從父節點走到子節點）。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li>樹中節點數量在範圍 <code>[0, 1000]</code></li>
+          <li><code>-10^9 &lt;= Node.val &lt;= 10^9</code></li>
+          <li><code>-1000 &lt;= targetSum &lt;= 1000</code></li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>我這份寫法的想法是：我在 DFS 走到某個節點時，把「從根走到目前節點的路徑」用一個容器記下來，然後在這個節點當結尾，去檢查有多少段「往上回推的連續路徑」加起來等於 <code>targetSum</code>。</p>
+        <p>具體來說：</p>
+        <ul>
+          <li><code>nums</code> 裡面存的是「目前 DFS 路徑上，從根到現在」每個節點的值</li>
+          <li>當我走到某個節點 <code>root</code>，我把 <code>root-&gt;val</code> push 進 <code>nums</code></li>
+          <li>然後我從 <code>nums</code> 的尾巴開始往前加總：這個加總代表「以目前節點為結尾的所有向下路徑」的總和</li>
+        </ul>
+        <p>只要累積和 <code>sum</code> 等於 <code>targetSum</code>，就代表存在一條合法路徑（起點可能在路徑中間，不一定是根），所以我把 <code>c++</code>。</p>
+        <p>這樣每個節點都做一次「往上回推」的檢查，就能把所有可能路徑都數到。</p>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>root</code>：題目輸入的樹根節點（也是 DFS 目前走到的節點）</li>
+          <li><code>targetSum</code>：題目輸入的目標總和</li>
+          <li><code>target</code>：我用 <code>long long</code> 存的目標值（避免加總溢位）</li>
+          <li><code>c</code>：符合條件的路徑數量（全域累加）</li>
+          <li><code>nums</code>：目前 DFS 路徑上每個節點的值（從根到當前節點）</li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+        <h3>1. 用 DFS 維護一條「從根到目前節點」的路徑序列</h3>
+        <p>我寫 <code>count(root, nums)</code>，<code>nums</code> 代表目前 DFS 走到這裡的路徑值序列。每往下走到一個節點，就把它的值 push 進去；回來時再 pop 掉，讓 <code>nums</code> 永遠對應到目前遞迴堆疊上的那條路。</p>
+        <hr />
+
+        <h3>2. 每到一個節點，就把它當作「路徑結尾」往回檢查</h3>
+        <p>當 <code>root</code> 不為空時：</p>
+        <ul>
+          <li>先把 <code>root-&gt;val</code> 放進 <code>nums</code></li>
+          <li>設 <code>sum = 0</code></li>
+          <li>從 <code>nums</code> 最後一個元素開始一路往前加，這代表我在枚舉所有「以目前節點結尾」的向下路徑</li>
+          <li>只要某次累加後 <code>sum == target</code>，就代表找到一條符合的路徑，<code>c++</code></li>
+        </ul>
+        <hr />
+
+        <h3>3. 遞迴左右子樹，繼續用同樣方式數路徑</h3>
+        <p>檢查完「以目前節點結尾」的路徑後，我再遞迴呼叫：</p>
+        <ul>
+          <li><code>count(root-&gt;left, nums)</code></li>
+          <li><code>count(root-&gt;right, nums)</code></li>
+        </ul>
+        <p>這樣每個節點都會被當作結尾檢查一次，所有路徑都會被數到。</p>
+        <hr />
+
+        <h3>4. 回溯時把目前節點從 nums 移除</h3>
+        <p>左右子樹都做完後，<code>nums.pop_back()</code>，把這個節點值移掉，回到上一層時 <code>nums</code> 才會是正確的路徑。</p>
+        <hr />
+
+        <h3>5. 在 pathSum 裡設定 target 並從根開始 DFS</h3>
+        <p><code>pathSum(root, targetSum)</code> 會先把 <code>target</code> 設好，然後用空的 <code>nums</code> 從根開始 DFS，最後回傳累加的 <code>c</code>。</p>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left),
+ * right(right) {}
+ * };
+ */
+class Solution {
+public:
+    int c = 0;
+    long long target;
+    void count(TreeNode* root, deque&lt;int&gt;&amp; nums) {
+        long long sum = 0;
+        if (root) {
+            nums.push_back(root-&gt;val);
+            for (int i = nums.size() - 1; i &gt;= 0; i--) {
+                sum += nums[i];
+                if (sum == target) {
+                    c++;
+                }
+            }
+            count(root-&gt;left, nums);
+            count(root-&gt;right, nums);
+            nums.pop_back();
+        } else {
+            return;
+        }
+    }
+
+    int pathSum(TreeNode* root, int targetSum) {
+        target = targetSum;
+        deque&lt;int&gt; nums = {};
+        count(root, nums);
+        return c;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/path-sum-iii/description/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-02-11</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value">
+            <span class="post-tags">
+              <span class="post-tag">Tree</span>
+              <span class="post-tag">Depth-First Search</span>
+              <span class="post-tag">Binary Tree</span>
+              <span class="post-tag">Prefix Sum</span>
+              <span class="post-tag">Medium</span>
+            </span>
+          </span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/leetcode75/437-path-sum-iii.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
