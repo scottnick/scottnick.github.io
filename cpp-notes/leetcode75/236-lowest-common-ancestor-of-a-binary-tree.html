@@ -1,0 +1,264 @@
+<!-- leetcode75/236-lowest-common-ancestor-of-a-binary-tree.html: LeetCode 75 文章 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>236. Lowest Common Ancestor of a Binary Tree</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+               width="18" height="18" aria-hidden="true" focusable="false"
+               style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="../leetcode75/index.html">LeetCode 75</a>
+      <span aria-hidden="true">/</span>
+      <span>236. Lowest Common Ancestor of a Binary Tree</span>
+    </nav>
+
+    <section class="hero">
+      <h1>236. Lowest Common Ancestor of a Binary Tree</h1>
+      <p><strong>練習日期：</strong>2026-02-11</p>
+      <p><strong>難度：</strong>Medium</p>
+      <p><strong>類型：</strong>Tree、Depth-First Search、Binary Tree</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul></ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給你一棵二元樹的根節點 <code>root</code>，以及樹中的兩個節點 <code>p</code> 和 <code>q</code>。</p>
+        <p>請回傳 <code>p</code> 和 <code>q</code> 的最低共同祖先（lowest common ancestor, LCA）。</p>
+        <p>最低共同祖先的定義是：在樹中同時是 <code>p</code> 和 <code>q</code> 祖先的節點之中，深度最大的那個節點。</p>
+        <p>題目保證 <code>p</code> 和 <code>q</code> 都存在於這棵樹中，而且 <code>p != q</code>。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li>樹中的節點數量在範圍 <code>[2, 10^5]</code></li>
+          <li><code>-10^9 &lt;= Node.val &lt;= 10^9</code></li>
+          <li>所有 <code>Node.val</code> 都互不相同</li>
+          <li><code>p != q</code></li>
+          <li><code>p</code> 和 <code>q</code> 都存在於樹中</li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>這題我的想法很特別，用一個 <code>int</code> 紀錄到底走過 <code>p/q</code> 了沒：</p>
+        <ul>
+          <li><code>1</code> 代表「在這棵子樹裡有找到 p」</li>
+          <li><code>10</code> 代表「在這棵子樹裡有找到 q」</li>
+        </ul>
+        <p>所以只要我看這個數字的「個位數 / 十位數」是不是大於 0，我就知道這棵子樹到底有沒有包含 <code>p</code> 或 <code>q</code>。</p>
+        <p>接著只要某個節點的子樹同時包含 <code>p</code> 和 <code>q</code>，而且這是第一次遇到這種節點，那它就是 LCA，直接記下來當答案。</p>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>np</code>：我把題目傳進來的 <code>p</code> 存成全域指標，讓遞迴時不用一直帶參數</li>
+          <li><code>nq</code>：同理，存 <code>q</code></li>
+          <li><code>first</code>：用來確保答案只會被設定一次</li>
+          <li><code>ans</code>：最後要回傳的 LCA 節點指標</li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+        <h3>1. 用 <code>check(root)</code> 回傳「這棵子樹是否包含 p/q」的狀態</h3>
+        <p>我設計 <code>check(root)</code> 回傳一個 <code>int</code>，用位數表示狀態：</p>
+        <ul>
+          <li>回傳 <code>0</code>：這棵子樹沒有 <code>p</code> 也沒有 <code>q</code></li>
+          <li>回傳 <code>1</code>：這棵子樹有 <code>p</code></li>
+          <li>回傳 <code>10</code>：這棵子樹有 <code>q</code></li>
+          <li>回傳 <code>11</code>：這棵子樹同時有 <code>p</code> 和 <code>q</code></li>
+        </ul>
+        <p>這樣我只要看 <code>k % 10</code> 就知道有沒有 <code>p</code>，看 <code>k / 10</code> 就知道有沒有 <code>q</code>。</p>
+
+        <hr>
+
+        <h3>2. 在每個節點先判斷「自己是不是 p 或 q」</h3>
+        <p>在 <code>check(root)</code> 裡，我先做：</p>
+        <ul>
+          <li>如果 <code>root == np</code>，先給 <code>k = 1</code></li>
+          <li>如果 <code>root == nq</code>，先給 <code>k = 10</code></li>
+          <li>否則 <code>k = 0</code></li>
+        </ul>
+        <p>這代表「光是這個節點本身」有沒有命中 <code>p</code> 或 <code>q</code>。</p>
+
+        <hr>
+
+        <h3>3. 把左右子樹的狀態加回來，得到整棵子樹的狀態</h3>
+        <p>接著我會做：</p>
+        <p><code>k = k + check(root-&gt;left) + check(root-&gt;right);</code></p>
+        <p>這行的意思是：「目前節點 + 左子樹 + 右子樹」三者的狀態全部加總起來。</p>
+        <p>因為我的設計是 <code>p</code> 用 1、<code>q</code> 用 10，所以加起來後：</p>
+        <ul>
+          <li>只要 <code>k % 10 &gt; 0</code>，代表這整棵子樹裡有 <code>p</code></li>
+          <li>只要 <code>k / 10 &gt; 0</code>，代表這整棵子樹裡有 <code>q</code></li>
+        </ul>
+
+        <hr>
+
+        <h3>4. 第一次遇到同時包含 p 和 q 的節點，就記下來當答案</h3>
+        <p>當我算完 <code>k</code> 之後，我會檢查：</p>
+        <ul>
+          <li><code>k / 10 &gt; 0</code> 代表有 <code>q</code></li>
+          <li><code>k % 10 &gt; 0</code> 代表有 <code>p</code></li>
+        </ul>
+        <p>如果兩者都成立，代表這個 <code>root</code> 的子樹同時包含 <code>p</code> 和 <code>q</code>。</p>
+        <p>而且我用 <code>first</code> 來確保只記第一次：</p>
+        <ul>
+          <li>因為 DFS 是從底下回傳往上推</li>
+          <li>第一個符合「同時包含 p 和 q」的節點，一定是最深的那個，也就是 LCA</li>
+        </ul>
+        <p>所以我會在第一次遇到時做：</p>
+        <ul>
+          <li><code>first = false</code></li>
+          <li><code>ans = root</code></li>
+        </ul>
+
+        <hr>
+
+        <h3>5. 把狀態壓回到 0/1/10/11，避免加總後變成奇怪的數字</h3>
+        <p>因為 <code>k</code> 是三者加總，有可能出現像 <code>12、21</code> 這種值（例如左邊回 11、右邊回 1 之類的狀況），但其實我只在乎「有沒有 p」和「有沒有 q」。</p>
+        <p>所以我最後會把它壓回四種狀態：</p>
+        <ul>
+          <li>兩者都有 → 回傳 <code>11</code></li>
+          <li>只有 q → 回傳 <code>10</code></li>
+          <li>只有 p → 回傳 <code>1</code></li>
+          <li>都沒有 → 回傳 <code>0</code></li>
+        </ul>
+        <p>這樣上層節點就能用相同規則繼續判斷。</p>
+
+        <hr>
+
+        <h3>6. 在 <code>lowestCommonAncestor</code> 裡設定全域 p/q，跑 DFS，回傳 ans</h3>
+        <p>我先把 <code>p</code>、<code>q</code> 存到全域的 <code>np</code>、<code>nq</code>，然後呼叫 <code>check(root)</code> 跑完整棵樹。</p>
+        <p>最後直接回傳 <code>ans</code>。</p>
+
+        <h2 id="complexity">⏱️ 複雜度</h2>
+        <ul>
+          <li>時間複雜度：<code>O(n)</code><br>每個節點只會被 DFS 走訪一次，並且每次只做常數次運算。</li>
+          <li>空間複雜度：<code>O(h)</code><br>主要是遞迴呼叫堆疊的深度，<code>h</code> 是樹高。最壞情況（鏈狀樹）會到 <code>O(n)</code>。</li>
+        </ul>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    TreeNode *np, *nq;
+    bool first = true;
+    TreeNode* ans;
+    int check(TreeNode* root) { // 0是空,1是p,10是q
+        if (root) {
+            int k = 0;
+            if (root == np) {
+                k = 1;
+            } else if (root == nq) {
+                k = 10;
+            }
+            k = k + check(root-&gt;left) + check(root-&gt;right);
+            if (first &amp;&amp; k / 10 &gt; 0 &amp;&amp; k % 10 &gt; 0) {
+                first = false;
+                ans = root;
+            }
+            if (k / 10 &gt; 0 &amp;&amp; k % 10 &gt; 0) {
+                return 11;
+            } else if (k / 10 &gt; 0) {
+                return 10;
+            } else if (k % 10 &gt; 0) {
+                return 1;
+            } else {
+                return 0;
+            }
+        } else {
+            return 0;
+        }
+    }
+    TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+        np = p;
+        nq = q;
+        check(root);
+        return ans;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-tree/description/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-02-11</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value">
+            <span class="post-tags">
+              <span class="post-tag">Tree</span>
+              <span class="post-tag">Depth-First Search</span>
+              <span class="post-tag">Binary Tree</span>
+              <span class="post-tag">Medium</span>
+            </span>
+          </span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/leetcode75/236-lowest-common-ancestor-of-a-binary-tree.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
