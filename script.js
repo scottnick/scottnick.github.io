@@ -267,7 +267,48 @@
 
   function initArticleToc() {
     const toc = document.querySelector('.article-toc');
-    if (!toc) return;
+    const article = document.querySelector('.article-content');
+    if (!toc || !article) return;
+
+    const list = toc.querySelector('ul');
+    if (!list) return;
+
+    const headings = Array.from(article.querySelectorAll('h2'));
+    if (!headings.length) {
+      list.innerHTML = '';
+      return;
+    }
+
+    const usedIds = new Set();
+    const slugify = (text) => text
+      .toLowerCase()
+      .trim()
+      .replace(/[\u{1F300}-\u{1FAFF}]/gu, '')
+      .replace(/[^\p{Letter}\p{Number}\s-]/gu, '')
+      .replace(/\s+/g, '-')
+      .replace(/-+/g, '-')
+      .replace(/^-|-$/g, '');
+
+    headings.forEach((heading, index) => {
+      let baseId = heading.id || slugify(heading.textContent || '');
+      if (!baseId) {
+        baseId = `section-${index + 1}`;
+      }
+
+      let nextId = baseId;
+      let suffix = 2;
+      while (usedIds.has(nextId) || (document.getElementById(nextId) && document.getElementById(nextId) !== heading)) {
+        nextId = `${baseId}-${suffix}`;
+        suffix += 1;
+      }
+
+      heading.id = nextId;
+      usedIds.add(nextId);
+    });
+
+    list.innerHTML = headings
+      .map((heading) => `<li><a href="#${heading.id}">${heading.textContent.trim()}</a></li>`)
+      .join('');
 
     const links = Array.from(toc.querySelectorAll('a[href^="#"]'));
     const targets = links
