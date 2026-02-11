@@ -1,0 +1,228 @@
+<!-- leetcode75/1372-longest-zigzag-path-in-a-binary-tree.html: LeetCode 75 文章 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>1372. Longest ZigZag Path in a Binary Tree</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+               width="18" height="18" aria-hidden="true" focusable="false"
+               style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="../leetcode75/index.html">LeetCode 75</a>
+      <span aria-hidden="true">/</span>
+      <span>1372. Longest ZigZag Path in a Binary Tree</span>
+    </nav>
+
+    <section class="hero">
+      <h1>1372. Longest ZigZag Path in a Binary Tree</h1>
+      <p><strong>練習日期：</strong>2026-02-11</p>
+      <p><strong>難度：</strong>Medium</p>
+      <p><strong>類型：</strong>Tree、Depth-First Search、Binary Tree</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul></ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給你一棵二元樹的根節點 <code>root</code>。</p>
+        <p>ZigZag 路徑定義為：從某個節點開始，往下走到子節點的路徑，並且每一步的方向必須在「左、右、左、右……」之間交替。</p>
+        <p>更正式地說，如果目前一步走向左子節點，那下一步就必須走向右子節點；如果目前一步走向右子節點，那下一步就必須走向左子節點。</p>
+        <p>ZigZag 路徑的長度是路徑中邊（edges）的數量，也就是走的步數。單一節點的路徑長度為 <code>0</code>。</p>
+        <p>請回傳這棵樹中最長 ZigZag 路徑的長度。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li>樹中節點的數量在範圍 <code>[1, 5 * 10^4]</code></li>
+          <li><code>1 &lt;= Node.val &lt;= 100</code></li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>我把 ZigZag 想成一件事：</p>
+        <blockquote>
+          <p>只要我知道「上一步走的是左還是右」，我就知道下一步必須走哪邊，並且可以更新目前連續 ZigZag 的長度。</p>
+        </blockquote>
+        <p>所以我在 DFS 函式裡帶兩個狀態：</p>
+        <ul>
+          <li><code>before</code>：上一步走的方向（我用 <code>true</code> 表示上一步是走左邊，<code>false</code> 表示上一步走右邊）</li>
+          <li><code>count</code>：目前連續 ZigZag 的長度（也就是目前已經走了幾條邊）</li>
+        </ul>
+        <p>當我站在某個節點 <code>root</code>：</p>
+        <ol>
+          <li>先用 <code>ans = max(ans, count)</code> 更新全域答案</li>
+          <li>如果上一步走左邊（<code>before == true</code>）：
+            <ul>
+              <li>下一步要走右邊才能延續 ZigZag：<code>check(root-&gt;right, false, count + 1)</code></li>
+              <li>如果我走左邊，方向就沒交替，等於重新開始：<code>check(root-&gt;left, true, 1)</code></li>
+            </ul>
+          </li>
+          <li>如果上一步走右邊（<code>before == false</code>）：
+            <ul>
+              <li>下一步要走左邊才能延續：<code>check(root-&gt;left, true, count + 1)</code></li>
+              <li>如果走右邊，代表重新開始：<code>check(root-&gt;right, false, 1)</code></li>
+            </ul>
+          </li>
+        </ol>
+        <p>最後我在 <code>longestZigZag</code> 裡從根節點做兩次 DFS：</p>
+        <ul>
+          <li>一次假設「上一動是左」（<code>before = true</code>）</li>
+          <li>一次假設「上一動是右」（<code>before = false</code>）</li>
+        </ul>
+        <p>這樣就等於把「從根開始的所有可能 ZigZag 起手方向」都涵蓋到。</p>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>root</code>：題目輸入的樹根節點（也是 <code>check</code> 目前所在節點）</li>
+          <li><code>ans</code>：目前找到的最長 ZigZag 長度（全域最大值）</li>
+          <li><code>before</code>：上一條邊走的方向（<code>true</code> 表示上一動往左，<code>false</code> 表示上一動往右）</li>
+          <li><code>count</code>：目前這條 ZigZag 路徑的長度（邊數）</li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+        <h3>1. 用 <code>check</code> 做 DFS，帶著「方向」與「目前長度」</h3>
+        <p><code>check</code> 的參數就是我維護 ZigZag 的狀態：上一動方向 + 目前連續長度。每往下走一次，就能決定是延續或重開。</p>
+
+        <h3>2. 每到一個節點先更新答案</h3>
+        <p>因為 <code>count</code> 代表「走到這個節點時的 ZigZag 長度」，所以我每次都先做：</p>
+        <p><code>ans = max(ans, count)</code></p>
+        <p>確保所有節點都能當作結尾被拿來更新最大值。</p>
+
+        <h3>3. 用 before 決定哪個子節點是「延續」，哪個是「重開」</h3>
+        <ul>
+          <li>如果 <code>before == true</code>（上一動走左）
+            <ul>
+              <li>走右子樹是延續：長度 <code>count + 1</code></li>
+              <li>走左子樹是重開：長度變成 <code>1</code></li>
+            </ul>
+          </li>
+          <li>如果 <code>before == false</code>（上一動走右）
+            <ul>
+              <li>走左子樹是延續：長度 <code>count + 1</code></li>
+              <li>走右子樹是重開：長度變成 <code>1</code></li>
+            </ul>
+          </li>
+        </ul>
+
+        <h3>4. 從根節點起跑時做兩次，涵蓋兩種起手方向</h3>
+        <p>因為根節點本身沒有「上一動」，所以我用兩次呼叫去模擬兩種可能的起手：</p>
+        <ul>
+          <li><code>check(root, true, 0)</code></li>
+          <li><code>check(root, false, 0)</code></li>
+        </ul>
+        <p>最後回傳 <code>ans</code>。</p>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left),
+ * right(right) {}
+ * };
+ */
+class Solution {
+public:
+    int ans = 0;
+    void check(TreeNode* root, bool before, int count) { // true是左邊
+        if (root) {
+            ans = max(ans, count);
+            if (before) {
+                check(root-&gt;right, false, count + 1);
+                check(root-&gt;left, true, 1);
+            } else {
+                check(root-&gt;left, true, count + 1);
+                check(root-&gt;right, false, 1);
+            }
+        } else {
+            return;
+        }
+    }
+    int longestZigZag(TreeNode* root) {
+        check(root, true, 0);
+        check(root, false, 0);
+        return ans;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/longest-zigzag-path-in-a-binary-tree/description/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-02-11</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value">
+            <span class="post-tags">
+              <span class="post-tag">Tree</span>
+              <span class="post-tag">Depth-First Search</span>
+              <span class="post-tag">Binary Tree</span>
+              <span class="post-tag">Medium</span>
+            </span>
+          </span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/leetcode75/1372-longest-zigzag-path-in-a-binary-tree.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
