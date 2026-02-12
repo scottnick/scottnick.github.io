@@ -1,0 +1,260 @@
+<!-- leetcode75/199-binary-tree-right-side-view.html: LeetCode 75 文章 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>199. Binary Tree Right Side View</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+               width="18" height="18" aria-hidden="true" focusable="false"
+               style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="../leetcode75/index.html">LeetCode 75</a>
+      <span aria-hidden="true">/</span>
+      <span>199. Binary Tree Right Side View</span>
+    </nav>
+
+    <section class="hero">
+      <h1>199. Binary Tree Right Side View</h1>
+      <p><strong>練習日期：</strong>2026-02-12</p>
+      <p><strong>難度：</strong>Medium</p>
+      <p><strong>類型：</strong>Tree、Breadth-First Search、Binary Tree</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul></ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給你一棵二元樹的根節點 <code>root</code>。</p>
+        <p>想像你站在樹的右側，請依照從上到下的順序，回傳你能看見的節點值。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li>樹中節點的數量在範圍 <code>[0, 100]</code></li>
+          <li><code>-100 &lt;= Node.val &lt;= 100</code></li>
+        </ul>
+
+        <h2 id="approach-bfs">🧠 解題思路（一）BFS</h2>
+        <p>題目提示叫我用 BFS 一層一層掃過去，因為「右側看到的節點」其實就是每一層最右邊那個節點。</p>
+        <p>因此我在 BFS 時做一件很固定的事情：先記錄當前層節點數量，完整處理這一層，並在這一層最後一個節點時收答案。</p>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>ans</code>：最後要回傳的右側視角節點值（由上到下）</li>
+          <li><code>q</code>：BFS 用的 queue，存下一個要處理的節點</li>
+          <li><code>n</code>：目前這一層的節點數量，用來確保只處理同一層節點</li>
+          <li><code>node</code>：目前從 queue 取出來正在處理的節點</li>
+        </ul>
+
+        <h2 id="steps-bfs">🪜 主要流程步驟（一）BFS</h2>
+        <h3>1. 特例：空樹直接回傳空陣列</h3>
+        <p>如果 <code>root</code> 是空的，代表沒有任何節點可以看到，直接回傳 <code>ans</code>。</p>
+        <hr />
+
+        <h3>2. 用 queue 做 BFS，確保一次處理一整層</h3>
+        <p>先把 <code>root</code> 放進 <code>q</code>，每輪 while 開頭用 <code>n = q.size()</code> 記錄這層節點數，避免把下一層混進來。</p>
+        <hr />
+
+        <h3>3. 掃過這一層所有節點，同時把下一層推進 queue</h3>
+        <p>每次取出 <code>node</code> 後，把存在的左右子節點推入 queue，做完 <code>n</code> 次就完成當前層。</p>
+        <hr />
+
+        <h3>4. 這一層最後處理到的節點就是右側看到的節點</h3>
+        <p>在 <code>for (i = 0 .. n-1)</code> 裡，當 <code>i == n - 1</code> 時，把 <code>node-&gt;val</code> 放進 <code>ans</code>。</p>
+        <hr />
+
+        <h3>5. BFS 結束後回傳 ans</h3>
+        <p>所有層都處理完，<code>ans</code> 就是從上到下的右側視角結果。</p>
+
+        <h2 id="complexity-bfs">⏱️ 複雜度（一）BFS</h2>
+        <ul>
+          <li>時間複雜度：<code>O(n)</code>，每個節點都只會進出 queue 一次。</li>
+          <li>空間複雜度：<code>O(n)</code>，最壞情況 queue 可能同時存一整層節點。</li>
+        </ul>
+
+        <h2 id="code-bfs">💻 程式碼實作（一）BFS</h2>
+        <pre><code class="language-cpp">/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left),
+ * right(right) {}
+ * };
+ */
+class Solution {
+public:
+    vector&lt;int&gt; rightSideView(TreeNode* root) {
+        vector&lt;int&gt; ans;
+        if (!root) {
+            return ans;
+        }
+        queue&lt;TreeNode*&gt; q;
+        q.push(root);
+        while (!q.empty()) {
+            int n = q.size();
+            for (int i = 0; i &lt; n; i++) {
+                TreeNode* node = q.front();
+                q.pop();
+                if (node-&gt;left) {
+                    q.push(node-&gt;left);
+                }
+                if (node-&gt;right) {
+                    q.push(node-&gt;right);
+                }
+                if (i == n - 1) {
+                    ans.push_back(node-&gt;val);
+                }
+            }
+        }
+        return ans;
+    }
+};
+</code></pre>
+
+        <h2 id="approach-dfs">🧠 解題思路（二）DFS</h2>
+        <p>DFS 的核心想法是：右側看到的節點，就是每一層最先被看到的節點。</p>
+        <p>所以我固定用「先右再左」的順序走 DFS。每次第一次到達某層時，就把當前節點加入答案。</p>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>h</code>：目前已經記錄到的最大深度（代表 <code>ans</code> 已有幾層答案）</li>
+          <li><code>ans</code>：右側視角的節點值（由上到下）</li>
+          <li><code>depth</code>：目前 DFS 走到的深度（根節點從 <code>1</code> 開始）</li>
+        </ul>
+
+        <h2 id="steps-dfs">🪜 主要流程步驟（二）DFS</h2>
+        <h3>1. DFS 固定「先右再左」</h3>
+        <p>遞迴函式 <code>check(root, depth)</code> 先走右子樹再走左子樹，確保同層右側節點先被拜訪。</p>
+
+        <h3>2. 用 <code>depth &gt; h</code> 判斷是不是這層第一次看到</h3>
+        <p>若條件成立，表示這層尚未收錄答案，當前節點就是右側視角，將它 push 進 <code>ans</code> 並更新 <code>h</code>。</p>
+
+        <h3>3. 持續遞迴維持右優先</h3>
+        <p>依序呼叫 <code>check(root-&gt;right, depth + 1)</code> 與 <code>check(root-&gt;left, depth + 1)</code>。</p>
+
+        <h3>4. 從根開始，最後回傳 ans</h3>
+        <p>在 <code>rightSideView</code> 中執行 <code>check(root, 1)</code>，DFS 完成後回傳 <code>ans</code>。</p>
+
+        <h2 id="complexity-dfs">⏱️ 複雜度（二）DFS</h2>
+        <ul>
+          <li>時間複雜度：<code>O(n)</code>，每個節點最多被拜訪一次。</li>
+          <li>空間複雜度：<code>O(h)</code>，主要是遞迴堆疊深度；最壞鏈狀樹時為 <code>O(n)</code>。</li>
+        </ul>
+
+        <h2 id="code-dfs">💻 程式碼實作（二）DFS</h2>
+        <pre><code class="language-cpp">/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left),
+ * right(right) {}
+ * };
+ */
+class Solution {
+public:
+    int h = 0;
+    vector&lt;int&gt; ans;
+    void check(TreeNode* root, int depth) {
+        if (root) {
+            if (depth &gt; h) {
+                h++;
+                ans.push_back(root-&gt;val);
+            }
+            check(root-&gt;right, depth + 1);
+            check(root-&gt;left, depth + 1);
+        } else {
+            return;
+        }
+    }
+    vector&lt;int&gt; rightSideView(TreeNode* root) {
+        check(root, 1);
+        return ans;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/binary-tree-right-side-view/description/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-02-12</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value">
+            <span class="post-tags">
+              <span class="post-tag">Tree</span>
+              <span class="post-tag">Breadth-First Search</span>
+              <span class="post-tag">Binary Tree</span>
+              <span class="post-tag">Medium</span>
+            </span>
+          </span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/leetcode75/199-binary-tree-right-side-view.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
