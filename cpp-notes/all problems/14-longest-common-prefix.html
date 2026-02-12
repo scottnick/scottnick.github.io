@@ -1,0 +1,201 @@
+<!-- all problems/14-longest-common-prefix.html: 全部題單文章 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>14. Longest Common Prefix</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+               width="18" height="18" aria-hidden="true" focusable="false"
+               style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="../all%20problems/index.html">All problems</a>
+      <span aria-hidden="true">/</span>
+      <span>14. Longest Common Prefix</span>
+    </nav>
+
+    <section class="hero">
+      <h1>14. Longest Common Prefix</h1>
+      <p><strong>練習日期：</strong>2026-02-12</p>
+      <p><strong>難度：</strong>Easy</p>
+      <p><strong>類型：</strong>String</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#complexity">⏱️ 複雜度</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>請你寫一個函式，用來找出一個字串陣列中，最長的共同前綴字串。</p>
+        <p>如果不存在共同前綴，則回傳空字串 <code>""</code>。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>1 &lt;= strs.length &lt;= 200</code></li>
+          <li><code>0 &lt;= strs[i].length &lt;= 200</code></li>
+          <li><code>strs[i]</code> 只由小寫英文字母組成</li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>我把這題想成一個很直接的檢查流程：</p>
+        <p>我先決定「最多能比到幾個字」，因為共同前綴不可能比最短字串還長。
+        所以我先掃一次整個陣列，找到最短字串長度 <code>mins</code>。</p>
+        <p>接著我用 <code>j</code> 從左到右一個字一個字比：</p>
+        <ul>
+          <li>先拿第一個字串在位置 <code>j</code> 的字元當作目標字 <code>goal</code></li>
+          <li>再把所有字串在同一個位置 <code>j</code> 的字元都拿來跟 <code>goal</code> 比</li>
+          <li>只要有任何一個字串在這個位置不同，代表共同前綴到這裡就結束，直接回傳目前累積的 <code>ans</code></li>
+        </ul>
+        <p>如果這一輪全部都相同，代表第 <code>j</code> 個字元屬於共同前綴，把它加進 <code>ans</code>，然後繼續下一個位置。</p>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>mins</code>：所有字串中最短的長度，用來限制最多能比到哪個位置</li>
+          <li><code>n</code>：字串陣列 <code>strs</code> 的大小</li>
+          <li><code>ans</code>：目前累積出的共同前綴字串</li>
+          <li><code>goal</code>：用第一個字串在第 <code>j</code> 個位置的字元當作「本輪要比對的目標字元」</li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+        <h3>1. 先找出最短字串長度 mins</h3>
+        <p>我先把 <code>mins</code> 設成很大，然後掃過所有字串，用 <code>mins = min(mins, strs[i].size())</code> 找出最短長度。
+        因為共同前綴最多只能到這個長度，超過一定不可能。</p>
+        <hr />
+
+        <h3>2. 逐字元位置 j 從 0 比到 mins-1</h3>
+        <p>對每個位置 <code>j</code>：</p>
+        <p>先拿 <code>strs[0][j]</code> 當作 <code>goal</code>，代表「這一輪大家應該都要長得跟它一樣」。</p>
+        <hr />
+
+        <h3>3. 檢查所有字串在位置 j 是否都等於 goal</h3>
+        <p>我用 <code>k</code> 掃過所有字串：</p>
+        <ul>
+          <li>只要出現 <code>strs[k][j] != goal</code>
+            <ul>
+              <li>代表共同前綴到這裡停止</li>
+              <li>直接回傳目前的 <code>ans</code></li>
+            </ul>
+          </li>
+        </ul>
+        <hr />
+
+        <h3>4. 若全部相同，把 goal 加進 ans</h3>
+        <p>如果這一輪沒有任何不一樣，代表這個位置確實屬於共同前綴，做 <code>ans += goal</code>，繼續比下一個位置。</p>
+        <hr />
+
+        <h3>5. 全部比完仍沒中斷，就回傳 ans</h3>
+        <p>如果一路比到 <code>mins</code> 都沒有不同，代表最短字串整段都是共同前綴，回傳 <code>ans</code>。</p>
+
+        <h2 id="complexity">⏱️ 複雜度</h2>
+        <ul>
+          <li>時間複雜度：<code>O(n * m)</code>
+            <code>m</code> 是最短字串長度。外層最多跑 <code>m</code> 次，每次內層比 <code>n</code> 個字串。</li>
+          <li>空間複雜度：<code>O(1)</code>（不含回傳字串）
+            只用到幾個變數；<code>ans</code> 是輸出本身。</li>
+        </ul>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    string longestCommonPrefix(vector&lt;string&gt;&amp; strs) {
+        int mins = INT_MAX;
+        int n = strs.size();
+        string ans = "";
+        for (int i = 0; i &lt; n; i++) {
+            mins = min(mins, (int)strs[i].size());
+        }
+        for (int j = 0; j &lt; mins; j++) {
+            char goal = strs[0][j];
+            for (int k = 0; k &lt; n; k++) {
+                if (goal != strs[k][j]) {
+                    return ans;
+                }
+            }
+            ans += goal;
+        }
+        return ans;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/longest-common-prefix/description/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-02-12</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value">
+            <span class="post-tags">
+              <span class="post-tag">String</span>
+              <span class="post-tag">Easy</span>
+            </span>
+          </span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/all%20problems/14-longest-common-prefix.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
