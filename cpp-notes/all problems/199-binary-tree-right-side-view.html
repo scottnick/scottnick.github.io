@@ -77,7 +77,7 @@
         <p>題目提示叫我用 BFS 一層一層掃過去，因為「右側看到的節點」其實就是每一層最右邊那個節點。</p>
         <p>因此我在 BFS 時做一件很固定的事情：先記錄當前層節點數量，完整處理這一層，並在這一層最後一個節點時收答案。</p>
 
-        <h3>所有變數</h3>
+        <h2>所有變數</h2>
         <ul>
           <li><code>ans</code>：最後要回傳的右側視角節點值（由上到下）</li>
           <li><code>q</code>：BFS 用的 queue，存下一個要處理的節點</li>
@@ -85,7 +85,7 @@
           <li><code>node</code>：目前從 queue 取出來正在處理的節點</li>
         </ul>
 
-        <h2 id="steps-bfs">🪜 主要流程步驟（一）BFS</h2>
+        <h2 id="steps-bfs">🪜 主要流程步驟</h2>
         <h3>1. 特例：空樹直接回傳空陣列</h3>
         <p>如果 <code>root</code> 是空的，代表沒有任何節點可以看到，直接回傳 <code>ans</code>。</p>
         <hr />
@@ -105,13 +105,13 @@
         <h3>5. BFS 結束後回傳 ans</h3>
         <p>所有層都處理完，<code>ans</code> 就是從上到下的右側視角結果。</p>
 
-        <h2 id="complexity-bfs">⏱️ 複雜度（一）BFS</h2>
+        <h2 id="complexity-bfs">⏱️ 複雜度</h2>
         <ul>
           <li>時間複雜度：<code>O(n)</code>，每個節點都只會進出 queue 一次。</li>
           <li>空間複雜度：<code>O(n)</code>，最壞情況 queue 可能同時存一整層節點。</li>
         </ul>
 
-        <h2 id="code-bfs">💻 程式碼實作（一）BFS</h2>
+        <h2 id="code-bfs">💻 程式碼實作（一）</h2>
         <pre><code class="language-cpp">/**
  * Definition for a binary tree node.
  * struct TreeNode {
@@ -158,7 +158,7 @@ public:
         <p>DFS 的核心想法是：右側看到的節點，就是每一層最先被看到的節點。</p>
         <p>所以我固定用「先右再左」的順序走 DFS。每次第一次到達某層時，就把當前節點加入答案。</p>
 
-        <h3>所有變數</h3>
+        <h2>所有變數</h2>
         <ul>
           <li><code>h</code>：目前已經記錄到的最大深度（代表 <code>ans</code> 已有幾層答案）</li>
           <li><code>ans</code>：右側視角的節點值（由上到下）</li>
@@ -166,25 +166,25 @@ public:
         </ul>
 
         <h2 id="steps-dfs">🪜 主要流程步驟（二）DFS</h2>
-        <h3>1. DFS 固定「先右再左」</h3>
+        <h3>1. 用 DFS 並且固定「先右再左」的走訪順序</h3>
         <p>遞迴函式 <code>check(root, depth)</code> 先走右子樹再走左子樹，確保同層右側節點先被拜訪。</p>
 
-        <h3>2. 用 <code>depth &gt; h</code> 判斷是不是這層第一次看到</h3>
+        <h3>2. 用 depth &gt; h 判斷「這一層是不是第一次看到」</h3>
         <p>若條件成立，表示這層尚未收錄答案，當前節點就是右側視角，將它 push 進 <code>ans</code> 並更新 <code>h</code>。</p>
 
-        <h3>3. 持續遞迴維持右優先</h3>
+        <h3>3. 繼續往下遞迴，維持右優先</h3>
         <p>依序呼叫 <code>check(root-&gt;right, depth + 1)</code> 與 <code>check(root-&gt;left, depth + 1)</code>。</p>
 
-        <h3>4. 從根開始，最後回傳 ans</h3>
+        <h3>4. 從根開始呼叫 check，最後回傳 ans</h3>
         <p>在 <code>rightSideView</code> 中執行 <code>check(root, 1)</code>，DFS 完成後回傳 <code>ans</code>。</p>
 
-        <h2 id="complexity-dfs">⏱️ 複雜度（二）DFS</h2>
+        <h2 id="complexity-dfs">⏱️ 複雜度</h2>
         <ul>
           <li>時間複雜度：<code>O(n)</code>，每個節點最多被拜訪一次。</li>
           <li>空間複雜度：<code>O(h)</code>，主要是遞迴堆疊深度；最壞鏈狀樹時為 <code>O(n)</code>。</li>
         </ul>
 
-        <h2 id="code-dfs">💻 程式碼實作（二）DFS</h2>
+        <h2 id="code-dfs">💻 程式碼實作（二）</h2>
         <pre><code class="language-cpp">/**
  * Definition for a binary tree node.
  * struct TreeNode {
