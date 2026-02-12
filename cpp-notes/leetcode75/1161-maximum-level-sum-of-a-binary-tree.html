@@ -1,0 +1,219 @@
+<!-- leetcode75/1161-maximum-level-sum-of-a-binary-tree.html: LeetCode 75 文章 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>1161. Maximum Level Sum of a Binary Tree</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+               width="18" height="18" aria-hidden="true" focusable="false"
+               style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="../leetcode75/index.html">LeetCode 75</a>
+      <span aria-hidden="true">/</span>
+      <span>1161. Maximum Level Sum of a Binary Tree</span>
+    </nav>
+
+    <section class="hero">
+      <h1>1161. Maximum Level Sum of a Binary Tree</h1>
+      <p><strong>練習日期：</strong>2026-02-12</p>
+      <p><strong>難度：</strong>Medium</p>
+      <p><strong>類型：</strong>Tree、Breadth-First Search、Binary Tree</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul></ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給你一棵二元樹的根節點 <code>root</code>。</p>
+        <p>第 <code>i</code> 層的總和定義為該層所有節點值的總和。</p>
+        <p>請回傳「節點值總和最大」的那一層的層數（層數從 <code>1</code> 開始）。</p>
+        <p>如果有多層的總和同樣最大，回傳層數最小的那一層。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li>樹中節點數量在範圍 <code>[1, 10^4]</code></li>
+          <li><code>-10^5 &lt;= Node.val &lt;= 10^5</code></li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>我用 BFS 一層一層掃過去，因為題目要的就是「每一層的總和」。</p>
+        <p>所以我做的事情很固定：</p>
+        <ul>
+          <li>queue 裡面永遠放「下一個要處理的節點」</li>
+          <li>每一輪 while 就代表我要處理一層</li>
+          <li>我先記下這一層的節點數量 <code>n = q.size()</code>，確保接下來只處理這一層</li>
+          <li>把這一層的節點全部 pop 出來，累加它們的 <code>val</code> 變成 <code>sum</code></li>
+          <li>同時把下一層的節點 push 進 queue</li>
+        </ul>
+        <p>處理完一層後，我把 <code>sum</code> 存進 <code>nums</code>，最後再掃一次 <code>nums</code> 找出最大值所在的層數。</p>
+        <p>這樣的好處是我把「算每層總和」跟「找最大的層」拆成兩段，邏輯很直覺。</p>
+
+        <h2 id="variables">所有變數</h2>
+        <ul>
+          <li><code>nums</code>：每一層的總和，<code>nums[i]</code> 代表第 <code>i+1</code> 層的總和</li>
+          <li><code>q</code>：BFS 用的 queue，存目前要處理的節點</li>
+          <li><code>n</code>：目前這一層的節點數量</li>
+          <li><code>sum</code>：目前這一層的總和</li>
+          <li><code>ans</code>：目前找到的最大層總和</li>
+          <li><code>level</code>：目前最大總和出現的層數（從 1 開始）</li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+        <h3>1. 用 BFS 一層一層計算總和</h3>
+        <p>我把 <code>root</code> 放進 queue，然後開始 while。</p>
+        <p>每一輪 while：</p>
+        <ul>
+          <li><code>n = q.size()</code> 代表這一層有幾個節點</li>
+          <li>把這一層的 <code>n</code> 個節點全部拿出來做加總</li>
+          <li>同時把它們的子節點丟進 queue，留給下一輪處理</li>
+        </ul>
+        <hr />
+
+        <h3>2. 把每層的 sum 存進 nums</h3>
+        <p>當一層的 for 迴圈跑完後，這層的 <code>sum</code> 就算完了。</p>
+        <p>我把它 push 進 <code>nums</code>，這樣 <code>nums</code> 就會依序存著：</p>
+        <p>第 1 層總和、第 2 層總和、第 3 層總和……</p>
+        <hr />
+
+        <h3>3. BFS 結束後，再掃一次 nums 找最大總和的層</h3>
+        <p>我用 <code>ans</code> 記錄目前最大總和，用 <code>level</code> 記錄它出現在哪一層。</p>
+        <p>掃 <code>nums</code> 時：</p>
+        <ul>
+          <li>如果 <code>nums[j]</code> 比 <code>ans</code> 大</li>
+          <li>更新 <code>ans</code></li>
+          <li>更新 <code>level = j + 1</code></li>
+        </ul>
+        <p>因為我只在嚴格變大的時候更新，所以如果有相同最大值，會保留第一次出現的層數，也就符合「回傳層數最小」的要求。</p>
+
+        <h2 id="complexity">⏱️ 複雜度</h2>
+        <ul>
+          <li>時間複雜度：<code>O(n)</code>，每個節點只會被 push/pop 一次，加總也是一次。</li>
+          <li>空間複雜度：<code>O(n)</code>，queue 最壞可能存一整層節點，另外 <code>nums</code> 也存了每層總和。</li>
+        </ul>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left),
+ * right(right) {}
+ * };
+ */
+class Solution {
+public:
+    int maxLevelSum(TreeNode* root) {
+        vector&lt;int&gt; nums;
+        queue&lt;TreeNode*&gt; q;
+        q.push(root);
+        while (!q.empty()) {
+            int n = q.size();
+            int sum = 0;
+            for (int i = 0; i &lt; n; i++) {
+                TreeNode* node = q.front();
+                sum += node-&gt;val;
+                q.pop();
+                if (node-&gt;left) {
+                    q.push(node-&gt;left);
+                }
+                if (node-&gt;right) {
+                    q.push(node-&gt;right);
+                }
+            }
+            nums.push_back(sum);
+        }
+        int ans = INT_MIN;
+        int level = 0;
+        for (int j = 0; j &lt; nums.size(); j++) {
+            if (ans &lt; nums[j]) {
+                ans = nums[j];
+                level = j + 1;
+            }
+        }
+        return level;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/maximum-level-sum-of-a-binary-tree/description/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-02-12</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value">
+            <span class="post-tags">
+              <span class="post-tag">Tree</span>
+              <span class="post-tag">Breadth-First Search</span>
+              <span class="post-tag">Binary Tree</span>
+              <span class="post-tag">Medium</span>
+            </span>
+          </span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/leetcode75/1161-maximum-level-sum-of-a-binary-tree.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
