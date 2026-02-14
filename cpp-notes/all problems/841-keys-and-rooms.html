@@ -1,0 +1,203 @@
+<!-- all problems/841-keys-and-rooms.html: 全部題單文章 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>841. Keys and Rooms</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+               width="18" height="18" aria-hidden="true" focusable="false"
+               style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="index.html">All problems</a>
+      <span aria-hidden="true">/</span>
+      <span>841. Keys and Rooms</span>
+    </nav>
+
+    <section class="hero">
+      <h1>841. Keys and Rooms</h1>
+      <p><strong>練習日期：</strong>2026-02-14</p>
+      <p><strong>難度：</strong>Medium</p>
+      <p><strong>類型：</strong>Depth-First Search、Graph</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#complexity">⏱️ 複雜度</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>有 <code>n</code> 間房間，編號從 <code>0</code> 到 <code>n - 1</code>，除了房間 <code>0</code> 以外，所有房間一開始都是鎖住的。</p>
+        <p>你的目標是造訪所有房間。不過，如果你沒有某個房間的鑰匙，你就不能進入那間上鎖的房間。</p>
+        <p>當你造訪某個房間時，你可以拿到該房間裡所有的鑰匙。每一把鑰匙都有一個編號，代表它可以打開哪一間房間。</p>
+        <p>給你一個陣列 <code>rooms</code>，其中 <code>rooms[i]</code> 表示在房間 <code>i</code> 裡能拿到的鑰匙列表。</p>
+        <p>如果你可以造訪所有房間，回傳 <code>true</code>，否則回傳 <code>false</code>。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>n == rooms.length</code></li>
+          <li><code>2 &lt;= n &lt;= 1000</code></li>
+          <li><code>0 &lt;= rooms[i].length &lt;= 1000</code></li>
+          <li><code>1 &lt;= sum(rooms[i].length) &lt;= 3000</code></li>
+          <li><code>0 &lt;= rooms[i][j] &lt; n</code></li>
+          <li><code>rooms[i]</code> 裡的所有值都互不相同</li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>我把房間看成一張圖：</p>
+        <ul>
+          <li>每個房間是一個點</li>
+          <li>房間 <code>i</code> 裡的鑰匙 <code>rooms[i]</code>，代表我從 <code>i</code> 可以走到那些房間</li>
+        </ul>
+        <p>題目問「從房間 0 出發，能不能走到所有點」，本質就是圖的連通性問題。</p>
+        <p>所以我做 DFS：</p>
+        <ul>
+          <li>我用 <code>allrooms</code> 記錄每個房間有沒有被走到</li>
+          <li>從 <code>0</code> 開始遞迴拜訪</li>
+          <li>每到一間房間，就把裡面的鑰匙全部拿來繼續走下去</li>
+          <li>最後檢查 <code>allrooms</code> 是否全部都變成 <code>true</code></li>
+        </ul>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>allrooms</code>：大小為 <code>n</code> 的布林陣列，<code>allrooms[i] = true</code> 代表房間 <code>i</code> 已經被造訪過</li>
+          <li><code>now</code>：目前 DFS 走到的房間編號</li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+
+        <h3>1. 初始化 visited 陣列並從房間 0 開始 DFS</h3>
+        <p>我先用 <code>allrooms.assign(n, false)</code> 把所有房間都設成尚未造訪。</p>
+        <p>接著呼叫 <code>visit(0, rooms)</code>，代表我從唯一一開始能進去的房間 <code>0</code> 出發。</p>
+        <hr />
+
+        <h3>2. visit(now) 做的事情</h3>
+        <p>每次走到房間 <code>now</code>：</p>
+        <ul>
+          <li>先把 <code>allrooms[now] = true</code>，表示這間房間已經被我進來過</li>
+          <li>然後把 <code>rooms[now]</code> 裡面的每一把鑰匙都拿來嘗試開門</li>
+          <li>如果那個房間還沒走過，就遞迴呼叫 <code>visit(那個房間, rooms)</code></li>
+        </ul>
+        <p>這樣 DFS 會把所有「從 0 出發能到的房間」都標成 <code>true</code>。</p>
+        <hr />
+
+        <h3>3. DFS 結束後檢查是否所有房間都走到</h3>
+        <p>DFS 跑完後，我掃一次 <code>allrooms</code>：</p>
+        <ul>
+          <li>只要有任何一個是 <code>false</code>，代表那間房間永遠拿不到鑰匙進不去，直接回傳 <code>false</code></li>
+          <li>否則全部都是 <code>true</code>，回傳 <code>true</code></li>
+        </ul>
+
+        <h2 id="complexity">⏱️ 複雜度</h2>
+        <ul>
+          <li>時間複雜度：<code>O(n + totalKeys)</code> 每個房間最多進一次，每把鑰匙最多看一次。</li>
+          <li>空間複雜度：<code>O(n)</code> <code>allrooms</code> 需要 <code>n</code>，遞迴深度最壞也可能到 <code>n</code>。</li>
+        </ul>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    vector&lt;bool&gt; allrooms;
+    void visit(int now, vector&lt;vector&lt;int&gt;&gt;&amp; rooms) {
+        allrooms[now] = true;
+        for (int i : rooms[now]) {
+            if (!allrooms[i]) {
+                visit(i, rooms);
+            }
+        }
+    }
+    bool canVisitAllRooms(vector&lt;vector&lt;int&gt;&gt;&amp; rooms) {
+        int n = rooms.size();
+        allrooms.assign(n, false);
+        visit(0, rooms);
+        for (bool j : allrooms) {
+            if (!j) {
+                return false;
+            }
+        }
+        return true;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/keys-and-rooms/description/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-02-14</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value">
+            <span class="post-tags">
+              <span class="post-tag">Depth-First Search</span>
+              <span class="post-tag">Graph</span>
+              <span class="post-tag">Medium</span>
+            </span>
+          </span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/all%20problems/841-keys-and-rooms.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
