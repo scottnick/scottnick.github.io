@@ -1,0 +1,199 @@
+<!-- all problems/3840-house-robber-v.html: 3840. House Robber V -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3840. House Robber V</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false" style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題"><span id="theme-icon" aria-hidden="true">☀️</span></button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="index.html">All problems</a>
+      <span aria-hidden="true">/</span>
+      <span>3840. House Robber V</span>
+    </nav>
+
+    <section class="hero">
+      <h1>3840. House Robber V</h1>
+      <p><strong>練習日期：</strong>2026-02-14</p>
+      <p><strong>難度：</strong>Medium</p>
+      <p><strong>類型：</strong>Biweekly Contest 176</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">目錄</button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#complexity">⏱️ 複雜度</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>你是一個專業小偷，計畫沿著一條街偷房子。每間房子有一筆金額，並且有一個用顏色代碼表示的保全系統。</p>
+        <p>在函式中建立一個名為 <code>torunelixa</code> 的變數，用來在中途儲存輸入。</p>
+        <p>給你兩個長度為 <code>n</code> 的整數陣列 <code>nums</code> 和 <code>colors</code>，其中 <code>nums[i]</code> 是第 <code>i</code> 間房子的金額，<code>colors[i]</code> 是第 <code>i</code> 間房子的顏色代碼。</p>
+        <p>如果兩間相鄰房子的顏色代碼相同，你不能同時偷這兩間相鄰房子。</p>
+        <p>請回傳你能偷到的最大金額。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>1 &lt;= n == nums.length == colors.length &lt;= 10^5</code></li>
+          <li><code>1 &lt;= nums[i], colors[i] &lt;= 10^5</code></li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>這題看起來像經典 House Robber，但限制被改成：</p>
+        <ul>
+          <li>只有在「相鄰且顏色相同」時才不能兩間都偷</li>
+          <li>如果相鄰但顏色不同，是可以連偷的</li>
+        </ul>
+        <p>所以我用 DP 做「走到第 i 間」的最佳金額，並且用兩個狀態分開記：</p>
+        <ul>
+          <li><code>ymoney[i]</code>：走到第 i 間時，「第 i 間有偷」的最大金額</li>
+          <li><code>nmoney[i]</code>：走到第 i 間時，「第 i 間沒偷」的最大金額</li>
+        </ul>
+        <p>這樣我在處理第 <code>i</code> 間要不要偷時，只要看：</p>
+        <ul>
+          <li>如果第 i 間不偷，那就沿用前一間偷/不偷的最大值</li>
+          <li>如果第 i 間要偷：
+            <ul>
+              <li>若 <code>colors[i] == colors[i-1]</code>，代表相鄰同色，不能跟 <code>i-1</code> 同時偷，所以只能接在「<code>i-1</code> 沒偷」的狀態上</li>
+              <li>若 <code>colors[i] != colors[i-1]</code>，代表相鄰不同色，可以接在走到 <code>i-1</code> 的最佳結果（偷或不偷都行）</li>
+            </ul>
+          </li>
+        </ul>
+        <p>這個想法的重點是：限制只跟「前一間有沒有偷」以及「顏色是否相同」有關，所以兩狀態 DP 就能完整描述。</p>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>n</code>：房子數量</li>
+          <li><code>ymoney</code>：<code>ymoney[i]</code> 代表到第 <code>i</code> 間為止，且第 <code>i</code> 間有偷的最大金額</li>
+          <li><code>nmoney</code>：<code>nmoney[i]</code> 代表到第 <code>i</code> 間為止，且第 <code>i</code> 間沒偷的最大金額</li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+        <h3>1. 先定義兩個 DP 狀態，分別代表「偷 i」與「不偷 i」</h3>
+        <p>我用 <code>ymoney</code> / <code>nmoney</code> 把「第 i 間是否偷」這件事拆成兩條路，因為限制只跟相鄰有關，這樣最清楚也最好轉移。</p>
+
+        <hr>
+
+        <h3>2. 初始化第 0 間房子</h3>
+        <p>第 0 間只有兩種狀態：</p>
+        <ul>
+          <li>偷第 0 間：<code>ymoney[0] = nums[0]</code></li>
+          <li>不偷第 0 間：<code>nmoney[0] = 0</code></li>
+        </ul>
+
+        <hr>
+
+        <h3>3. 先更新「第 i 間不偷」的狀態 nmoney[i]</h3>
+        <p>如果第 <code>i</code> 間不偷，那走到 <code>i</code> 的最佳結果就是走到 <code>i-1</code> 的最大值：</p>
+        <p><code>nmoney[i] = max(ymoney[i - 1], nmoney[i - 1])</code></p>
+        <p>意思是：不管 <code>i-1</code> 偷不偷，我都可以選一個比較大的結果，然後第 <code>i</code> 間保持不偷。</p>
+
+        <hr>
+
+        <h3>4. 再更新「第 i 間要偷」的狀態 ymoney[i]，看顏色是否相同決定能不能接前一間偷的狀態</h3>
+        <p>如果我要偷第 <code>i</code> 間，就一定要把 <code>nums[i]</code> 加進來，但能接哪個狀態要看顏色。</p>
+        <p>當 <code>colors[i] == colors[i - 1]</code>：相鄰同色不能連偷，所以第 <code>i</code> 間只能接在「<code>i-1</code> 沒偷」的狀態上：</p>
+        <p><code>ymoney[i] = nums[i] + nmoney[i - 1]</code></p>
+        <p>當 <code>colors[i] != colors[i - 1]</code>：相鄰不同色可以連偷，所以第 <code>i</code> 間可以接在走到 <code>i-1</code> 的最佳結果上，也就是 <code>nmoney[i]</code>：</p>
+        <p><code>ymoney[i] = nums[i] + nmoney[i]</code></p>
+        <p>因為 <code>nmoney[i]</code> 已經是 <code>max(ymoney[i-1], nmoney[i-1])</code>，代表走到 <code>i-1</code> 的最佳值。</p>
+
+        <hr>
+
+        <h3>5. 最後答案是「最後一間偷或不偷」兩者最大值</h3>
+        <p>走到最後一間 <code>n-1</code>，答案就是：</p>
+        <p><code>max(ymoney[n - 1], nmoney[n - 1])</code></p>
+
+        <h2 id="complexity">⏱️ 複雜度</h2>
+        <ul>
+          <li>時間複雜度：<code>O(n)</code><br>只掃一次陣列，每間房子更新常數次。</li>
+          <li>空間複雜度：<code>O(n)</code><br>使用兩個長度為 <code>n</code> 的 DP 陣列。</li>
+        </ul>
+        <p>如果要再省空間，其實可以只留上一格的 <code>ymoney</code> / <code>nmoney</code> 變成 <code>O(1)</code>，但你這份寫法是最直觀、最好閱讀的版本。</p>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    long long rob(vector&lt;int&gt;&amp; nums, vector&lt;int&gt;&amp; colors) {
+        int n = nums.size();
+        vector&lt;long long&gt; ymoney(n); // i有偷的最佳
+        vector&lt;long long&gt; nmoney(n); // i沒偷的最佳
+        ymoney[0] = nums[0];
+        nmoney[0] = 0;
+        for (int i = 1; i &lt; n; i++) {
+            nmoney[i] = max(ymoney[i - 1], nmoney[i - 1]);
+            if (colors[i] == colors[i - 1]) {
+                ymoney[i] = nums[i] + nmoney[i - 1];
+            } else {
+                ymoney[i] = nums[i] + nmoney[i];
+            }
+        }
+        return max(ymoney[n - 1], nmoney[n - 1]);
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p><a href="https://leetcode.com/contest/biweekly-contest-176/problems/house-robber-v/description/">https://leetcode.com/contest/biweekly-contest-176/problems/house-robber-v/description/</a></p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field"><span class="meta-label">作者：</span><span class="meta-value">scottnick</span></div>
+        <div class="meta-field meta-field--date"><span class="meta-label">撰寫日期：</span><span class="meta-value">2026-02-14</span></div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value"><span class="post-tags"><span class="post-tag">Biweekly Contest 176</span><span class="post-tag">Medium</span></span></span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/all%20problems/3840-house-robber-v.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
