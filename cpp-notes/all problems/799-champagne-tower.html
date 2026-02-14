@@ -1,0 +1,194 @@
+<!-- all problems/799-champagne-tower.html: 全部題單文章 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>799. Champagne Tower</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+               width="18" height="18" aria-hidden="true" focusable="false"
+               style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="../all%20problems/index.html">All problems</a>
+      <span aria-hidden="true">/</span>
+      <span>799. Champagne Tower</span>
+    </nav>
+
+    <section class="hero">
+      <h1>799. Champagne Tower</h1>
+      <p><strong>練習日期：</strong>2026-02-14</p>
+      <p><strong>難度：</strong>Medium</p>
+      <p><strong>類型：</strong>Dynamic Programming</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>你有把香檳倒進一座香檳塔。這座塔的排列方式是：第 <code>0</code> 列有 <code>1</code> 個杯子，第 <code>1</code> 列有 <code>2</code> 個杯子，第 <code>2</code> 列有 <code>3</code> 個杯子，以此類推。</p>
+        <p>每個杯子最多只能裝 <code>1</code> 杯香檳。當某個杯子的香檳超過 <code>1</code> 時，多出來的部分會平均分到它正下方相鄰的兩個杯子（左下、右下）。</p>
+        <p>你倒入了 <code>poured</code> 杯香檳。</p>
+        <p>請回傳在香檳倒完之後，第 <code>query_row</code> 列、第 <code>query_glass</code> 個杯子裡面實際裝了多少香檳。</p>
+        <p>答案必須在 <code>10^-5</code> 以內視為正確。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>0 &lt;= poured &lt;= 10^9</code></li>
+          <li><code>0 &lt;= query_row &lt;= 100</code></li>
+          <li><code>0 &lt;= query_glass &lt;= query_row</code></li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>這題我用 DP 直接模擬「每一杯溢出的量會往下分流」的過程。</p>
+        <p>我把 <code>ml[i][j]</code> 定義成：第 <code>i</code> 列第 <code>j</code> 個杯子目前被倒進來的香檳總量（可能超過 1）。</p>
+        <p>因為每個杯子最多只留 1 杯，多出來的部分才會往下流，所以我在處理每個杯子時只在乎：</p>
+        <ul>
+          <li><code>overflow = max(0, ml[i][j] - 1)</code></li>
+        </ul>
+        <p>如果 <code>overflow &gt; 0</code>：</p>
+        <ul>
+          <li>左下杯子會得到 <code>overflow / 2</code></li>
+          <li>右下杯子會得到 <code>overflow / 2</code></li>
+        </ul>
+        <p>我只需要一路算到 <code>query_row</code> 就好，因為題目只問那一層的某個杯子。</p>
+        <p>最後答案要回傳「實際裝了多少」，所以還要再做一次：</p>
+        <ul>
+          <li><code>min(ml[query_row][query_glass], 1.0)</code></li>
+        </ul>
+        <p>因為杯子最多只能裝 1。</p>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>ml</code>：DP 表，<code>ml[i][j]</code> 代表第 <code>i</code> 列第 <code>j</code> 個杯子累積被倒到的香檳量</li>
+          <li><code>k</code>：某個杯子溢出的香檳量（<code>ml[i][j] - 1</code> 的正值部分）</li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+        <h3>1. 建立 DP 表並把 poured 倒在頂端</h3>
+        <p>我先開一個大小到 <code>query_row</code> 的 2D 陣列，因為更下面的列我不需要算。</p>
+        <p>然後把 <code>ml[0][0] = poured</code>，代表所有香檳先倒進最上面那一杯。</p>
+
+        <hr />
+
+        <h3>2. 逐列往下推，把溢出的量平均分到下一列</h3>
+        <p>我從第 0 列推到第 <code>query_row - 1</code> 列。</p>
+        <p>對每個杯子 <code>(i, j)</code>：</p>
+        <ul>
+          <li>算 <code>k = max(0.0, ml[i][j] - 1.0)</code></li>
+          <li>如果 <code>k &gt; 0</code>
+            <ul>
+              <li><code>ml[i + 1][j] += k / 2</code></li>
+              <li><code>ml[i + 1][j + 1] += k / 2</code></li>
+            </ul>
+          </li>
+        </ul>
+        <p>這樣下一列的杯子就會累積到所有從上面流下來的量。</p>
+
+        <hr />
+
+        <h3>3. 回傳 query_row, query_glass 的實際裝量</h3>
+        <p>DP 算完後 <code>ml[query_row][query_glass]</code> 可能大於 1，但杯子最多只能裝 1。</p>
+        <p>所以回傳：</p>
+        <p><code>min(ml[query_row][query_glass], 1.0)</code></p>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    double champagneTower(int poured, int query_row, int query_glass) {
+        vector&lt;vector&lt;double&gt;&gt; ml(query_row + 1, vector&lt;double&gt;(query_row + 1, 0.0));
+        ml[0][0] = (double)poured;
+        for (int i = 0; i &lt; query_row; i++) {
+            for (int j = 0; j &lt;= i; j++) {
+                double k = max(0.0, ml[i][j] - 1.0);
+                if (k &gt; 0) {
+                    ml[i + 1][j] += k / 2.0;
+                    ml[i + 1][j + 1] += k / 2.0;
+                }
+            }
+        }
+        return min(ml[query_row][query_glass], 1.0);
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/champagne-tower/description/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-02-14</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value">
+            <span class="post-tags">
+              <span class="post-tag">Dynamic Programming</span>
+              <span class="post-tag">Medium</span>
+            </span>
+          </span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/all%20problems/799-champagne-tower.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
