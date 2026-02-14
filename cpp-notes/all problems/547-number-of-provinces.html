@@ -1,0 +1,220 @@
+<!-- all problems/547-number-of-provinces.html: 全部題單文章 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>547. Number of Provinces</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+               width="18" height="18" aria-hidden="true" focusable="false"
+               style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="index.html">All problems</a>
+      <span aria-hidden="true">/</span>
+      <span>547. Number of Provinces</span>
+    </nav>
+
+    <section class="hero">
+      <h1>547. Number of Provinces</h1>
+      <p><strong>練習日期：</strong>2026-02-14</p>
+      <p><strong>難度：</strong>Medium</p>
+      <p><strong>類型：</strong>Depth-First Search、Graph</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#complexity">⏱️ 複雜度</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>有 <code>n</code> 個城市。有些城市彼此相連，有些則沒有。</p>
+        <p>如果城市 <code>a</code> 和城市 <code>b</code> 直接相連，且城市 <code>b</code> 和城市 <code>c</code> 直接相連，那麼城市 <code>a</code> 和城市 <code>c</code> 就是間接相連。</p>
+        <p>一個省份（province）是一組彼此直接或間接相連的城市，而且省份之外不包含其他城市。</p>
+        <p>給你一個 <code>n x n</code> 的矩陣 <code>isConnected</code>，其中：</p>
+        <ul>
+          <li>若第 <code>i</code> 個城市與第 <code>j</code> 個城市直接相連，則 <code>isConnected[i][j] = 1</code></li>
+          <li>否則 <code>isConnected[i][j] = 0</code></li>
+        </ul>
+        <p>請回傳省份的總數量。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>1 &lt;= n &lt;= 200</code></li>
+          <li><code>n == isConnected.length</code></li>
+          <li><code>n == isConnected[i].length</code></li>
+          <li><code>isConnected[i][j]</code> 是 <code>1</code> 或 <code>0</code></li>
+          <li><code>isConnected[i][i] == 1</code></li>
+          <li><code>isConnected[i][j] == isConnected[j][i]</code></li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>我把題目當成一張圖：</p>
+        <ul>
+          <li>城市是點</li>
+          <li><code>isConnected[i][j] == 1</code> 代表 <code>i</code> 和 <code>j</code> 之間有邊</li>
+        </ul>
+        <p>題目要的「省份數」其實就是圖中「連通分量」的數量。</p>
+        <p>所以我的作法是：</p>
+        <ul>
+          <li>用 <code>city</code> 記錄每個城市有沒有被走過（visited）</li>
+          <li>從第 <code>0</code> 個城市一路掃到第 <code>n-1</code> 個城市</li>
+          <li>只要遇到一個還沒走過的城市，代表我找到一個新的省份起點</li>
+          <li>從它開始做 DFS，把同一個省份裡所有能連到的城市都標記成 visited</li>
+          <li>DFS 結束後，省份數 <code>provinces</code> 加 <code>1</code></li>
+        </ul>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>city</code>：<code>vector&lt;bool&gt;</code>，<code>city[x] = true</code> 代表城市 <code>x</code> 已經被 DFS 走過</li>
+          <li><code>provinces</code>：省份數量（每找到一個新的連通分量就加一）</li>
+          <li><code>n</code>：城市總數（<code>isConnected.size()</code>）</li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+
+        <h3>1. 用 city 當作 visited，避免重複走城市</h3>
+        <p>我先把 <code>city</code> 全部設成 <code>false</code>，代表每個城市一開始都還沒被走過。</p>
+        <p>之後 DFS 走到一個城市時就把它設成 <code>true</code>，保證每個城市最多被處理一次。</p>
+        <hr />
+
+        <h3>2. connect(i) 用 DFS 把同一個省份全部標記起來</h3>
+        <p><code>connect(i, isConnected)</code> 的意思是：從城市 <code>i</code> 出發，把所有「直接或間接相連」的城市都找出來。</p>
+        <p>流程是：</p>
+        <ul>
+          <li>先把 <code>city[i] = true</code></li>
+          <li>掃描同一列 <code>isConnected[i][*]</code></li>
+          <li>只要發現某個城市 <code>j</code> 與 <code>i</code> 相連，且 <code>city[j]</code> 還是 <code>false</code></li>
+          <li>就遞迴呼叫 <code>connect(j, isConnected)</code> 繼續擴張這個省份</li>
+        </ul>
+        <p>這樣 DFS 結束時，整個連通分量都會被標成 visited。</p>
+        <hr />
+
+        <h3>3. 主迴圈掃所有城市，遇到沒走過的就代表新省份</h3>
+        <p>在 <code>findCircleNum</code> 裡，我從 <code>0 ~ n-1</code> 逐一檢查：</p>
+        <ul>
+          <li>如果 <code>city[i]</code> 是 <code>false</code>，代表這個城市還不屬於任何已探索過的省份</li>
+          <li>我就從它開始 <code>connect(i, isConnected)</code>，把整個省份一次走完</li>
+          <li>然後 <code>provinces++</code></li>
+        </ul>
+        <p>最後回傳 <code>provinces</code>。</p>
+
+        <h2 id="complexity">⏱️ 複雜度</h2>
+        <ul>
+          <li>時間複雜度：<code>O(n^2)</code>，因為對每個城市做 DFS 時，核心操作是掃描一整列 <code>isConnected[i][0..n-1]</code>。</li>
+          <li>空間複雜度：<code>O(n)</code>，<code>city</code> 需要 <code>n</code>，遞迴深度最壞也可能到 <code>n</code>。</li>
+        </ul>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    vector&lt;bool&gt; city;
+    int provinces = 0;
+    int n;
+
+    void connect(int i, vector&lt;vector&lt;int&gt;&gt;&amp; v) {
+        city[i] = true;
+        for (int j = 0; j &lt; n; j++) {
+            if (v[i][j] &amp;&amp; !city[j]) {
+                connect(j, v);
+            }
+        }
+    }
+
+    int findCircleNum(vector&lt;vector&lt;int&gt;&gt;&amp; isConnected) {
+        n = isConnected.size();
+        city.assign(n, false);
+        provinces = 0;
+
+        for (int i = 0; i &lt; n; i++) {
+            if (!city[i]) {
+                connect(i, isConnected);
+                provinces++;
+            }
+        }
+
+        return provinces;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/number-of-provinces/description/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-02-14</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value">
+            <span class="post-tags">
+              <span class="post-tag">Depth-First Search</span>
+              <span class="post-tag">Graph</span>
+              <span class="post-tag">Medium</span>
+            </span>
+          </span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/all%20problems/547-number-of-provinces.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
