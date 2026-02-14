@@ -1,0 +1,187 @@
+<!-- contests/biweekly-contest-176-q1.html: Biweekly Contest 176 Q1 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Q1. Weighted Word Mapping</title>
+  <link rel="stylesheet" href="../../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../../index.html">主頁</a>
+        <a href="../../../courses.html">修課紀錄</a>
+        <a href="../../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false" style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題"><span id="theme-icon" aria-hidden="true">☀️</span></button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="../index.html">Contests</a>
+      <span aria-hidden="true">/</span>
+      <a href="../biweekly-contest-176.html">Biweekly Contest 176</a>
+      <span aria-hidden="true">/</span>
+      <span>Q1. Weighted Word Mapping</span>
+    </nav>
+
+    <section class="hero">
+      <h1>Q1. Weighted Word Mapping</h1>
+      <p><strong>練習日期：</strong>2026-02-14</p>
+      <p><strong>類型：</strong>Biweekly Contest 176</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">目錄</button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#complexity">⏱️ 複雜度</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給你一個字串陣列 <code>words</code>，其中每個字串代表一個只包含小寫英文字母的單字。</p>
+        <p>你也會拿到一個長度為 <code>26</code> 的整數陣列 <code>weights</code>，其中 <code>weights[i]</code> 代表第 <code>i</code> 個小寫英文字母的權重。</p>
+        <p>一個單字的權重定義為：它所有字元的權重總和。</p>
+        <p>對每個單字，把它的權重對 <code>26</code> 取模，並用反向字母順序把結果對應到一個小寫字母（<code>0 -&gt; 'z'</code>, <code>1 -&gt; 'y'</code>, ..., <code>25 -&gt; 'a'</code>）。</p>
+        <p>請回傳一個字串，內容是依序把每個單字對應到的字母串接起來。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>1 &lt;= words.length &lt;= 100</code></li>
+          <li><code>1 &lt;= words[i].length &lt;= 10</code></li>
+          <li><code>weights.length == 26</code></li>
+          <li><code>1 &lt;= weights[i] &lt;= 100</code></li>
+          <li><code>words[i]</code> 只包含小寫英文字母</li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>這題就是照題目描述做轉換，我的邏輯分成兩段：</p>
+        <p>第一段先算每個單字的權重。我把字元 <code>c</code> 轉成 <code>0~25</code> 的位置 <code>pos = c - 'a'</code>，然後把 <code>weights[pos]</code> 加進總和。</p>
+        <p>第二段把總和對 26 取模，得到 <code>check</code>。題目規定 <code>check</code> 要用反向字母表映射：</p>
+        <ul>
+          <li><code>0</code> 要變成 <code>'z'</code></li>
+          <li><code>25</code> 要變成 <code>'a'</code></li>
+        </ul>
+        <p>所以我用這個轉換式：</p>
+        <p><code>mapped = 'a' + (25 - check)</code></p>
+        <p>最後把每個單字的 <code>mapped</code> 字元依序加到 <code>ans</code>，回傳 <code>ans</code>。</p>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>ans</code>：最後要回傳的結果字串（把每個單字對應到的字母依序串起來）</li>
+          <li><code>check</code>：某個單字的權重總和（後面會再 <code>mod 26</code>）</li>
+          <li><code>pos</code>：把某個字元轉成 <code>0~25</code> 的索引，用來查 <code>weights</code></li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+        <h3>1. 逐個處理 words 裡的單字</h3>
+        <p>我用迴圈把 <code>words</code> 裡每個 <code>s</code> 拿出來，對每個單字都獨立算一次權重並轉成字母。</p>
+
+        <hr>
+
+        <h3>2. 計算單字權重總和 check</h3>
+        <p>對某個單字 <code>s</code>：</p>
+        <ul>
+          <li>先把 <code>check</code> 設成 <code>0</code></li>
+          <li>掃過 <code>s</code> 的每個字元</li>
+          <li>把字元轉成索引 <code>pos = s[i] - 'a'</code></li>
+          <li><code>check += weights[pos]</code></li>
+        </ul>
+        <p>這樣 <code>check</code> 就是這個單字的權重。</p>
+
+        <hr>
+
+        <h3>3. 權重對 26 取模，得到映射用的數字</h3>
+        <p>題目要的是 <code>weight % 26</code>，所以我做：</p>
+        <p><code>check %= 26</code></p>
+
+        <hr>
+
+        <h3>4. 用反向字母表把 check 轉成字元並加到答案</h3>
+        <p>反向字母表的規則是 <code>0 -&gt; z ... 25 -&gt; a</code>。</p>
+        <p>所以我用：</p>
+        <p><code>ans += (char)(25 - check + 'a')</code></p>
+        <p>這樣就把對應字元加進 <code>ans</code>。</p>
+
+        <hr>
+
+        <h3>5. 回傳 ans</h3>
+        <p>所有單字處理完後，<code>ans</code> 就是答案。</p>
+
+        <h2 id="complexity">⏱️ 複雜度</h2>
+        <ul>
+          <li>時間複雜度：<code>O(totalLen)</code><br><code>totalLen</code> 是所有單字長度總和，因為每個字元只會被掃過一次。</li>
+          <li>空間複雜度：<code>O(1)</code>（不含輸出字串）<br>只用了固定幾個整數變數；輸出 <code>ans</code> 長度是 <code>words.length</code>。</li>
+        </ul>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    string mapWordWeights(vector&lt;string&gt;&amp; words, vector&lt;int&gt;&amp; weights) {
+        string ans = "";
+        for (string s : words) {
+            int check = 0;
+            for (int i = 0; i &lt; s.size(); i++) {
+                int pos = s[i] - 'a';
+                check += weights[pos];
+            }
+            check %= 26;
+            ans += (char)(25 - check + 'a');
+        }
+        return ans;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p><a href="https://leetcode.com/contest/biweekly-contest-176/problems/weighted-word-mapping/description/">https://leetcode.com/contest/biweekly-contest-176/problems/weighted-word-mapping/description/</a></p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field"><span class="meta-label">作者：</span><span class="meta-value">scottnick</span></div>
+        <div class="meta-field meta-field--date"><span class="meta-label">撰寫日期：</span><span class="meta-value">2026-02-14</span></div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value"><span class="post-tags"><span class="post-tag">Biweekly Contest 176</span></span></span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/contests/biweekly-contest-176/q1-weighted-word-mapping.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../../script.js"></script>
+</body>
+</html>
