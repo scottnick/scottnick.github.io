@@ -627,6 +627,57 @@ public:
 
 ---
 
+## 10.10（新增法律）Contest 題解雙版本規則（contests / all problems）
+
+> 目的：同一場 Contest 的題目，要同時符合「Contest 瀏覽」與「All Problems 主索引」兩種使用情境。
+
+### 10.10.1 必須同時新增兩份文章（必遵守）
+
+當我新增「Contest 題解」時，必須同時建立兩份對應文章：
+
+1) **contests 版本**：放在 `cpp-notes/contests/...`
+2) **all problems 版本**：放在 `cpp-notes/all problems/...`
+
+> 除非我明確說「不要新增到 all problems」，否則一律視為必須雙版本同時新增。
+
+### 10.10.2 contests 版本格式規則（必遵守）
+
+contests 版本的文章必須符合：
+
+* 題目編號：使用 **Q 編號**，固定為 `Q1 / Q2 / Q3 / Q4`
+* 標題命名：以 `Q1~Q4` 為主識別（例如：`Q1 - ...`）
+* **不顯示難度**（文章資訊區塊中不得出現 Easy/Medium/Hard）
+* `## 🔗 題目連結` 必須使用 **contest 連結**（LeetCode 的 `/contest/.../problems/...` 形式）
+* `.post-tag` 仍必須存在（供全站類別索引），但 tags 內容照我原稿，不得自行增刪改
+
+### 10.10.3 all problems 版本格式規則（必遵守）
+
+all problems 版本的文章必須符合：
+
+* 題目編號：使用 **LeetCode 官方數字題號**（例如 `3828`、`3833`）
+* 標題命名：以 `題號-英文題名`（沿用 all problems 既有命名規則）
+* **必須顯示難度**（文章資訊區塊中要有 Easy/Medium/Hard）
+* `## 🔗 題目連結` 必須使用 **problems 連結**（LeetCode 的 `/problems/.../description/` 形式）
+* contests 版本與 all problems 版本內容（HackMD 原稿）可相同，但兩者的：
+  * 題號表示法（Q vs 數字）
+  * 難度（contests 無 / all problems 有）
+  * 題目連結（contest vs problems）
+  必須依本條規則分流，不得混用
+
+### 10.10.4 驗收條件（必做）
+
+新增 Contest 題解後必須確認：
+
+1. contests 資料夾存在對應的 `Q1~Q4` 文章（題號為 Q）
+2. all problems 資料夾存在對應的官方題號文章（題號為數字）
+3. contests 文章的題目連結是 `/contest/.../problems/...`
+4. all problems 文章的題目連結是 `/problems/.../description/`
+5. contests 文章不出現難度；all problems 文章必須出現難度
+6. 兩份文章皆符合第 9 節與第 10 節的「原稿不得增刪改」規則
+7. 依第 6.2 / 6.2.1 規則更新 `site-index.json` 並完成驗收
+
+---
+
 ## 11) 類別頁 UI / 計數 / 分頁規則（新增法律）
 
 ### 11.1 category.html 類別頁「已顯示 / 共」定義（必遵守）
