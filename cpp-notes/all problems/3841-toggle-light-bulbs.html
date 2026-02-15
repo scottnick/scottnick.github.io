@@ -1,0 +1,147 @@
+<!-- all problems/3841-toggle-light-bulbs.html: 3841. Toggle Light Bulbs -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3841. Toggle Light Bulbs</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false" style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題"><span id="theme-icon" aria-hidden="true">☀️</span></button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="index.html">All problems</a>
+      <span aria-hidden="true">/</span>
+      <span>3841. Toggle Light Bulbs</span>
+    </nav>
+
+    <section class="hero">
+      <h1>3841. Toggle Light Bulbs</h1>
+      <p><strong>練習日期：</strong>2026-02-15</p>
+      <p><strong>難度：</strong>Easy</p>
+      <p><strong>類型：</strong>Weekly Contest 489</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">目錄</button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#complexity">⏱️ 複雜度</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給你一個整數陣列 <code>bulbs</code>，其中每個元素都介於 1 到 100。</p>
+        <p>有 100 顆燈泡，編號從 1 到 100，一開始全部都是關的。</p>
+        <p>對於陣列 <code>bulbs</code> 中的每個元素 <code>bulbs[i]</code>：</p>
+        <p>如果第 <code>bulbs[i]</code> 顆燈泡目前是關的，就把它打開；否則就把它關掉。</p>
+        <p>請回傳最後仍然亮著的燈泡編號清單，並且要依照遞增順序排序。如果最後沒有任何燈泡亮著，就回傳空陣列。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>1 &lt;= bulbs.length &lt;= 100</code></li>
+          <li><code>1 &lt;= bulbs[i] &lt;= 100</code></li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>這題就是照題目做「開關切換」。</p>
+        <p>我用一個大小 101 的布林陣列 <code>swi</code> 來記錄每顆燈泡目前是開還是關（燈泡編號是 1~100，所以不用 index 0）。</p>
+        <p>流程分成兩段：第一段掃過 <code>bulbs</code>，遇到編號 <code>i</code> 就把 <code>swi[i]</code> 的狀態翻轉一次；第二段把所有 <code>swi[j] == true</code> 的編號 <code>j</code> 收集起來放進 <code>open</code>，最後回傳 <code>open</code>。</p>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>swi</code>：<code>vector&lt;bool&gt;</code>，記錄第 <code>j</code> 顆燈泡最後是亮著（true）或關著（false）</li>
+          <li><code>open</code>：<code>vector&lt;int&gt;</code>，把最後亮著的燈泡編號依序收集起來</li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+        <h3>1. 建立狀態表 swi，初始化全部關閉</h3>
+        <p>建立 <code>swi(101, false)</code>，代表 1~100 號燈泡一開始全部都是關的。</p>
+
+        <h3>2. 依序處理 bulbs，對指定燈泡做一次翻轉</h3>
+        <p>掃過 <code>bulbs</code> 每個元素 <code>i</code>，對 <code>swi[i]</code> 做狀態切換：關變開、開變關。</p>
+
+        <h3>3. 把最後仍然亮著的燈泡編號收集進 open</h3>
+        <p>從 <code>j = 1</code> 掃到 <code>100</code>，只要 <code>swi[j] == true</code> 就把 <code>j</code> 放進 <code>open</code>。</p>
+
+        <h3>4. 回傳 open</h3>
+        <p>如果沒有任何亮著的燈泡，<code>open</code> 會是空陣列，直接回傳即可。</p>
+
+        <h2 id="complexity">⏱️ 複雜度</h2>
+        <ul>
+          <li>時間複雜度：<code>O(n + 100)</code>，<code>n</code> 是 <code>bulbs.length</code>。</li>
+          <li>空間複雜度：<code>O(100)</code>，<code>swi</code> 固定長度 101，<code>open</code> 最多收集 100 個元素。</li>
+        </ul>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    vector&lt;int&gt; toggleLightBulbs(vector&lt;int&gt;&amp; bulbs) {
+        vector&lt;bool&gt; swi(101, false);
+        vector&lt;int&gt; open;
+        for (int i : bulbs) {
+            swi[i] = (swi[i] == false);
+        }
+        for (int j = 1; j &lt; 101; j++) {
+            if (swi[j]) {
+                open.push_back(j);
+            }
+        }
+        return open;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/toggle-light-bulbs/description/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field"><span class="meta-label">作者：</span><span class="meta-value">scottnick</span></div>
+        <div class="meta-field meta-field--date"><span class="meta-label">撰寫日期：</span><span class="meta-value">2026-02-15</span></div>
+        <div class="meta-field meta-field--full"><span class="meta-label">類別：</span><span class="meta-value"><span class="post-tags"><span class="post-tag">Weekly Contest 489</span><span class="post-tag">Easy</span></span></span></div>
+        <div class="meta-field meta-field--full"><span class="meta-label">原文連結：</span><span class="meta-value">https://scottnick.github.io/cpp-notes/all%20problems/3841-toggle-light-bulbs.html</span></div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
