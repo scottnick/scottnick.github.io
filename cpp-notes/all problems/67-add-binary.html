@@ -1,0 +1,213 @@
+<!-- all problems/67-add-binary.html: 全部題單文章 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>67. Add Binary</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+               width="18" height="18" aria-hidden="true" focusable="false"
+               style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="../all%20problems/index.html">All problems</a>
+      <span aria-hidden="true">/</span>
+      <span>67. Add Binary</span>
+    </nav>
+
+    <section class="hero">
+      <h1>67. Add Binary</h1>
+      <p><strong>練習日期：</strong>2026-02-16</p>
+      <p><strong>難度：</strong>Easy</p>
+      <p><strong>類型：</strong>String、Math、Simulation</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#variables">所有變數</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#complexity">⏱️ 複雜度</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給你兩個二進位字串 <code>a</code> 和 <code>b</code>，請回傳它們的和（也是二進位字串）。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>1 &lt;= a.length, b.length &lt;= 10</code></li>
+          <li><code>a</code> 和 <code>b</code> 只包含字元 <code>'0'</code> 或 <code>'1'</code></li>
+          <li>每個字串都不包含前導零，除非該字串本身就是 <code>"0"</code> (<a href="https://leetcode.com/problems/add-binary/description/?utm_source=chatgpt.com">LeetCode</a>)</li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>我這份寫法的核心就是「模擬二進位加法」。</p>
+        <p>因為二進位相加本來就會從最低位開始算，所以我先把 <code>a</code>、<code>b</code> 反轉，讓 index 0 變成最低位，接著一路往右掃，用 <code>carry</code> 記錄進位。</p>
+        <p>另外我先確保 <code>a</code> 是比較短的那個（如果 <code>a</code> 比 <code>b</code> 長就交換），這樣在迴圈裡判斷「<code>i &lt; m</code>」就能知道 <code>a</code> 這位還存不存在。</p>
+        <p>最後我把算出來的結果也是反著加進 <code>ans</code>，所以結束後再把 <code>ans</code> 反轉回正確順序。</p>
+
+        <h2 id="variables">所有變數</h2>
+        <ul>
+          <li><code>m</code>：<code>a</code> 的長度（保證是較短的那個）</li>
+          <li><code>n</code>：<code>b</code> 的長度（較長或相等）</li>
+          <li><code>ans</code>：答案字串（先用反向順序累積，最後再 reverse）</li>
+          <li><code>carry</code>：進位（只能是 0 或 1）</li>
+          <li><code>digits</code>：當前位元相加後的結果（包含進位），再轉成該位輸出與新的進位</li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+        <h3>1. 先確保 a 是比較短的字串</h3>
+        <p>如果 <code>a.size() &gt; b.size()</code>，就直接呼叫 <code>addBinary(b, a)</code> 交換，讓後面的邏輯只要處理「a 可能比 b 短」這一種情況。</p>
+        <hr />
+
+        <h3>2. 反轉兩個字串，從最低位開始加</h3>
+        <p>把 <code>a</code>、<code>b</code> reverse 之後：</p>
+        <ul>
+          <li><code>a[0]</code> / <code>b[0]</code> 就代表最低位</li>
+          <li>我用 <code>carry</code> 來記錄上一位加法產生的進位</li>
+        </ul>
+        <hr />
+
+        <h3>3. 逐位相加，維護 carry，並把結果塞進 ans</h3>
+        <p>我用 <code>i = 0..n-1</code> 掃過較長的 <code>b</code>：</p>
+        <ul>
+          <li>先讓 <code>digits = carry</code>，並把 <code>carry</code> 歸零（等一下重新算）</li>
+          <li>如果 <code>i &lt; m</code>，代表 <code>a</code> 這位存在，就把 <code>a[i]</code> 和 <code>b[i]</code> 的 bit 都加進 <code>digits</code></li>
+          <li>否則只有 <code>b[i]</code> 需要加進來</li>
+          <li>若 <code>digits &gt; 1</code>，代表需要進位：
+            <ul>
+              <li><code>digits -= 2</code></li>
+              <li><code>carry = 1</code></li>
+            </ul>
+          </li>
+          <li>把 <code>digits</code> 用 <code>to_string</code> 加到 <code>ans</code>（此時 <code>ans</code> 是反向累積）</li>
+        </ul>
+        <hr />
+
+        <h3>4. 迴圈結束後，如果還有進位就補上</h3>
+        <p>如果最後 <code>carry &gt; 0</code>，代表最高位還多一個 1，需要把它加進 <code>ans</code>。</p>
+        <hr />
+
+        <h3>5. 把 ans 反轉回正確方向</h3>
+        <p>因為 <code>ans</code> 是從低位到高位一路 append，所以最後 reverse 回來才是正確答案。</p>
+
+        <h2 id="complexity">⏱️ 複雜度</h2>
+        <ul>
+          <li>時間複雜度：<code>O(n)</code>，<code>n = max(a.length, b.length)</code>（反轉 + 一次掃描）</li>
+          <li>空間複雜度：<code>O(n)</code>，答案字串需要長度約 <code>n</code>（可能再多 1 位進位）</li>
+        </ul>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    string addBinary(string a, string b) {
+        if (a.size() &gt; b.size()) { // a小b大
+            return addBinary(b, a);
+        }
+        int m = a.size(), n = b.size();
+        string ans = "";
+        reverse(a.begin(), a.end());
+        reverse(b.begin(), b.end());
+        int carry = 0;
+        for (int i = 0; i &lt; n; i++) {
+            int digits = carry;
+            carry = 0;
+            if (i &lt; m) {
+                digits = digits + (a[i] - '0') + (b[i] - '0');
+            } else {
+                digits += (b[i] - '0');
+            }
+            if (digits &gt; 1) {
+                digits -= 2;
+                carry = 1;
+            }
+            ans += to_string(digits);
+        }
+        if (carry &gt; 0) {
+            ans += to_string(carry);
+        }
+        reverse(ans.begin(), ans.end());
+        return ans;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p><a href="https://leetcode.com/problems/add-binary/description/">https://leetcode.com/problems/add-binary/description/</a></p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-02-16</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value">
+            <span class="post-tags">
+              <span class="post-tag">String</span>
+              <span class="post-tag">Math</span>
+              <span class="post-tag">Simulation</span>
+              <span class="post-tag">Easy</span>
+            </span>
+          </span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/all%20problems/67-add-binary.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
