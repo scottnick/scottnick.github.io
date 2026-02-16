@@ -1,0 +1,225 @@
+<!-- grind75/15-3sum.html: Grind 75 文章 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>15. 3Sum</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+               width="18" height="18" aria-hidden="true" focusable="false"
+               style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="../grind75/index.html">Grind 75</a>
+      <span aria-hidden="true">/</span>
+      <span>15. 3Sum</span>
+    </nav>
+
+    <section class="hero">
+      <h1>15. 3Sum</h1>
+      <p><strong>練習日期：</strong>2026-02-14</p>
+      <p><strong>難度：</strong>Medium</p>
+      <p><strong>類型：</strong>Array、Two Pointers、Sorting</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#complexity">⏱️ 複雜度</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給你一個整數陣列 <code>nums</code>。</p>
+        <p>請回傳所有不重複的三元組 <code>[nums[i], nums[j], nums[k]]</code>，使得：</p>
+        <ul>
+          <li><code>i != j</code>、<code>i != k</code>、<code>j != k</code></li>
+          <li><code>nums[i] + nums[j] + nums[k] == 0</code></li>
+        </ul>
+        <p>答案中不可以包含重複的三元組。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>3 &lt;= nums.length &lt;= 3000</code></li>
+          <li><code>-10^5 &lt;= nums[i] &lt;= 10^5</code></li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>我這份寫法的速度沒有很快，因為是遇到 TLE 之後才加上一些判斷條件修正的😔😔</p>
+        <p>主體概念是：先排序，然後固定一個數 <code>nums[x]</code>，把問題變成在右邊找兩個數 <code>nums[y]</code>、<code>nums[z]</code> 讓它們加起來等於 <code>-nums[x]</code>。</p>
+        <p>排序的好處是：</p>
+        <ul>
+          <li>可以在掃描時提早停止：如果 <code>nums[x] &gt; 0</code>，後面都更大，不可能再湊到 0</li>
+          <li>可以用「從右邊往左縮」的方式調整 <code>z</code> 來逼近目標</li>
+        </ul>
+
+        <p>另外我有做兩次去重：</p>
+        <ul>
+          <li>第一層固定 <code>x</code> 時，用 <code>before</code> 跳過相同的 <code>nums[x]</code></li>
+          <li>產生完所有三元組後，把 <code>ans</code> 再 sort 一次，然後從後往前把相同的三元組 erase 掉</li>
+        </ul>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>ans</code>：存放所有找到的三元組答案</li>
+          <li><code>before</code>：記錄上一個使用過的 <code>nums[x]</code>，避免固定 <code>x</code> 時重複處理同樣的值</li>
+          <li><code>z</code>：右側指標，從最右邊往左移動</li>
+          <li><code>check</code>：在最後去重時記錄上一個三元組，判斷是否重複</li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+        <h3>1. 先排序，讓後續能用大小關係做剪枝</h3>
+        <p>先 <code>sort(nums.begin(), nums.end())</code>。</p>
+        <p>排序後同一個值會集中在一起，且越後面越大，這讓我可以做提早停止，也能讓 <code>z</code> 指標只往左移。</p>
+
+        <h3>2. 固定第一個數 <code>nums[x]</code>，把目標變成 two-sum</h3>
+        <p>用 <code>x</code> 從 <code>0</code> 跑到 <code>n - 3</code>，每次固定 <code>nums[x]</code> 當作三元組的第一個數。</p>
+        <p>我用 <code>before</code> 跳過重複的 <code>nums[x]</code>；若 <code>nums[x] == before</code>，就 <code>continue</code>。另外如果 <code>nums[x] &gt; 0</code> 就直接 <code>break</code>。</p>
+
+        <h3>3. 對每個 x，用 y 掃右邊，並讓 z 從最右邊往左縮</h3>
+        <ul>
+          <li>先把 <code>z = n - 1</code> 設在最右端</li>
+          <li>再用 <code>y</code> 從 <code>x + 1</code> 往右掃</li>
+        </ul>
+        <p>對每個 <code>y</code>，一直嘗試用目前的 <code>y</code> 配上目前的 <code>z</code>：</p>
+        <ul>
+          <li>若 <code>nums[y] + nums[z] == -nums[x]</code>，加入答案</li>
+          <li>若 <code>nums[y] + nums[z] &lt; -nums[x]</code>，代表太小，直接 <code>break</code> 換下一個更大的 <code>y</code></li>
+          <li>否則代表太大，<code>z--</code> 往左縮小總和</li>
+        </ul>
+
+        <h3>4. 全部找完後，對 <code>ans</code> 排序並去除重複三元組</h3>
+        <p>因為內層沒有完整處理 <code>y</code>、<code>z</code> 的重複值，所以最後用答案後處理去重。</p>
+        <p>先 <code>sort(ans.begin(), ans.end())</code>，再用 <code>check</code> 從後往前掃，重複就 <code>erase</code>。</p>
+
+        <h3>5. 回傳去重後的 <code>ans</code></h3>
+        <p>最後回傳 <code>ans</code>，就是所有不重複的三元組。</p>
+
+        <h2 id="complexity">⏱️ 複雜度</h2>
+        <ul>
+          <li>時間複雜度：大約 <code>O(n^2)</code>，另外 <code>sort(ans)</code> 是 <code>O(m log m)</code>，<code>m</code> 為找到的三元組數量。</li>
+          <li>空間複雜度：<code>O(m)</code>，<code>ans</code> 用來存放所有答案。</li>
+        </ul>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    vector&lt;vector&lt;int&gt;&gt; threeSum(vector&lt;int&gt;&amp; nums) {
+        sort(nums.begin(), nums.end());
+        int n = nums.size();
+        vector&lt;vector&lt;int&gt;&gt; ans;
+        int before = INT_MAX;
+        for (int x = 0; x &lt; n - 2; x++) {
+            if (nums[x] == before) {
+                continue;
+            }
+            before = nums[x];
+            if (nums[x] &gt; 0) {
+                break;
+            }
+            int z = n - 1;
+            for (int y = x + 1; y &lt; n; y++) {
+                while (z &gt; y) {
+                    if (nums[y] + nums[z] == -nums[x]) {
+                        ans.push_back({nums[x], nums[y], nums[z]});
+                    } else if (nums[y] + nums[z] &lt; -nums[x]) {
+                        break;
+                    }
+                    z--;
+                }
+            }
+        }
+
+        sort(ans.begin(), ans.end()); // 去重複
+        vector&lt;int&gt; check(3, INT_MAX);
+        for (int i = ans.size() - 1; i &gt;= 0; i--) {
+            if (check != ans[i]) {
+                check = ans[i];
+            } else {
+                ans.erase(ans.begin() + i);
+            }
+        }
+        return ans;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/3sum/description/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-02-14</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value">
+            <span class="post-tags">
+              <span class="post-tag">Array</span>
+              <span class="post-tag">Two Pointers</span>
+              <span class="post-tag">Sorting</span>
+              <span class="post-tag">Medium</span>
+            </span>
+          </span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/grind75/15-3sum.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
