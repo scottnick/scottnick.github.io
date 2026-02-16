@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>190. Reverse Bits</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+               width="18" height="18" aria-hidden="true" focusable="false"
+               style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="index.html">All problems</a>
+      <span aria-hidden="true">/</span>
+      <span>190. Reverse Bits</span>
+    </nav>
+
+    <section class="hero">
+      <h1>190. Reverse Bits</h1>
+      <p><strong>練習日期：</strong>2026-02-16</p>
+      <p><strong>難度：</strong>Easy</p>
+      <p><strong>類型：</strong>Bit Manipulation</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul></ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給定一個 32 位元有號整數，請將它的位元反轉。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>0 &lt;= n &lt;= 2^31 - 2</code></li>
+          <li><code>n</code> 是偶數</li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>我這份寫法是在做「逐位取出 + 逐位建立」。</p>
+        <p>我每次都從 <code>n</code> 的最低位開始取（用 <code>n % 2</code>），然後把它接到 <code>ans</code> 的尾端。</p>
+        <p>因為我要做的是反轉，所以「原本最低位」會變成「答案的最高位」，因此我每一輪都先把 <code>ans</code> 乘以 2（等價於左移一位），再把取出的 bit 加上去。</p>
+        <p>整個過程固定做 32 次，就能把 32 個位元完整反轉完。</p>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>ans</code>：正在建立的反轉結果（每輪把新 bit 接到 ans 右邊）</li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+        <h3>1. 初始化 ans = 0</h3>
+        <p><code>ans</code> 一開始是空的結果，所以設成 0。</p>
+
+        <hr>
+
+        <h3>2. 重複 32 次：每次把 n 的最低位搬到 ans 的右邊</h3>
+        <p>每一輪都做同一件事：</p>
+        <p>先用 <code>n % 2</code> 取得 <code>n</code> 的最低位。<br>
+        再用 <code>ans = 2 * ans + n % 2</code> 把 <code>ans</code> 左移一格並把這個 bit 放進去。</p>
+        <p>這樣連做 32 次，就等於把 <code>n</code> 的 bit 從低到高取出，依序塞到 <code>ans</code>，最後就變成反轉。</p>
+
+        <hr>
+
+        <h3>3. 每輪都把 n 右移一位</h3>
+        <p>我用 <code>n = (n - n % 2) / 2</code> 把最低位移除，讓下一輪可以取到下一個 bit。</p>
+
+        <hr>
+
+        <h3>4. 回傳 ans</h3>
+        <p>32 次做完後，<code>ans</code> 就是反轉後的整數。</p>
+
+        <h2 id="complexity">⏱️ 複雜度</h2>
+        <ul>
+          <li>時間複雜度：<code>O(32)</code>，也就是 <code>O(1)</code></li>
+          <li>空間複雜度：<code>O(1)</code></li>
+        </ul>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    int reverseBits(int n) {
+        int ans = 0;
+        for (int i = 0; i &lt; 32; i++) {
+            ans = 2 * ans + n % 2;
+            n = (n - n % 2) / 2;
+        }
+        return ans;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/reverse-bits/description/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-02-16</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value">
+            <span class="post-tags">
+              <span class="post-tag">Bit Manipulation</span>
+              <span class="post-tag">Easy</span>
+            </span>
+          </span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/all%20problems/190-reverse-bits.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
