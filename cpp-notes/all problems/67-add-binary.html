@@ -78,7 +78,7 @@
         <ul>
           <li><code>1 &lt;= a.length, b.length &lt;= 10</code></li>
           <li><code>a</code> 和 <code>b</code> 只包含字元 <code>'0'</code> 或 <code>'1'</code></li>
-          <li>每個字串都不包含前導零，除非該字串本身就是 <code>"0"</code> (<a href="https://leetcode.com/problems/add-binary/description/?utm_source=chatgpt.com">LeetCode</a>)</li>
+          <li>每個字串都不包含前導零，除非該字串本身就是 <code>"0"</code></li>
         </ul>
 
         <h2 id="approach">🧠 解題思路</h2>
@@ -87,7 +87,7 @@
         <p>另外我先確保 <code>a</code> 是比較短的那個（如果 <code>a</code> 比 <code>b</code> 長就交換），這樣在迴圈裡判斷「<code>i &lt; m</code>」就能知道 <code>a</code> 這位還存不存在。</p>
         <p>最後我把算出來的結果也是反著加進 <code>ans</code>，所以結束後再把 <code>ans</code> 反轉回正確順序。</p>
 
-        <h2 id="variables">所有變數</h2>
+        <h3 id="variables">所有變數</h3>
         <ul>
           <li><code>m</code>：<code>a</code> 的長度（保證是較短的那個）</li>
           <li><code>n</code>：<code>b</code> 的長度（較長或相等）</li>
