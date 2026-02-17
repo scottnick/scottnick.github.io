@@ -1,0 +1,184 @@
+<!-- top-interview-150/55-jump-game.html: Top Interview 150 文章 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>55. Jump Game</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+               width="18" height="18" aria-hidden="true" focusable="false"
+               style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="../top-interview-150/index.html">Top Interview 150</a>
+      <span aria-hidden="true">/</span>
+      <span>55. Jump Game</span>
+    </nav>
+
+    <section class="hero">
+      <h1>55. Jump Game</h1>
+      <p><strong>練習日期：</strong>2026-02-18</p>
+      <p><strong>難度：</strong>Medium</p>
+      <p><strong>類型：</strong>Array、Greedy</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#complexity">⏱️ 複雜度</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給你一個整數陣列 <code>nums</code>。你一開始站在陣列的第一個索引位置。</p>
+        <p>陣列中的每個元素 <code>nums[i]</code> 代表你從索引 <code>i</code> 最多可以往前跳的步數。</p>
+        <p>如果你可以到達最後一個索引，回傳 <code>true</code>；否則回傳 <code>false</code>。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>1 &lt;= nums.length &lt;= 10^4</code></li>
+          <li><code>0 &lt;= nums[i] &lt;= 10^5</code></li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>我這份寫法是從右往左掃，反過來想：</p>
+        <p>我不直接問「從起點能不能跳到終點」，而是問：</p>
+        <blockquote>
+          <p>我現在距離「某個可以到達終點的位置」還差幾步？</p>
+        </blockquote>
+        <p>所以我用 <code>count</code> 表示：如果我站在目前位置 <code>i</code>，要到達「右邊那個已知能到終點的位置」至少還需要跳幾步。</p>
+        <p>掃描時有兩種情況：</p>
+        <ul>
+          <li>如果 <code>nums[i] &gt;= count</code>，代表從 <code>i</code> 這格一跳就能跨過去（或剛好到達）那個目標位置
+            那 <code>i</code> 本身也就變成「新的可以到終點的位置」，我把 <code>count</code> 重新設成 0。</li>
+          <li>不管能不能更新目標位置，往左移一格時，「距離目標」都會多 1，所以每輪最後 <code>count++</code>。</li>
+        </ul>
+        <p>最後如果最左邊（i = 0）也能成為「可到終點的位置」，那整體就成功。</p>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>count</code>：目前位置到右邊「可到終點的目標位置」所需要的最少步數（距離）</li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+
+        <h3>1. 從最右邊開始掃，先把 count 設成 -1</h3>
+        <p>我用 <code>count = -1</code> 的原因是：第一輪在最右邊 <code>i = n-1</code> 時，會先檢查再 <code>count++</code>，這樣可以讓「終點本身」被視為距離 0 的目標。</p>
+
+        <hr>
+
+        <h3>2. 由右到左逐格檢查：這格能不能成為新的目標點</h3>
+        <p>對每個索引 <code>i</code>（從 <code>n-1</code> 到 <code>0</code>）：</p>
+        <p>如果 <code>nums[i] &gt;= count</code>
+          代表從 <code>i</code> 出發，跳躍能力足以到達目前的目標位置（或超過），所以我把 <code>count = 0</code>，表示「目標點更新成 i」。</p>
+
+        <hr>
+
+        <h3>3. 每往左移一格，距離目標就 +1</h3>
+        <p>不管剛剛有沒有更新目標點，下一輪 <code>i</code> 會往左一格，所以距離一定多 1，我做 <code>count++</code>。</p>
+
+        <hr>
+
+        <h3>4. 看最後起點能不能成為目標點</h3>
+        <p>如果起點可以到終點，那掃完後會呈現 <code>count == 1</code>，我就回傳 <code>true</code>；否則回傳 <code>false</code>。</p>
+
+        <h2 id="complexity">⏱️ 複雜度</h2>
+        <ul>
+          <li>時間複雜度：<code>O(n)</code>，只掃一次陣列</li>
+          <li>空間複雜度：<code>O(1)</code></li>
+        </ul>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    bool canJump(vector&lt;int&gt;&amp; nums) {
+        int count = -1;
+        for (int i = nums.size() - 1; i &gt;= 0; i--) {
+            if (nums[i] &gt;= count) {
+                count = 0;
+            }
+            count++;
+        }
+        return (count == 1);
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/jump-game/description/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-02-18</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value">
+            <span class="post-tags">
+              <span class="post-tag">Array</span>
+              <span class="post-tag">Greedy</span>
+              <span class="post-tag">Medium</span>
+            </span>
+          </span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/top-interview-150/55-jump-game.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
