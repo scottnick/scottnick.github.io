@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>693. Binary Number with Alternating Bits</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+               width="18" height="18" aria-hidden="true" focusable="false"
+               style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="index.html">All problems</a>
+      <span aria-hidden="true">/</span>
+      <span>693. Binary Number with Alternating Bits</span>
+    </nav>
+
+    <section class="hero">
+      <h1>693. Binary Number with Alternating Bits</h1>
+      <p><strong>練習日期：</strong>2026-02-18</p>
+      <p><strong>難度：</strong>Easy</p>
+      <p><strong>類型：</strong>Bit Manipulation</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">目錄</button>
+        <strong>目錄</strong>
+        <ul></ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給定一個正整數，請判斷它的二進位表示是否為「交替位元」：也就是任意兩個相鄰位元的值永遠不同。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>1 &lt;= n &lt;= 2^31 - 1</code></li>
+        </ul>
+
+        <h2 id="approach-1">🧠 解題思路（一）用 int 除法</h2>
+        <p>我這份寫法的核心是用位元操作做一個很漂亮的判斷。</p>
+        <p>先把 <code>n</code> 右移一位得到 <code>k = n / 2</code>（等價於 <code>n &gt;&gt; 1</code>），這樣 <code>k</code> 就是「少了最後一個 bit」的版本。接著做 <code>n ^ k</code>：</p>
+        <ul>
+          <li>如果 <code>n</code> 的 bits 是交替的（例如 <code>101010...</code>）</li>
+          <li>那 <code>n</code> 跟右移一位的 <code>k</code> 每一位都會不同</li>
+          <li>XOR 後就會變成全 1（例如 <code>11111...</code>）</li>
+        </ul>
+        <p>而「是不是形如 <code>111...</code> 的數」可以用經典技巧判斷：</p>
+        <blockquote>
+          <p><code>x</code> 是全 1（二進位形如 <code>111...</code>）<br>當且僅當 <code>(x &amp; (x + 1)) == 0</code></p>
+        </blockquote>
+        <p>所以我最後直接檢查 <code>((k ^ n) &amp; ((k ^ n) + 1)) == 0</code>。</p>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>k</code>：<code>n</code> 右移一位後的結果（用來和 <code>n</code> 做 XOR）</li>
+        </ul>
+
+        <h2 id="steps-1">🪜 主要流程步驟（一）</h2>
+        <h3>1. 先把 n 右移一位得到 k</h3>
+        <p><code>k = n / 2</code> 代表把 <code>n</code> 的二進位整體往右移一格，少掉最低位那一個 bit。</p>
+
+        <hr>
+
+        <h3>2. 用 XOR 把「交替」轉成「全 1」</h3>
+        <p><code>x = k ^ n</code></p>
+        <p>如果 <code>n</code> 是交替位元，那 <code>n</code> 和 <code>k</code> 在每一個對齊的位置都不同，因此 XOR 會得到 <code>111...</code> 這種全 1 的形狀。</p>
+
+        <hr>
+
+        <h3>3. 判斷 x 是否為全 1</h3>
+        <p>用位元性質檢查：<code>(x &amp; (x + 1)) == 0</code>。如果成立，代表 <code>x</code> 是 <code>111...</code>，也就代表原本 <code>n</code> 的相鄰位元確實都不同。</p>
+
+        <h2 id="complexity-1">⏱️ 複雜度（一）</h2>
+        <ul>
+          <li>時間複雜度：<code>O(1)</code></li>
+          <li>空間複雜度：<code>O(1)</code></li>
+        </ul>
+
+        <h2 id="code-1">💻 程式碼實作（一）</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    bool hasAlternatingBits(int n) {
+        long long k = n / 2; // 沒有最後一個位元
+        return ((k ^ n) &amp; ((k ^ n) + 1)) == 0;
+    }
+};
+</code></pre>
+
+        <h2 id="approach-2">🧠 解題思路（二）用移位</h2>
+        <p>這份寫法的重點是把「交替」轉成一個很容易判斷的形狀。</p>
+        <p>如果 <code>n</code> 的二進位是交替的（例如 <code>101010...</code> 或 <code>010101...</code>），那把它右移一位後，兩個數在每一個對齊的位置都會是相反的。因此做 XOR：<code>x = n ^ (n &gt;&gt; 1)</code>，就會得到一個全部都是 <code>1</code> 的二進位數（像 <code>11111...</code>）。</p>
+        <p>接下來只要判斷 <code>x</code> 是不是「全 1」即可。而「全 1」有一個經典特徵：</p>
+        <ul>
+          <li><code>111...</code> 加 1 會變成 <code>1000...</code></li>
+          <li>兩者做 AND 會變成 <code>0</code></li>
+        </ul>
+        <p>所以用 <code>(x &amp; (x + 1)) == 0</code>，就能一行判斷是否為交替位元。</p>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>x</code>：<code>n</code> 與 <code>n &gt;&gt; 1</code> XOR 後的結果，用來判斷是否為全 1</li>
+        </ul>
+
+        <h2 id="steps-2">🪜 主要流程步驟（二）</h2>
+        <h3>1. 先把 n 右移一位並做 XOR</h3>
+        <p><code>x = n ^ (n &gt;&gt; 1)</code>，這一步的效果是：如果原本相鄰位元都不同，XOR 後會得到 <code>111...</code>。</p>
+
+        <hr>
+
+        <h3>2. 判斷 x 是否為全 1</h3>
+        <p>用位元性質：<code>(x &amp; (x + 1)) == 0</code>。成立代表 <code>x</code> 是 <code>111...</code>，也就代表 <code>n</code> 是交替位元。</p>
+
+        <h2 id="complexity-2">⏱️ 複雜度（二）</h2>
+        <ul>
+          <li>時間複雜度：<code>O(1)</code></li>
+          <li>空間複雜度：<code>O(1)</code></li>
+        </ul>
+
+        <h2 id="code-2">💻 程式碼實作（二）</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    bool hasAlternatingBits(int n) {
+        long long x = n ^ (n &gt;&gt; 1); // 2進位移動一位
+        return (x &amp; (x + 1)) == 0;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/binary-number-with-alternating-bits/description/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-02-18</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value">
+            <span class="post-tags">
+              <span class="post-tag">Bit Manipulation</span>
+              <span class="post-tag">Easy</span>
+            </span>
+          </span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/all%20problems/693-binary-number-with-alternating-bits.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
