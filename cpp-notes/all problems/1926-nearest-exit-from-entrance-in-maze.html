@@ -1,0 +1,204 @@
+<!-- all problems/1926-nearest-exit-from-entrance-in-maze.html: All problems 文章 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>1926. Nearest Exit from Entrance in Maze</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+               width="18" height="18" aria-hidden="true" focusable="false"
+               style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="index.html">All problems</a>
+      <span aria-hidden="true">/</span>
+      <span>1926. Nearest Exit from Entrance in Maze</span>
+    </nav>
+
+    <section class="hero">
+      <h1>1926. Nearest Exit from Entrance in Maze</h1>
+      <p><strong>練習日期：</strong>2026-02-19</p>
+      <p><strong>難度：</strong>Medium</p>
+      <p><strong>類型：</strong>Breadth-First Search、Matrix、Shortest Path</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">目錄</button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#complexity">⏱️ 複雜度</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給你一個 <code>m x n</code> 的矩陣 <code>maze</code>（0-indexed），其中空格用 <code>'.'</code> 表示、牆壁用 <code>'+'</code> 表示。你也會拿到迷宮的入口 <code>entrance</code>，其中 <code>entrance = [entrance_row, entrance_col]</code> 代表你一開始站的位置（行、列）。</p>
+        <p>每一步你可以往上、下、左、右移動一格。你不能走到牆壁，也不能走出迷宮。</p>
+        <p>你的目標是從 <code>entrance</code> 找到最近的出口。出口定義為：在迷宮邊界上的空格（第一/最後一列或第一/最後一行）。注意：入口本身不算出口。</p>
+        <p>請回傳從入口到最近出口的最短路徑步數；如果不存在這種路徑，回傳 <code>-1</code>。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>maze.length == m</code></li>
+          <li><code>maze[i].length == n</code></li>
+          <li><code>1 &lt;= m, n &lt;= 100</code></li>
+          <li><code>maze[i][j]</code> 只會是 <code>'.'</code> 或 <code>'+'</code></li>
+          <li><code>entrance.length == 2</code></li>
+          <li><code>0 &lt;= entrance_row &lt; m</code></li>
+          <li><code>0 &lt;= entrance_col &lt; n</code></li>
+          <li><code>entrance</code> 一定會是一個空格</li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>我這題用 BFS，因為題目要的是「最短步數」，而迷宮每一步移動的成本都一樣（走一格就是 +1 步），所以 BFS 一層一層擴展，第一次走到出口時，就一定是最短距離。</p>
+        <p>我的寫法用兩個 <code>queue&lt;int&gt;</code> 分別存 x / y 座標，搭配 <code>dx/dy</code> 代表四個方向位移。</p>
+        <p>另外我把走過的格子直接改成 <code>'+'</code>，等於「把它當牆」，避免重複走回來造成無限循環，也省掉額外 <code>visited</code> 陣列。</p>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>count</code>：目前 BFS 走到第幾步（第幾層）。我每處理完一層就讓它 +1，所以當我找到出口時，<code>count</code> 就是最短步數</li>
+          <li><code>m</code>：迷宮列數</li>
+          <li><code>n</code>：迷宮行數</li>
+          <li><code>x</code>：BFS 用的 queue，存目前所有待處理格子的 row</li>
+          <li><code>y</code>：BFS 用的 queue，存目前所有待處理格子的 col</li>
+          <li><code>dx</code>、<code>dy</code>：四方向位移（下、上、右、左），用來快速枚舉鄰居</li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+        <h3>1. 初始化 BFS 起點，並把入口標記成已走過</h3>
+        <p>我先把入口 <code>(entrance[0], entrance[1])</code> 放進 <code>x / y</code> 兩個 queue。然後直接做 <code>maze[entrance[0]][entrance[1]] = '+'</code>，表示入口已經走過，避免之後又走回入口。</p>
+
+        <h3>2. 一層一層 BFS，count 代表目前步數</h3>
+        <p>只要 queue 還有東西，就代表還有位置可以擴展。每次外層 while 開始，我先記錄這一層有多少個點 <code>s = x.size()</code>，並把 <code>count++</code>，表示接下來這一層的擴展是「走了第 count 步」才到的新格子。</p>
+
+        <h3>3. 對每個當前格子，往四個方向嘗試走一步</h3>
+        <p>我用 <code>dx/dy</code> 算出鄰居 <code>(nx, ny)</code>：</p>
+        <ul>
+          <li>如果 <code>(nx, ny)</code> 超出邊界：直接略過</li>
+          <li>如果 <code>maze[nx][ny] == '.'</code>：代表可走
+            <ul>
+              <li>如果這個鄰居在邊界上（<code>nx==0</code> 或 <code>nx==m-1</code> 或 <code>ny==0</code> 或 <code>ny==n-1</code>），那它就是出口，直接回傳 <code>count</code></li>
+              <li>否則把它標記成 <code>'+'</code>，並 push 進 queue，等下一層繼續擴展</li>
+            </ul>
+          </li>
+        </ul>
+
+        <h3>4. BFS 結束還沒找到出口，就回傳 -1</h3>
+        <p>如果 queue 都清空了，代表所有能到的空格都走遍了仍然沒有出口路徑，所以答案是 <code>-1</code>。</p>
+
+        <h2 id="complexity">⏱️ 複雜度</h2>
+        <ul>
+          <li>時間複雜度：<code>O(mn)</code>，每個格子最多進 queue 一次、每次最多看 4 個方向</li>
+          <li>空間複雜度：<code>O(mn)</code>，最壞情況 queue 可能同時存很多格子（加上原地標記不另外開 visited）</li>
+        </ul>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    int nearestExit(vector&lt;vector&lt;char&gt;&gt;&amp; maze, vector&lt;int&gt;&amp; entrance) {
+        int count = 0;
+        int m = maze.size(), n = maze[0].size();
+        queue&lt;int&gt; x, y;
+        x.push(entrance[0]), y.push(entrance[1]);
+        int dx[4] = {1, -1, 0, 0}, dy[4] = {0, 0, 1, -1};
+        maze[entrance[0]][entrance[1]] = '+';
+        while (!x.empty()) {
+            int s = x.size();
+            count++;
+            for (int j = 0; j &lt; s; j++) {
+                for (int i = 0; i &lt; 4; i++) {
+                    int nx = x.front() + dx[i], ny = y.front() + dy[i];
+                    if (nx &lt; 0 || nx &gt;= m || ny &lt; 0 || ny &gt;= n) {
+                        continue;
+                    } else if (maze[nx][ny] == '.') {
+                        if (nx == 0 || nx == m - 1 || ny == 0 || ny == n - 1) {
+                            return count;
+                        }
+                        maze[nx][ny] = '+';
+                        x.push(nx);
+                        y.push(ny);
+                    }
+                }
+                x.pop();
+                y.pop();
+            }
+        }
+        return -1;
+    }
+};</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/nearest-exit-from-entrance-in-maze/description/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-02-19</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value">
+            <span class="post-tags">
+              <span class="post-tag">Breadth-First Search</span>
+              <span class="post-tag">Matrix</span>
+              <span class="post-tag">Shortest Path</span>
+              <span class="post-tag">Medium</span>
+            </span>
+          </span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/all%20problems/1926-nearest-exit-from-entrance-in-maze.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
