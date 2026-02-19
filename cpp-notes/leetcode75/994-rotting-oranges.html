@@ -59,16 +59,19 @@
           目錄
         </button>
         <strong>目錄</strong>
-        <ul>
+                <ul>
           <li><a href="#statement">📘 題目敘述</a></li>
-          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#approach-vector">🧠 解題思路（一）用vector</a></li>
+          <li><a href="#code-vector">💻 程式碼實作（一）</a></li>
+          <li><a href="#approach-queue">🧠 解題思路（二）用queue</a></li>
           <li><a href="#steps">🪜 主要流程步驟</a></li>
-          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#complexity">⏱️ 複雜度</a></li>
+          <li><a href="#code-queue">💻 程式碼實作（二）</a></li>
           <li><a href="#link">🔗 題目連結</a></li>
         </ul>
       </aside>
 
-      <section class="term-block article-content">
+            <section class="term-block article-content">
         <h2 id="statement">📘 題目敘述</h2>
         <p>給定一個 <code>m x n</code> 的網格 <code>grid</code>，其中：</p>
         <ul>
@@ -87,11 +90,11 @@
           <li><code>grid[i][j]</code> 只會是 <code>0</code>、<code>1</code>、<code>2</code></li>
         </ul>
 
-        <h2 id="approach">🧠 解題思路</h2>
-        <p>我的想法是用 BFS 的概念：<strong>把「目前腐爛的橘子」當成同一層，一分鐘內把它們四周的新鮮橘子全部感染。</strong> 感染完一輪就代表過了 1 分鐘，然後再處理下一輪新感染的橘子。</p>
-        <hr />
+        <h2 id="approach-vector">🧠 解題思路（一）用vector</h2>
+        <p>我的想法是用 BFS 的概念：<br><strong>把「目前腐爛的橘子」當成同一層，一分鐘內把它們四周的新鮮橘子全部感染。</strong><br>感染完一輪就代表過了 1 分鐘，然後再處理下一輪新感染的橘子。</p>
+        <hr>
 
-        <h3>所有變數（對應我的 code）</h3>
+        <h3>所有變數</h3>
         <ul>
           <li><code>m, n</code>：網格大小</li>
           <li><code>fresh</code>：目前還剩多少顆新鮮橘子（<code>grid == 1</code> 的數量）</li>
@@ -107,9 +110,9 @@
           <li><code>min</code>：已經過了幾分鐘</li>
         </ul>
         <p>（我用 <code>orot ~ nrot-1</code> 這段 index 來表示「這一分鐘要擴散的腐爛橘子集合」）</p>
-        <hr />
 
-        <h2 id="steps">🪜 主要流程步驟</h2>
+        <hr>
+
         <h3>步驟一：先掃一次 grid，統計初始狀態</h3>
         <p>我先把所有格子掃一遍：</p>
         <ul>
@@ -122,7 +125,8 @@
           <li><code>rotten</code> 裡面存著「一開始就腐爛」的所有橘子</li>
           <li><code>nrot</code> 就是初始腐爛橘子的數量</li>
         </ul>
-        <hr />
+
+        <hr>
 
         <h3>步驟二：用 while 迴圈模擬「一分鐘一層的擴散」</h3>
         <p>只要 <code>fresh != 0</code>（還有新鮮橘子），就繼續跑：</p>
@@ -134,22 +138,21 @@
           <li>所以 <code>[orot, nrot)</code> 就是「這一分鐘要擴散的腐爛橘子」</li>
         </ul>
         <p>這樣做的效果等同於 BFS 的分層。</p>
-        <hr />
+
+        <hr>
 
         <h4>情況一：擴散（感染四周）</h4>
         <p>對每一顆「這一分鐘要擴散」的腐爛橘子 <code>(x, y)</code>：</p>
         <ul>
           <li>我看它的四個方向 <code>(xn, yn)</code></li>
-          <li>如果 <code>(xn, yn)</code> 在範圍內，且 <code>grid[xn][yn] == 1</code>：
-            <ul>
-              <li>代表是一顆新鮮橘子會被感染</li>
-              <li>把 <code>(xn, yn)</code> 加到 <code>rotten</code>（變成新的腐爛橘子）</li>
-              <li><code>fresh--</code>（新鮮橘子減少）</li>
-              <li><code>grid[xn][yn] = 2</code>（標記成腐爛，避免重複感染）</li>
-            </ul>
-          </li>
+          <li>如果 <code>(xn, yn)</code> 在範圍內，且 <code>grid[xn][yn] == 1</code>：</li>
+          <li>代表是一顆新鮮橘子會被感染</li>
+          <li>把 <code>(xn, yn)</code> 加到 <code>rotten</code>（變成新的腐爛橘子）</li>
+          <li><code>fresh--</code>（新鮮橘子減少）</li>
+          <li><code>grid[xn][yn] = 2</code>（標記成腐爛，避免重複感染）</li>
         </ul>
-        <hr />
+
+        <hr>
 
         <h4>情況二：這一輪沒有新增腐爛，但 fresh 還沒變 0 → 不可能完成</h4>
         <p>感染完一輪後，我會檢查：</p>
@@ -162,7 +165,8 @@
           <li>但還有新鮮橘子存在</li>
         </ul>
         <p>→ 表示剩下的新鮮橘子被隔開了，永遠感染不到，所以直接回傳 <code>-1</code>。</p>
-        <hr />
+
+        <hr>
 
         <h3>更新到下一分鐘</h3>
         <p>如果還能繼續：</p>
@@ -171,12 +175,13 @@
           <li><code>nrot = rotten[0].size()</code>（更新目前腐爛總數）</li>
           <li><code>min++</code>（過了 1 分鐘）</li>
         </ul>
-        <hr />
+
+        <hr>
 
         <h3>最後回傳</h3>
         <p>當 <code>fresh == 0</code> 時，代表全部都感染完了，回傳 <code>min</code>。（若一開始 <code>fresh == 0</code>，while 不會進去，直接回傳 0）</p>
 
-        <h2 id="code">💻 程式碼實作</h2>
+        <h2 id="code-vector">💻 程式碼實作（一）</h2>
         <pre><code class="language-cpp">class Solution {
 public:
     int orangesRotting(vector&lt;vector&lt;int&gt;&gt;&amp; grid) {
@@ -229,8 +234,120 @@ public:
         }
         return min;
     }
-};
-</code></pre>
+};</code></pre>
+
+        <h2 id="approach-queue">🧠 解題思路（二）用queue</h2>
+        <p>這題我用 BFS，因為「腐爛擴散」本質就是從所有腐爛點同時往外一層一層擴散，而且題目要的是「最少分鐘數」，也就是最短層數。</p>
+        <p>我做法的關鍵是「多源 BFS」：</p>
+        <ul>
+          <li>一開始把所有腐爛橘子（值為 2）的位置都丟進 queue，代表它們在第 0 分鐘同時開始擴散</li>
+          <li>每處理完 queue 的一整層，就代表過了 1 分鐘</li>
+          <li>在擴散時，遇到新鮮橘子（值為 1）就把它改成腐爛（設成 2），並加入 queue，等下一分鐘繼續擴散</li>
+        </ul>
+        <p>另外我用 <code>fresh</code> 記錄還剩多少新鮮橘子，這樣 BFS 結束後只要看 <code>fresh</code> 是否歸零，就能判斷到底有沒有全部腐爛。</p>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>count</code>：分鐘數計數器。我用「每跑完一層就 +1」的方式，所以最後回傳的是擴散了幾層（幾分鐘）</li>
+          <li><code>fresh</code>：目前還剩多少顆新鮮橘子（值為 1）</li>
+          <li><code>m</code>：列數</li>
+          <li><code>n</code>：行數</li>
+          <li><code>x</code>：queue，存待處理格子的 row</li>
+          <li><code>y</code>：queue，存待處理格子的 col</li>
+          <li><code>dx</code>、<code>dy</code>：四方向位移（下、上、右、左）</li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+        <h3>1. 掃描整張 grid，收集所有起始腐爛點 + 計算 fresh</h3>
+        <p>我先走過整個矩陣：</p>
+        <ul>
+          <li>看到 <code>2</code>：把座標放進 queue（多源 BFS 的起點）</li>
+          <li>看到 <code>1</code>：<code>fresh++</code></li>
+        </ul>
+
+        <hr>
+
+        <h3>2. 如果 fresh 一開始就是 0，直接回傳 0</h3>
+        <p>代表根本沒有新鮮橘子要被感染，所以答案就是 0 分鐘。</p>
+
+        <hr>
+
+        <h3>3. BFS 分層擴散，每一層代表過了 1 分鐘</h3>
+        <p>只要 queue 還不空，就代表目前還有腐爛橘子會繼續往外感染。</p>
+        <p>我每次先用 <code>s = x.size()</code> 記錄這一層有幾個點，然後 <code>count++</code>，表示「接下來要處理的是下一分鐘會腐爛的擴散」。</p>
+
+        <hr>
+
+        <h3>4. 對每個腐爛點，往四個方向感染新鮮橘子</h3>
+        <p>對四方向鄰居：</p>
+        <ul>
+          <li>如果出界：略過</li>
+          <li>如果是新鮮橘子 <code>grid[nx][ny] == 1</code>：</li>
+          <li>把它改成 <code>2</code>（代表它已經腐爛）</li>
+          <li>丟進 queue（下一分鐘它也能繼續感染別人）</li>
+          <li><code>fresh--</code>（新鮮橘子數量減少）</li>
+        </ul>
+
+        <hr>
+
+        <h3>5. BFS 結束後，用 fresh 判斷答案</h3>
+        <ul>
+          <li>如果 <code>fresh &gt; 0</code>：代表有些新鮮橘子永遠感染不到，回傳 <code>-1</code></li>
+          <li>否則回傳 <code>count</code></li>
+        </ul>
+
+        <h2 id="complexity">⏱️ 複雜度</h2>
+        <ul>
+          <li>時間複雜度：<code>O(mn)</code>，每個格子最多被放進 queue 一次、處理一次</li>
+          <li>空間複雜度：<code>O(mn)</code>，最壞情況 queue 可能存很多格子</li>
+        </ul>
+
+        <h2 id="code-queue">💻 程式碼實作（二）</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    int orangesRotting(vector&lt;vector&lt;int&gt;&gt;&amp; grid) {
+        int count = -1, fresh = 0;
+        int m = grid.size(), n = grid[0].size();
+        queue&lt;int&gt; x, y;
+        for (int i = 0; i &lt; m; i++) {
+            for (int j = 0; j &lt; n; j++) {
+                if (grid[i][j] == 2) {
+                    x.push(i);
+                    y.push(j);
+                } else if (grid[i][j] == 1) {
+                    fresh++;
+                }
+            }
+        }
+        if (fresh == 0) {
+            return 0;
+        }
+        int dx[4] = {1, -1, 0, 0}, dy[4] = {0, 0, 1, -1};
+        while (!x.empty()) {
+            int s = x.size();
+            count++;
+            for (int k = 0; k &lt; s; k++) {
+                for (int i = 0; i &lt; 4; i++) {
+                    int nx = x.front() + dx[i], ny = y.front() + dy[i];
+                    if (nx &lt; 0 || nx &gt;= m || ny &lt; 0 || ny &gt;= n) {
+                        continue;
+                    } else if (grid[nx][ny] == 1) {
+                        grid[nx][ny] = 2;
+                        x.push(nx);
+                        y.push(ny);
+                        fresh--;
+                    }
+                }
+                x.pop();
+                y.pop();
+            }
+        }
+        if (fresh &gt; 0) {
+            return -1;
+        }
+        return count;
+    }
+};</code></pre>
 
         <h2 id="link">🔗 題目連結</h2>
         <p>https://leetcode.com/problems/rotting-oranges/description/</p>
