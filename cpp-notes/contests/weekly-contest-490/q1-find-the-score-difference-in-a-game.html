@@ -1,0 +1,144 @@
+<!-- contests/weekly-contest-490-q1.html: Weekly Contest 490 Q1 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Q1. Find the Score Difference in a Game</title>
+  <link rel="stylesheet" href="../../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../../index.html">主頁</a>
+        <a href="../../../courses.html">修課紀錄</a>
+        <a href="../../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false" style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題"><span id="theme-icon" aria-hidden="true">☀️</span></button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="../index.html">Contests</a>
+      <span aria-hidden="true">/</span>
+      <a href="../weekly-contest-490.html">Weekly Contest 490</a>
+      <span aria-hidden="true">/</span>
+      <span>Q1. Find the Score Difference in a Game</span>
+    </nav>
+
+    <section class="hero">
+      <h1>Q1. Find the Score Difference in a Game</h1>
+      <p><strong>練習日期：</strong>2026-02-22</p>
+      <p><strong>難度：</strong>Easy</p>
+      <p><strong>類型：</strong>Weekly Contest 490</p>
+    </section>
+
+    <section class="term-block article-content">
+      <h2>📘 題目敘述</h2>
+      <p>給你一個整數陣列 <code>nums</code>，其中 <code>nums[i]</code> 表示第 <code>i</code> 場遊戲所得到的分數。</p>
+      <p>有且只有兩位玩家。一開始第一位玩家是 active，第二位玩家是 inactive。</p>
+      <p>對於每一場遊戲 <code>i</code>，會依序套用以下規則：</p>
+      <ul>
+        <li>如果 <code>nums[i]</code> 是奇數，active 和 inactive 的玩家交換角色。</li>
+        <li>每逢第 6 場遊戲（遊戲索引 <code>5, 11, 17, ...</code>），active 和 inactive 的玩家交換角色。</li>
+        <li>active 玩家會玩第 <code>i</code> 場遊戲並獲得 <code>nums[i]</code> 分數。</li>
+      </ul>
+      <p>請回傳分數差（score difference），定義為第一位玩家總分減去第二位玩家總分。</p>
+
+      <h3>條件限制</h3>
+      <ul>
+        <li><code>1 &lt;= nums.length &lt;= 1000</code></li>
+        <li><code>1 &lt;= nums[i] &lt;= 1000</code></li>
+      </ul>
+
+      <h2>🧠 解題思路</h2>
+      <p>我這題就是照規則逐場模擬。</p>
+      <p>我用布林值 <code>act</code> 表示目前 active 的是不是第一位玩家：</p>
+      <ul>
+        <li><code>act == true</code>：第一位玩家 active</li>
+        <li><code>act == false</code>：第二位玩家 active</li>
+      </ul>
+      <p>每一場遊戲都照題目順序先處理交換規則，再加分；最後回傳 <code>first - second</code>。</p>
+
+      <h3>所有變數</h3>
+      <ul>
+        <li><code>n</code>：遊戲場數（<code>nums.size()</code>）</li>
+        <li><code>act</code>：目前 active 的是不是第一位玩家</li>
+        <li><code>first</code>：第一位玩家累積總分</li>
+        <li><code>second</code>：第二位玩家累積總分</li>
+      </ul>
+
+      <h2>🪜 主要流程步驟</h2>
+      <h3>1. 初始化狀態</h3>
+      <p>把 <code>act = true</code>，並將 <code>first = 0</code>、<code>second = 0</code>。</p>
+      <h3>2. 逐場處理遊戲</h3>
+      <p>若 <code>nums[i]</code> 是奇數就先 <code>act = !act</code>；若 <code>(i + 1) % 6 == 0</code> 再 <code>act = !act</code>；最後把分數加到目前 active 玩家。</p>
+      <h3>3. 回傳分數差</h3>
+      <p>迴圈結束後回傳 <code>first - second</code>。</p>
+
+      <h2>⏱️ 複雜度</h2>
+      <ul>
+        <li>時間複雜度：<code>O(n)</code></li>
+        <li>空間複雜度：<code>O(1)</code></li>
+      </ul>
+
+      <h2>💻 程式碼實作</h2>
+      <pre><code class="language-cpp">class Solution {
+public:
+    int scoreDifference(vector&lt;int&gt;&amp; nums) {
+        int n = nums.size();
+        bool act = true;
+        int first = 0, second = 0;
+        for (int i = 0; i &lt; n; i++) {
+            if (nums[i] % 2 == 1) {
+                act = !act;
+            }
+            if ((i + 1) % 6 == 0) {
+                act = !act;
+            }
+            if (act) {
+                first += nums[i];
+            } else {
+                second += nums[i];
+            }
+        }
+        return first - second;
+    }
+};</code></pre>
+
+      <h2>🔗 題目連結</h2>
+      <p>https://leetcode.com/contest/weekly-contest-490/problems/find-the-score-difference-in-a-game/description/</p>
+    </section>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field"><span class="meta-label">作者：</span><span class="meta-value">scottnick</span></div>
+        <div class="meta-field meta-field--date"><span class="meta-label">撰寫日期：</span><span class="meta-value">2026-02-22</span></div>
+        <div class="meta-field meta-field--full"><span class="meta-label">類別：</span><span class="meta-value"><span class="post-tags"><span class="post-tag">Weekly Contest 490</span></span></span></div>
+        <div class="meta-field meta-field--full"><span class="meta-label">原文連結：</span><span class="meta-value">https://scottnick.github.io/cpp-notes/contests/weekly-contest-490/q1-find-the-score-difference-in-a-game.html</span></div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../../script.js"></script>
+</body>
+</html>
