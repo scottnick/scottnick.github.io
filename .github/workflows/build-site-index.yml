@@ -1,28 +1,28 @@
-name: Build site index
+name: Build site index (and sitemap)
 
 on:
   push:
     branches: ["main"]
 
-# 防止同 workflow 同時跑，互相 push 打架
+# 讓這類「自動改檔並推回 main」的 workflow，在整個 repo 同一時間只能跑一個
 concurrency:
-  group: build-site-index-${{ github.ref }}
+  group: repo-autogen-${{ github.ref }}
   cancel-in-progress: false
 
-# 讓 GITHUB_TOKEN 有寫入 repo 的權限（不然 push 會 403）
 permissions:
   contents: write
 
 jobs:
   build-index:
-    # 避免 bot 自己推完又觸發自己，形成無限迴圈
+    # 避免自己 commit 又觸發自己，無限循環
     if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
+      - name: Checkout (main)
         uses: actions/checkout@v4
         with:
+          ref: main
           fetch-depth: 0
 
       - name: Setup Python
@@ -34,30 +34,45 @@ jobs:
         run: |
           python scripts/build_site_index.py
 
-      # 如果你也要在這個 workflow 產生 robots / sitemap，就在這裡一起跑
-      # （如果 robots/sitemap 是另一個 workflow 產生也沒關係）
-      # - name: Generate robots.txt and sitemap.xml
-      #   run: |
-      #     python scripts/generate_sitemap.py
-      #     # 或你實際用的指令
-
-      - name: Commit & push changes (if any)
+      - name: Generate sitemap.xml
         run: |
+          python scripts/generate_sitemap.py
+
+      - name: Generate robots.txt
+        run: |
+          cat > robots.txt << 'EOF'
+          User-agent: *
+          Allow: /
+
+          Sitemap: https://scottnick.github.io/sitemap.xml
+          EOF
+
+      - name: Commit & push changes (if any) with retry
+        run: |
+          set -e
+
           git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
 
-          # 你要寫回 repo 的檔案都 add 起來（照你實際產物調整）
-          git add site-index.json sitemap.xml robots.txt || true
+          git add site-index.json sitemap.xml robots.txt
 
-          # 沒變更就結束
           if git diff --cached --quiet; then
             echo "No changes to commit."
             exit 0
           fi
 
-          git commit -m "chore: update site index [skip ci]"
+          git commit -m "chore: update site-index + sitemap [skip ci]"
 
-          # ★關鍵：push 前先把 remote 變更 rebase 下來（含 autostash，避免你遇到 unstaged changes）
-          git pull --rebase --autostash origin main
+          # 避免 remote 先被別的 commit 更新，先 rebase 再推；推失敗就重試幾次
+          for i in 1 2 3 4 5; do
+            git pull --rebase --autostash origin main || true
+            if git push origin HEAD:main; then
+              echo "Push succeeded."
+              exit 0
+            fi
+            echo "Push failed, retrying... ($i/5)"
+            sleep 2
+          done
 
-          git push origin HEAD:main
+          echo "Push failed after retries."
+          exit 1
