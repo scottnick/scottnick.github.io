@@ -51,8 +51,22 @@
       <p><strong>類型：</strong>Weekly Contest 490</p>
     </section>
 
-    <section class="term-block article-content">
-      <h2>📘 題目敘述</h2>
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">目錄</button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#complexity">⏱️ 複雜度</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+      <h2 id="statement">📘 題目敘述</h2>
       <p>給你一個整數 <code>n</code>。</p>
       <p>若某數字的各位數字階乘總和等於它本身，則稱為 digitorial。請判斷 <code>n</code> 的任意排列（不能有前導 0）是否能形成 digitorial 數字。</p>
 
@@ -61,7 +75,7 @@
         <li><code>1 &lt;= n &lt;= 10^9</code></li>
       </ul>
 
-      <h2>🧠 解題思路</h2>
+      <h2 id="approach">🧠 解題思路</h2>
       <p>我不用枚舉所有排列，而是比較數字 multiset：</p>
       <ol>
         <li>先算出 <code>n</code> 的各位階乘和 <code>sum</code>。</li>
@@ -77,7 +91,7 @@
         <li><code>a</code>、<code>b</code>：分別記錄 <code>n</code> 與 <code>sum</code> 的數字次數</li>
       </ul>
 
-      <h2>🪜 主要流程步驟</h2>
+      <h2 id="steps">🪜 主要流程步驟</h2>
       <h3>1. 建立階乘表</h3>
       <p>先準備 <code>fact[10]</code> 供 O(1) 查詢 digit!。</p>
       <h3>2. 計算 sum</h3>
@@ -85,13 +99,13 @@
       <h3>3. 統計次數並比較</h3>
       <p>分別統計到 <code>a[]</code> 和 <code>b[]</code>，全部相等就回傳 true。</p>
 
-      <h2>⏱️ 複雜度</h2>
+      <h2 id="complexity">⏱️ 複雜度</h2>
       <ul>
         <li>時間複雜度：<code>O(d)</code>（<code>d</code> 為位數）</li>
         <li>空間複雜度：<code>O(1)</code></li>
       </ul>
 
-      <h2>💻 程式碼實作</h2>
+      <h2 id="code">💻 程式碼實作</h2>
       <pre><code class="language-cpp">class Solution {
 public:
     bool isDigitorialPermutation(int n) {
@@ -120,9 +134,10 @@ public:
     }
 };</code></pre>
 
-      <h2>🔗 題目連結</h2>
+      <h2 id="link">🔗 題目連結</h2>
       <p>https://leetcode.com/contest/weekly-contest-490/problems/check-digitorial-permutation/description/</p>
-    </section>
+      </section>
+    </div>
 
     <section class="term-block article-footer">
       <h2 class="article-footer__title">文章資訊</h2>

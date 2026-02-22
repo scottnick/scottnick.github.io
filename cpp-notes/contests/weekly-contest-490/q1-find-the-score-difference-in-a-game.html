@@ -51,8 +51,22 @@
       <p><strong>類型：</strong>Weekly Contest 490</p>
     </section>
 
-    <section class="term-block article-content">
-      <h2>📘 題目敘述</h2>
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">目錄</button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#complexity">⏱️ 複雜度</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+      <h2 id="statement">📘 題目敘述</h2>
       <p>給你一個整數陣列 <code>nums</code>，其中 <code>nums[i]</code> 表示第 <code>i</code> 場遊戲所得到的分數。</p>
       <p>有且只有兩位玩家。一開始第一位玩家是 active，第二位玩家是 inactive。</p>
       <p>對於每一場遊戲 <code>i</code>，會依序套用以下規則：</p>
@@ -69,7 +83,7 @@
         <li><code>1 &lt;= nums[i] &lt;= 1000</code></li>
       </ul>
 
-      <h2>🧠 解題思路</h2>
+      <h2 id="approach">🧠 解題思路</h2>
       <p>我這題就是照規則逐場模擬。</p>
       <p>我用布林值 <code>act</code> 表示目前 active 的是不是第一位玩家：</p>
       <ul>
@@ -86,7 +100,7 @@
         <li><code>second</code>：第二位玩家累積總分</li>
       </ul>
 
-      <h2>🪜 主要流程步驟</h2>
+      <h2 id="steps">🪜 主要流程步驟</h2>
       <h3>1. 初始化狀態</h3>
       <p>把 <code>act = true</code>，並將 <code>first = 0</code>、<code>second = 0</code>。</p>
       <h3>2. 逐場處理遊戲</h3>
@@ -94,13 +108,13 @@
       <h3>3. 回傳分數差</h3>
       <p>迴圈結束後回傳 <code>first - second</code>。</p>
 
-      <h2>⏱️ 複雜度</h2>
+      <h2 id="complexity">⏱️ 複雜度</h2>
       <ul>
         <li>時間複雜度：<code>O(n)</code></li>
         <li>空間複雜度：<code>O(1)</code></li>
       </ul>
 
-      <h2>💻 程式碼實作</h2>
+      <h2 id="code">💻 程式碼實作</h2>
       <pre><code class="language-cpp">class Solution {
 public:
     int scoreDifference(vector&lt;int&gt;&amp; nums) {
@@ -124,9 +138,10 @@ public:
     }
 };</code></pre>
 
-      <h2>🔗 題目連結</h2>
+      <h2 id="link">🔗 題目連結</h2>
       <p>https://leetcode.com/contest/weekly-contest-490/problems/find-the-score-difference-in-a-game/description/</p>
-    </section>
+      </section>
+    </div>
 
     <section class="term-block article-footer">
       <h2 class="article-footer__title">文章資訊</h2>
