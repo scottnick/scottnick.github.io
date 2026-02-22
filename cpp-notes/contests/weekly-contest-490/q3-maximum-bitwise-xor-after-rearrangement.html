@@ -51,8 +51,22 @@
       <p><strong>類型：</strong>Weekly Contest 490</p>
     </section>
 
-    <section class="term-block article-content">
-      <h2>📘 題目敘述</h2>
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">目錄</button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#complexity">⏱️ 複雜度</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+      <h2 id="statement">📘 題目敘述</h2>
       <p>給你兩個長度為 <code>n</code> 的二進位字串 <code>s</code> 和 <code>t</code>。可以任意重排 <code>t</code>，<code>s</code> 保持不變，求可得到的最大 XOR 結果字串。</p>
 
       <h3>條件限制</h3>
@@ -61,7 +75,7 @@
         <li><code>s[i]</code>、<code>t[i]</code> 只會是 <code>'0'</code> 或 <code>'1'</code></li>
       </ul>
 
-      <h2>🧠 解題思路</h2>
+      <h2 id="approach">🧠 解題思路</h2>
       <p>要讓整體數值最大，就要從左到右盡量讓每一位 XOR 變成 <code>1</code>。</p>
       <p>先統計 <code>t</code> 還剩多少個 0 與 1，再依序掃 <code>s</code>：</p>
       <ul>
@@ -76,7 +90,7 @@
         <li><code>ans</code>：答案字串</li>
       </ul>
 
-      <h2>🪜 主要流程步驟</h2>
+      <h2 id="steps">🪜 主要流程步驟</h2>
       <h3>1. 先統計 t 的 0 和 1</h3>
       <p>掃過 <code>t</code> 建立計數。</p>
       <h3>2. 從左到右掃 s，盡量做出 1</h3>
@@ -84,13 +98,13 @@
       <h3>3. 回傳 ans</h3>
       <p>掃描完成後的 <code>ans</code> 就是最大 XOR 結果。</p>
 
-      <h2>⏱️ 複雜度</h2>
+      <h2 id="complexity">⏱️ 複雜度</h2>
       <ul>
         <li>時間複雜度：<code>O(n)</code></li>
         <li>空間複雜度：<code>O(1)</code>（不含輸出）</li>
       </ul>
 
-      <h2>💻 程式碼實作</h2>
+      <h2 id="code">💻 程式碼實作</h2>
       <pre><code class="language-cpp">class Solution {
 public:
     string maximumXor(string s, string t) {
@@ -126,9 +140,10 @@ public:
     }
 };</code></pre>
 
-      <h2>🔗 題目連結</h2>
+      <h2 id="link">🔗 題目連結</h2>
       <p>https://leetcode.com/contest/weekly-contest-490/problems/maximum-bitwise-xor-after-rearrangement/description/</p>
-    </section>
+      </section>
+    </div>
 
     <section class="term-block article-footer">
       <h2 class="article-footer__title">文章資訊</h2>
