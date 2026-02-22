@@ -1,0 +1,140 @@
+<!-- contests/weekly-contest-490-q2.html: Weekly Contest 490 Q2 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Q2. Check Digitorial Permutation</title>
+  <link rel="stylesheet" href="../../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../../index.html">主頁</a>
+        <a href="../../../courses.html">修課紀錄</a>
+        <a href="../../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false" style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題"><span id="theme-icon" aria-hidden="true">☀️</span></button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="../index.html">Contests</a>
+      <span aria-hidden="true">/</span>
+      <a href="../weekly-contest-490.html">Weekly Contest 490</a>
+      <span aria-hidden="true">/</span>
+      <span>Q2. Check Digitorial Permutation</span>
+    </nav>
+
+    <section class="hero">
+      <h1>Q2. Check Digitorial Permutation</h1>
+      <p><strong>練習日期：</strong>2026-02-22</p>
+      <p><strong>難度：</strong>Medium</p>
+      <p><strong>類型：</strong>Weekly Contest 490</p>
+    </section>
+
+    <section class="term-block article-content">
+      <h2>📘 題目敘述</h2>
+      <p>給你一個整數 <code>n</code>。</p>
+      <p>若某數字的各位數字階乘總和等於它本身，則稱為 digitorial。請判斷 <code>n</code> 的任意排列（不能有前導 0）是否能形成 digitorial 數字。</p>
+
+      <h3>條件限制</h3>
+      <ul>
+        <li><code>1 &lt;= n &lt;= 10^9</code></li>
+      </ul>
+
+      <h2>🧠 解題思路</h2>
+      <p>我不用枚舉所有排列，而是比較數字 multiset：</p>
+      <ol>
+        <li>先算出 <code>n</code> 的各位階乘和 <code>sum</code>。</li>
+        <li>分別統計 <code>n</code> 與 <code>sum</code> 的每個數字出現次數。</li>
+        <li>若 0~9 次數完全相同，代表 <code>sum</code> 是 <code>n</code> 的某個排列，回傳 true。</li>
+      </ol>
+
+      <h3>所有變數</h3>
+      <ul>
+        <li><code>fact</code>：0~9 階乘表</li>
+        <li><code>sum</code>：<code>n</code> 的各位數字階乘總和</li>
+        <li><code>k</code>：<code>n</code> 的副本</li>
+        <li><code>a</code>、<code>b</code>：分別記錄 <code>n</code> 與 <code>sum</code> 的數字次數</li>
+      </ul>
+
+      <h2>🪜 主要流程步驟</h2>
+      <h3>1. 建立階乘表</h3>
+      <p>先準備 <code>fact[10]</code> 供 O(1) 查詢 digit!。</p>
+      <h3>2. 計算 sum</h3>
+      <p>用 <code>k</code> 掃描 <code>n</code> 每一位，累加 <code>fact[digit]</code> 得到 <code>sum</code>。</p>
+      <h3>3. 統計次數並比較</h3>
+      <p>分別統計到 <code>a[]</code> 和 <code>b[]</code>，全部相等就回傳 true。</p>
+
+      <h2>⏱️ 複雜度</h2>
+      <ul>
+        <li>時間複雜度：<code>O(d)</code>（<code>d</code> 為位數）</li>
+        <li>空間複雜度：<code>O(1)</code></li>
+      </ul>
+
+      <h2>💻 程式碼實作</h2>
+      <pre><code class="language-cpp">class Solution {
+public:
+    bool isDigitorialPermutation(int n) {
+        int fact[10] = {1, 1, 2, 6, 24, 120, 720, 5040, 40320, 362880};
+        int sum = 0;
+        int k = n;
+        while (k > 0) {
+            sum += fact[k % 10];
+            k /= 10;
+        }
+        int a[10] = {0}, b[10] = {0};
+        while (n > 0) {
+            a[n % 10]++;
+            n /= 10;
+        }
+        while (sum > 0) {
+            b[sum % 10]++;
+            sum /= 10;
+        }
+        for (int i = 0; i &lt; 10; i++) {
+            if (a[i] != b[i]) {
+                return false;
+            }
+        }
+        return true;
+    }
+};</code></pre>
+
+      <h2>🔗 題目連結</h2>
+      <p>https://leetcode.com/contest/weekly-contest-490/problems/check-digitorial-permutation/description/</p>
+    </section>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field"><span class="meta-label">作者：</span><span class="meta-value">scottnick</span></div>
+        <div class="meta-field meta-field--date"><span class="meta-label">撰寫日期：</span><span class="meta-value">2026-02-22</span></div>
+        <div class="meta-field meta-field--full"><span class="meta-label">類別：</span><span class="meta-value"><span class="post-tags"><span class="post-tag">Weekly Contest 490</span></span></span></div>
+        <div class="meta-field meta-field--full"><span class="meta-label">原文連結：</span><span class="meta-value">https://scottnick.github.io/cpp-notes/contests/weekly-contest-490/q2-check-digitorial-permutation.html</span></div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../../script.js"></script>
+</body>
+</html>
