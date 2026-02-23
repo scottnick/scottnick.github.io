@@ -1,0 +1,257 @@
+<!-- all problems/1952-three-divisors.html: 全部題單文章 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>1952. Three Divisors</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+               width="18" height="18" aria-hidden="true" focusable="false"
+               style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="index.html">All problems</a>
+      <span aria-hidden="true">/</span>
+      <span>1952. Three Divisors</span>
+    </nav>
+
+    <section class="hero">
+      <h1>1952. Three Divisors</h1>
+      <p><strong>練習日期：</strong>2026-02-23</p>
+      <p><strong>難度：</strong>Easy</p>
+      <p><strong>類型：</strong>Math、Enumeration、Number Theory</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach-1">🧠 解題思路（一）建立質數表</a></li>
+          <li><a href="#steps-1">🪜 主要流程步驟</a></li>
+          <li><a href="#code-1">💻 程式碼實作（一）</a></li>
+          <li><a href="#approach-2">🧠 解題思路（二）直接計算</a></li>
+          <li><a href="#steps-2">🪜 主要流程步驟</a></li>
+          <li><a href="#code-2">💻 程式碼實作（二）</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給你一個整數 <code>n</code>，如果 <code>n</code> 正好有三個正因數（divisors），回傳 <code>true</code>；否則回傳 <code>false</code>。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>1 &lt;= n &lt;= 10^4</code></li>
+        </ul>
+
+        <h2 id="approach-1">🧠 解題思路（一）建立質數表</h2>
+        <p>這題的關鍵性質是：</p>
+        <p>一個數字正好有三個正因數，當且僅當它是「某個質數的平方」。</p>
+        <p>原因是：如果 <code>n = p^2</code>，其中 <code>p</code> 是質數，那 <code>n</code> 的正因數只有 <code>1, p, p^2</code> 三個。反過來，如果 <code>n</code> 有三個正因數，那它一定是某個質數的平方。</p>
+        <p>所以我的做法就是你說的：先建立一份質數表，然後檢查 <code>n</code> 是不是其中某個質數的平方。</p>
+        <p>程式碼的流程是：</p>
+        <ol>
+          <li>先用一個 <code>check[]</code> 做簡單的篩法，找出 2~99 的質數</li>
+          <li>把所有質數放進 <code>p</code></li>
+          <li>掃過 <code>p</code>，只要 <code>n == p[l] * p[l]</code> 就回傳 <code>true</code></li>
+          <li>都沒有就回傳 <code>false</code></li>
+        </ol>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>p</code>：存 2~99 的所有質數</li>
+          <li><code>check</code>：用來標記某個數是不是合數（被標記成 true 代表不是質數）</li>
+        </ul>
+
+        <h2 id="steps-1">🪜 主要流程步驟</h2>
+        <h3>1. 先用 check[] 篩出 2~99 的質數</h3>
+        <p>我把 <code>check</code> 初始化為全 false，代表一開始都先當成可能是質數。</p>
+        <p>接著我用兩層迴圈：</p>
+        <ul>
+          <li>外層 <code>i</code> 從 2 到 9</li>
+          <li>內層把 <code>i</code> 的倍數（從 <code>2*i</code> 開始）全部標成 <code>true</code></li>
+        </ul>
+        <p>這樣被標記過的數就不是質數。</p>
+
+        <hr />
+
+        <h3>2. 把沒被標記的數收集成質數表 p</h3>
+        <p>我再掃一次 <code>k = 2..99</code>：</p>
+        <p>只要 <code>check[k] == false</code>，代表它沒有被任何小因數標記，是質數，就 push 進 <code>p</code>。</p>
+
+        <hr />
+
+        <h3>3. 檢查 n 是否為某個質數的平方</h3>
+        <p>我掃 <code>p</code> 中所有質數：</p>
+        <p>只要 <code>n == p[l] * p[l]</code>，就代表 <code>n</code> 是質數平方，因此有且只有三個正因數，回傳 <code>true</code>。</p>
+
+        <hr />
+
+        <h3>4. 全部檢查完都不是，就回傳 false</h3>
+        <p>如果沒有任何質數平方等於 <code>n</code>，代表 <code>n</code> 的因數數量不是 3，回傳 <code>false</code>。</p>
+
+        <h2 id="complexity-1">⏱️ 複雜度</h2>
+        <ul>
+          <li>時間複雜度：<code>O(1)</code> 因為你只固定篩 2~99，再固定掃一小段質數表，規模是常數。</li>
+          <li>空間複雜度：<code>O(1)</code> <code>check[100]</code> 和質數表都固定大小。</li>
+        </ul>
+
+        <h2 id="code-1">💻 程式碼實作（一）</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    bool isThree(int n) {
+        vector&lt;int&gt; p;
+        bool check[100] = {false};
+        for (int i = 2; i &lt; 10; i++) {
+            for (int j = i * 2; j &lt; 100; j += i) {
+                check[j] = true;
+            }
+        }
+        for (int k = 2; k &lt; 100; k++) {
+            if (!check[k]) {
+                p.push_back(k);
+            }
+        }
+        for (int l = 0; l &lt; p.size(); l++) {
+            if (n == p[l] * p[l]) {
+                return true;
+            }
+        }
+        return false;
+    }
+};
+</code></pre>
+
+        <h2 id="approach-2">🧠 解題思路（二）直接計算</h2>
+        <p>我這份寫法就是最直接的做法：把 <code>1..n</code> 全部試一次，看有幾個數可以整除 <code>n</code>。</p>
+        <p>只要 <code>n % i == 0</code>，代表 <code>i</code> 是 <code>n</code> 的一個正因數，我就把 <code>count++</code>。</p>
+        <p>因為題目只在乎是不是「剛好 3 個」，所以我加了一個剪枝：一旦 <code>count &gt; 3</code>，就不用再算了，直接回傳 <code>false</code>。</p>
+        <p>最後迴圈跑完後，如果 <code>count == 3</code> 就回傳 <code>true</code>，否則回傳 <code>false</code>。</p>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>count</code>：目前找到的因數數量</li>
+        </ul>
+
+        <h2 id="steps-2">🪜 主要流程步驟</h2>
+        <h3>1. 初始化 count = 0</h3>
+        <p>我用 <code>count</code> 記錄目前找到幾個因數，一開始當然是 0。</p>
+
+        <hr />
+
+        <h3>2. 從 1 掃到 n，遇到能整除就 count++</h3>
+        <p>我用 <code>i</code> 從 1 到 n：</p>
+        <p>如果 <code>n % i == 0</code>，代表 <code>i</code> 是因數，就 <code>count++</code>。</p>
+
+        <hr />
+
+        <h3>3. 只要 count 超過 3，就直接回傳 false</h3>
+        <p>因為題目要的是「剛好 3 個因數」：</p>
+        <p>一旦 <code>count &gt; 3</code>，就不可能是答案了，直接回傳 <code>false</code>，省掉後面的檢查。</p>
+
+        <hr />
+
+        <h3>4. 掃完後判斷 count 是否等於 3</h3>
+        <p>如果最後 <code>count == 3</code>，回傳 <code>true</code>；否則回傳 <code>false</code>。</p>
+
+        <h2 id="complexity-2">⏱️ 複雜度</h2>
+        <ul>
+          <li>時間複雜度：<code>O(n)</code> 最壞要掃到 <code>n</code>，每次做一次取模判斷。</li>
+          <li>空間複雜度：<code>O(1)</code></li>
+        </ul>
+
+        <h2 id="code-2">💻 程式碼實作（二）</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    bool isThree(int n) {
+        int count = 0;
+        for (int i = 1; i &lt;= n; i++) {
+            if (n % i == 0) {
+                count++;
+            }
+            if (count &gt; 3) {
+                return false;
+            }
+        }
+        if (count == 3) {
+            return true;
+        }
+        return false;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/three-divisors/description/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-02-23</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value">
+            <span class="post-tags">
+              <span class="post-tag">Math</span>
+              <span class="post-tag">Enumeration</span>
+              <span class="post-tag">Number Theory</span>
+              <span class="post-tag">Easy</span>
+            </span>
+          </span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/all%20problems/1952-three-divisors.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
