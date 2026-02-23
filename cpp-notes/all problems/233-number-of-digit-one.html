@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Number of Digit One</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+               width="18" height="18" aria-hidden="true" focusable="false"
+               style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="index.html">All problems</a>
+      <span aria-hidden="true">/</span>
+      <span>Number of Digit One</span>
+    </nav>
+
+    <section class="hero">
+      <h1>233. Number of Digit One</h1>
+      <p><strong>練習日期：</strong>2026-02-23</p>
+      <p><strong>難度：</strong>Hard</p>
+      <p><strong>類型：</strong>Math、Dynamic Programming</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#complexity">⏱️ 複雜度</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給你一個整數 <code>n</code>，請計算從 <code>0</code> 到 <code>n</code>（包含 <code>n</code>）之間，所有數字的十進位表示中，數字 <code>1</code> 出現的總次數。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>0 &lt;= n &lt;= 10^9</code></li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>這題如果真的一個一個數去數 <code>1</code> 會太慢，所以要用「按位數統計」的方式。</p>
+        <p>我的做法是固定看某一個位數 <code>k</code>（1、10、100...），問：</p>
+        <blockquote>
+          <p>從 0 到 n，這個位數上出現 <code>1</code> 的次數有多少？</p>
+        </blockquote>
+        <p>只要把每一個位數的貢獻加起來，就是總答案。</p>
+        <p>對於某個位數 <code>k</code>（代表目前在看的是個位/十位/百位...）
+我把 <code>n</code> 拆成三段：</p>
+        <ul>
+          <li><code>high</code>：更高位（<code>n / (k*10)</code>）</li>
+          <li><code>now</code>：目前這一位（<code>(n / k) % 10</code>）</li>
+          <li><code>low</code>：更低位（<code>n % k</code>）</li>
+        </ul>
+        <p>然後用固定公式算這一位的貢獻：</p>
+        <ol>
+          <li>
+            <p>先加上 <code>high * k</code>
+   代表「完整跑完 high 個循環」時，這一位固定會有 <code>k</code> 次是 1</p>
+          </li>
+          <li>
+            <p>再看 <code>now</code> 是什麼：</p>
+            <ul>
+              <li>如果 <code>now == 1</code>
+  代表這一輪還會多出 <code>low + 1</code> 次（從 0 到 low）</li>
+              <li>如果 <code>now &gt; 1</code>
+  代表這一輪已經超過 1 的區間，所以會再多 <code>k</code> 次</li>
+              <li>如果 <code>now == 0</code>
+  不額外增加</li>
+            </ul>
+          </li>
+        </ol>
+        <p>我用 <code>k *= 10</code> 逐位往上算，直到超過 <code>n</code>。</p>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>count</code>：累積答案，表示 0 到 n 之間數字 1 出現的總次數</li>
+          <li><code>k</code>：目前正在統計的位數（1、10、100...）</li>
+          <li><code>high</code>：<code>n</code> 在目前位數左邊的高位部分</li>
+          <li><code>now</code>：<code>n</code> 在目前位數的數字</li>
+          <li><code>low</code>：<code>n</code> 在目前位數右邊的低位部分</li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+        <h3>1. 用 k 表示目前統計的位數，從個位開始一路往上</h3>
+        <p>我用 <code>k = 1</code> 開始，代表先統計個位。
+每次結束後做 <code>k *= 10</code>，依序處理十位、百位、千位……</p>
+        <hr />
+        <h3>2. 對每個位數，把 n 拆成 high / now / low</h3>
+        <p>對固定的 <code>k</code>：</p>
+        <ul>
+          <li><code>high = n / (k * 10)</code></li>
+          <li><code>now = (n / k) % 10</code></li>
+          <li><code>low = n % k</code></li>
+        </ul>
+        <p>這三個值就完整描述了 <code>n</code> 在這個位數附近的結構。</p>
+        <hr />
+        <h3>3. 先加上 high * k，代表完整循環帶來的 1 次數</h3>
+        <p>不管 <code>now</code> 是多少，這一位的 <code>1</code> 會先有：</p>
+        <p><code>high * k</code></p>
+        <p>這是因為每 0~(k*10-1) 的循環裡，該位數會有連續 k 個數是 1。</p>
+        <hr />
+        <h3>4. 再根據 now 的值處理「最後不完整那段」</h3>
+        <ul>
+          <li>若 <code>now == 1</code>：加 <code>low + 1</code></li>
+          <li>若 <code>now &gt; 1</code>：加 <code>k</code></li>
+          <li>若 <code>now == 0</code>：不加</li>
+        </ul>
+        <hr />
+        <h3>5. 累加完所有位數後回傳 count</h3>
+        <p>當 <code>k &gt; n</code> 時代表所有位數都處理完了，回傳 <code>count</code>。</p>
+
+        <h2 id="complexity">⏱️ 複雜度</h2>
+        <ul>
+          <li>
+            <p>時間複雜度：<code>O(log10 n)</code>
+  只跑 n 的位數次（最多 10 次）</p>
+          </li>
+          <li>
+            <p>空間複雜度：<code>O(1)</code></p>
+          </li>
+        </ul>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    int countDigitOne(int n) {
+        int count = 0;
+        for (long long k = 1; k &lt;= n; k *= 10) {
+            long long high = n / (k * 10); // 高位數
+            long long now = (n / k) % 10;  // 現在
+            long long low = n % k;         // 低位數
+            count += high * k;
+            if (now == 1) {
+                count += (low + 1); // 0~low這些
+            } else if (now &gt; 1) {
+                count += k;
+            }
+        }
+        return count;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/number-of-digit-one/description/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-02-23</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value">
+            <span class="post-tags">
+              <span class="post-tag">Math</span>
+              <span class="post-tag">Dynamic Programming</span>
+              <span class="post-tag">Hard</span>
+            </span>
+          </span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/all%20problems/233-number-of-digit-one.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
