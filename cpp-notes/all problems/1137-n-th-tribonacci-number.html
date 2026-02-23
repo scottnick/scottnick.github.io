@@ -1,0 +1,179 @@
+<!-- all problems/1137-n-th-tribonacci-number.html: 全部題單文章 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>1137. N-th Tribonacci Number</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+               width="18" height="18" aria-hidden="true" focusable="false"
+               style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="index.html">All problems</a>
+      <span aria-hidden="true">/</span>
+      <span>1137. N-th Tribonacci Number</span>
+    </nav>
+
+    <section class="hero">
+      <h1>1137. N-th Tribonacci Number</h1>
+      <p><strong>練習日期：</strong>2026-02-23</p>
+      <p><strong>難度：</strong>Easy</p>
+      <p><strong>類型：</strong>Dynamic Programming、Math</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#complexity">⏱️ 複雜度</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>Tribonacci 序列 <code>Tn</code> 定義如下：</p>
+        <ul>
+          <li><code>T0 = 0</code>，<code>T1 = 1</code>，<code>T2 = 1</code></li>
+          <li>並且對於 <code>n &gt;= 0</code>：<code>T(n+3) = Tn + T(n+1) + T(n+2)</code></li>
+        </ul>
+        <p>給你一個整數 <code>n</code>，請回傳 <code>Tn</code> 的值。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>0 &lt;= n &lt;= 37</code></li>
+          <li>答案保證可以放進 32-bit 有號整數</li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>這題就是直接照遞推式做 DP。</p>
+        <p>我用一個陣列 <code>t</code> 存每一項 Tribonacci 的值：</p>
+        <ul>
+          <li>先把初始值放好：<code>t[0]=0</code>、<code>t[1]=1</code>、<code>t[2]=1</code></li>
+          <li>之後從 <code>i = 3</code> 開始往上推：
+            <ul>
+              <li><code>t[i] = t[i-3] + t[i-2] + t[i-1]</code></li>
+            </ul>
+          </li>
+        </ul>
+        <p>最後回傳 <code>t[n]</code>。</p>
+        <p>這樣做的重點是：每一項只需要前面三項，從小算到大就能得到答案。</p>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>t</code>：DP 陣列，<code>t[i]</code> 存 <code>Ti</code> 的值</li>
+          <li><code>i</code>：用來從 3 推到 <code>n</code> 的迴圈索引</li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+
+        <h3>1. 建立陣列 t 並放入初始值</h3>
+        <p>我先建立 <code>int t[38]</code>，因為題目 <code>n &lt;= 37</code>，開到 38 足夠。</p>
+        <p>接著把 <code>t[1] = 1</code>、<code>t[2] = 1</code> 設好（<code>t[0]</code> 會保持 0）。</p>
+        <hr />
+
+        <h3>2. 用遞推式從 i = 3 推到 n</h3>
+        <p>我用 for 迴圈從 <code>i = 3</code> 到 <code>n</code>：</p>
+        <p><code>t[i] = t[i-3] + t[i-2] + t[i-1]</code></p>
+        <p>每一步都只用到前面三項。</p>
+        <hr />
+
+        <h3>3. 回傳 t[n]</h3>
+        <p>迴圈結束後，<code>t[n]</code> 就是答案。</p>
+
+        <h2 id="complexity">⏱️ 複雜度</h2>
+        <ul>
+          <li>時間複雜度：<code>O(n)</code></li>
+          <li>空間複雜度：<code>O(1)</code>，因為 <code>t</code> 的大小是固定 38，不會隨 n 成長</li>
+        </ul>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    int tribonacci(int n) {
+        int t[38] = {0};
+        t[1] = 1, t[2] = 1;
+        for (int i = 3; i &lt;= n; i++) {
+            t[i] = t[i - 3] + t[i - 2] + t[i - 1];
+        }
+        return t[n];
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/n-th-tribonacci-number/description/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-02-23</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value">
+            <span class="post-tags">
+              <span class="post-tag">Dynamic Programming</span>
+              <span class="post-tag">Math</span>
+              <span class="post-tag">Easy</span>
+            </span>
+          </span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/all%20problems/1137-n-th-tribonacci-number.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
