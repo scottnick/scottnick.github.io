@@ -3141,10 +3141,22 @@
         "習慣養成"
       ],
       "folder": "home"
+    },
+    {
+      "path": "cpp-notes/all%20problems/1022-sum-of-root-to-leaf-binary-numbers.html",
+      "title": "1022. Sum of Root To Leaf Binary Numbers",
+      "date": "2026-02-24",
+      "tags": [
+        "Tree",
+        "Depth-First Search",
+        "Binary Tree",
+        "Easy"
+      ],
+      "folder": "cpp-notes/all problems"
     }
   ],
   "folderCounts": {
-    "cpp-notes/all%20problems/index.html": 137,
+    "cpp-notes/all%20problems/index.html": 138,
     "cpp-notes/grind75/index.html": 15,
     "cpp-notes/neetcode150/index.html": 17,
     "cpp-notes/contests/index.html": 33,
