@@ -1,9 +1,10 @@
 name: Build site index (and sitemap)
 
 on:
+  workflow_dispatch:
   push:
-    branches: ["main"]
-
+    branches: [ "main" ]
+    
 # 讓這類「自動改檔並推回 main」的 workflow，在整個 repo 同一時間只能跑一個
 concurrency:
   group: repo-autogen-${{ github.ref }}
