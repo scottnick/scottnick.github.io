@@ -1,0 +1,225 @@
+<!-- all problems/1466-reorder-routes-to-make-all-paths-lead-to-the-city-zero.html: 全部題單文章 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>1466. Reorder Routes to Make All Paths Lead to the City Zero</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+               width="18" height="18" aria-hidden="true" focusable="false"
+               style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="index.html">All problems</a>
+      <span aria-hidden="true">/</span>
+      <span>1466. Reorder Routes to Make All Paths Lead to the City Zero</span>
+    </nav>
+
+    <section class="hero">
+      <h1>1466. Reorder Routes to Make All Paths Lead to the City Zero</h1>
+      <p><strong>練習日期：</strong>2026-02-24</p>
+      <p><strong>難度：</strong>Medium</p>
+      <p><strong>類型：</strong>Depth-First Search、Graph</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#complexity">⏱️ 複雜度</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>有 <code>n</code> 個城市，編號從 <code>0</code> 到 <code>n - 1</code>。有 <code>n - 1</code> 條道路，把所有城市連成一棵樹。</p>
+        <p>每條道路原本都有方向，<code>connections[i] = [a, b]</code> 表示有一條道路從城市 <code>a</code> 指向城市 <code>b</code>。</p>
+        <p>你可以改變一些道路的方向。請回傳最少需要改變方向的道路數量，才能讓每個城市都可以沿著道路走到城市 <code>0</code>。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>2 &lt;= n &lt;= 5 * 10^4</code></li>
+          <li><code>connections.length == n - 1</code></li>
+          <li><code>connections[i].length == 2</code></li>
+          <li><code>0 &lt;= a_i, b_i &lt;= n - 1</code></li>
+          <li><code>a_i != b_i</code></li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>我這題的想法是把原本有方向的邊，轉成「無向圖 + 額外資訊」，然後從 <code>0</code> 出發 DFS 一次就能算出答案。</p>
+        <p>做法是這樣：</p>
+        <p>對每條原始邊 <code>a -&gt; b</code>：</p>
+        <ul>
+          <li>我在 <code>g[a]</code> 放一條到 <code>b</code> 的邊，並標記 <code>k = 0</code></li>
+          <li><code>k = 0</code> 的意思是：這條邊方向是「離開 <code>0</code> 的方向」（如果我從 <code>0</code> 的 DFS 走到它，就代表它需要被反轉）</li>
+          <li>我在 <code>g[b]</code> 放一條到 <code>a</code> 的邊，並標記 <code>k = 1</code></li>
+          <li><code>k = 1</code> 的意思是：這條邊方向本來就是「往 <code>0</code> 的方向」（從 <code>b</code> 走到 <code>a</code> 不需要反轉）</li>
+        </ul>
+        <p>接著我從城市 <code>0</code> 做 DFS：</p>
+        <ul>
+          <li>每當我走一條 <code>k == 0</code> 的邊去拜訪沒看過的城市，代表這條原本方向是「從目前節點往外」的，若要讓大家都能走回 <code>0</code>，就必須把它反轉，所以 <code>ans++</code></li>
+          <li><code>k == 1</code> 的邊代表原本就是朝向 DFS 起點方向，不需要反轉</li>
+        </ul>
+        <p>因為整張圖是一棵樹，每個城市只會被走到一次，所以 DFS 過程中把所有需要反轉的邊累加起來，就是最小答案。</p>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>g</code>：鄰接表，<code>g[i]</code> 存 <code>(to, k)</code></li>
+          <li><code>to</code>：相鄰城市</li>
+          <li><code>k == 0</code>：代表原始邊方向是 <code>i -&gt; to</code>（走這條邊會需要反轉）</li>
+          <li><code>k == 1</code>：代表原始邊方向是 <code>to -&gt; i</code>（走這條邊不需要反轉）</li>
+          <li><code>visit</code>：記錄城市是否已 DFS 走過，避免走回頭造成重複</li>
+          <li><code>ans</code>：需要反轉的邊數（最後回傳）</li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+
+        <h3>1. 建立「無向鄰接表 + 方向標記」</h3>
+        <p>我把每條輸入 <code>a -&gt; b</code> 同時加兩條邊：</p>
+        <ul>
+          <li><code>g[a].push_back({b, 0})</code></li>
+          <li><code>g[b].push_back({a, 1})</code></li>
+        </ul>
+        <p>這樣我在 DFS 時永遠可以走到鄰居，但用 <code>k</code> 判斷「原本方向」是否要反轉。</p>
+        <hr />
+
+        <h3>2. 從城市 0 做 DFS，確保每個城市只走一次</h3>
+        <p>我用 <code>visit</code> 防止重複：</p>
+        <ul>
+          <li>每到一個城市 <code>i</code>，先 <code>visit[i] = true</code></li>
+          <li>掃描 <code>g[i]</code> 的所有鄰居 <code>(to, k)</code></li>
+          <li>如果 <code>to</code> 已走過就跳過</li>
+          <li>否則表示這條邊是樹上通往未拜訪子節點的邊</li>
+        </ul>
+        <hr />
+
+        <h3>3. 走到未拜訪鄰居時，遇到 k==0 就代表必須反轉</h3>
+        <p>當我要從 <code>i</code> 走到 <code>to</code>：</p>
+        <ul>
+          <li>如果 <code>k == 0</code>，代表原本方向是 <code>i -&gt; to</code></li>
+          <li>但我們希望 <code>to</code> 能走回 <code>0</code>，這條邊應該要變成 <code>to -&gt; i</code></li>
+          <li>所以這條邊必須反轉，<code>ans++</code></li>
+        </ul>
+        <p>然後遞迴 <code>check(to)</code> 繼續走下去。</p>
+        <hr />
+
+        <h3>4. DFS 結束後回傳 ans</h3>
+        <p>因為樹的每條邊只會在 DFS 走向未訪問節點時被處理一次，所有需要反轉的邊都會被正確累加，最後回傳 <code>ans</code>。</p>
+
+        <h2 id="complexity">⏱️ 複雜度</h2>
+        <ul>
+          <li>時間複雜度：<code>O(n)</code>，因為是樹，邊數 <code>n-1</code>，每個節點和邊都只會被處理一次。</li>
+          <li>空間複雜度：<code>O(n)</code>，鄰接表 <code>g</code> 需要存 <code>2*(n-1)</code> 條邊，<code>visit</code> 也需要 <code>n</code>，遞迴深度最壞 <code>O(n)</code>。</li>
+        </ul>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    vector&lt;vector&lt;pair&lt;int, int&gt;&gt;&gt; g; // g[0]是點 g[1]0是不動1是反
+    vector&lt;bool&gt; visit;
+    int ans = 0;
+
+    void check(int i) {
+        visit[i] = true;
+        for (auto [to, k] : g[i]) {
+            if (visit[to]) {
+                continue;
+            } else {
+                if (k == 0) {
+                    ans++;
+                }
+                check(to);
+            }
+        }
+    }
+
+    int minReorder(int n, vector&lt;vector&lt;int&gt;&gt;&amp; connections) {
+        g.assign(n, {});
+        visit.assign(n, false);
+        for (auto&amp; x : connections) { // auto自動抓型態
+            int a = x[0], b = x[1];
+            g[a].push_back({b, 0});
+            g[b].push_back({a, 1});
+        }
+        check(0);
+        return ans;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/reorder-routes-to-make-all-paths-lead-to-the-city-zero/description/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-02-24</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value">
+            <span class="post-tags">
+              <span class="post-tag">Depth-First Search</span>
+              <span class="post-tag">Graph</span>
+              <span class="post-tag">Medium</span>
+            </span>
+          </span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/all%20problems/1466-reorder-routes-to-make-all-paths-lead-to-the-city-zero.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
