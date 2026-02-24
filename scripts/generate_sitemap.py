@@ -15,11 +15,7 @@ EXCLUDE_DIRS = {
 # 不想收錄的檔案（可自行增減）
 EXCLUDE_FILES = {
     "404.html",
-    # 你的站內工具/列表頁（如果你不想放進 sitemap）
-    "index.html",         # 根目錄 index 會用 "/" 代替，不用重複
-    "categories.html",
-    "category.html",
-    "cpp.html",
+    "index.html",  # 你會用 "/" 代表首頁，保留避免重複即可
 }
 
 def should_exclude(rel_path: str) -> bool:
