@@ -986,6 +986,36 @@
     }
   }
 
+
+  function initAllProblemsNumericSort() {
+    const path = decodeURIComponent(window.location.pathname || '').toLowerCase();
+    const isAllProblemsIndex =
+      path.endsWith('/cpp-notes/all problems/index.html') || path.endsWith('/cpp-notes/all problems/');
+    if (!isAllProblemsIndex) return;
+
+    const grid = document.querySelector('.course-terms .post-grid');
+    if (!grid) return;
+
+    const cards = Array.from(grid.querySelectorAll(':scope > .post-card'));
+    if (cards.length < 2) return;
+
+    const getProblemNumber = (card) => {
+      const title = card.querySelector('h3')?.textContent?.trim() || '';
+      const match = title.match(/^(\d+)\./);
+      return match ? Number.parseInt(match[1], 10) : Number.POSITIVE_INFINITY;
+    };
+
+    cards
+      .sort((a, b) => {
+        const numDiff = getProblemNumber(a) - getProblemNumber(b);
+        if (numDiff !== 0) return numDiff;
+        const titleA = a.querySelector('h3')?.textContent?.trim() || '';
+        const titleB = b.querySelector('h3')?.textContent?.trim() || '';
+        return titleA.localeCompare(titleB);
+      })
+      .forEach((card) => grid.appendChild(card));
+  }
+
   function setActiveNav() {
     const path = window.location.pathname.split('/').pop() || 'index.html';
     document.querySelectorAll('.nav-links a').forEach((link) => {
@@ -1062,6 +1092,7 @@
     initFilterInputs();
     initCategoriesPage();
     initCategoryPage();
+    initAllProblemsNumericSort();
     // Back button is only rendered on category pages via markup.
     setActiveNav();
     initCodeHighlighting();
