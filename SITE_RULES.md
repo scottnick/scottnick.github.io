@@ -805,3 +805,11 @@ all problems 版本的文章必須符合：
 2. 分頁列符合 ±2 + 頭尾 + … 的規則
 3. active 分頁按鈕可清楚辨識
 4. categories.html 的相關文章命中只依 title（不得混入 tags 等條件）
+
+## 13) LeetCode Topics 規則
+
+1) 每篇 LeetCode 題解文章的 Topics 必須以 LeetCode 官方 topicTags 為準（本次以 TOPICS_MAP 作為一次性來源）。
+2) Topics 必須完整且順序與官方一致。
+3) 上方「類型」與底部 post-tag 必須同步一致。
+4) Difficulty（Easy/Medium/Hard）不是 topic，但要保留並固定放最後（若原文沒有 difficulty，不可硬加）。
+5) contests 規則不同：不顯示難度，且此次不改 contests。
