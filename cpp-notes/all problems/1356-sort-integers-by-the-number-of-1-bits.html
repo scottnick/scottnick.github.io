@@ -1,0 +1,205 @@
+<!-- all problems/1356-sort-integers-by-the-number-of-1-bits.html: 全部題單文章 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>1356. Sort Integers by The Number of 1 Bits</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+               width="18" height="18" aria-hidden="true" focusable="false"
+               style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="index.html">All problems</a>
+      <span aria-hidden="true">/</span>
+      <span>1356. Sort Integers by The Number of 1 Bits</span>
+    </nav>
+
+    <section class="hero">
+      <h1>1356. Sort Integers by The Number of 1 Bits</h1>
+      <p><strong>練習日期：</strong>2026-02-25</p>
+      <p><strong>難度：</strong>Easy</p>
+      <p><strong>類型：</strong>Array、Bit Manipulation、Sorting、Counting</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#complexity">⏱️ 複雜度</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給你一個整數陣列 <code>arr</code>。</p>
+        <p>請你依照每個整數的二進位表示中 <code>1</code> 的個數，將陣列中的整數由小到大排序。</p>
+        <p>如果兩個整數的 <code>1</code> 的個數相同，就依照整數本身的大小由小到大排序。</p>
+        <p>請回傳排序後的陣列。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>1 &lt;= arr.length &lt;= 500</code></li>
+          <li><code>0 &lt;= arr[i] &lt;= 10^4</code></li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>我先把每個數字 <code>i</code> 轉成一個排序用的 key：</p>
+        <ul>
+          <li>key 的第一部分：<code>i</code> 的二進位裡有幾個 <code>1</code>（記成 <code>count</code>）</li>
+          <li>key 的第二部分：數字本身 <code>i</code></li>
+        </ul>
+        <p>所以我用一個 <code>vector&lt;pair&lt;int,int&gt;&gt; s</code> 存 <code>(count, i)</code>。</p>
+        <p>接著直接對 <code>s</code> 排序，因為 pair 的排序規則就是：</p>
+        <ul>
+          <li>先比第一個元素（count）</li>
+          <li>count 相同再比第二個元素（i）</li>
+        </ul>
+        <p>剛好完全符合題目需求。</p>
+        <p>計算 <code>count</code> 我用的是經典技巧：</p>
+        <p><code>n = n &amp; (n - 1)</code></p>
+        <p>每做一次就會刪掉 <code>n</code> 最右邊的一個 <code>1</code>，所以做幾次就代表有幾個 <code>1</code>。</p>
+        <p>排序完後我再把 pair 裡的第二個值 <code>i</code> 依序拿出來放進 <code>ans</code>。</p>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>s</code>：存 <code>(count, i)</code> 的陣列，用來排序</li>
+          <li><code>count</code>：某個數字二進位中 <code>1</code> 的個數</li>
+          <li><code>n</code>：用來計算 bit count 的暫存值（會被反覆做 <code>n &amp; (n-1)</code> 直到變 0）</li>
+          <li><code>ans</code>：排序後的答案陣列</li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+
+        <h3>1. 把每個數字轉成 (1 的個數, 原數字) 的 pair</h3>
+        <p>我掃過 <code>arr</code> 的每個 <code>i</code>：</p>
+        <ul>
+          <li>用 <code>n = i</code> 當作暫存</li>
+          <li>用 while 迴圈把 <code>n</code> 的每個 1 刪掉一次</li>
+          <li>刪一次 <code>count++</code></li>
+          <li>最後得到 <code>(count, i)</code>，push 進 <code>s</code></li>
+        </ul>
+        <hr />
+
+        <h3>2. 對 s 排序</h3>
+        <p>我做 <code>sort(s.begin(), s.end())</code>。</p>
+        <p>因為 pair 的排序規則剛好就是先比 <code>count</code>，再比 <code>i</code>，所以不用自己寫比較器。</p>
+        <hr />
+
+        <h3>3. 把排序後的結果取回成答案</h3>
+        <p>排序後的 <code>s</code> 已經是正確順序，我把每個 pair 的第二個元素 <code>b</code> 依序 push 進 <code>ans</code>。</p>
+        <hr />
+
+        <h3>4. 回傳 ans</h3>
+        <p>回傳最後的排序結果。</p>
+
+        <h2 id="complexity">⏱️ 複雜度</h2>
+        <ul>
+          <li>時間複雜度：<code>O(n log n + n * bits)</code>
+            <code>n</code> 是 <code>arr</code> 長度。排序是 <code>n log n</code>，每個數字計算 bit count 最多做約 14 次（因為 <code>arr[i] &lt;= 10^4</code>）。</li>
+          <li>空間複雜度：<code>O(n)</code>
+            <code>s</code> 和 <code>ans</code> 都是長度 <code>n</code>。</li>
+        </ul>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    vector&lt;int&gt; sortByBits(vector&lt;int&gt;&amp; arr) {
+        vector&lt;pair&lt;int, int&gt;&gt; s;
+        for (int i : arr) {
+            int count = 0;
+            int n = i;
+            while (n &gt; 0) {
+                n = n &amp; (n - 1); // 刪掉最右側的1
+                count++;
+            }
+            s.push_back({count, i});
+        }
+        sort(s.begin(), s.end());
+        vector&lt;int&gt; ans;
+        for (auto&amp; [a, b] : s) {
+            ans.push_back(b);
+        }
+        return ans;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/sort-integers-by-the-number-of-1-bits/description/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-02-25</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value">
+            <span class="post-tags">
+              <span class="post-tag">Array</span>
+              <span class="post-tag">Bit Manipulation</span>
+              <span class="post-tag">Sorting</span>
+              <span class="post-tag">Counting</span>
+              <span class="post-tag">Easy</span>
+            </span>
+          </span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/all%20problems/1356-sort-integers-by-the-number-of-1-bits.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
