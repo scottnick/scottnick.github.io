@@ -205,7 +205,7 @@
     }
   }
 
-  const SITE_INDEX_URL = 'site-index.json';
+  const SITE_INDEX_URL = '/site-index.json';
   const SITE_INDEX_CACHE_KEY = 'site_index_cache_v1';
 
   async function getSiteIndex() {
@@ -987,7 +987,149 @@
   }
 
 
-  function initAllProblemsNumericSort() {
+  function isContestTag(tag) {
+    return /(?:weekly|biweekly) contest\s+\d+/i.test((tag || '').trim());
+  }
+
+  function isDifficultyTag(tag) {
+    return /^(easy|medium|hard)$/i.test((tag || '').trim());
+  }
+
+  function orderTags(tags) {
+    const list = Array.isArray(tags) ? tags : [];
+    const seen = new Set();
+    const topics = [];
+    const contests = [];
+    const difficulty = [];
+
+    list.forEach((rawTag) => {
+      const tag = String(rawTag || '').trim();
+      if (!tag) return;
+      const dedupeKey = tag.toLowerCase();
+      if (seen.has(dedupeKey)) return;
+      seen.add(dedupeKey);
+
+      if (isDifficultyTag(tag)) {
+        difficulty.push(tag);
+        return;
+      }
+      if (isContestTag(tag)) {
+        contests.push(tag);
+        return;
+      }
+      topics.push(tag);
+    });
+
+    return [...topics, ...contests, ...difficulty];
+  }
+
+  function normalizeAllProblemsPost(post) {
+    const rawPath = post?.path || post?.url || '';
+    const decodedPath = decodeURIComponent(rawPath);
+    if (!isAllProblemsArticle(decodedPath)) return null;
+    if (!isSiteArticle(decodedPath)) return null;
+    if (decodedPath.toLowerCase().endsWith('/index.html')) return null;
+
+    const href = decodedPath.split('/').pop() || '';
+    if (!href) return null;
+
+    const title = post?.title || href.replace(/\.html$/i, '');
+    const numberMatch = title.match(/^(\d+)\./);
+    const number = numberMatch ? Number.parseInt(numberMatch[1], 10) : Number.POSITIVE_INFINITY;
+
+    return {
+      href,
+      title,
+      number,
+      tags: orderTags(post?.tags),
+    };
+  }
+
+  function hasTopicTag(tags) {
+    return (Array.isArray(tags) ? tags : []).some(
+      (tag) => !isContestTag(tag) && !isDifficultyTag(tag),
+    );
+  }
+
+  async function fetchTagsFromArticle(href) {
+    const response = await fetch(href, { cache: 'no-store' });
+    if (!response.ok) throw new Error(`Failed to fetch article tags: ${href}`);
+    const html = await response.text();
+    const doc = new DOMParser().parseFromString(html, 'text/html');
+    const tags = Array.from(doc.querySelectorAll('.post-tag')).map((tagEl) =>
+      (tagEl.textContent || '').trim(),
+    );
+    return orderTags(tags);
+  }
+
+  async function ensureAllProblemsTags(cards) {
+    const tasks = cards.map(async (card) => {
+      if (hasTopicTag(card.tags)) return card;
+      try {
+        const tags = await fetchTagsFromArticle(card.href);
+        if (!tags.length) return card;
+        return { ...card, tags };
+      } catch (error) {
+        return card;
+      }
+    });
+    return Promise.all(tasks);
+  }
+
+  async function initAllProblemsPage() {
+    const path = decodeURIComponent(window.location.pathname || '').toLowerCase();
+    const isAllProblemsIndex =
+      path.endsWith('/cpp-notes/all problems/index.html') || path.endsWith('/cpp-notes/all problems/');
+    if (!isAllProblemsIndex) return;
+
+    const grid = document.querySelector('.course-terms .post-grid');
+    if (!grid) return;
+
+    try {
+      const siteIndex = await getSiteIndex();
+      const cards = (siteIndex?.posts || [])
+        .map(normalizeAllProblemsPost)
+        .filter(Boolean)
+        .sort((a, b) => {
+          const numDiff = a.number - b.number;
+          if (numDiff !== 0) return numDiff;
+          return a.title.localeCompare(b.title);
+        });
+
+      if (!cards.length) return;
+
+      const cardsWithTags = await ensureAllProblemsTags(cards);
+
+      const fragment = document.createDocumentFragment();
+      cardsWithTags.forEach((card) => {
+        const cardEl = document.createElement('a');
+        cardEl.className = 'post-card';
+        cardEl.href = card.href;
+
+        const heading = document.createElement('h3');
+        heading.textContent = card.title;
+        cardEl.appendChild(heading);
+
+        const tagsWrap = document.createElement('div');
+        tagsWrap.className = 'post-tags';
+        card.tags.forEach((tag) => {
+          const tagEl = document.createElement('span');
+          tagEl.className = 'post-tag';
+          tagEl.textContent = tag;
+          tagsWrap.appendChild(tagEl);
+        });
+        cardEl.appendChild(tagsWrap);
+
+        fragment.appendChild(cardEl);
+      });
+
+      grid.replaceChildren(fragment);
+    } catch (error) {
+      initAllProblemsNumericSortFallback();
+    }
+  }
+
+  function initAllProblemsNumericSortFallback() {
     const path = decodeURIComponent(window.location.pathname || '').toLowerCase();
     const isAllProblemsIndex =
       path.endsWith('/cpp-notes/all problems/index.html') || path.endsWith('/cpp-notes/all problems/');
@@ -1092,7 +1234,7 @@
     initFilterInputs();
     initCategoriesPage();
     initCategoryPage();
-    initAllProblemsNumericSort();
+    initAllProblemsPage();
     // Back button is only rendered on category pages via markup.
     setActiveNav();
     initCodeHighlighting();
