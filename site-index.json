@@ -1,6 +1,6 @@
 {
-  "buildId": "20260226053304",
-  "generatedAt": "2026-02-26T05:33:04.179473Z",
+  "buildId": "20260226055113",
+  "generatedAt": "2026-02-26T05:51:13.724656Z",
   "posts": [
     {
       "path": "courses.html",
@@ -200,6 +200,7 @@
       "title": "3818. Minimum Prefix Removal to Make Array Strictly Increasing",
       "date": "2026-01-25",
       "tags": [
+        "Array",
         "Weekly Contest 486",
         "Medium"
       ],
@@ -317,6 +318,10 @@
       "title": "3815. Design Auction System",
       "date": "2026-01-18",
       "tags": [
+        "Hash Table",
+        "Design",
+        "Heap (Priority Queue)",
+        "Ordered Set",
         "Weekly Contest 485",
         "Medium"
       ],
@@ -504,6 +509,8 @@
       "title": "3813. Vowel-Consonant Score",
       "date": "2026-01-18",
       "tags": [
+        "String",
+        "Simulation",
         "Weekly Contest 485",
         "Easy"
       ],
@@ -678,6 +685,9 @@
       "title": "3823. Reverse Letters Then Special Characters in a String",
       "date": "2026-01-31",
       "tags": [
+        "Two Pointers",
+        "String",
+        "Simulation",
         "Biweekly Contest 175",
         "Easy"
       ],
@@ -739,6 +749,10 @@
       "title": "3842. Toggle Light Bulbs",
       "date": "2026-02-15",
       "tags": [
+        "Array",
+        "Hash Table",
+        "Sorting",
+        "Simulation",
         "Weekly Contest 489",
         "Easy"
       ],
@@ -795,6 +809,7 @@
       "title": "3809. Best Reachable Tower",
       "date": "2026-01-17",
       "tags": [
+        "Array",
         "Biweekly Contest 174",
         "Medium"
       ],
@@ -815,6 +830,9 @@
       "title": "3821. Find Nth Smallest Integer with K One Bits",
       "date": "2026-01-25",
       "tags": [
+        "Math",
+        "Bit Manipulation",
+        "Combinatorics",
         "Weekly Contest 486",
         "Hard"
       ],
@@ -837,6 +855,8 @@
       "title": "3827. Count Monobit Integers",
       "date": "2026-02-01",
       "tags": [
+        "Bit Manipulation",
+        "Enumeration",
         "Weekly Contest 487",
         "Easy"
       ],
@@ -859,6 +879,10 @@
       "title": "3829. Design Ride Sharing System",
       "date": "2026-02-01",
       "tags": [
+        "Hash Table",
+        "Design",
+        "Queue",
+        "Data Stream",
         "Weekly Contest 487",
         "Medium"
       ],
@@ -892,6 +916,9 @@
       "title": "3843. First Element with Unique Frequency",
       "date": "2026-02-15",
       "tags": [
+        "Array",
+        "Hash Table",
+        "Counting",
         "Weekly Contest 489",
         "Medium"
       ],
@@ -912,6 +939,8 @@
       "title": "3833. Count Dominant Indices",
       "date": "2026-02-08",
       "tags": [
+        "Array",
+        "Enumeration",
         "Weekly Contest 488",
         "Easy"
       ],
@@ -1012,6 +1041,9 @@
       "title": "3838. Weighted Word Mapping",
       "date": "2026-02-14",
       "tags": [
+        "Array",
+        "String",
+        "Simulation",
         "Biweekly Contest 176",
         "Easy"
       ],
@@ -1045,6 +1077,10 @@
       "title": "3828. Final Element After Subarray Deletions",
       "date": "2026-02-01",
       "tags": [
+        "Array",
+        "Math",
+        "Brainteaser",
+        "Game Theory",
         "Weekly Contest 487",
         "Medium"
       ],
@@ -1055,6 +1091,10 @@
       "title": "3814. Maximum Capacity Within Budget",
       "date": "2026-01-18",
       "tags": [
+        "Array",
+        "Two Pointers",
+        "Binary Search",
+        "Sorting",
         "Weekly Contest 485",
         "Medium"
       ],
@@ -1189,6 +1229,8 @@
       "title": "3824. Minimum K to Reduce Array Within Limit",
       "date": "2026-02-01",
       "tags": [
+        "Array",
+        "Binary Search",
         "Biweekly Contest 175",
         "Medium"
       ],
@@ -1211,6 +1253,8 @@
       "title": "3819. Rotate Non-Negative Elements",
       "date": "2026-01-25",
       "tags": [
+        "Array",
+        "Simulation",
         "Weekly Contest 486",
         "Medium"
       ],
@@ -1233,6 +1277,9 @@
       "title": "3830. Longest Alternating Subarray After Removing At Most One Element",
       "date": "2026-02-01",
       "tags": [
+        "Array",
+        "Dynamic Programming",
+        "Enumeration",
         "Weekly Contest 487",
         "Hard"
       ],
@@ -1290,6 +1337,10 @@
       "title": "3839. Number of Prefix Connected Groups",
       "date": "2026-02-14",
       "tags": [
+        "Array",
+        "Hash Table",
+        "String",
+        "Counting",
         "Biweekly Contest 176",
         "Medium"
       ],
@@ -1405,6 +1456,9 @@
       "title": "3834. Merge Adjacent Equal Elements",
       "date": "2026-02-08",
       "tags": [
+        "Array",
+        "Stack",
+        "Simulation",
         "Weekly Contest 488",
         "Medium"
       ],
@@ -1603,6 +1657,8 @@
       "title": "3840. House Robber V",
       "date": "2026-02-14",
       "tags": [
+        "Array",
+        "Dynamic Programming",
         "Biweekly Contest 176",
         "Medium"
       ],
