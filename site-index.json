@@ -1,6 +1,6 @@
 {
-  "buildId": "20260227115126",
-  "generatedAt": "2026-02-27T11:51:26.034333Z",
+  "buildId": "20260227172634",
+  "generatedAt": "2026-02-27T17:26:34.073926Z",
   "posts": [
     {
       "path": "courses.html",
@@ -631,6 +631,7 @@
       "tags": [
         "Array",
         "Dynamic Programming",
+        "Weekly Contest 461",
         "Hard"
       ],
       "folder": "cpp-notes/all problems"
@@ -644,6 +645,7 @@
         "Binary Search",
         "Sliding Window",
         "Sorting",
+        "Biweekly Contest 162",
         "Medium"
       ],
       "folder": "cpp-notes/all problems"
@@ -1608,6 +1610,7 @@
       "date": "2026-02-03",
       "tags": [
         "Array",
+        "Weekly Contest 461",
         "Easy"
       ],
       "folder": "cpp-notes/all problems"
