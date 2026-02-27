@@ -383,6 +383,8 @@
       "title": "3848. Check Digitorial Permutation",
       "date": "2026-02-22",
       "tags": [
+        "Math",
+        "Counting",
         "Weekly Contest 490",
         "Medium"
       ],
@@ -664,6 +666,8 @@
       "title": "3847. Find the Score Difference in a Game",
       "date": "2026-02-22",
       "tags": [
+        "Array",
+        "Simulation",
         "Weekly Contest 490",
         "Easy"
       ],
@@ -820,6 +824,8 @@
       "title": "3849. Maximum Bitwise XOR After Rearrangement",
       "date": "2026-02-22",
       "tags": [
+        "Greedy",
+        "String",
         "Weekly Contest 490",
         "Medium"
       ],
@@ -1209,6 +1215,8 @@
       "title": "3810. Minimum Operations to Reach Target Array",
       "date": "2026-01-17",
       "tags": [
+        "Array",
+        "Hash Table",
         "Biweekly Contest 174",
         "Medium"
       ],
