@@ -2147,7 +2147,7 @@
       "folder": "cpp-notes/contests/weekly-contest-488"
     },
     {
-      "path": "cpp-notes/contests/weekly-contest-485/w3.html",
+      "path": "cpp-notes/contests/weekly-contest-485/q3-design-auction-system.html",
       "title": "Q3. Design Auction System",
       "date": "2026-01-18",
       "tags": [
@@ -2167,7 +2167,7 @@
       "folder": "cpp-notes/contests/weekly-contest-485"
     },
     {
-      "path": "cpp-notes/contests/weekly-contest-485/w2.html",
+      "path": "cpp-notes/contests/weekly-contest-485/q2-maximum-capacity-within-budget.html",
       "title": "Q2. Maximum Capacity Within Budget",
       "date": "2026-01-18",
       "tags": [
@@ -2215,7 +2215,7 @@
       "folder": "cpp-notes/contests/biweekly-contest-175"
     },
     {
-      "path": "cpp-notes/contests/biweekly-contest-174/q1.html",
+      "path": "cpp-notes/contests/biweekly-contest-174/q1-best-reachable-tower.html",
       "title": "Q1. Best Reachable Tower",
       "date": "2026-01-17",
       "tags": [
@@ -2224,7 +2224,7 @@
       "folder": "cpp-notes/contests/biweekly-contest-174"
     },
     {
-      "path": "cpp-notes/contests/biweekly-contest-174/q2.html",
+      "path": "cpp-notes/contests/biweekly-contest-174/q2-minimum-operations-to-reach-target-array.html",
       "title": "Q2. Minimum Operations to Reach Target Array",
       "date": "2026-01-17",
       "tags": [
@@ -2375,7 +2375,7 @@
       "folder": "cpp-notes/grind75"
     },
     {
-      "path": "cpp-notes/grind75/longest-substring-without-repeating-characters.html",
+      "path": "cpp-notes/grind75/3-longest-substring-without-repeating-characters.html",
       "title": "3. Longest Substring Without Repeating Characters",
       "date": "2025-12-29",
       "tags": [
@@ -2446,7 +2446,7 @@
       "folder": "cpp-notes/grind75"
     },
     {
-      "path": "cpp-notes/grind75/two-sum.html",
+      "path": "cpp-notes/grind75/1-two-sum.html",
       "title": "1. Two Sum",
       "date": "2025-12-29",
       "tags": [
@@ -2514,7 +2514,7 @@
       "folder": "cpp-notes/grind75"
     },
     {
-      "path": "cpp-notes/grind75/longest-palindromic-substring.html",
+      "path": "cpp-notes/grind75/5-longest-palindromic-substring.html",
       "title": "5. Longest Palindromic Substring",
       "date": "2025-12-30",
       "tags": [
@@ -3203,7 +3203,7 @@
       "folder": "cpp-notes/neetcode150"
     },
     {
-      "path": "cpp-notes/neetcode150/longest-substring-without-repeating-characters.html",
+      "path": "cpp-notes/neetcode150/3-longest-substring-without-repeating-characters.html",
       "title": "3. Longest Substring Without Repeating Characters",
       "date": "2025-12-29",
       "tags": [
@@ -3309,7 +3309,7 @@
       "folder": "cpp-notes/neetcode150"
     },
     {
-      "path": "cpp-notes/neetcode150/longest-palindromic-substring.html",
+      "path": "cpp-notes/neetcode150/5-longest-palindromic-substring.html",
       "title": "5. Longest Palindromic Substring",
       "date": "2025-12-30",
       "tags": [
