@@ -1023,57 +1023,44 @@
     return [...topics, ...contests, ...difficulty];
   }
 
-  function normalizeAllProblemsPost(post) {
-    const rawPath = post?.path || post?.url || '';
-    const decodedPath = decodeURIComponent(rawPath);
-    if (!isAllProblemsArticle(decodedPath)) return null;
-    if (!isSiteArticle(decodedPath)) return null;
-    if (decodedPath.toLowerCase().endsWith('/index.html')) return null;
+  function normalizeRepoRelativePath(rawPath) {
+    if (!rawPath) return '';
 
-    const href = decodedPath.split('/').pop() || '';
-    if (!href) return null;
+    let parsed;
+    try {
+      parsed = new URL(rawPath, window.location.href);
+    } catch (error) {
+      return '';
+    }
 
-    const title = post?.title || href.replace(/\.html$/i, '');
-    const numberMatch = title.match(/^(\d+)\./);
-    const number = numberMatch ? Number.parseInt(numberMatch[1], 10) : Number.POSITIVE_INFINITY;
+    const decodedPath = decodeURIComponent(parsed.pathname || '');
+    const segments = decodedPath.split('/').filter(Boolean);
+    if (!segments.length) return '';
 
-    return {
-      href,
-      title,
-      number,
-      tags: orderTags(post?.tags),
-    };
+    const cppIndex = segments.indexOf('cpp-notes');
+    if (cppIndex >= 0) {
+      return segments.slice(cppIndex).join('/');
+    }
+
+    if (segments.length >= 2 && segments[0].includes('.') && segments[1] === 'cpp-notes') {
+      return segments.slice(1).join('/');
+    }
+
+    return segments.join('/');
   }
 
-  function hasTopicTag(tags) {
-    return (Array.isArray(tags) ? tags : []).some(
-      (tag) => !isContestTag(tag) && !isDifficultyTag(tag),
-    );
-  }
+  function renderCardTags(cardEl, tags) {
+    const tagsWrap = cardEl.querySelector('.post-tags');
+    if (!tagsWrap) return;
 
-  async function fetchTagsFromArticle(href) {
-    const response = await fetch(href, { cache: 'no-store' });
-    if (!response.ok) throw new Error(`Failed to fetch article tags: ${href}`);
-    const html = await response.text();
-    const doc = new DOMParser().parseFromString(html, 'text/html');
-    const tags = Array.from(doc.querySelectorAll('.post-tag')).map((tagEl) =>
-      (tagEl.textContent || '').trim(),
-    );
-    return orderTags(tags);
-  }
-
-  async function ensureAllProblemsTags(cards) {
-    const tasks = cards.map(async (card) => {
-      if (hasTopicTag(card.tags)) return card;
-      try {
-        const tags = await fetchTagsFromArticle(card.href);
-        if (!tags.length) return card;
-        return { ...card, tags };
-      } catch (error) {
-        return card;
-      }
+    const orderedTags = orderTags(tags);
+    tagsWrap.innerHTML = '';
+    orderedTags.forEach((tag) => {
+      const tagEl = document.createElement('span');
+      tagEl.className = 'post-tag';
+      tagEl.textContent = tag;
+      tagsWrap.appendChild(tagEl);
     });
-    return Promise.all(tasks);
   }
 
   async function initAllProblemsPage() {
@@ -1087,46 +1074,28 @@
 
     try {
       const siteIndex = await getSiteIndex();
-      const cards = (siteIndex?.posts || [])
-        .map(normalizeAllProblemsPost)
-        .filter(Boolean)
-        .sort((a, b) => {
-          const numDiff = a.number - b.number;
-          if (numDiff !== 0) return numDiff;
-          return a.title.localeCompare(b.title);
-        });
+      const posts = Array.isArray(siteIndex?.posts) ? siteIndex.posts : [];
+      const tagsByPath = new Map();
 
-      if (!cards.length) return;
-
-      const cardsWithTags = await ensureAllProblemsTags(cards);
-
-      const fragment = document.createDocumentFragment();
-      cardsWithTags.forEach((card) => {
-        const cardEl = document.createElement('a');
-        cardEl.className = 'post-card';
-        cardEl.href = card.href;
-
-        const heading = document.createElement('h3');
-        heading.textContent = card.title;
-        cardEl.appendChild(heading);
-
-        const tagsWrap = document.createElement('div');
-        tagsWrap.className = 'post-tags';
-        card.tags.forEach((tag) => {
-          const tagEl = document.createElement('span');
-          tagEl.className = 'post-tag';
-          tagEl.textContent = tag;
-          tagsWrap.appendChild(tagEl);
-        });
-        cardEl.appendChild(tagsWrap);
-
-        fragment.appendChild(cardEl);
+      posts.forEach((post) => {
+        const relPath = normalizeRepoRelativePath(post?.path || post?.url || '');
+        if (!relPath || !isAllProblemsArticle(relPath) || relPath.toLowerCase().endsWith('/index.html')) return;
+        tagsByPath.set(relPath.toLowerCase(), Array.isArray(post.tags) ? post.tags : []);
       });
 
-      grid.replaceChildren(fragment);
+      const cards = Array.from(grid.querySelectorAll(':scope > .post-card'));
+      cards.forEach((cardEl) => {
+        const href = cardEl.getAttribute('href') || cardEl.href;
+        const relPath = normalizeRepoRelativePath(href).toLowerCase();
+        const tags = tagsByPath.get(relPath);
+        if (!tags) return;
+        renderCardTags(cardEl, tags);
+      });
     } catch (error) {
-      initAllProblemsNumericSortFallback();
+      // keep existing HTML as fallback
     }
+
+    initAllProblemsNumericSortFallback();
   }
 
   function initAllProblemsNumericSortFallback() {
