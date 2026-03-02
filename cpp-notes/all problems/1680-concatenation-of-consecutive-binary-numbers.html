@@ -1,0 +1,183 @@
+<!-- all problems/1680-concatenation-of-consecutive-binary-numbers.html: 全部題單文章 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>1680. Concatenation of Consecutive Binary Numbers</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+               width="18" height="18" aria-hidden="true" focusable="false"
+               style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="../all%20problems/index.html">All problems</a>
+      <span aria-hidden="true">/</span>
+      <span>1680. Concatenation of Consecutive Binary Numbers</span>
+    </nav>
+
+    <section class="hero">
+      <h1>1680. Concatenation of Consecutive Binary Numbers</h1>
+      <p><strong>練習日期：</strong>2026-02-28</p>
+      <p><strong>難度：</strong>Medium</p>
+      <p><strong>類型：</strong>Math、Bit Manipulation、Simulation</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#variables">所有變數</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#complexity">⏱️ 複雜度</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給你一個整數 <code>n</code>，請把 <code>1</code> 到 <code>n</code> 的二進位表示依序串接起來，形成一個很長的二進位字串。回傳這個二進位字串對應的十進位數值，並對 <code>10^9 + 7</code> 取模。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>1 &lt;= n &lt;= 10^5</code></li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>這題如果真的去建立那條很長的二進位字串再轉回十進位，長度會爆，而且成本很高。所以要改成「邊串邊算」的方式。</p>
+        <p>假設目前已經串好 <code>1..(x-1)</code> 的結果是 <code>ans</code>（十進位），現在要把 <code>x</code> 的二進位接到右邊。</p>
+        <p>如果 <code>x</code> 的二進位長度是 <code>len</code>，那把 <code>x</code> 接到右邊的十進位等價操作就是：</p>
+        <ul>
+          <li><code>ans = ans * 2^len + x</code></li>
+        </ul>
+        <p>原因是：在二進位往左移 <code>len</code> 位，等價於乘上 <code>2^len</code>，然後再加上 <code>x</code> 就是把它接在尾巴。</p>
+        <p>所以整題變成從 <code>1</code> 跑到 <code>n</code>，每次算出當前數字的 bit 長度 <code>len</code>，再做一次 <code>ans = ans * 2^len + now</code>，每一步都取模即可。</p>
+        <p>這份寫法重點是邏輯直觀：每次乘上 <code>2^len</code> 代表左移 <code>len</code> 格，再加上 <code>now</code> 就完成串接。</p>
+
+        <h3 id="variables">所有變數</h3>
+        <ul>
+          <li><code>c</code>：模數 <code>1e9+7</code>。</li>
+          <li><code>ans</code>：目前串接結果的十進位值（每一步都會取模）。</li>
+          <li><code>now</code>：目前要接上的數字（從 1 跑到 n）。</li>
+          <li><code>len</code>：<code>now</code> 的 bit 長度，用 <code>(int)log2(now) + 1</code> 計算。</li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+        <h3>1. 初始化</h3>
+        <ul>
+          <li><code>ans = 0</code></li>
+          <li><code>now = 1</code></li>
+          <li><code>c = 1e9+7</code></li>
+        </ul>
+
+        <h3>2. 迴圈把 1 到 n 串起來</h3>
+        <p>對每個 <code>now</code>：</p>
+        <ul>
+          <li>計算 <code>len = (int)log2(now) + 1</code></li>
+          <li>先把 <code>ans</code> 左移 <code>len</code> 位：<code>ans *= 2^len</code></li>
+          <li>再把 <code>now</code> 接到尾巴：<code>ans += now</code></li>
+          <li>取模：<code>ans %= c</code></li>
+          <li><code>now++</code></li>
+        </ul>
+
+        <h3>3. 回傳答案</h3>
+        <ul>
+          <li>回傳 <code>ans</code></li>
+        </ul>
+
+        <h2 id="complexity">⏱️ 複雜度</h2>
+        <ul>
+          <li>時間複雜度：<code>O(n)</code>，從 1 到 n 每個數字處理一次。</li>
+          <li>空間複雜度：<code>O(1)</code>，只使用固定數量變數。</li>
+        </ul>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    int concatenatedBinary(int n) {
+        const int c = 1000000007;
+        long long ans = 0;
+        int now = 1;
+        while (now &lt;= n) {
+            ans *= pow(2, (int)log2(now) + 1);
+            ans += now;
+            ans %= c;
+            now++;
+        }
+        return ans;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p><a href="https://leetcode.com/problems/concatenation-of-consecutive-binary-numbers/description/">https://leetcode.com/problems/concatenation-of-consecutive-binary-numbers/description/</a></p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-02-28</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value"><span class="post-tags">
+              <span class="post-tag">Math</span>
+              <span class="post-tag">Bit Manipulation</span>
+              <span class="post-tag">Simulation</span>
+              <span class="post-tag">Medium</span>
+            </span></span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/all%20problems/1680-concatenation-of-consecutive-binary-numbers.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
