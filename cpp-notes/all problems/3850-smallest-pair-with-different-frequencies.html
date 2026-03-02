@@ -1,0 +1,38 @@
+<!-- all problems/3850-smallest-pair-with-different-frequencies.html: 3850. Smallest Pair With Different Frequencies -->
+<!doctype html><html lang="zh-Hant"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>3850. Smallest Pair With Different Frequencies</title><link rel="stylesheet" href="../../styles.css"></head><body class="page-article"><header><nav class="navbar"><a class="brand" href="../../personal.html">scottnick 個人網頁</a><button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button><div class="nav-links" id="nav-links"><a href="../../index.html">主頁</a><a href="../../courses.html">修課紀錄</a><a href="../../cpp.html" class="active">C++學習筆記</a><a href="../../profile.html">個人檔案</a></div><div class="nav-actions"><a class="nav-action-link" href="../../categories.html">類別</a><button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題"><span id="theme-icon" aria-hidden="true">☀️</span></button></div></nav></header><main>
+<nav class="breadcrumb" aria-label="文章路徑"><a href="../../cpp.html">C++學習筆記</a><span aria-hidden="true">/</span><a href="index.html">All problems</a><span aria-hidden="true">/</span><span>3850. Smallest Pair With Different Frequencies</span></nav>
+<section class="hero"><h1>3850. Smallest Pair With Different Frequencies</h1><p><strong>練習日期：</strong>2026-02-28</p><p><strong>難度：</strong>Easy</p><p><strong>類型：</strong>Array、Sorting、Biweekly Contest 177</p></section>
+<div class="article-layout"><aside class="article-toc" aria-label="文章目錄"><button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">目錄</button><strong>目錄</strong><ul><li><a href="#statement">📘 題目敘述</a></li><li><a href="#approach">🧠 解題思路</a></li><li><a href="#steps">🪜 主要流程步驟</a></li><li><a href="#complexity">⏱️ 複雜度</a></li><li><a href="#code">💻 程式碼實作</a></li><li><a href="#link">🔗 題目連結</a></li></ul></aside><section class="term-block article-content">
+<h2 id="statement">📘 題目敘述</h2><p>給你一個整數陣列 <code>nums</code>，找出滿足 <code>x &lt; y</code> 且兩者出現次數不同的最小字典序配對 <code>[x, y]</code>，若不存在回傳 <code>[-1, -1]</code>。</p><h3>條件限制</h3><ul><li><code>1 &lt;= nums.length &lt;= 100</code></li><li><code>1 &lt;= nums[i] &lt;= 100</code></li></ul>
+<h2 id="approach">🧠 解題思路</h2><p>先排序，建立 <code>times</code> 紀錄每個值與次數。固定最小值作為 <code>x</code>，再往後找第一個頻率不同的值作為 <code>y</code>；因為已排序，這樣同時滿足最小 <code>x</code>、最小 <code>y</code>。</p><h3>所有變數</h3><ul><li><code>times</code>：每個不同值與其頻率</li><li><code>a</code>：判斷數字是否出現過</li><li><code>fst</code>：固定的最小 <code>x</code></li><li><code>count</code>：<code>fst</code> 的頻率</li></ul>
+<h2 id="steps">🪜 主要流程步驟</h2><h3>1. 排序 nums</h3><p>確保不同值按遞增處理。</p><hr><h3>2. 建立頻率表 times</h3><p>第一次出現就新增，重複出現就把次數加一。</p><hr><h3>3. 固定最小值為 x</h3><p>取 <code>times[0]</code> 作為 <code>x</code> 與其頻率基準。</p><hr><h3>4. 找第一個頻率不同的 y</h3><p>掃描 <code>times</code>，遇到頻率不同即回傳。</p><hr><h3>5. 否則回傳 [-1,-1]</h3><p>代表所有數字頻率都相同。</p>
+<h2 id="complexity">⏱️ 複雜度</h2><ul><li>時間複雜度：<code>O(n log n + n * u)</code></li><li>空間複雜度：<code>O(u)</code></li></ul>
+<h2 id="code">💻 程式碼實作</h2><pre><code class="language-cpp">class Solution {
+public:
+    vector&lt;int&gt; minDistinctFreqPair(vector&lt;int&gt;&amp; nums) {
+        sort(nums.begin(), nums.end());
+        vector&lt;pair&lt;int, int&gt;&gt; times;
+        set&lt;int&gt; a;
+        for (int i : nums) {
+            if (!a.count(i)) {
+                times.push_back({i, 1});
+                a.insert(i);
+            } else {
+                for (int j = 0; j &lt; times.size(); j++) {
+                    if (times[j].first == i) {
+                        times[j].second++;
+                    }
+                }
+            }
+        }
+        int fst = times[0].first, count = times[0].second;
+        for (auto&amp; [x, y] : times) {
+            if (y != count) {
+                return {fst, x};
+            }
+        }
+        return {-1, -1};
+    }
+};</code></pre><h2 id="link">🔗 題目連結</h2><p><a href="https://leetcode.com/problems/smallest-pair-with-different-frequencies/">https://leetcode.com/problems/smallest-pair-with-different-frequencies/</a></p></section></div>
+<section class="term-block article-footer"><h2 class="article-footer__title">文章資訊</h2><div class="meta-grid"><div class="meta-field"><span class="meta-label">作者：</span><span class="meta-value">scottnick</span></div><div class="meta-field meta-field--date"><span class="meta-label">撰寫日期：</span><span class="meta-value">2026-02-28</span></div><div class="meta-field meta-field--full"><span class="meta-label">類別：</span><span class="meta-value"><span class="post-tags"><span class="post-tag">Array</span><span class="post-tag">Sorting</span><span class="post-tag">Biweekly Contest 177</span><span class="post-tag">Easy</span></span></span></div><div class="meta-field meta-field--full"><span class="meta-label">原文連結：</span><span class="meta-value">https://scottnick.github.io/cpp-notes/all%20problems/3850-smallest-pair-with-different-frequencies.html</span></div></div></section>
+</main><script src="../../script.js"></script></body></html>
