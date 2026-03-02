@@ -1,0 +1,215 @@
+<!-- cpp-notes/leetcode75/2542-maximum-subsequence-score.html: 文章 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2542. Maximum Subsequence Score</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+               width="18" height="18" aria-hidden="true" focusable="false"
+               style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="index.html">LeetCode 75</a>
+      <span aria-hidden="true">/</span>
+      <span>2542. Maximum Subsequence Score</span>
+    </nav>
+
+    <section class="hero">
+      <h1>2542. Maximum Subsequence Score</h1>
+      <p><strong>練習日期：</strong>2026-02-27</p>
+      <p><strong>難度：</strong>Medium</p>
+      <p><strong>類型：</strong>Array、Greedy、Sorting、Heap (Priority Queue)</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">目錄</button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給你兩個長度相同、0-indexed 的整數陣列 <code>nums1</code> 與 <code>nums2</code>，以及一個正整數 <code>k</code>。你必須從索引集合 <code>{0,1,...,n-1}</code> 中選出一個長度為 <code>k</code> 的 subsequence（只要選索引，不要求連續）。</p>
+        <p>假設選到的索引是 <code>i0, i1, ..., i(k-1)</code>，分數定義為：</p>
+        <ul>
+          <li>分數 =（選到的 <code>nums1</code> 總和）×（選到的 <code>nums2</code> 最小值）</li>
+          <li>也就是 <code>(nums1[i0] + ... + nums1[i(k-1)]) * min(nums2[i0], ..., nums2[i(k-1)])</code></li>
+        </ul>
+        <p>請回傳可以得到的最大分數。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>n == nums1.length == nums2.length</code></li>
+          <li><code>1 &lt;= n &lt;= 10^5</code></li>
+          <li><code>0 &lt;= nums1[i], nums2[i] &lt;= 10^5</code></li>
+          <li><code>1 &lt;= k &lt;= n</code></li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>這題的關鍵是：分數裡面有一個 <code>min(nums2)</code>，很難直接同時最大化「總和」與「最小值」。</p>
+        <p>我用的想法是「先決定最小值是誰」。</p>
+        <p>如果我們假設答案選出的 k 個索引中，<code>min(nums2)</code> 的值剛好等於某個值 <code>a</code>，那代表被選到的所有元素都必須滿足 <code>nums2 &gt;= a</code>，而且至少要包含一個 <code>nums2 == a</code> 的元素。</p>
+        <p>因此我把 <code>(nums2[i], nums1[i])</code> 配對起來，並且按照 <code>nums2</code> 由大到小排序。當我掃描到某個 pair <code>(a, b)</code> 時，意思是：</p>
+        <ul>
+          <li>目前掃過的所有元素，其 <code>nums2</code> 都 &gt;= <code>a</code></li>
+          <li>如果我現在決定 <code>min(nums2) = a</code>，那我只能從「目前掃過的這些元素」裡面挑 <code>k</code> 個</li>
+          <li>在這個前提下，我要最大化分數 <code>sum(nums1選到的k個) * a</code></li>
+          <li>因為 <code>a</code> 已經固定，所以只要讓 <code>sum(nums1)</code> 最大就好</li>
+        </ul>
+        <p>所以在掃描過程中，我維護「目前看過的元素裡，最大的 k 個 nums1 的總和」。做法是用一個 <strong>min-heap</strong>：</p>
+        <ul>
+          <li>heap 裡放我目前選的 nums1 值</li>
+          <li>讓 heap 大小最多維持 k</li>
+          <li>每次加入一個新的 nums1，如果超過 k，就把最小的那個踢掉</li>
+          <li>這樣 heap 裡永遠是「目前為止最大的 k 個 nums1」</li>
+          <li>當 heap 大小剛好是 k，就可以用 <code>sum * a</code> 更新答案</li>
+        </ul>
+        <p>這就是為什麼我先排序 <code>nums2</code>，再用 priority_queue 去維護 nums1。</p>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>n</code>：陣列長度</li>
+          <li><code>v</code>：<code>vector&lt;pair&lt;int,int&gt;&gt;</code>，存 <code>(nums2[i], nums1[i])</code></li>
+          <li><code>q</code>：<code>priority_queue&lt;int, vector&lt;int&gt;, greater&lt;int&gt;&gt;</code>，min-heap，用來維護目前挑選的 <code>k</code> 個 nums1（保留最大的 k 個，所以要踢最小的）</li>
+          <li><code>sum</code>：目前 heap 裡所有 nums1 的總和（用 <code>long long</code> 避免溢位）</li>
+          <li><code>ans</code>：答案最大值（用 <code>long long</code>）</li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+        <h3>1. 存pair並排序</h3>
+        <ul>
+          <li>把每個位置 i 變成 pair <code>(nums2[i], nums1[i])</code> 存進 <code>v</code></li>
+          <li>將 <code>v</code> 依照 <code>nums2</code> 由大到小排序
+            我是先 <code>sort</code>（升序）再 <code>reverse</code>，最後效果是降序</li>
+        </ul>
+
+        <h3>2. 逐個掃描，維護「最大的 k 個 nums1」</h3>
+        <ul>
+          <li>對 <code>v</code> 的每個 <code>(a, b)</code>（a=nums2, b=nums1）：</li>
+          <li>把 <code>b</code> 放進 min-heap <code>q</code></li>
+          <li><code>sum += b</code></li>
+          <li>如果 <code>q.size() &gt; k</code>：
+            <ul>
+              <li>代表多放了一個，需要把最小的 nums1 移除</li>
+              <li><code>sum -= q.top()</code>，然後 <code>q.pop()</code></li>
+            </ul>
+          </li>
+        </ul>
+
+        <h3>3. 用當前 a 當作 min(nums2) 嘗試更新答案</h3>
+        <ul>
+          <li>當 <code>q.size() == k</code>，代表在「nums2 &gt;= a」這個範圍內，我已經維持住最大的 k 個 nums1</li>
+          <li>此時如果 min(nums2) 就是 a，那分數是 <code>sum * a</code></li>
+          <li>用 <code>ans = max(ans, sum * a)</code> 更新</li>
+        </ul>
+
+        <h3>4. 回傳答案</h3>
+        <ul>
+          <li>掃描結束後回傳 <code>ans</code></li>
+        </ul>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    long long maxScore(vector&lt;int&gt;&amp; nums1, vector&lt;int&gt;&amp; nums2, int k) {
+        int n = nums1.size();
+        vector&lt;pair&lt;int, int&gt;&gt; v;
+        for (int i = 0; i &lt; n; i++) {
+            v.push_back({nums2[i], nums1[i]});
+        }
+        sort(v.begin(), v.end());
+        reverse(v.begin(), v.end());
+        priority_queue&lt;int, vector&lt;int&gt;, greater&lt;int&gt;&gt; q;
+        long long sum = 0, ans = 0;
+        for (auto&amp; [a, b] : v) {
+            q.push(b);
+            sum += b;
+            if (q.size() &gt; k) {
+                sum -= q.top();
+                q.pop();
+            }
+            if (q.size() == k) {
+                ans = max(ans, sum * a);
+            }
+        }
+        return ans;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/maximum-subsequence-score/description/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-02-27</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value"><span class="post-tags">
+              <span class="post-tag">Array</span>
+              <span class="post-tag">Greedy</span>
+              <span class="post-tag">Sorting</span>
+              <span class="post-tag">Heap (Priority Queue)</span>
+              <span class="post-tag">Medium</span>
+            </span></span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/leetcode75/2542-maximum-subsequence-score.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
