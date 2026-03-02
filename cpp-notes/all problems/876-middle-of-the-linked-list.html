@@ -1,0 +1,187 @@
+<!-- all problems/876-middle-of-the-linked-list.html: All problems 文章 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>876. Middle of the Linked List</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+               width="18" height="18" aria-hidden="true" focusable="false"
+               style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="index.html">All problems</a>
+      <span aria-hidden="true">/</span>
+      <span>876. Middle of the Linked List</span>
+    </nav>
+
+    <section class="hero">
+      <h1>876. Middle of the Linked List</h1>
+      <p><strong>練習日期：</strong>2026-02-28</p>
+      <p><strong>難度：</strong>Easy</p>
+      <p><strong>類型：</strong>Linked List、Two Pointers</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#complexity">⏱️ 複雜度</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給你一個單向鏈結串列的頭節點 <code>head</code>，請回傳這個鏈結串列的中間節點。</p>
+        <p>如果有兩個中間節點，請回傳第二個中間節點。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li>串列中的節點數量在範圍 <code>[1, 100]</code></li>
+          <li><code>1 &lt;= Node.val &lt;= 100</code></li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>我用快慢指標來找中間：</p>
+        <ul>
+          <li><code>slow</code> 每次走一步</li>
+          <li><code>fast</code> 每次走兩步</li>
+        </ul>
+        <p>當 <code>fast</code> 走到尾端（或超過尾端）時，<code>slow</code> 剛好會走到中間。</p>
+        <p>而題目要求「偶數長度時回傳第二個中間」，其實這個 while 條件：</p>
+        <p><code>while (fast &amp;&amp; fast-&gt;next)</code></p>
+        <p>就會自然讓 <code>slow</code> 停在第二個中間，所以不需要額外特判。</p>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>fast</code>：快指標，每次走兩步</li>
+          <li><code>slow</code>：慢指標，每次走一步</li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+        <h3>1. 初始化快慢指標都指向 head</h3>
+        <p>我先把 <code>fast</code> 和 <code>slow</code> 都設成 <code>head</code>。</p>
+
+        <hr />
+
+        <h3>2. fast 走兩步、slow 走一步，直到 fast 不能再走兩步</h3>
+        <p>只要 <code>fast</code> 還存在且 <code>fast-&gt;next</code> 存在，我就讓：</p>
+        <ul>
+          <li><code>fast = fast-&gt;next-&gt;next</code></li>
+          <li><code>slow = slow-&gt;next</code></li>
+        </ul>
+
+        <hr />
+
+        <h3>3. while 結束時 slow 就是答案</h3>
+        <ul>
+          <li>串列長度是奇數：<code>slow</code> 在唯一中間</li>
+          <li>串列長度是偶數：<code>slow</code> 在第二個中間（符合題意）</li>
+        </ul>
+        <p>回傳 <code>slow</code> 即可。</p>
+
+        <h2 id="complexity">⏱️ 複雜度</h2>
+        <ul>
+          <li>時間複雜度：<code>O(n)</code></li>
+          <li>空間複雜度：<code>O(1)</code></li>
+        </ul>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* middleNode(ListNode* head) {
+        ListNode* fast = head;
+        ListNode* slow = head;
+        while (fast &amp;&amp; fast-&gt;next) {
+            fast = fast-&gt;next-&gt;next;
+            slow = slow-&gt;next;
+        }
+        return slow;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/middle-of-the-linked-list/description/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-02-28</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value"><span class="post-tags">
+              <span class="post-tag">Linked List</span>
+              <span class="post-tag">Two Pointers</span>
+              <span class="post-tag">Easy</span>
+            </span></span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/all%20problems/876-middle-of-the-linked-list.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
