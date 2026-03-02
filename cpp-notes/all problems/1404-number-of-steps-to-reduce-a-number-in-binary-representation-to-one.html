@@ -1,0 +1,190 @@
+<!-- all problems/1404-number-of-steps-to-reduce-a-number-in-binary-representation-to-one.html: 全部題單文章 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>1404. Number of Steps to Reduce a Number in Binary Representation to One</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+               width="18" height="18" aria-hidden="true" focusable="false"
+               style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="../all%20problems/index.html">All problems</a>
+      <span aria-hidden="true">/</span>
+      <span>1404. Number of Steps to Reduce a Number in Binary Representation to One</span>
+    </nav>
+
+    <section class="hero">
+      <h1>1404. Number of Steps to Reduce a Number in Binary Representation to One</h1>
+      <p><strong>練習日期：</strong>2026-02-26</p>
+      <p><strong>難度：</strong>Medium</p>
+      <p><strong>類型：</strong>String、Bit Manipulation、Simulation</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#variables">所有變數</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#complexity">⏱️ 複雜度</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給你一個二進位表示的字串 <code>s</code>，代表一個正整數。請回傳把這個數字化簡到 <code>1</code> 需要幾步，規則如下：</p>
+        <ul>
+          <li>如果目前數字是偶數：必須除以 2。</li>
+          <li>如果目前數字是奇數：必須加 1。</li>
+        </ul>
+        <p>題目保證所有測資都能走到 <code>1</code>。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>1 &lt;= s.length &lt;= 500</code></li>
+          <li><code>s</code> 只由 <code>'0'</code>、<code>'1'</code> 組成</li>
+          <li><code>s[0] == '1'</code></li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>這題不能把 <code>s</code> 轉成整數直接模擬，因為 <code>s.length</code> 最多到 500 會爆。正確做法是直接用二進位的性質計步數。</p>
+        <p>先想兩個基本操作在二進位代表什麼：</p>
+        <ul>
+          <li>除以 2：等價於右移一位（把最後一個 bit 去掉）。</li>
+          <li>奇數加 1：最後一位是 <code>1</code>，加一會產生進位（carry），進位會往左傳：遇到 <code>1</code> 會變 <code>0</code> 並繼續 carry；遇到 <code>0</code> 會變 <code>1</code> 並停止 carry。若一路都是 <code>1</code>，最後會多出一個新的最高位。</li>
+        </ul>
+        <p>我的程式不是真的去改字串，而是用「掃描 + 計數」來等價計算總步數。</p>
+        <p>做法分成兩段：</p>
+        <p>第一段先把「一定會做的除以 2 次數」算好。二進位長度是 <code>n</code>，不管中間怎麼加一，想把數字降到只剩最高位那個 <code>1</code>，至少要做 <code>n-1</code> 次右移，所以先 <code>count = n - 1</code>。</p>
+        <p>第二段從右往左掃描，用 <code>check</code> 表示「右邊是否已經進入 carry 狀態」。一旦 carry 狀態存在，後續遇到 <code>0</code> 會被進位翻成 <code>1</code>，等價於你在那個位置會多付出一次操作成本，所以看到 <code>0</code> 且 <code>check == true</code> 就 <code>count++</code>。最後只要整體曾經產生 carry（也就是 <code>check == true</code>），還會有固定的收尾成本，所以再 <code>count += 2</code>。</p>
+
+        <h3 id="variables">所有變數</h3>
+        <ul>
+          <li><code>count</code>：答案步數累計器。一開始先放入基本右移次數 <code>s.size() - 1</code>，後面再補上因為 carry 造成的額外步數與收尾步數。</li>
+          <li><code>check</code>：布林值，表示是否已經進入「carry 會往左傳」的狀態。一旦變成 <code>true</code> 就代表過程中曾經需要處理加一造成的進位效應。</li>
+          <li><code>i</code>：從右往左掃描的索引，掃到 <code>i &gt; 0</code> 停止，因為最左邊那個 bit 最後會變成終點 <code>"1"</code> 的基準。</li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+        <h3>1. 初始化基本步數</h3>
+        <ul>
+          <li><code>count = s.size() - 1</code></li>
+          <li><code>check = false</code></li>
+        </ul>
+        <p>這一步的直覺是：不管你中間做了多少次 <code>+1</code>，要把長度為 <code>n</code> 的二進位降到只剩最高位，至少要右移 <code>n-1</code> 次，所以先把它加進去。</p>
+        <hr />
+
+        <h3>2. 從右往左掃描，補上 carry 造成的額外步數</h3>
+        <p>用迴圈從 <code>i = n-1</code> 掃到 <code>1</code>：</p>
+        <p>當看到 <code>s[i] == '1'</code>：把 <code>check = true</code>，表示右側已經出現會引發加一與進位的狀態，之後進位效應會影響更左邊的位元。</p>
+        <p>當看到 <code>s[i] == '0'</code>：如果 <code>check == true</code>，代表右側存在 carry，這個 <code>0</code> 在進位影響下會被翻成 <code>1</code>，等價於需要多做一次操作，所以 <code>count++</code>。</p>
+        <hr />
+
+        <h3>3. 收尾固定成本</h3>
+        <p>如果 <code>check == true</code>，最後要再補上固定的兩步，所以 <code>count += 2</code>。</p>
+
+        <h2 id="complexity">⏱️ 複雜度</h2>
+        <ul>
+          <li>時間複雜度：<code>O(n)</code>，只需要從右到左掃描一次字串。</li>
+          <li>空間複雜度：<code>O(1)</code>，只使用常數個變數。</li>
+        </ul>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    int numSteps(string s) {
+        int count = s.size() - 1;
+        bool check = false;
+        for (int i = s.size() - 1; i &gt; 0; i--) {
+            if (s[i] == '1') {
+                check = true;
+            } else {
+                if (check) {
+                    count++;
+                }
+            }
+        }
+        if (check) {
+            count += 2;
+        }
+        return count;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p><a href="https://leetcode.com/problems/number-of-steps-to-reduce-a-number-in-binary-representation-to-one/description/">https://leetcode.com/problems/number-of-steps-to-reduce-a-number-in-binary-representation-to-one/description/</a></p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-02-26</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value"><span class="post-tags">
+              <span class="post-tag">String</span>
+              <span class="post-tag">Bit Manipulation</span>
+              <span class="post-tag">Simulation</span>
+              <span class="post-tag">Medium</span>
+            </span></span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/all%20problems/1404-number-of-steps-to-reduce-a-number-in-binary-representation-to-one.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
