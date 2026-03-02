@@ -1,0 +1,228 @@
+<!-- all problems/1536-minimum-swaps-to-arrange-a-binary-grid.html: 全部題單文章 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>1536. Minimum Swaps to Arrange a Binary Grid</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+               width="18" height="18" aria-hidden="true" focusable="false"
+               style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="../all%20problems/index.html">All problems</a>
+      <span aria-hidden="true">/</span>
+      <span>1536. Minimum Swaps to Arrange a Binary Grid</span>
+    </nav>
+
+    <section class="hero">
+      <h1>1536. Minimum Swaps to Arrange a Binary Grid</h1>
+      <p><strong>練習日期：</strong>2026-03-02</p>
+      <p><strong>難度：</strong>Medium</p>
+      <p><strong>類型：</strong>Array、Greedy、Matrix</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#complexity">⏱️ 複雜度</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給你一個 <code>n x n</code> 的二元矩陣 <code>grid</code>，一次操作中你可以選擇 <code>grid</code> 的兩個相鄰列（rows）並交換它們。</p>
+        <p>如果一個矩陣滿足：主對角線（main diagonal）上方的所有格子都是 0，則稱這個矩陣是 valid。</p>
+        <p>請回傳把 <code>grid</code> 變成 valid 所需的最少操作次數；如果不可能變成 valid，回傳 <code>-1</code>。</p>
+        <p>主對角線是從格子 <code>(1, 1)</code> 到 <code>(n, n)</code> 的那條對角線。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>n == grid.length == grid[i].length</code></li>
+          <li><code>1 &lt;= n &lt;= 200</code></li>
+          <li><code>grid[i][j]</code> 只會是 <code>0</code> 或 <code>1</code></li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>這題的條件「主對角線上方全是 0」可以換成每一列的限制來看：</p>
+        <p>第 <code>i</code> 列（0-index）在對角線上方的位置是 <code>j &gt; i</code>。所以第 <code>i</code> 列必須滿足：在 <code>j = i+1</code> 到 <code>n-1</code> 這段都要是 0。</p>
+        <p>換句話說：</p>
+        <blockquote>
+          <p>第 <code>i</code> 列的尾端至少要有 <code>n - i - 1</code> 個連續的 0。</p>
+        </blockquote>
+        <p>所以我先把每一列尾端連續 0 的數量算出來，存成一個陣列 <code>v</code>。</p>
+        <p>接著從上到下依序安排每一列：</p>
+        <ul>
+          <li>第 <code>i</code> 列需要 <code>v[j] &gt;= n - i - 1</code></li>
+          <li>我在剩下的列裡從上往下找第一個符合的列（最靠前的）</li>
+          <li>找到後把它「搬到」目前位置，搬動需要的相鄰交換次數就是它距離目前位置的步數</li>
+          <li>我用 <code>ans += j</code> 來累積這個搬動成本（因為我直接把那一列從 <code>v</code> 刪掉，等於把它提到最前面）</li>
+          <li>如果找不到任何列符合，就代表不可能，回傳 <code>-1</code></li>
+        </ul>
+        <p>這就是一個典型的 greedy：每一層都選「最靠前」能滿足需求的列，因為這樣交換次數最少。</p>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>n</code>：矩陣大小（列數 / 行數）。</li>
+          <li><code>v</code>：<code>v[r]</code> 代表第 <code>r</code> 列尾端連續 0 的數量。</li>
+          <li><code>ans</code>：累積的最少相鄰列交換次數。</li>
+          <li><code>count</code>：在計算某一列尾端 0 時的計數器。</li>
+          <li><code>check</code>：用來判斷第 <code>i</code> 個位置是否找得到可用的列（找不到就回傳 -1）。</li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+        <h3>1. 先把每一列「尾端連續 0 的數量」算出來放進 v</h3>
+        <p>我對每一列從最右邊開始往左掃：</p>
+        <ul>
+          <li>只要遇到 0 就 <code>count++</code></li>
+          <li>一旦遇到 1 就停止</li>
+        </ul>
+        <p>最後把 <code>count</code> 放進 <code>v</code>。這一步完成後，<code>v</code> 就代表每列的「可用程度」。</p>
+
+        <hr>
+
+        <h3>2. 從上到下依序決定第 i 列要放哪一列</h3>
+        <p>對於位置 <code>i</code>，它需要的尾端 0 數量是：<code>need = n - i - 1</code></p>
+        <p>我在目前剩下的 <code>v</code> 裡從前往後找第一個 <code>v[j] &gt;= need</code> 的列。</p>
+
+        <hr>
+
+        <h3>3. 找到就把它搬上來，ans 加上搬動距離，並從 v 移除</h3>
+        <p>假設我找到的是第 <code>j</code> 個：</p>
+        <p>把它搬到目前的位置需要做 <code>j</code> 次相鄰交換（往上推 j 格）。</p>
+        <p>所以我做：</p>
+        <ul>
+          <li><code>ans += j</code></li>
+          <li><code>v.erase(v.begin() + j)</code></li>
+        </ul>
+        <p>這個 <code>erase</code> 的效果等於把那列抽出來放到前面（已經固定到第 i 列），剩下的列相對順序不變。</p>
+
+        <hr>
+
+        <h3>4. 如果某個 i 找不到任何符合的列，就回傳 -1</h3>
+        <p>如果整個 <code>v</code> 掃完都沒有 <code>v[j] &gt;= need</code>，代表無論怎麼交換都無法讓第 <code>i</code> 列達成條件，直接回傳 <code>-1</code>。</p>
+
+        <hr>
+
+        <h3>5. 全部位置都安排完成後回傳 ans</h3>
+        <p>如果 <code>i = 0..n-1</code> 都能找到列，代表一定能組成 valid grid，回傳累積的 <code>ans</code>。</p>
+
+        <h2 id="complexity">⏱️ 複雜度</h2>
+        <ul>
+          <li>時間複雜度：<code>O(n^2)</code>。先算 <code>v</code> 是 <code>O(n^2)</code>（每列最多掃 n 次），後面安排每一列也可能掃 <code>v</code>，再加上 <code>erase</code> 的位移成本，整體在 <code>n &lt;= 200</code> 下可接受。</li>
+          <li>空間複雜度：<code>O(n)</code>，主要是 <code>v</code> 陣列。</li>
+        </ul>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    int minSwaps(vector&lt;vector&lt;int&gt;&gt;&amp; grid) {
+        int n = grid.size();
+        vector&lt;int&gt; v;
+        for (auto&amp; row : grid) {
+            int count = 0;
+            for (int j = n - 1; j &gt;= 0; j--) {
+                if (row[j] == 0) {
+                    count++;
+                } else {
+                    break;
+                }
+            }
+            v.push_back(count);
+        }
+        int ans = 0;
+        for (int i = 0; i &lt; n; i++) {
+            bool check = true;
+            for (int j = 0; j &lt; v.size(); j++) {
+                if (v[j] &gt;= n - i - 1) {
+                    check = false;
+                    ans += j;
+                    v.erase(v.begin() + j);
+                    break;
+                }
+            }
+            if (check) {
+                return -1;
+            }
+        }
+        return ans;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p><a href="https://leetcode.com/problems/minimum-swaps-to-arrange-a-binary-grid/description/">https://leetcode.com/problems/minimum-swaps-to-arrange-a-binary-grid/description/</a></p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-03-02</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value"><span class="post-tags">
+              <span class="post-tag">Array</span>
+              <span class="post-tag">Greedy</span>
+              <span class="post-tag">Matrix</span>
+              <span class="post-tag">Medium</span>
+            </span></span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/all%20problems/1536-minimum-swaps-to-arrange-a-binary-grid.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
