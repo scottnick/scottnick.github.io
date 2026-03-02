@@ -1,0 +1,37 @@
+<!-- contests/biweekly-contest-177-q2.html: Biweekly Contest 177 Q2 -->
+<!doctype html><html lang="zh-Hant"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Q2. Merge Close Characters</title><link rel="stylesheet" href="../../../styles.css"></head><body class="page-article"><header><nav class="navbar"><a class="brand" href="../../../personal.html">scottnick 個人網頁</a><button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button><div class="nav-links" id="nav-links"><a href="../../../index.html">主頁</a><a href="../../../courses.html">修課紀錄</a><a href="../../../cpp.html" class="active">C++學習筆記</a><a href="../../../profile.html">個人檔案</a></div><div class="nav-actions"><a class="nav-action-link" href="../../../categories.html">類別</a><button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題"><span id="theme-icon" aria-hidden="true">☀️</span></button></div></nav></header><main>
+<nav class="breadcrumb" aria-label="文章路徑"><a href="../../../cpp.html">C++學習筆記</a><span aria-hidden="true">/</span><a href="../index.html">Contests</a><span aria-hidden="true">/</span><a href="../biweekly-contest-177.html">Biweekly Contest 177</a><span aria-hidden="true">/</span><span>Q2. Merge Close Characters</span></nav>
+<section class="hero"><h1>Q2. Merge Close Characters</h1><p><strong>練習日期：</strong>2026-02-28</p><p><strong>難度：</strong>Medium</p><p><strong>類型：</strong>Biweekly Contest 177</p></section>
+<div class="article-layout"><aside class="article-toc" aria-label="文章目錄"><button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">目錄</button><strong>目錄</strong><ul><li><a href="#statement">📘 題目敘述</a></li><li><a href="#approach">🧠 解題思路</a></li><li><a href="#steps">🪜 主要流程步驟</a></li><li><a href="#complexity">⏱️ 複雜度</a></li><li><a href="#code">💻 程式碼實作</a></li><li><a href="#link">🔗 題目連結</a></li></ul></aside>
+<section class="term-block article-content"><h2 id="statement">📘 題目敘述</h2><p>給你一個只包含小寫英文字母的字串 <code>s</code>，以及一個整數 <code>k</code>。</p><p>在目前的字串 <code>s</code> 中，兩個相同字元如果它們的索引距離最多為 <code>k</code>，則稱它們是 close。當兩個字元是 close 時，右邊那個會合併到左邊那個，直到不能再合併為止。</p><p>若同時有多個合併可能，永遠先合併左端索引最小的一對；若左端相同，則選右端索引最小的一對。</p><h3>條件限制</h3><ul><li><code>1 &lt;= s.length &lt;= 100</code></li><li><code>1 &lt;= k &lt;= s.length</code></li><li><code>s</code> 只包含小寫英文字母</li></ul>
+<h2 id="approach">🧠 解題思路</h2><p>我這份寫法是用長度最多為 <code>k</code> 的滑動視窗去模擬：在目前位置往回看 <code>k</code> 個字元內，有沒有出現過相同字元。</p><p>我用 <code>queue&lt;char&gt; q</code> 記錄最近加入答案的字元，再用 <code>set&lt;char&gt; ss</code> 快速判斷某字元是否在視窗內。</p><h3>所有變數</h3><ul><li><code>q</code>：存最近加入答案的字元，維持最多 <code>k</code> 個</li><li><code>ss</code>：存 <code>q</code> 裡有哪些字元，用來快速判斷</li><li><code>ans</code>：最後要回傳的結果字串</li></ul>
+<h2 id="steps">🪜 主要流程步驟</h2><h3>1. 初始化視窗與答案</h3><p>建立空的 <code>queue</code>、<code>set</code> 與答案字串 <code>ans</code>。</p><hr><h3>2. 逐字掃描 s</h3><p>如果目前字元已經在 <code>ss</code> 內，代表距離 <code>k</code> 內有同字元，它會被合併，不加入答案。</p><hr><h3>3. 視窗滿時先移除最舊字元</h3><p>當視窗大小等於 <code>k</code> 且新字元不在 <code>ss</code> 時，先彈出最舊字元，再把新字元加入。</p><hr><h3>4. 視窗未滿時直接加入</h3><p>當視窗未滿且字元不在 <code>ss</code> 中，直接加入 <code>q</code>、<code>ss</code> 和 <code>ans</code>。</p><hr><h3>5. 回傳 ans</h3><p>掃描結束後回傳 <code>ans</code>。</p>
+<h2 id="complexity">⏱️ 複雜度</h2><ul><li>時間複雜度：<code>O(n log k)</code></li><li>空間複雜度：<code>O(k)</code></li></ul>
+<h2 id="code">💻 程式碼實作</h2><pre><code class="language-cpp">class Solution {
+public:
+    string mergeCharacters(string s, int k) {
+        queue&lt;char&gt; q;
+        set&lt;char&gt; ss;
+        string ans = "";
+        for (char a : s) {
+            if (q.size() == k) {
+                if (!ss.count(a)) {
+                    ss.erase(q.front());
+                    q.pop();
+                    q.push(a);
+                    ss.insert(a);
+                    ans += a;
+                }
+            }
+            if (q.size() &lt; k &amp;&amp; !ss.count(a)) {
+                q.push(a);
+                ss.insert(a);
+                ans += a;
+            }
+        }
+        return ans;
+    }
+};</code></pre>
+<h2 id="link">🔗 題目連結</h2><p><a href="https://leetcode.com/contest/biweekly-contest-177/problems/merge-close-characters/">https://leetcode.com/contest/biweekly-contest-177/problems/merge-close-characters/</a></p></section></div>
+<section class="term-block article-footer"><h2 class="article-footer__title">文章資訊</h2><div class="meta-grid"><div class="meta-field"><span class="meta-label">作者：</span><span class="meta-value">scottnick</span></div><div class="meta-field meta-field--date"><span class="meta-label">撰寫日期：</span><span class="meta-value">2026-02-28</span></div><div class="meta-field meta-field--full"><span class="meta-label">類別：</span><span class="meta-value"><span class="post-tags"><span class="post-tag">Biweekly Contest 177</span></span></span></div><div class="meta-field meta-field--full"><span class="meta-label">原文連結：</span><span class="meta-value">https://scottnick.github.io/cpp-notes/contests/biweekly-contest-177/q2-merge-close-characters.html</span></div></div></section>
+</main><script src="../../../script.js"></script></body></html>
