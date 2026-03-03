@@ -1,0 +1,206 @@
+<!-- all problems/1545-find-kth-bit-in-nth-binary-string.html: 全部題單文章 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>1545. Find Kth Bit in Nth Binary String</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+               width="18" height="18" aria-hidden="true" focusable="false"
+               style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="../all%20problems/index.html">All problems</a>
+      <span aria-hidden="true">/</span>
+      <span>1545. Find Kth Bit in Nth Binary String</span>
+    </nav>
+
+    <section class="hero">
+      <h1>1545. Find Kth Bit in Nth Binary String</h1>
+      <p><strong>練習日期：</strong>2026-03-03</p>
+      <p><strong>難度：</strong>Medium</p>
+      <p><strong>類型：</strong>String、Recursion、Simulation</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#complexity">⏱️ 複雜度</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給你兩個正整數 <code>n</code> 和 <code>k</code>，二進位字串 <code>S_n</code> 的形成方式如下：</p>
+        <ul>
+          <li><code>S_1 = "0"</code></li>
+          <li>對於 <code>i &gt; 1</code>：<br>
+          <code>S_i = S_{i-1} + "1" + reverse(invert(S_{i-1}))</code></li>
+        </ul>
+        <p>其中 <code>+</code> 表示字串串接，<code>reverse(x)</code> 會回傳 <code>x</code> 反轉後的字串，<code>invert(x)</code> 會把 <code>x</code> 的每個位元翻轉（<code>0</code> 變 <code>1</code>，<code>1</code> 變 <code>0</code>）。</p>
+        <p>請回傳 <code>S_n</code> 的第 <code>k</code> 個位元。題目保證給定的 <code>n</code> 和 <code>k</code> 都是有效的。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>1 &lt;= n &lt;= 20</code></li>
+          <li><code>1 &lt;= k &lt;= 2^n - 1</code></li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>這題如果真的把 <code>S_n</code> 建出來會很長（長度是 <code>2^n - 1</code>），但其實我們只問第 <code>k</code> 位，所以可以用遞迴利用結構直接找。</p>
+        <p><code>S_n</code> 的結構是：</p>
+        <p><code>S_{n-1}</code> + <code>"1"</code> + <code>reverse(invert(S_{n-1}))</code></p>
+        <p>因此 <code>S_n</code> 的中間那個 <code>"1"</code> 的位置一定是：</p>
+        <p><code>m = 2^(n-1)</code></p>
+        <p>我分三種情況看 <code>k</code> 落在哪：</p>
+        <ol>
+          <li><p><code>k == m</code><br>
+          代表剛好在中間，那答案一定是 <code>'1'</code></p></li>
+          <li><p><code>k &lt; m</code><br>
+          代表落在左半邊，左半邊就是 <code>S_{n-1}</code><br>
+          所以答案等同於 <code>findKthBit(n-1, k)</code></p></li>
+          <li><p><code>k &gt; m</code><br>
+          代表落在右半邊，右半邊是 <code>reverse(invert(S_{n-1}))</code><br>
+          右半邊的位置 <code>k</code> 對應回 <code>S_{n-1}</code> 的位置會是鏡射：</p>
+          <p><code>k' = 2*m - k</code></p>
+          <p>先去 <code>S_{n-1}</code> 找 <code>k'</code> 的值，得到 <code>b</code>，但右半邊還有 invert，所以要再翻轉一次：</p>
+          <ul>
+            <li><code>b == '0'</code> → 回傳 <code>'1'</code></li>
+            <li><code>b == '1'</code> → 回傳 <code>'0'</code></li>
+          </ul></li>
+        </ol>
+        <p>遞迴一直縮小 <code>n</code>，最後 <code>n == 1</code> 時 <code>S_1</code> 只有 <code>"0"</code>，直接回傳 <code>'0'</code>。</p>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>m</code>：<code>S_n</code> 的中間位置 <code>2^(n-1)</code>，也是中間那個 <code>'1'</code> 的位置</li>
+          <li><code>b</code>：當 <code>k</code> 在右半邊時，用來接住在 <code>S_{n-1}</code> 對應位置查到的位元，之後再翻轉回傳</li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+        <h3>1. 基底：n == 1 時直接回傳 '0'</h3>
+        <p>因為 <code>S_1 = "0"</code>，不管 <code>k</code> 是多少（題目保證有效），答案就是 <code>'0'</code>。</p>
+        <hr />
+
+        <h3>2. 計算中間位置 m = 2^(n-1)</h3>
+        <p><code>S_n</code> 長度是 <code>2^n - 1</code>，中間那個 <code>'1'</code> 的位置固定是 <code>2^(n-1)</code>。</p>
+        <hr />
+
+        <h3>3. k == m：直接回傳 '1'</h3>
+        <p>落在中間就不用再遞迴了。</p>
+        <hr />
+
+        <h3>4. k &lt; m：到左半邊的 S_{n-1} 繼續找</h3>
+        <p>左半邊完全就是 <code>S_{n-1}</code>，所以直接遞迴：</p>
+        <p><code>findKthBit(n-1, k)</code></p>
+        <hr />
+
+        <h3>5. k &gt; m：映射回 S_{n-1} 再翻轉</h3>
+        <p>右半邊是 <code>reverse(invert(S_{n-1}))</code>，所以先用鏡射位置：</p>
+        <p><code>k' = 2*m - k</code></p>
+        <p>去找 <code>S_{n-1}</code> 的第 <code>k'</code> 位得到 <code>b</code>，最後因為有 invert，要把 <code>b</code> 翻轉後回傳。</p>
+
+        <h2 id="complexity">⏱️ 複雜度</h2>
+        <ul>
+          <li>時間複雜度：<code>O(n)</code><br>
+          每次遞迴 <code>n</code> 減 1，最多跑到 <code>n == 1</code>。</li>
+          <li>空間複雜度：<code>O(n)</code><br>
+          遞迴呼叫深度最多 <code>n</code>。</li>
+        </ul>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    char findKthBit(int n, int k) {
+        int m = pow(2, n - 1);
+        if (n == 1) {
+            return '0';
+        }
+        if (k == m) {
+            return '1';
+        } else if (k < m) {
+            return findKthBit(n - 1, k);
+        } else {
+            char b = findKthBit(n - 1, 2 * m - k);
+            return (b == '0') ? '1' : '0';
+        }
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/find-kth-bit-in-nth-binary-string/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-03-03</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value"><span class="post-tags">
+              <span class="post-tag">String</span>
+              <span class="post-tag">Recursion</span>
+              <span class="post-tag">Simulation</span>
+              <span class="post-tag">Medium</span>
+            </span></span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/all%20problems/1545-find-kth-bit-in-nth-binary-string.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
