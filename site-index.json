@@ -1,6 +1,6 @@
 {
-  "buildId": "20260303001923",
-  "generatedAt": "2026-03-03T00:19:23.007459Z",
+  "buildId": "20260303005042",
+  "generatedAt": "2026-03-03T00:50:42.976394Z",
   "posts": [
     {
       "path": "courses.html",
@@ -49,6 +49,18 @@
         "修課紀錄"
       ],
       "folder": "courses"
+    },
+    {
+      "path": "cpp-notes/all%20problems/3853-merge-close-characters.html",
+      "title": "3853. Merge Close Characters",
+      "date": "2026-02-28",
+      "tags": [
+        "String",
+        "Simulation",
+        "Biweekly Contest 177",
+        "Medium"
+      ],
+      "folder": "cpp-notes/all problems"
     },
     {
       "path": "cpp-notes/all%20problems/1-two-sum.html",
@@ -1106,18 +1118,6 @@
       "folder": "cpp-notes/all problems"
     },
     {
-      "path": "cpp-notes/all%20problems/3853-sum-of-k-digit-numbers-in-a-range.html",
-      "title": "3853. Sum of K-Digit Numbers in a Range",
-      "date": "2026-02-28",
-      "tags": [
-        "Math",
-        "Combinatorics",
-        "Biweekly Contest 177",
-        "Hard"
-      ],
-      "folder": "cpp-notes/all problems"
-    },
-    {
       "path": "cpp-notes/all%20problems/3828-final-element-after-subarray-deletions.html",
       "title": "3828. Final Element After Subarray Deletions",
       "date": "2026-02-01",
@@ -1142,18 +1142,6 @@
         "Sorting",
         "Weekly Contest 485",
         "Medium"
-      ],
-      "folder": "cpp-notes/all problems"
-    },
-    {
-      "path": "cpp-notes/all%20problems/3850-smallest-pair-with-different-frequencies.html",
-      "title": "3850. Smallest Pair With Different Frequencies",
-      "date": "2026-02-28",
-      "tags": [
-        "Array",
-        "Sorting",
-        "Biweekly Contest 177",
-        "Easy"
       ],
       "folder": "cpp-notes/all problems"
     },
@@ -1364,6 +1352,18 @@
         "Math",
         "String",
         "Medium"
+      ],
+      "folder": "cpp-notes/all problems"
+    },
+    {
+      "path": "cpp-notes/all%20problems/3855-sum-of-k-digit-numbers-in-a-range.html",
+      "title": "3855. Sum of K-Digit Numbers in a Range",
+      "date": "2026-02-28",
+      "tags": [
+        "Math",
+        "Combinatorics",
+        "Biweekly Contest 177",
+        "Hard"
       ],
       "folder": "cpp-notes/all problems"
     },
@@ -1652,18 +1652,6 @@
       "folder": "cpp-notes/all problems"
     },
     {
-      "path": "cpp-notes/all%20problems/3851-merge-close-characters.html",
-      "title": "3851. Merge Close Characters",
-      "date": "2026-02-28",
-      "tags": [
-        "String",
-        "Simulation",
-        "Biweekly Contest 177",
-        "Medium"
-      ],
-      "folder": "cpp-notes/all problems"
-    },
-    {
       "path": "cpp-notes/all%20problems/1004-max-consecutive-ones-iii.html",
       "title": "1004. Max Consecutive Ones III",
       "date": "2026-01-30",
@@ -1730,6 +1718,18 @@
       "tags": [
         "Array",
         "Hash Table",
+        "Easy"
+      ],
+      "folder": "cpp-notes/all problems"
+    },
+    {
+      "path": "cpp-notes/all%20problems/3852-smallest-pair-with-different-frequencies.html",
+      "title": "3852. Smallest Pair With Different Frequencies",
+      "date": "2026-02-28",
+      "tags": [
+        "Array",
+        "Sorting",
+        "Biweekly Contest 177",
         "Easy"
       ],
       "folder": "cpp-notes/all problems"
@@ -2177,7 +2177,10 @@
       "title": "Biweekly Contest 177",
       "date": "",
       "tags": [
-        "Biweekly Contest 177"
+        "Biweekly Contest 177",
+        "Easy",
+        "Medium",
+        "Hard"
       ],
       "folder": "cpp-notes/contests"
     },
@@ -2239,7 +2242,8 @@
       "title": "Q2. Merge Close Characters",
       "date": "2026-02-28",
       "tags": [
-        "Biweekly Contest 177"
+        "Biweekly Contest 177",
+        "Medium"
       ],
       "folder": "cpp-notes/contests/biweekly-contest-177"
     },
@@ -2248,7 +2252,8 @@
       "title": "Q1. Smallest Pair With Different Frequencies",
       "date": "2026-02-28",
       "tags": [
-        "Biweekly Contest 177"
+        "Biweekly Contest 177",
+        "Easy"
       ],
       "folder": "cpp-notes/contests/biweekly-contest-177"
     },
@@ -2257,7 +2262,8 @@
       "title": "Q4. Sum of K-Digit Numbers in a Range",
       "date": "2026-02-28",
       "tags": [
-        "Biweekly Contest 177"
+        "Biweekly Contest 177",
+        "Hard"
       ],
       "folder": "cpp-notes/contests/biweekly-contest-177"
     },
