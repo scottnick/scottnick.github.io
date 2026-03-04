@@ -1,0 +1,172 @@
+<!-- all problems/1689-partitioning-into-minimum-number-of-deci-binary-numbers.html: 全部題單文章 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>1689. Partitioning Into Minimum Number Of Deci-Binary Numbers</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+               width="18" height="18" aria-hidden="true" focusable="false"
+               style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="../all%20problems/index.html">All problems</a>
+      <span aria-hidden="true">/</span>
+      <span>1689. Partitioning Into Minimum Number Of Deci-Binary Numbers</span>
+    </nav>
+
+    <section class="hero">
+      <h1>1689. Partitioning Into Minimum Number Of Deci-Binary Numbers</h1>
+      <p><strong>練習日期：</strong>2026-03-04</p>
+      <p><strong>難度：</strong>Medium</p>
+      <p><strong>類型：</strong>String、Greedy</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#complexity">⏱️ 複雜度</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>一個十進位數如果滿足每一位數字都只會是 <code>0</code> 或 <code>1</code>，且沒有前導零，則稱這個十進位數為 deci-binary。 例如 <code>101</code> 和 <code>1100</code> 是 deci-binary，而 <code>112</code> 和 <code>3001</code> 不是。</p>
+        <p>給你一個字串 <code>n</code>，代表一個正的十進位整數，請回傳最少需要多少個正的 deci-binary 數字，才能讓它們的總和等於 <code>n</code>。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>1 &lt;= n.length &lt;= 10^5</code></li>
+          <li><code>n</code> 只包含數字字元</li>
+          <li><code>n</code> 沒有前導零，且代表一個正整數</li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>這題的核心其實就是看 <code>n</code> 裡面最大的那個數字是多少。</p>
+        <p>理由是：</p>
+        <p>每個 deci-binary 的每一位最多只能貢獻 <code>1</code>。 所以如果 <code>n</code> 的某一位是 <code>d</code>，代表那一位總共需要湊出 <code>d</code>，而每個數在那一位最多出 1，所以至少要 <code>d</code> 個數才能湊出那一位。</p>
+        <p>因此整個 <code>n</code> 的最少數量，至少要大於等於所有位數的最大值。</p>
+        <p>反過來也一定做得到： 假設最大位數是 <code>ans</code>，我就可以用 <code>ans</code> 個 deci-binary 數字去分配每一位的 <code>1</code>，讓每一位的 1 的個數剛好等於 <code>n</code> 那一位的數字，這樣就能組成 <code>n</code>。</p>
+        <p>所以答案就是：</p>
+        <blockquote>
+          <p><code>n</code> 中出現的最大數字。</p>
+        </blockquote>
+        <p>我的程式碼就是掃一遍字串，找到最大 digit。</p>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>ans</code>：目前掃到的最大 digit（最後回傳它）</li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+        <h3>1. 初始化 ans = 0</h3>
+        <p>一開始先假設最大 digit 是 0。</p>
+
+        <hr />
+
+        <h3>2. 掃過 n 的每個字元，更新最大 digit</h3>
+        <p>對每個字元 <code>a</code>：</p>
+        <ul>
+          <li><code>a - '0'</code> 會得到它對應的數字</li>
+          <li>用 <code>ans = max(ans, a - '0')</code> 更新最大值</li>
+        </ul>
+
+        <hr />
+
+        <h3>3. 回傳 ans</h3>
+        <p>掃完後 <code>ans</code> 就是最大 digit，也就是最少需要的 deci-binary 數量。</p>
+
+        <h2 id="complexity">⏱️ 複雜度</h2>
+        <ul>
+          <li>時間複雜度：<code>O(|n|)</code> 只掃一遍字串。</li>
+          <li>空間複雜度：<code>O(1)</code></li>
+        </ul>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    int minPartitions(string n) {
+        int ans = 0;
+        for (char a : n) {
+            ans = max(a - '0', ans);
+        }
+        return ans;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/partitioning-into-minimum-number-of-deci-binary-numbers/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-03-04</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value"><span class="post-tags">
+              <span class="post-tag">String</span>
+              <span class="post-tag">Greedy</span>
+              <span class="post-tag">Medium</span>
+            </span></span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/all%20problems/1689-partitioning-into-minimum-number-of-deci-binary-numbers.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
