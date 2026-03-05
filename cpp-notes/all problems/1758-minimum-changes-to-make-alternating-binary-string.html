@@ -1,0 +1,180 @@
+<!-- all problems/1758-minimum-changes-to-make-alternating-binary-string.html: LeetCode 1758 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>1758. Minimum Changes To Make Alternating Binary String</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+               width="18" height="18" aria-hidden="true" focusable="false"
+               style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="index.html">All problems</a>
+      <span aria-hidden="true">/</span>
+      <span>1758. Minimum Changes To Make Alternating Binary String</span>
+    </nav>
+
+    <section class="hero">
+      <h1>1758. Minimum Changes To Make Alternating Binary String</h1>
+      <p><strong>練習日期：</strong>2026-03-05</p>
+      <p><strong>難度：</strong>Easy</p>
+      <p><strong>類型：</strong>String</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#complexity">⏱️ 複雜度</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給你一個字串 <code>s</code>，只包含字元 <code>'0'</code> 和 <code>'1'</code>。在一次操作中，你可以把任意一個 <code>'0'</code> 變成 <code>'1'</code>，或把 <code>'1'</code> 變成 <code>'0'</code>。</p>
+        <p>如果一個字串相鄰兩個字元都不相等，則稱它為交錯字串（alternating）。例如 <code>"010"</code> 是交錯字串，而 <code>"0100"</code> 不是。</p>
+        <p>請回傳把 <code>s</code> 變成交錯字串所需要的最少操作次數。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>1 &lt;= s.length &lt;= 10^4</code></li>
+          <li><code>s[i]</code> 是 <code>'0'</code> 或 <code>'1'</code></li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>交錯字串其實只會有兩種可能的目標型態：</p>
+        <ul>
+          <li>目標 A：<code>010101...</code>（偶數位置是 0，奇數位置是 1）</li>
+          <li>目標 B：<code>101010...</code>（偶數位置是 1，奇數位置是 0）</li>
+        </ul>
+        <p>我的做法是先計算「要變成目標 A 需要改幾個字元」，這個數量叫 <code>c0</code>。</p>
+        <p>因為每個位置不是符合目標 A 就是不符合，所以：</p>
+        <ul>
+          <li>變成目標 B 需要修改的次數就會是 <code>n - c0</code></li>
+        </ul>
+        <p>最後答案就是 <code>min(c0, n - c0)</code>。</p>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>n</code>：字串 <code>s</code> 的長度</li>
+          <li><code>c0</code>：把 <code>s</code> 變成 <code>0101...</code> 這種型態時，需要修改的字元數</li>
+          <li><code>ans</code>：最後答案（程式中直接用 <code>min(c0, n - c0)</code> 回傳）</li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+
+        <h3>1. 設定其中一種目標型態：0101...</h3>
+        <p>我把目標固定成：第 <code>i</code> 個位置應該是 <code>i % 2</code>（0,1,0,1...），用這個當作參考。</p>
+
+        <hr />
+
+        <h3>2. 掃過整個字串，計算 c0</h3>
+        <p>如果某一格 <code>s[i]</code> 跟目標 <code>i % 2</code> 一樣，就代表「這一格已經符合 0101...」</p>
+        <p>我把符合的數量累加到 <code>c0</code>，最後：</p>
+        <ul>
+          <li>不符合 0101... 的數量 = <code>n - c0</code></li>
+          <li>而「把字串變成 0101...」需要改的，就是不符合的數量</li>
+        </ul>
+        <p>你這份程式的寫法是反過來：你累加的是「符合」的數量，最後用 <code>min(c0, n - c0)</code> 直接同時代表兩種目標的修改量，效果一樣。</p>
+
+        <hr />
+
+        <h3>3. 兩種目標取最小</h3>
+        <p><code>0101...</code> 和 <code>1010...</code> 兩種只差整體翻轉，所以修改次數必定一個是 <code>c0</code>，另一個是 <code>n - c0</code>，取最小即可。</p>
+
+        <h2 id="complexity">⏱️ 複雜度</h2>
+        <ul>
+          <li>時間複雜度：<code>O(n)</code>（掃一次字串）</li>
+          <li>空間複雜度：<code>O(1)</code>（只用常數變數）</li>
+        </ul>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    int minOperations(string s) {
+        int n = s.size();
+        int c0 = 0; // c0是01數列
+        for (int i = 0; i &lt; n; i++) {
+            if (s[i] - '0' == i % 2) {
+                c0++;
+            }
+        }
+        return min(c0, n - c0);
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/minimum-changes-to-make-alternating-binary-string/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-03-05</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value"><span class="post-tags">
+              <span class="post-tag">String</span>
+              <span class="post-tag">Easy</span>
+            </span></span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/all%20problems/1758-minimum-changes-to-make-alternating-binary-string.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
