@@ -1,0 +1,218 @@
+<!-- cpp-notes/leetcode75/2462-total-cost-to-hire-k-workers.html: 文章 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2462. Total Cost to Hire K Workers</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+               width="18" height="18" aria-hidden="true" focusable="false"
+               style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="index.html">LeetCode 75</a>
+      <span aria-hidden="true">/</span>
+      <span>2462. Total Cost to Hire K Workers</span>
+    </nav>
+
+    <section class="hero">
+      <h1>2462. Total Cost to Hire K Workers</h1>
+      <p><strong>練習日期：</strong>2026-03-06</p>
+      <p><strong>難度：</strong>Medium</p>
+      <p><strong>類型：</strong>Array、Two Pointers、Heap (Priority Queue)、Simulation</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">目錄</button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#complexity">⏱️ 複雜度</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給你一個 0-indexed 的整數陣列 <code>costs</code>，其中 <code>costs[i]</code> 是雇用第 <code>i</code> 位工人的成本。</p>
+        <p>另外給你兩個整數 <code>k</code> 和 <code>candidates</code>。我們想要依照以下規則雇用剛好 <code>k</code> 位工人：</p>
+        <p>你會進行 <code>k</code> 次 session，每次 session 會雇用剛好一位工人。<br>在每一次雇用 session 中，從「前 <code>candidates</code> 位工人」或「後 <code>candidates</code> 位工人」中選擇成本最低的工人。若成本相同，選擇索引較小的那位。<br>例如，若 <code>costs = [3,2,7,7,1,2]</code> 且 <code>candidates = 2</code>，那在第一次雇用 session 中，我們會選第 4 位工人，因為他是最低成本 <code>[3,2,7,7,1,2]</code>。<br>在第二次雇用 session 中，我們會選第 1 位工人，因為他與第 4 位工人同樣是最低成本，但索引較小 <code>[3,2,7,7,2]</code>。請注意，在這個過程中索引可能會改變。</p>
+        <p>如果剩下的工人數量少於 <code>candidates</code>，就從剩下的工人中選擇成本最低者。若成本相同，選擇索引較小的那位。<br>同一位工人只能被選一次。</p>
+        <p>回傳雇用剛好 <code>k</code> 位工人的總成本。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>1 &lt;= costs.length &lt;= 10^5</code></li>
+          <li><code>1 &lt;= costs[i] &lt;= 10^5</code></li>
+          <li><code>1 &lt;= k, candidates &lt;= costs.length</code></li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>題目每一輪只能從「左邊前 candidates」或「右邊後 candidates」這兩個區域挑最小成本，因此我用兩個 min-heap 來分別維護左右兩側目前可選的人：</p>
+        <ul>
+          <li>左邊可選集合丟進 <code>lq</code></li>
+          <li>右邊可選集合丟進 <code>rq</code></li>
+        </ul>
+        <p>然後用兩個指標 <code>l</code>、<code>r</code> 控制「下一個要補進 heap 的位置」：</p>
+        <ul>
+          <li><code>l</code> 代表目前左邊已經放進 <code>lq</code> 的最右端位置（下一個要補的是 <code>l+1</code>）</li>
+          <li><code>r</code> 代表目前右邊下一個可以放進 <code>rq</code> 的位置（每次補完就 <code>r--</code>）</li>
+        </ul>
+        <p>每次雇用（總共 <code>k</code> 次）就比較 <code>lq.top()</code> 與 <code>rq.top()</code>，挑比較小的成本；若同成本，我的寫法會優先選左邊。選完之後，再從同一側補一個新工人進來，直到左右指標交錯為止。</p>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>lq</code>：左側候選人的 min-heap，<code>top()</code> 永遠是目前左側可選的最低成本</li>
+          <li><code>rq</code>：右側候選人的 min-heap，<code>top()</code> 永遠是目前右側可選的最低成本</li>
+          <li><code>l</code>：左側目前已經放入 <code>lq</code> 的最右端索引（左側已放入的範圍是 <code>0..l</code>）</li>
+          <li><code>r</code>：右側下一個準備放入 <code>rq</code> 的索引（每次放入後就 <code>r--</code>，用來逐步往左補）</li>
+          <li><code>ans</code>：目前累積的總成本</li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+        <h3>1. 先把左邊前 candidates 個人丟進 lq</h3>
+        <p><code>l</code> 從 <code>-1</code> 開始往右推，推到 <code>candidates-1</code>，把 <code>costs[0..candidates-1]</code> 依序丟進 <code>lq</code>。</p>
+
+        <hr>
+
+        <h3>2. 再把右邊後 candidates 個人丟進 rq（注意不要跟左邊重疊）</h3>
+        <p><code>r</code> 從最右邊開始往左放，把右側的候選人丟進 <code>rq</code>。<br>同時用 <code>l &lt; r</code> 避免左右候選區域重疊（例如陣列很短、或 candidates 很大時）。</p>
+
+        <hr>
+
+        <h3>3. 做 k 次雇用：每次從 lq 或 rq 取較小的成本</h3>
+        <p>每一輪比較：</p>
+        <ul>
+          <li>如果 <code>rq</code> 是空的，就只能從 <code>lq</code> 取</li>
+          <li>否則如果 <code>lq.top() &lt;= rq.top()</code>，就從 <code>lq</code> 取</li>
+          <li>否則從 <code>rq</code> 取</li>
+        </ul>
+        <p>取到的值加進 <code>ans</code>。</p>
+
+        <hr>
+
+        <h3>4. 從被取走的那一側補一個新候選人進 heap</h3>
+        <p>如果是從 <code>lq</code> 取走，就嘗試把 <code>l+1</code> 的人補進 <code>lq</code>。<br>如果是從 <code>rq</code> 取走，就嘗試把 <code>r</code> 的人補進 <code>rq</code>，然後 <code>r--</code>。<br>補之前都用 <code>l &lt; r</code> 檢查是否還有「尚未進入任何 heap」的候選人可以補。</p>
+
+        <hr>
+
+        <h3>5. k 次結束後回傳 ans</h3>
+        <p>代表已經雇用完剛好 <code>k</code> 位工人。</p>
+
+        <h2 id="complexity">⏱️ 複雜度</h2>
+        <ul>
+          <li>時間複雜度：<code>O((candidates + k) log candidates)</code>（兩個 heap 的大小都不會超過 <code>candidates</code>，每次 push/pop 都是 <code>log candidates</code>）</li>
+          <li>空間複雜度：<code>O(candidates)</code>（兩個 heap）</li>
+        </ul>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    long long totalCost(vector&lt;int&gt;&amp; costs, int k, int candidates) {
+        priority_queue&lt;int, vector&lt;int&gt;, greater&lt;int&gt;&gt; lq;
+        priority_queue&lt;int, vector&lt;int&gt;, greater&lt;int&gt;&gt; rq;
+        int l = -1, r = costs.size() - 1; // l有包含，r沒有
+        while (l &lt; candidates - 1) {
+            l++;
+            lq.push(costs[l]);
+        }
+        while (r &gt; costs.size() - candidates - 1 &amp;&amp; l &lt; r) {
+            rq.push(costs[r]);
+            r--;
+        }
+        long long ans = 0;
+        while (k &gt; 0) {
+            if (rq.empty() || (!lq.empty() &amp;&amp; lq.top() &lt;= rq.top())) {
+                ans += lq.top();
+                lq.pop();
+                if (l &lt; r) {
+                    l++;
+                    lq.push(costs[l]);
+                }
+            } else {
+                ans += rq.top();
+                rq.pop();
+                if (l &lt; r) {
+                    rq.push(costs[r]);
+                    r--;
+                }
+            }
+            k--;
+        }
+        return ans;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/total-cost-to-hire-k-workers/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-03-06</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value"><span class="post-tags">
+              <span class="post-tag">Array</span>
+              <span class="post-tag">Two Pointers</span>
+              <span class="post-tag">Heap (Priority Queue)</span>
+              <span class="post-tag">Simulation</span>
+              <span class="post-tag">Medium</span>
+            </span></span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/leetcode75/2462-total-cost-to-hire-k-workers.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
