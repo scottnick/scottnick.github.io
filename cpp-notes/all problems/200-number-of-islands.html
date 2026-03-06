@@ -1,0 +1,197 @@
+<!-- all problems/200-number-of-islands.html -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>200. Number of Islands</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false" style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題"><span id="theme-icon" aria-hidden="true">☀️</span></button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="index.html">All problems</a>
+      <span aria-hidden="true">/</span>
+      <span>200. Number of Islands</span>
+    </nav>
+
+    <section class="hero">
+      <h1>200. Number of Islands</h1>
+      <p><strong>練習日期：</strong>2026-03-06</p>
+      <p><strong>難度：</strong>Medium</p>
+      <p><strong>類型：</strong>Array、Depth-First Search、Breadth-First Search、Union-Find、Matrix</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">目錄</button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#complexity">⏱️ 複雜度</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給你一個 <code>m x n</code> 的二維二進位網格 <code>grid</code>，它代表一張由 <code>'1'</code>（陸地）與 <code>'0'</code>（水）組成的地圖，請回傳島嶼的數量。</p>
+        <p>島嶼被水包圍，並且由水平或垂直相鄰的陸地連接形成。你可以假設網格的四個邊緣都被水包圍。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>m == grid.length</code></li>
+          <li><code>n == grid[i].length</code></li>
+          <li><code>1 &lt;= m, n &lt;= 300</code></li>
+          <li><code>grid[i][j]</code> 是 <code>'0'</code> 或 <code>'1'</code></li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>這題我用 DFS 做「淹島」的概念。</p>
+        <p>我一格一格掃描 <code>grid</code>：只要遇到 <code>'1'</code>，代表我發現了一座新的島，所以島的數量 <code>count++</code>。接著我就從這格開始做 DFS，把同一座島上所有連在一起的 <code>'1'</code> 全部改成 <code>'0'</code>，等於把這座島整個消掉，避免之後掃描到同一座島又重複計數。</p>
+        <p>為了讓 DFS 可以往四個方向走，我用 <code>dx</code>、<code>dy</code> 存上下左右的位移。</p>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>m</code>：<code>grid</code> 的列數</li>
+          <li><code>n</code>：<code>grid</code> 的行數</li>
+          <li><code>dx</code>：四個方向的 x 位移 <code>{1, -1, 0, 0}</code></li>
+          <li><code>dy</code>：四個方向的 y 位移 <code>{0, 0, 1, -1}</code></li>
+          <li><code>count</code>：目前已找到的島嶼數量</li>
+          <li><code>filled(x, y, grid)</code>：把 <code>(x, y)</code> 所在島嶼用 DFS 全部標記掉（把 <code>'1'</code> 變 <code>'0'</code>）</li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+        <h3>1. 先記下 m、n，準備做整張圖的掃描</h3>
+        <p>在 <code>numIslands</code> 一開始先設定：</p>
+        <ul>
+          <li><code>m = grid.size()</code></li>
+          <li><code>n = grid[0].size()</code></li>
+        </ul>
+
+        <hr>
+
+        <h3>2. 用雙層迴圈掃描每一格</h3>
+        <p>對每個 <code>(i, j)</code>：</p>
+        <ul>
+          <li>如果 <code>grid[i][j] == '1'</code>，代表找到一座新島。我就先 <code>count++</code>，再呼叫 <code>filled(i, j, grid)</code> 把整座島清掉。</li>
+        </ul>
+
+        <hr>
+
+        <h3>3. filled 的邊界判斷，避免走出地圖</h3>
+        <p><code>filled(x, y, grid)</code> 進來後，先檢查：</p>
+        <ul>
+          <li><code>x &lt; 0</code> 或 <code>x &gt;= m</code> 或 <code>y &lt; 0</code> 或 <code>y &gt;= n</code>，直接 <code>return</code>。</li>
+        </ul>
+        <p>這樣 DFS 才不會越界。</p>
+
+        <hr>
+
+        <h3>4. 如果這格是陸地，就把它改成水，並往四個方向擴散</h3>
+        <p>如果 <code>grid[x][y] == '1'</code>：</p>
+        <ul>
+          <li>先把它標記成走過：<code>grid[x][y] = '0'</code></li>
+          <li>然後用 <code>k = 0..3</code> 走四個方向，下一格是 <code>(x + dx[k], y + dy[k])</code>，對那格繼續呼叫 <code>filled(...)</code></li>
+        </ul>
+        <p>這一步會把「同一座島所有連通的陸地」全部清成 <code>'0'</code>。</p>
+
+        <hr>
+
+        <h3>5. 掃描結束後，count 就是答案</h3>
+        <p>因為每座島第一次被遇到時會 <code>count++</code>，而且同座島會立刻被 DFS 清掉，所以不會重複計數。</p>
+
+        <h2 id="complexity">⏱️ 複雜度</h2>
+        <ul>
+          <li>時間複雜度：<code>O(m * n)</code>，每個格子最多被 DFS 處理一次（從 <code>'1'</code> 變 <code>'0'</code>）。</li>
+          <li>空間複雜度：<code>O(m * n)</code>（最壞情況遞迴深度可能到整張圖大小；若改成 iterative DFS/BFS 可避免遞迴爆棧的風險）。</li>
+        </ul>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    int m;
+    int n;
+    int dx[4] = {1, -1, 0, 0};
+    int dy[4] = {0, 0, 1, -1};
+    int count = 0;
+
+    void filled(int x, int y, vector&lt;vector&lt;char&gt;&gt;&amp; grid) {
+        if (x &lt; 0 || x &gt;= m || y &lt; 0 || y &gt;= n) {
+            return;
+        }
+        if (grid[x][y] == '1') {
+            grid[x][y] = '0';
+            for (int k = 0; k &lt; 4; k++) {
+                filled(x + dx[k], y + dy[k], grid);
+            }
+        }
+        return;
+    }
+
+    int numIslands(vector&lt;vector&lt;char&gt;&gt;&amp; grid) {
+        m = grid.size();
+        n = grid[0].size();
+        for (int i = 0; i &lt; m; i++) {
+            for (int j = 0; j &lt; n; j++) {
+                if (grid[i][j] == '1') {
+                    count++;
+                    filled(i, j, grid);
+                }
+            }
+        }
+        return count;
+    }
+};</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>
+          <a href="https://leetcode.com/problems/number-of-islands/description/" target="_blank" rel="noopener noreferrer">https://leetcode.com/problems/number-of-islands/description/</a>
+        </p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field"><span class="meta-label">作者：</span><span class="meta-value">scottnick</span></div>
+        <div class="meta-field meta-field--date"><span class="meta-label">撰寫日期：</span><span class="meta-value">2026-03-06</span></div>
+        <div class="meta-field meta-field--full"><span class="meta-label">類別：</span><span class="meta-value"><span class="post-tags"><span class="post-tag">Array</span><span class="post-tag">Depth-First Search</span><span class="post-tag">Breadth-First Search</span><span class="post-tag">Union-Find</span><span class="post-tag">Matrix</span><span class="post-tag">Medium</span></span></span></span></div>
+        <div class="meta-field meta-field--full"><span class="meta-label">原文連結：</span><span class="meta-value">https://scottnick.github.io/cpp-notes/all%20problems/200-number-of-islands.html</span></div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
