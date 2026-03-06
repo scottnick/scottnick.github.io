@@ -1,0 +1,175 @@
+<!-- 1502-can-make-arithmetic-progression-from-sequence.html: All problems 文章 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>1502. Can Make Arithmetic Progression From Sequence</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+               width="18" height="18" aria-hidden="true" focusable="false"
+               style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="index.html">All problems</a>
+      <span aria-hidden="true">/</span>
+      <span>1502. Can Make Arithmetic Progression From Sequence</span>
+    </nav>
+
+    <section class="hero">
+      <h1>1502. Can Make Arithmetic Progression From Sequence</h1>
+      <p><strong>練習日期：</strong>2026-03-06</p>
+      <p><strong>難度：</strong>Easy</p>
+      <p><strong>類型：</strong>Array、Sorting</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#complexity">⏱️ 複雜度</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>如果一個數列中，任何兩個相鄰元素的差都相同，那這個數列就稱為等差數列（arithmetic progression）。</p>
+        <p>給你一個數字陣列 <code>arr</code>，如果 <code>arr</code> 可以重新排列後形成等差數列，回傳 <code>true</code>；否則回傳 <code>false</code>。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>2 &lt;= arr.length &lt;= 1000</code></li>
+          <li><code>-10^6 &lt;= arr[i] &lt;= 10^6</code></li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>這題的核心是：等差數列只要「排好順序」後，相鄰差值都一樣就成立。</p>
+        <p>所以我的做法很直接：</p>
+        <p>先把 <code>arr</code> 排序。</p>
+        <p>排序後如果它能形成等差數列，那相鄰兩項的差一定都會等於同一個 <code>d</code>。</p>
+        <p>我用第一段差 <code>arr[1] - arr[0]</code> 當作目標差值 <code>d</code>，接著一路檢查每一段相鄰差是否都等於 <code>d</code>。只要遇到一段不等，就代表不可能形成等差數列。</p>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>d</code>：排序後的目標公差，設定為 <code>arr[1] - arr[0]</code></li>
+          <li><code>n</code>：陣列長度 <code>arr.size()</code></li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+
+        <h3>1. 先排序，讓數列變成「固定順序」方便檢查</h3>
+        <p>我先做 <code>sort(arr.begin(), arr.end())</code>。</p>
+        <p>因為只要存在某種排列能形成等差數列，那把它從小到大排好後，相鄰差值也會固定一致。</p>
+        <hr />
+
+        <h3>2. 用第一段差值當作公差 d</h3>
+        <p>排序後設定：</p>
+        <p><code>d = arr[1] - arr[0]</code></p>
+        <p>這個 <code>d</code> 就是我希望整個數列每一段相鄰差都一樣的目標。</p>
+        <hr />
+
+        <h3>3. 逐段檢查每一個相鄰差值</h3>
+        <p>從 <code>i = 1</code> 一路檢查到 <code>n - 2</code>：</p>
+        <p>如果 <code>arr[i + 1] - arr[i] != d</code><br>
+        就直接回傳 <code>false</code>，因為已經破壞等差的條件。</p>
+        <hr />
+
+        <h3>4. 全部都符合就回傳 true</h3>
+        <p>如果整個迴圈都沒出現不一致，代表每段相鄰差值都相同，所以回傳 <code>true</code>。</p>
+
+        <h2 id="complexity">⏱️ 複雜度</h2>
+        <ul>
+          <li>時間複雜度：<code>O(n log n)</code>（排序）</li>
+          <li>空間複雜度：<code>O(1)</code>（不計排序的額外空間；或視實作可能為 <code>O(log n)</code>）</li>
+        </ul>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    bool canMakeArithmeticProgression(vector&lt;int&gt;&amp; arr) {
+        sort(arr.begin(), arr.end());
+        int d = arr[1] - arr[0];
+        int n = arr.size();
+        for (int i = 1; i &lt; n - 1; i++) {
+            if (arr[i + 1] - arr[i] != d) {
+                return false;
+            }
+        }
+        return true;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/can-make-arithmetic-progression-from-sequence/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-03-06</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value"><span class="post-tags">
+              <span class="post-tag">Array</span>
+              <span class="post-tag">Sorting</span>
+              <span class="post-tag">Easy</span>
+            </span></span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/all%20problems/1502-can-make-arithmetic-progression-from-sequence.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
