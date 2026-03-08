@@ -1,21 +1,188 @@
 <!-- all problems/3861-minimum-capacity-box.html: Weekly Contest 492 -->
 <!doctype html>
 <html lang="zh-Hant">
-<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>3861. Minimum Capacity Box</title><link rel="stylesheet" href="../../styles.css"></head>
-<body class="page-article"><header><nav class="navbar"><a class="brand" href="../../personal.html">scottnick 個人網頁</a><button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button><div class="nav-links" id="nav-links"><a href="../../index.html">主頁</a><a href="../../courses.html">修課紀錄</a><a href="../../cpp.html" class="active">C++學習筆記</a><a href="../../profile.html">個人檔案</a></div><div class="nav-actions"><a class="nav-action-link" href="../../categories.html">類別</a><button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題"><span id="theme-icon" aria-hidden="true">☀️</span></button></div></nav></header>
-<main><nav class="breadcrumb" aria-label="文章路徑"><a href="../../cpp.html">C++學習筆記</a><span aria-hidden="true">/</span><a href="index.html">All problems</a><span aria-hidden="true">/</span><span>3861. Minimum Capacity Box</span></nav>
-<section class="hero"><h1>3861. Minimum Capacity Box</h1><p><strong>練習日期：</strong>2026-03-08</p><p><strong>難度：</strong>Easy</p><p><strong>類型：</strong>Array、Weekly Contest 492</p></section>
-<div class="article-layout"><aside class="article-toc" aria-label="文章目錄"><button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">目錄</button><strong>目錄</strong><ul><li><a href="#statement">📘 題目敘述</a></li><li><a href="#approach">🧠 解題思路</a></li><li><a href="#steps">🪜 主要流程步驟</a></li><li><a href="#complexity">⏱️ 複雜度</a></li><li><a href="#code">💻 程式碼實作</a></li><li><a href="#link">🔗 題目連結</a></li></ul></aside><section class="term-block article-content">
-<h2 id="statement">📘 題目敘述</h2>
-<p>你會拿到一個整數陣列 <code>capacity</code>，其中 <code>capacity[i]</code> 代表第 <code>i</code> 個箱子的容量，以及一個整數 <code>itemSize</code> 代表物品的大小。</p>
-<p>如果 <code>capacity[i] &gt;= itemSize</code>，則第 <code>i</code> 個箱子可以裝下該物品。</p>
-<p>請回傳能裝下物品的箱子中，容量最小的那個箱子索引。如果有多個箱子容量同樣最小，回傳索引最小的那個。如果沒有任何箱子能裝下物品，回傳 <code>-1</code>。</p>
-<h3>條件限制</h3><ul><li><code>1 &lt;= capacity.length &lt;= 100</code></li><li><code>1 &lt;= capacity[i] &lt;= 100</code></li><li><code>1 &lt;= itemSize &lt;= 100</code></li></ul>
-<h2 id="approach">🧠 解題思路</h2><p>直接線性掃描一遍 <code>capacity</code>，維護目前最小可用容量與對應索引。若遇到 <code>capacity[i] == itemSize</code>，可立刻回傳，因為這已是可行最小值。</p>
-<h3>所有變數</h3><ul><li><code>pos</code>：目前找到最小可用容量的索引，初始 <code>-1</code></li><li><code>cap</code>：目前最小可用容量，初始 <code>INT_MAX</code></li></ul>
-<h2 id="steps">🪜 主要流程步驟</h2><h3>1. 初始化</h3><p><code>pos = -1</code>、<code>cap = INT_MAX</code>。</p><h3>2. 掃描每個箱子</h3><ul><li><code>capacity[i] == itemSize</code>：直接回傳 <code>i</code></li><li><code>capacity[i] &gt; itemSize</code>：若更小則更新 <code>cap</code> 與 <code>pos</code></li></ul><h3>3. 回傳答案</h3><p>掃描後回傳 <code>pos</code>。</p>
-<h2 id="complexity">⏱️ 複雜度</h2><ul><li>時間複雜度：<code>O(n)</code></li><li>空間複雜度：<code>O(1)</code></li></ul>
-<h2 id="code">💻 程式碼實作</h2><pre><code class="language-cpp">class Solution {
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>3861. Minimum Capacity Box</title>
+    <link rel="stylesheet" href="../../styles.css" />
+  </head>
+  <body class="page-article">
+    <header>
+      <nav class="navbar">
+        <a class="brand" href="../../personal.html">scottnick 個人網頁</a
+        ><button
+          class="menu-btn"
+          id="menu-btn"
+          aria-label="開啟選單"
+          aria-expanded="false"
+        >
+          ☰
+        </button>
+        <div class="nav-links" id="nav-links">
+          <a href="../../index.html">主頁</a
+          ><a href="../../courses.html">修課紀錄</a
+          ><a href="../../cpp.html" class="active">C++學習筆記</a
+          ><a href="../../profile.html">個人檔案</a>
+        </div>
+        <div class="nav-actions">
+          <a class="nav-action-link" href="../../categories.html">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              width="18"
+              height="18"
+              aria-hidden="true"
+              focusable="false"
+              style="
+                display: inline-block;
+                vertical-align: -3px;
+                margin-right: 6px;
+              "
+            >
+              <rect
+                x="4"
+                y="4"
+                width="7"
+                height="7"
+                rx="1.2"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+              ></rect>
+              <rect
+                x="13"
+                y="4"
+                width="7"
+                height="7"
+                rx="1.2"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+              ></rect>
+              <rect
+                x="4"
+                y="13"
+                width="7"
+                height="7"
+                rx="1.2"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+              ></rect>
+              <rect
+                x="13"
+                y="13"
+                width="7"
+                height="7"
+                rx="1.2"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+              ></rect>
+            </svg>
+            類別 </a
+          ><button
+            class="icon-btn toggle-btn"
+            id="theme-toggle"
+            aria-label="切換主題"
+          >
+            <span id="theme-icon" aria-hidden="true">☀️</span>
+          </button>
+        </div>
+      </nav>
+    </header>
+    <main>
+      <nav class="breadcrumb" aria-label="文章路徑">
+        <a href="../../cpp.html">C++學習筆記</a><span aria-hidden="true">/</span
+        ><a href="index.html">All problems</a><span aria-hidden="true">/</span
+        ><span>3861. Minimum Capacity Box</span>
+      </nav>
+      <section class="hero">
+        <h1>3861. Minimum Capacity Box</h1>
+        <p><strong>練習日期：</strong>2026-03-08</p>
+        <p><strong>難度：</strong>Easy</p>
+        <p><strong>類型：</strong>Array、Weekly Contest 492</p>
+      </section>
+      <div class="article-layout">
+        <aside class="article-toc" aria-label="文章目錄">
+          <button
+            class="toc-toggle"
+            id="article-toc-toggle"
+            type="button"
+            aria-expanded="false"
+          >
+            目錄</button
+          ><strong>目錄</strong>
+          <ul>
+            <li><a href="#statement">📘 題目敘述</a></li>
+            <li><a href="#approach">🧠 解題思路</a></li>
+            <li><a href="#steps">🪜 主要流程步驟</a></li>
+            <li><a href="#complexity">⏱️ 複雜度</a></li>
+            <li><a href="#code">💻 程式碼實作</a></li>
+            <li><a href="#link">🔗 題目連結</a></li>
+          </ul>
+        </aside>
+        <section class="term-block article-content">
+          <h2 id="statement">📘 題目敘述</h2>
+          <p>
+            你會拿到一個整數陣列 <code>capacity</code>，其中
+            <code>capacity[i]</code> 代表第
+            <code>i</code> 個箱子的容量，以及一個整數
+            <code>itemSize</code> 代表物品的大小。
+          </p>
+          <p>
+            如果 <code>capacity[i] &gt;= itemSize</code>，則第
+            <code>i</code> 個箱子可以裝下該物品。
+          </p>
+          <p>
+            請回傳能裝下物品的箱子中，容量最小的那個箱子索引。如果有多個箱子容量同樣最小，回傳索引最小的那個。如果沒有任何箱子能裝下物品，回傳
+            <code>-1</code>。
+          </p>
+          <h3>條件限制</h3>
+          <ul>
+            <li><code>1 &lt;= capacity.length &lt;= 100</code></li>
+            <li><code>1 &lt;= capacity[i] &lt;= 100</code></li>
+            <li><code>1 &lt;= itemSize &lt;= 100</code></li>
+          </ul>
+          <h2 id="approach">🧠 解題思路</h2>
+          <p>
+            直接線性掃描一遍
+            <code>capacity</code>，維護目前最小可用容量與對應索引。若遇到
+            <code>capacity[i] == itemSize</code
+            >，可立刻回傳，因為這已是可行最小值。
+          </p>
+          <h3>所有變數</h3>
+          <ul>
+            <li>
+              <code>pos</code>：目前找到最小可用容量的索引，初始 <code>-1</code>
+            </li>
+            <li>
+              <code>cap</code>：目前最小可用容量，初始 <code>INT_MAX</code>
+            </li>
+          </ul>
+          <h2 id="steps">🪜 主要流程步驟</h2>
+          <h3>1. 初始化</h3>
+          <p><code>pos = -1</code>、<code>cap = INT_MAX</code>。</p>
+          <h3>2. 掃描每個箱子</h3>
+          <ul>
+            <li>
+              <code>capacity[i] == itemSize</code>：直接回傳 <code>i</code>
+            </li>
+            <li>
+              <code>capacity[i] &gt; itemSize</code>：若更小則更新
+              <code>cap</code> 與 <code>pos</code>
+            </li>
+          </ul>
+          <h3>3. 回傳答案</h3>
+          <p>掃描後回傳 <code>pos</code>。</p>
+          <h2 id="complexity">⏱️ 複雜度</h2>
+          <ul>
+            <li>時間複雜度：<code>O(n)</code></li>
+            <li>空間複雜度：<code>O(1)</code></li>
+          </ul>
+          <h2 id="code">💻 程式碼實作</h2>
+          <pre><code class="language-cpp">class Solution {
 public:
     int minimumIndex(vector&lt;int&gt;&amp; capacity, int itemSize) {
         int pos = -1;
@@ -31,7 +198,47 @@ public:
         return pos;
     }
 };</code></pre>
-<h2 id="link">🔗 題目連結</h2><p><a href="https://leetcode.com/contest/weekly-contest-492/problems/minimum-capacity-box/" target="_blank" rel="noopener noreferrer">https://leetcode.com/contest/weekly-contest-492/problems/minimum-capacity-box/</a></p>
-</section></div>
-<section class="term-block article-footer"><h2 class="article-footer__title">文章資訊</h2><div class="meta-grid"><div class="meta-field"><span class="meta-label">作者：</span><span class="meta-value">scottnick</span></div><div class="meta-field meta-field--date"><span class="meta-label">撰寫日期：</span><span class="meta-value">2026-03-08</span></div><div class="meta-field meta-field--full"><span class="meta-label">類別：</span><span class="meta-value"><span class="post-tags"><span class="post-tag">Array</span><span class="post-tag">Weekly Contest 492</span><span class="post-tag">Easy</span></span></span></div><div class="meta-field meta-field--full"><span class="meta-label">原文連結：</span><span class="meta-value">https://scottnick.github.io/cpp-notes/all%20problems/3861-minimum-capacity-box.html</span></div></div></section>
-</main><script src="../../script.js"></script></body></html>
+          <h2 id="link">🔗 題目連結</h2>
+          <p>
+            <a
+              href="https://leetcode.com/problems/minimum-capacity-box/"
+              target="_blank"
+              rel="noopener noreferrer"
+              >https://leetcode.com/problems/minimum-capacity-box/</a
+            >
+          </p>
+        </section>
+      </div>
+      <section class="term-block article-footer">
+        <h2 class="article-footer__title">文章資訊</h2>
+        <div class="meta-grid">
+          <div class="meta-field">
+            <span class="meta-label">作者：</span
+            ><span class="meta-value">scottnick</span>
+          </div>
+          <div class="meta-field meta-field--date">
+            <span class="meta-label">撰寫日期：</span
+            ><span class="meta-value">2026-03-08</span>
+          </div>
+          <div class="meta-field meta-field--full">
+            <span class="meta-label">類別：</span
+            ><span class="meta-value"
+              ><span class="post-tags"
+                ><span class="post-tag">Array</span
+                ><span class="post-tag">Weekly Contest 492</span
+                ><span class="post-tag">Easy</span></span
+              ></span
+            >
+          </div>
+          <div class="meta-field meta-field--full">
+            <span class="meta-label">原文連結：</span
+            ><span class="meta-value"
+              >https://scottnick.github.io/cpp-notes/all%20problems/3861-minimum-capacity-box.html</span
+            >
+          </div>
+        </div>
+      </section>
+    </main>
+    <script src="../../script.js"></script>
+  </body>
+</html>
