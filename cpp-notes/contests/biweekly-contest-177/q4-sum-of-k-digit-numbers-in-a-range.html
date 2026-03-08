@@ -1,13 +1,188 @@
 <!-- contests/biweekly-contest-177-q4.html: Biweekly Contest 177 Q4 -->
-<!doctype html><html lang="zh-Hant"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Q4. Sum of K-Digit Numbers in a Range</title><link rel="stylesheet" href="../../../styles.css"></head><body class="page-article"><header><nav class="navbar"><a class="brand" href="../../../personal.html">scottnick 個人網頁</a><button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button><div class="nav-links" id="nav-links"><a href="../../../index.html">主頁</a><a href="../../../courses.html">修課紀錄</a><a href="../../../cpp.html" class="active">C++學習筆記</a><a href="../../../profile.html">個人檔案</a></div><div class="nav-actions"><a class="nav-action-link" href="../../../categories.html">類別</a><button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題"><span id="theme-icon" aria-hidden="true">☀️</span></button></div></nav></header><main>
-<nav class="breadcrumb" aria-label="文章路徑"><a href="../../../cpp.html">C++學習筆記</a><span aria-hidden="true">/</span><a href="../index.html">Contests</a><span aria-hidden="true">/</span><a href="../biweekly-contest-177.html">Biweekly Contest 177</a><span aria-hidden="true">/</span><span>Q4. Sum of K-Digit Numbers in a Range</span></nav>
-<section class="hero"><h1>Q4. Sum of K-Digit Numbers in a Range</h1><p><strong>練習日期：</strong>2026-02-28</p><p><strong>難度：</strong>Hard</p><p><strong>類型：</strong>Biweekly Contest 177</p></section>
-<div class="article-layout"><aside class="article-toc" aria-label="文章目錄"><button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">目錄</button><strong>目錄</strong><ul><li><a href="#statement">📘 題目敘述</a></li><li><a href="#approach">🧠 解題思路</a></li><li><a href="#steps">🪜 主要流程步驟</a></li><li><a href="#complexity">⏱️ 複雜度</a></li><li><a href="#code">💻 程式碼實作</a></li><li><a href="#link">🔗 題目連結</a></li></ul></aside>
-<section class="term-block article-content"><h2 id="statement">📘 題目敘述</h2><p>給你三個整數 <code>l</code>、<code>r</code>、<code>k</code>。考慮所有恰好由 <code>k</code> 個數字組成，且每位數都從 <code>[l, r]</code> 選出的整數，求這些數字總和（對 <code>10^9 + 7</code> 取模）。</p><h3>條件限制</h3><ul><li><code>0 &lt;= l &lt;= r &lt;= 9</code></li><li><code>1 &lt;= k &lt;= 10^9</code></li></ul>
-<h2 id="approach">🧠 解題思路（最後TLE）</h2><p>我把總和拆成每一位的貢獻，並用三個關鍵量：</p><ul><li><code>each = (l+r) * (r-l+1) / 2</code>：單位數可選數字總和</li><li><code>every = 111...1</code>（k 個 1）：位權總和</li><li><code>comb = (r-l+1)^(k-1)</code>：固定某位時其餘位的組合數</li></ul><p>最後用 <code>ans = each * every * comb</code>（過程全程取模）得到答案；但因為我用線性迴圈跑到 <code>k</code>，在大資料會 TLE。</p><h3>所有變數</h3><ul><li><code>ans</code>：最後答案</li><li><code>c</code>：模數 <code>10^9 + 7</code></li><li><code>each</code>：<code>l..r</code> 的總和</li><li><code>every</code>：k 個 1 組成的位權和</li><li><code>comb</code>：<code>(r-l+1)^(k-1)</code></li></ul>
-<h2 id="steps">🪜 主要流程步驟</h2><h3>1. 先算 each</h3><p>用等差級數公式計算數字範圍總和。</p><hr><h3>2. 建出 every</h3><p>用 <code>every = every * 10 + 1</code> 迴圈建出 k 位 1。</p><hr><h3>3. 算 comb</h3><p>用乘法迴圈累積 <code>(r-l+1)^(k-1)</code>。</p><hr><h3>4. 相乘得到答案</h3><p>將三者相乘並取模。</p><hr><h3>5. 回傳 ans</h3><p>回傳最終結果。</p>
-<h2 id="complexity">⏱️ 複雜度</h2><ul><li>時間複雜度：<code>O(k)</code></li><li>空間複雜度：<code>O(1)</code></li></ul>
-<h2 id="code">💻 程式碼實作</h2><pre><code class="language-cpp">class Solution {
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Q4. Sum of K-Digit Numbers in a Range</title>
+    <link rel="stylesheet" href="../../../styles.css" />
+  </head>
+  <body class="page-article">
+    <header>
+      <nav class="navbar">
+        <a class="brand" href="../../../personal.html">scottnick 個人網頁</a
+        ><button
+          class="menu-btn"
+          id="menu-btn"
+          aria-label="開啟選單"
+          aria-expanded="false"
+        >
+          ☰
+        </button>
+        <div class="nav-links" id="nav-links">
+          <a href="../../../index.html">主頁</a
+          ><a href="../../../courses.html">修課紀錄</a
+          ><a href="../../../cpp.html" class="active">C++學習筆記</a
+          ><a href="../../../profile.html">個人檔案</a>
+        </div>
+        <div class="nav-actions">
+          <a class="nav-action-link" href="../../../categories.html">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              width="18"
+              height="18"
+              aria-hidden="true"
+              focusable="false"
+              style="
+                display: inline-block;
+                vertical-align: -3px;
+                margin-right: 6px;
+              "
+            >
+              <rect
+                x="4"
+                y="4"
+                width="7"
+                height="7"
+                rx="1.2"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+              ></rect>
+              <rect
+                x="13"
+                y="4"
+                width="7"
+                height="7"
+                rx="1.2"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+              ></rect>
+              <rect
+                x="4"
+                y="13"
+                width="7"
+                height="7"
+                rx="1.2"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+              ></rect>
+              <rect
+                x="13"
+                y="13"
+                width="7"
+                height="7"
+                rx="1.2"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+              ></rect>
+            </svg>
+            類別 </a
+          ><button
+            class="icon-btn toggle-btn"
+            id="theme-toggle"
+            aria-label="切換主題"
+          >
+            <span id="theme-icon" aria-hidden="true">☀️</span>
+          </button>
+        </div>
+      </nav>
+    </header>
+    <main>
+      <nav class="breadcrumb" aria-label="文章路徑">
+        <a href="../../../cpp.html">C++學習筆記</a
+        ><span aria-hidden="true">/</span><a href="../index.html">Contests</a
+        ><span aria-hidden="true">/</span
+        ><a href="../biweekly-contest-177.html">Biweekly Contest 177</a
+        ><span aria-hidden="true">/</span
+        ><span>Q4. Sum of K-Digit Numbers in a Range</span>
+      </nav>
+      <section class="hero">
+        <h1>Q4. Sum of K-Digit Numbers in a Range</h1>
+        <p><strong>練習日期：</strong>2026-02-28</p>
+        <p><strong>難度：</strong>Hard</p>
+        <p><strong>類型：</strong>Biweekly Contest 177</p>
+      </section>
+      <div class="article-layout">
+        <aside class="article-toc" aria-label="文章目錄">
+          <button
+            class="toc-toggle"
+            id="article-toc-toggle"
+            type="button"
+            aria-expanded="false"
+          >
+            目錄</button
+          ><strong>目錄</strong>
+          <ul>
+            <li><a href="#statement">📘 題目敘述</a></li>
+            <li><a href="#approach">🧠 解題思路</a></li>
+            <li><a href="#steps">🪜 主要流程步驟</a></li>
+            <li><a href="#complexity">⏱️ 複雜度</a></li>
+            <li><a href="#code">💻 程式碼實作</a></li>
+            <li><a href="#link">🔗 題目連結</a></li>
+          </ul>
+        </aside>
+        <section class="term-block article-content">
+          <h2 id="statement">📘 題目敘述</h2>
+          <p>
+            給你三個整數
+            <code>l</code>、<code>r</code>、<code>k</code>。考慮所有恰好由
+            <code>k</code> 個數字組成，且每位數都從
+            <code>[l, r]</code> 選出的整數，求這些數字總和（對
+            <code>10^9 + 7</code> 取模）。
+          </p>
+          <h3>條件限制</h3>
+          <ul>
+            <li><code>0 &lt;= l &lt;= r &lt;= 9</code></li>
+            <li><code>1 &lt;= k &lt;= 10^9</code></li>
+          </ul>
+          <h2 id="approach">🧠 解題思路（最後TLE）</h2>
+          <p>我把總和拆成每一位的貢獻，並用三個關鍵量：</p>
+          <ul>
+            <li><code>each = (l+r) * (r-l+1) / 2</code>：單位數可選數字總和</li>
+            <li><code>every = 111...1</code>（k 個 1）：位權總和</li>
+            <li><code>comb = (r-l+1)^(k-1)</code>：固定某位時其餘位的組合數</li>
+          </ul>
+          <p>
+            最後用
+            <code>ans = each * every * comb</code
+            >（過程全程取模）得到答案；但因為我用線性迴圈跑到
+            <code>k</code>，在大資料會 TLE。
+          </p>
+          <h3>所有變數</h3>
+          <ul>
+            <li><code>ans</code>：最後答案</li>
+            <li><code>c</code>：模數 <code>10^9 + 7</code></li>
+            <li><code>each</code>：<code>l..r</code> 的總和</li>
+            <li><code>every</code>：k 個 1 組成的位權和</li>
+            <li><code>comb</code>：<code>(r-l+1)^(k-1)</code></li>
+          </ul>
+          <h2 id="steps">🪜 主要流程步驟</h2>
+          <h3>1. 先算 each</h3>
+          <p>用等差級數公式計算數字範圍總和。</p>
+          <hr />
+          <h3>2. 建出 every</h3>
+          <p>用 <code>every = every * 10 + 1</code> 迴圈建出 k 位 1。</p>
+          <hr />
+          <h3>3. 算 comb</h3>
+          <p>用乘法迴圈累積 <code>(r-l+1)^(k-1)</code>。</p>
+          <hr />
+          <h3>4. 相乘得到答案</h3>
+          <p>將三者相乘並取模。</p>
+          <hr />
+          <h3>5. 回傳 ans</h3>
+          <p>回傳最終結果。</p>
+          <h2 id="complexity">⏱️ 複雜度</h2>
+          <ul>
+            <li>時間複雜度：<code>O(k)</code></li>
+            <li>空間複雜度：<code>O(1)</code></li>
+          </ul>
+          <h2 id="code">💻 程式碼實作</h2>
+          <pre><code class="language-cpp">class Solution {
 public:
     int sumOfNumbers(int l, int r, int k) {
         long long ans = 0;
@@ -30,6 +205,44 @@ public:
         return ans;
     }
 };</code></pre>
-<h2 id="link">🔗 題目連結</h2><p><a href="https://leetcode.com/contest/biweekly-contest-177/problems/sum-of-k-digit-numbers-in-a-range/">https://leetcode.com/contest/biweekly-contest-177/problems/sum-of-k-digit-numbers-in-a-range/</a></p></section></div>
-<section class="term-block article-footer"><h2 class="article-footer__title">文章資訊</h2><div class="meta-grid"><div class="meta-field"><span class="meta-label">作者：</span><span class="meta-value">scottnick</span></div><div class="meta-field meta-field--date"><span class="meta-label">撰寫日期：</span><span class="meta-value">2026-02-28</span></div><div class="meta-field meta-field--full"><span class="meta-label">類別：</span><span class="meta-value"><span class="post-tags"><span class="post-tag">Biweekly Contest 177</span><span class="post-tag">Hard</span></span></span></div><div class="meta-field meta-field--full"><span class="meta-label">原文連結：</span><span class="meta-value">https://scottnick.github.io/cpp-notes/contests/biweekly-contest-177/q4-sum-of-k-digit-numbers-in-a-range.html</span></div></div></section>
-</main><script src="../../../script.js"></script></body></html>
+          <h2 id="link">🔗 題目連結</h2>
+          <p>
+            <a
+              href="https://leetcode.com/contest/biweekly-contest-177/problems/sum-of-k-digit-numbers-in-a-range/"
+              >https://leetcode.com/contest/biweekly-contest-177/problems/sum-of-k-digit-numbers-in-a-range/</a
+            >
+          </p>
+        </section>
+      </div>
+      <section class="term-block article-footer">
+        <h2 class="article-footer__title">文章資訊</h2>
+        <div class="meta-grid">
+          <div class="meta-field">
+            <span class="meta-label">作者：</span
+            ><span class="meta-value">scottnick</span>
+          </div>
+          <div class="meta-field meta-field--date">
+            <span class="meta-label">撰寫日期：</span
+            ><span class="meta-value">2026-02-28</span>
+          </div>
+          <div class="meta-field meta-field--full">
+            <span class="meta-label">類別：</span
+            ><span class="meta-value"
+              ><span class="post-tags"
+                ><span class="post-tag">Biweekly Contest 177</span
+                ><span class="post-tag">Hard</span></span
+              ></span
+            >
+          </div>
+          <div class="meta-field meta-field--full">
+            <span class="meta-label">原文連結：</span
+            ><span class="meta-value"
+              >https://scottnick.github.io/cpp-notes/contests/biweekly-contest-177/q4-sum-of-k-digit-numbers-in-a-range.html</span
+            >
+          </div>
+        </div>
+      </section>
+    </main>
+    <script src="../../../script.js"></script>
+  </body>
+</html>

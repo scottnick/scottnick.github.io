@@ -1,26 +1,243 @@
 <!-- contests/biweekly-contest-177-q1.html: Biweekly Contest 177 Q1 -->
 <!doctype html>
 <html lang="zh-Hant">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Q1. Smallest Pair With Different Frequencies</title>
-  <link rel="stylesheet" href="../../../styles.css">
-</head>
-<body class="page-article">
-<header><nav class="navbar"><a class="brand" href="../../../personal.html">scottnick 個人網頁</a><button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button><div class="nav-links" id="nav-links"><a href="../../../index.html">主頁</a><a href="../../../courses.html">修課紀錄</a><a href="../../../cpp.html" class="active">C++學習筆記</a><a href="../../../profile.html">個人檔案</a></div><div class="nav-actions"><a class="nav-action-link" href="../../../categories.html">類別</a><button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題"><span id="theme-icon" aria-hidden="true">☀️</span></button></div></nav></header>
-<main>
-<nav class="breadcrumb" aria-label="文章路徑"><a href="../../../cpp.html">C++學習筆記</a><span aria-hidden="true">/</span><a href="../index.html">Contests</a><span aria-hidden="true">/</span><a href="../biweekly-contest-177.html">Biweekly Contest 177</a><span aria-hidden="true">/</span><span>Q1. Smallest Pair With Different Frequencies</span></nav>
-<section class="hero"><h1>Q1. Smallest Pair With Different Frequencies</h1><p><strong>練習日期：</strong>2026-02-28</p><p><strong>難度：</strong>Easy</p><p><strong>類型：</strong>Biweekly Contest 177</p></section>
-<div class="article-layout"><aside class="article-toc" aria-label="文章目錄"><button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">目錄</button><strong>目錄</strong><ul><li><a href="#statement">📘 題目敘述</a></li><li><a href="#approach">🧠 解題思路</a></li><li><a href="#steps">🪜 主要流程步驟</a></li><li><a href="#complexity">⏱️ 複雜度</a></li><li><a href="#code">💻 程式碼實作</a></li><li><a href="#link">🔗 題目連結</a></li></ul></aside>
-<section class="term-block article-content">
-<h2 id="statement">📘 題目敘述</h2><p>給你一個整數陣列 <code>nums</code>。</p><p>考慮所有由 <code>nums</code> 中不同值 <code>x</code> 和 <code>y</code> 組成的配對，並且滿足：</p><ul><li><code>x &lt; y</code></li><li><code>x</code> 和 <code>y</code> 在 <code>nums</code> 中出現的次數不同</li></ul><p>在所有符合條件的配對中，先選擇 <code>x</code> 盡可能小的那一組；如果有多組配對的 <code>x</code> 相同，則選擇 <code>y</code> 盡可能小的那一組。</p><p>請回傳整數陣列 <code>[x, y]</code>。如果不存在符合條件的配對，回傳 <code>[-1, -1]</code>。</p>
-<h3>條件限制</h3><ul><li><code>1 &lt;= nums.length &lt;= 100</code></li><li><code>1 &lt;= nums[i] &lt;= 100</code></li></ul>
-<h2 id="approach">🧠 解題思路</h2><p>我這份寫法的想法是先把每個不同數字的出現次數算出來，存成 <code>times</code> 這個 <code>vector&lt;pair&lt;int,int&gt;&gt;</code>。</p><ul><li><code>times[i].first</code> 是數字值</li><li><code>times[i].second</code> 是它的出現次數</li></ul><p>我先把 <code>nums</code> 排序，這樣我在建立 <code>times</code> 時遇到新數字會照小到大出現，最後 <code>times</code> 也會是照數字大小排序的。</p><p>建立頻率表後，我的目標是找最小的 <code>x</code>（所以直接拿 <code>times[0]</code> 當作 <code>x</code>），然後在後面找第一個頻率跟 <code>x</code> 不同的 <code>y</code>，因為 <code>times</code> 是照數值遞增，第一個找到的就是最小的 <code>y</code>。</p><p>如果整個掃完都沒有找到頻率不同的 <code>y</code>，就回傳 <code>[-1,-1]</code>。</p>
-<h3>所有變數</h3><ul><li><code>times</code>：存每個不同數字與其出現次數 <code>(value, freq)</code></li><li><code>a</code>：用來判斷某個數字是否已經出現過（避免重複新增到 times）</li><li><code>fst</code>：目前選到的 <code>x</code>（我用最小的那個數字）</li><li><code>count</code>：<code>fst</code> 的出現次數，用來和其他數字頻率比較</li></ul>
-<h2 id="steps">🪜 主要流程步驟</h2><h3>1. 先排序 nums</h3><p>我先把 <code>nums</code> 排序，確保接下來建立 <code>times</code> 時，數字會依照從小到大出現。</p><hr><h3>2. 建立 times：統計每個數字出現次數</h3><p>我掃過排序後的 <code>nums</code>：若是第一次看到就新增，若已存在就找到對應項把次數加一。</p><hr><h3>3. 固定 x 為 times[0]，因為它的值最小</h3><p>題目要最小的 <code>x</code>，而 <code>times</code> 是依照數字大小遞增，所以 <code>times[0]</code> 一定是最小值。</p><hr><h3>4. 從 times 後面找第一個頻率不同的 y</h3><p>只要遇到某個數字的頻率和 <code>count</code> 不同，直接回傳 <code>{fst, x}</code>。</p><hr><h3>5. 找不到就回傳 [-1, -1]</h3><p>如果全部數字的頻率都跟 <code>fst</code> 一樣，代表不存在符合條件的配對。</p>
-<h2 id="complexity">⏱️ 複雜度</h2><ul><li>時間複雜度：<code>O(n log n + n * u)</code></li><li>空間複雜度：<code>O(u)</code></li></ul>
-<h2 id="code">💻 程式碼實作</h2><pre><code class="language-cpp">class Solution {
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Q1. Smallest Pair With Different Frequencies</title>
+    <link rel="stylesheet" href="../../../styles.css" />
+  </head>
+  <body class="page-article">
+    <header>
+      <nav class="navbar">
+        <a class="brand" href="../../../personal.html">scottnick 個人網頁</a
+        ><button
+          class="menu-btn"
+          id="menu-btn"
+          aria-label="開啟選單"
+          aria-expanded="false"
+        >
+          ☰
+        </button>
+        <div class="nav-links" id="nav-links">
+          <a href="../../../index.html">主頁</a
+          ><a href="../../../courses.html">修課紀錄</a
+          ><a href="../../../cpp.html" class="active">C++學習筆記</a
+          ><a href="../../../profile.html">個人檔案</a>
+        </div>
+        <div class="nav-actions">
+          <a class="nav-action-link" href="../../../categories.html">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              width="18"
+              height="18"
+              aria-hidden="true"
+              focusable="false"
+              style="
+                display: inline-block;
+                vertical-align: -3px;
+                margin-right: 6px;
+              "
+            >
+              <rect
+                x="4"
+                y="4"
+                width="7"
+                height="7"
+                rx="1.2"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+              ></rect>
+              <rect
+                x="13"
+                y="4"
+                width="7"
+                height="7"
+                rx="1.2"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+              ></rect>
+              <rect
+                x="4"
+                y="13"
+                width="7"
+                height="7"
+                rx="1.2"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+              ></rect>
+              <rect
+                x="13"
+                y="13"
+                width="7"
+                height="7"
+                rx="1.2"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+              ></rect>
+            </svg>
+            類別 </a
+          ><button
+            class="icon-btn toggle-btn"
+            id="theme-toggle"
+            aria-label="切換主題"
+          >
+            <span id="theme-icon" aria-hidden="true">☀️</span>
+          </button>
+        </div>
+      </nav>
+    </header>
+    <main>
+      <nav class="breadcrumb" aria-label="文章路徑">
+        <a href="../../../cpp.html">C++學習筆記</a
+        ><span aria-hidden="true">/</span><a href="../index.html">Contests</a
+        ><span aria-hidden="true">/</span
+        ><a href="../biweekly-contest-177.html">Biweekly Contest 177</a
+        ><span aria-hidden="true">/</span
+        ><span>Q1. Smallest Pair With Different Frequencies</span>
+      </nav>
+      <section class="hero">
+        <h1>Q1. Smallest Pair With Different Frequencies</h1>
+        <p><strong>練習日期：</strong>2026-02-28</p>
+        <p><strong>難度：</strong>Easy</p>
+        <p><strong>類型：</strong>Biweekly Contest 177</p>
+      </section>
+      <div class="article-layout">
+        <aside class="article-toc" aria-label="文章目錄">
+          <button
+            class="toc-toggle"
+            id="article-toc-toggle"
+            type="button"
+            aria-expanded="false"
+          >
+            目錄</button
+          ><strong>目錄</strong>
+          <ul>
+            <li><a href="#statement">📘 題目敘述</a></li>
+            <li><a href="#approach">🧠 解題思路</a></li>
+            <li><a href="#steps">🪜 主要流程步驟</a></li>
+            <li><a href="#complexity">⏱️ 複雜度</a></li>
+            <li><a href="#code">💻 程式碼實作</a></li>
+            <li><a href="#link">🔗 題目連結</a></li>
+          </ul>
+        </aside>
+        <section class="term-block article-content">
+          <h2 id="statement">📘 題目敘述</h2>
+          <p>給你一個整數陣列 <code>nums</code>。</p>
+          <p>
+            考慮所有由 <code>nums</code> 中不同值 <code>x</code> 和
+            <code>y</code> 組成的配對，並且滿足：
+          </p>
+          <ul>
+            <li><code>x &lt; y</code></li>
+            <li>
+              <code>x</code> 和 <code>y</code> 在
+              <code>nums</code> 中出現的次數不同
+            </li>
+          </ul>
+          <p>
+            在所有符合條件的配對中，先選擇
+            <code>x</code> 盡可能小的那一組；如果有多組配對的
+            <code>x</code> 相同，則選擇 <code>y</code> 盡可能小的那一組。
+          </p>
+          <p>
+            請回傳整數陣列 <code>[x, y]</code>。如果不存在符合條件的配對，回傳
+            <code>[-1, -1]</code>。
+          </p>
+          <h3>條件限制</h3>
+          <ul>
+            <li><code>1 &lt;= nums.length &lt;= 100</code></li>
+            <li><code>1 &lt;= nums[i] &lt;= 100</code></li>
+          </ul>
+          <h2 id="approach">🧠 解題思路</h2>
+          <p>
+            我這份寫法的想法是先把每個不同數字的出現次數算出來，存成
+            <code>times</code> 這個
+            <code>vector&lt;pair&lt;int,int&gt;&gt;</code>。
+          </p>
+          <ul>
+            <li><code>times[i].first</code> 是數字值</li>
+            <li><code>times[i].second</code> 是它的出現次數</li>
+          </ul>
+          <p>
+            我先把 <code>nums</code> 排序，這樣我在建立
+            <code>times</code> 時遇到新數字會照小到大出現，最後
+            <code>times</code> 也會是照數字大小排序的。
+          </p>
+          <p>
+            建立頻率表後，我的目標是找最小的 <code>x</code>（所以直接拿
+            <code>times[0]</code> 當作
+            <code>x</code>），然後在後面找第一個頻率跟 <code>x</code> 不同的
+            <code>y</code>，因為
+            <code>times</code> 是照數值遞增，第一個找到的就是最小的
+            <code>y</code>。
+          </p>
+          <p>
+            如果整個掃完都沒有找到頻率不同的 <code>y</code>，就回傳
+            <code>[-1,-1]</code>。
+          </p>
+          <h3>所有變數</h3>
+          <ul>
+            <li>
+              <code>times</code>：存每個不同數字與其出現次數
+              <code>(value, freq)</code>
+            </li>
+            <li>
+              <code>a</code>：用來判斷某個數字是否已經出現過（避免重複新增到
+              times）
+            </li>
+            <li>
+              <code>fst</code>：目前選到的 <code>x</code>（我用最小的那個數字）
+            </li>
+            <li>
+              <code>count</code>：<code>fst</code>
+              的出現次數，用來和其他數字頻率比較
+            </li>
+          </ul>
+          <h2 id="steps">🪜 主要流程步驟</h2>
+          <h3>1. 先排序 nums</h3>
+          <p>
+            我先把 <code>nums</code> 排序，確保接下來建立
+            <code>times</code> 時，數字會依照從小到大出現。
+          </p>
+          <hr />
+          <h3>2. 建立 times：統計每個數字出現次數</h3>
+          <p>
+            我掃過排序後的
+            <code>nums</code
+            >：若是第一次看到就新增，若已存在就找到對應項把次數加一。
+          </p>
+          <hr />
+          <h3>3. 固定 x 為 times[0]，因為它的值最小</h3>
+          <p>
+            題目要最小的 <code>x</code>，而
+            <code>times</code> 是依照數字大小遞增，所以
+            <code>times[0]</code> 一定是最小值。
+          </p>
+          <hr />
+          <h3>4. 從 times 後面找第一個頻率不同的 y</h3>
+          <p>
+            只要遇到某個數字的頻率和 <code>count</code> 不同，直接回傳
+            <code>{fst, x}</code>。
+          </p>
+          <hr />
+          <h3>5. 找不到就回傳 [-1, -1]</h3>
+          <p>
+            如果全部數字的頻率都跟
+            <code>fst</code> 一樣，代表不存在符合條件的配對。
+          </p>
+          <h2 id="complexity">⏱️ 複雜度</h2>
+          <ul>
+            <li>時間複雜度：<code>O(n log n + n * u)</code></li>
+            <li>空間複雜度：<code>O(u)</code></li>
+          </ul>
+          <h2 id="code">💻 程式碼實作</h2>
+          <pre><code class="language-cpp">class Solution {
 public:
     vector&lt;int&gt; minDistinctFreqPair(vector&lt;int&gt;&amp; nums) {
         sort(nums.begin(), nums.end());
@@ -47,9 +264,44 @@ public:
         return {-1, -1};
     }
 };</code></pre>
-<h2 id="link">🔗 題目連結</h2><p><a href="https://leetcode.com/contest/biweekly-contest-177/problems/smallest-pair-with-different-frequencies/description/">https://leetcode.com/contest/biweekly-contest-177/problems/smallest-pair-with-different-frequencies/description/</a></p>
-</section></div>
-<section class="term-block article-footer"><h2 class="article-footer__title">文章資訊</h2><div class="meta-grid"><div class="meta-field"><span class="meta-label">作者：</span><span class="meta-value">scottnick</span></div><div class="meta-field meta-field--date"><span class="meta-label">撰寫日期：</span><span class="meta-value">2026-02-28</span></div><div class="meta-field meta-field--full"><span class="meta-label">類別：</span><span class="meta-value"><span class="post-tags"><span class="post-tag">Biweekly Contest 177</span><span class="post-tag">Easy</span></span></span></div><div class="meta-field meta-field--full"><span class="meta-label">原文連結：</span><span class="meta-value">https://scottnick.github.io/cpp-notes/contests/biweekly-contest-177/q1-smallest-pair-with-different-frequencies.html</span></div></div></section>
-</main><script src="../../../script.js"></script>
-</body>
+          <h2 id="link">🔗 題目連結</h2>
+          <p>
+            <a
+              href="https://leetcode.com/contest/biweekly-contest-177/problems/smallest-pair-with-different-frequencies/description/"
+              >https://leetcode.com/contest/biweekly-contest-177/problems/smallest-pair-with-different-frequencies/description/</a
+            >
+          </p>
+        </section>
+      </div>
+      <section class="term-block article-footer">
+        <h2 class="article-footer__title">文章資訊</h2>
+        <div class="meta-grid">
+          <div class="meta-field">
+            <span class="meta-label">作者：</span
+            ><span class="meta-value">scottnick</span>
+          </div>
+          <div class="meta-field meta-field--date">
+            <span class="meta-label">撰寫日期：</span
+            ><span class="meta-value">2026-02-28</span>
+          </div>
+          <div class="meta-field meta-field--full">
+            <span class="meta-label">類別：</span
+            ><span class="meta-value"
+              ><span class="post-tags"
+                ><span class="post-tag">Biweekly Contest 177</span
+                ><span class="post-tag">Easy</span></span
+              ></span
+            >
+          </div>
+          <div class="meta-field meta-field--full">
+            <span class="meta-label">原文連結：</span
+            ><span class="meta-value"
+              >https://scottnick.github.io/cpp-notes/contests/biweekly-contest-177/q1-smallest-pair-with-different-frequencies.html</span
+            >
+          </div>
+        </div>
+      </section>
+    </main>
+    <script src="../../../script.js"></script>
+  </body>
 </html>

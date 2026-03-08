@@ -1,42 +1,179 @@
 <!-- all problems/3856-trim-trailing-vowels.html: Weekly Contest 491 -->
 <!doctype html>
 <html lang="zh-Hant">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>3856. Trim Trailing Vowels</title>
-  <link rel="stylesheet" href="../../styles.css">
-</head>
-<body class="page-article">
-  <header><nav class="navbar"><a class="brand" href="../../personal.html">scottnick 個人網頁</a><button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button><div class="nav-links" id="nav-links"><a href="../../index.html">主頁</a><a href="../../courses.html">修課紀錄</a><a href="../../cpp.html" class="active">C++學習筆記</a><a href="../../profile.html">個人檔案</a></div><div class="nav-actions"><a class="nav-action-link" href="../../categories.html">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-               width="18" height="18" aria-hidden="true" focusable="false">
-            <rect x="3" y="4" width="7" height="7" rx="1.5"></rect>
-            <rect x="14" y="4" width="7" height="7" rx="1.5"></rect>
-            <rect x="3" y="15" width="7" height="7" rx="1.5"></rect>
-            <rect x="14" y="15" width="7" height="7" rx="1.5"></rect>
-          </svg>
-          <span>類別</span>
-        </a><button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題"><span id="theme-icon" aria-hidden="true">☀️</span></button></div></nav></header>
-  <main>
-    <nav class="breadcrumb" aria-label="文章路徑"><a href="../../cpp.html">C++學習筆記</a><span aria-hidden="true">/</span><a href="index.html">All problems</a><span aria-hidden="true">/</span><span>3856. Trim Trailing Vowels</span></nav>
-    <section class="hero"><h1>3856. Trim Trailing Vowels</h1><p><strong>練習日期：</strong>2026-03-01</p><p><strong>難度：</strong>Easy</p><p><strong>類型：</strong>String、Weekly Contest 491</p></section>
-    <div class="article-layout"><aside class="article-toc" aria-label="文章目錄"><button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">目錄</button><strong>目錄</strong><ul><li><a href="#statement">📘 題目敘述</a></li><li><a href="#approach">🧠 解題思路</a></li><li><a href="#steps">🪜 主要流程步驟</a></li><li><a href="#complexity">⏱️ 複雜度</a></li><li><a href="#code">💻 程式碼實作</a></li><li><a href="#link">🔗 題目連結</a></li></ul></aside>
-      <section class="term-block article-content">
-        <h2 id="statement">📘 題目敘述</h2>
-        <p>給你一個字串 <code>s</code>，它由小寫英文字母組成。</p><p>請回傳把 <code>s</code> 的所有結尾母音（trailing vowels）都移除後得到的字串。</p><p>母音包含字元 <code>'a'</code>、<code>'e'</code>、<code>'i'</code>、<code>'o'</code>、<code>'u'</code>。</p>
-        <h3>條件限制</h3><ul><li><code>1 &lt;= s.length &lt;= 100</code></li><li><code>s</code> 只包含小寫英文字母</li></ul>
-        <h2 id="approach">🧠 解題思路</h2>
-        <p>我從字串最後面往前掃描。只要目前字元是母音，就代表它是結尾母音的一部分，我就把它刪掉並繼續往前看；一旦遇到第一個不是母音的字元，就可以直接回傳目前的 <code>s</code>。</p>
-        <h3>所有變數</h3><ul><li><code>n</code>：字串 <code>s</code> 的長度</li><li><code>vol</code>：母音表，依序放 <code>'a' 'e' 'i' 'o' 'u'</code></li><li><code>i</code>：從右往左掃描 <code>s</code> 的索引</li><li><code>j</code>：掃描 <code>vol</code> 用的索引</li><li><code>check</code>：判斷 <code>s[i]</code> 是否不是母音</li></ul>
-        <h2 id="steps">🪜 主要流程步驟</h2>
-        <h3>1. 準備母音表，從字串尾端開始掃描</h3><p>先建立母音表，並讓 <code>i</code> 從 <code>n - 1</code> 走到 <code>0</code>。</p>
-        <h3>2. 檢查 <code>s[i]</code> 是不是母音</h3><p>用內層迴圈掃過母音表，若是母音就 <code>erase</code> 掉。</p>
-        <h3>3. 一旦遇到不是母音的字元就回傳</h3><p>代表結尾母音區段已處理完，直接回傳。</p>
-        <h3>4. 如果整個字串都是母音</h3><p>最後會變成空字串 <code>""</code>，直接回傳即可。</p>
-        <h2 id="complexity">⏱️ 複雜度</h2><ul><li>時間複雜度：最壞可視為 <code>O(n^2)</code></li><li>空間複雜度：<code>O(1)</code></li></ul>
-        <h2 id="code">💻 程式碼實作</h2>
-<pre><code class="language-cpp">class Solution {
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>3856. Trim Trailing Vowels</title>
+    <link rel="stylesheet" href="../../styles.css" />
+  </head>
+  <body class="page-article">
+    <header>
+      <nav class="navbar">
+        <a class="brand" href="../../personal.html">scottnick 個人網頁</a
+        ><button
+          class="menu-btn"
+          id="menu-btn"
+          aria-label="開啟選單"
+          aria-expanded="false"
+        >
+          ☰
+        </button>
+        <div class="nav-links" id="nav-links">
+          <a href="../../index.html">主頁</a
+          ><a href="../../courses.html">修課紀錄</a
+          ><a href="../../cpp.html" class="active">C++學習筆記</a
+          ><a href="../../profile.html">個人檔案</a>
+        </div>
+        <div class="nav-actions">
+          <a class="nav-action-link" href="../../categories.html">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              width="18"
+              height="18"
+              aria-hidden="true"
+              focusable="false"
+              style="
+                display: inline-block;
+                vertical-align: -3px;
+                margin-right: 6px;
+              "
+            >
+              <rect
+                x="4"
+                y="4"
+                width="7"
+                height="7"
+                rx="1.2"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+              ></rect>
+              <rect
+                x="13"
+                y="4"
+                width="7"
+                height="7"
+                rx="1.2"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+              ></rect>
+              <rect
+                x="4"
+                y="13"
+                width="7"
+                height="7"
+                rx="1.2"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+              ></rect>
+              <rect
+                x="13"
+                y="13"
+                width="7"
+                height="7"
+                rx="1.2"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+              ></rect>
+            </svg>
+            類別 </a
+          ><button
+            class="icon-btn toggle-btn"
+            id="theme-toggle"
+            aria-label="切換主題"
+          >
+            <span id="theme-icon" aria-hidden="true">☀️</span>
+          </button>
+        </div>
+      </nav>
+    </header>
+    <main>
+      <nav class="breadcrumb" aria-label="文章路徑">
+        <a href="../../cpp.html">C++學習筆記</a><span aria-hidden="true">/</span
+        ><a href="index.html">All problems</a><span aria-hidden="true">/</span
+        ><span>3856. Trim Trailing Vowels</span>
+      </nav>
+      <section class="hero">
+        <h1>3856. Trim Trailing Vowels</h1>
+        <p><strong>練習日期：</strong>2026-03-01</p>
+        <p><strong>難度：</strong>Easy</p>
+        <p><strong>類型：</strong>String、Weekly Contest 491</p>
+      </section>
+      <div class="article-layout">
+        <aside class="article-toc" aria-label="文章目錄">
+          <button
+            class="toc-toggle"
+            id="article-toc-toggle"
+            type="button"
+            aria-expanded="false"
+          >
+            目錄</button
+          ><strong>目錄</strong>
+          <ul>
+            <li><a href="#statement">📘 題目敘述</a></li>
+            <li><a href="#approach">🧠 解題思路</a></li>
+            <li><a href="#steps">🪜 主要流程步驟</a></li>
+            <li><a href="#complexity">⏱️ 複雜度</a></li>
+            <li><a href="#code">💻 程式碼實作</a></li>
+            <li><a href="#link">🔗 題目連結</a></li>
+          </ul>
+        </aside>
+        <section class="term-block article-content">
+          <h2 id="statement">📘 題目敘述</h2>
+          <p>給你一個字串 <code>s</code>，它由小寫英文字母組成。</p>
+          <p>
+            請回傳把 <code>s</code> 的所有結尾母音（trailing
+            vowels）都移除後得到的字串。
+          </p>
+          <p>
+            母音包含字元
+            <code>'a'</code
+            >、<code>'e'</code>、<code>'i'</code>、<code>'o'</code>、<code>'u'</code>。
+          </p>
+          <h3>條件限制</h3>
+          <ul>
+            <li><code>1 &lt;= s.length &lt;= 100</code></li>
+            <li><code>s</code> 只包含小寫英文字母</li>
+          </ul>
+          <h2 id="approach">🧠 解題思路</h2>
+          <p>
+            我從字串最後面往前掃描。只要目前字元是母音，就代表它是結尾母音的一部分，我就把它刪掉並繼續往前看；一旦遇到第一個不是母音的字元，就可以直接回傳目前的
+            <code>s</code>。
+          </p>
+          <h3>所有變數</h3>
+          <ul>
+            <li><code>n</code>：字串 <code>s</code> 的長度</li>
+            <li>
+              <code>vol</code>：母音表，依序放 <code>'a' 'e' 'i' 'o' 'u'</code>
+            </li>
+            <li><code>i</code>：從右往左掃描 <code>s</code> 的索引</li>
+            <li><code>j</code>：掃描 <code>vol</code> 用的索引</li>
+            <li><code>check</code>：判斷 <code>s[i]</code> 是否不是母音</li>
+          </ul>
+          <h2 id="steps">🪜 主要流程步驟</h2>
+          <h3>1. 準備母音表，從字串尾端開始掃描</h3>
+          <p>
+            先建立母音表，並讓 <code>i</code> 從 <code>n - 1</code> 走到
+            <code>0</code>。
+          </p>
+          <h3>2. 檢查 <code>s[i]</code> 是不是母音</h3>
+          <p>用內層迴圈掃過母音表，若是母音就 <code>erase</code> 掉。</p>
+          <h3>3. 一旦遇到不是母音的字元就回傳</h3>
+          <p>代表結尾母音區段已處理完，直接回傳。</p>
+          <h3>4. 如果整個字串都是母音</h3>
+          <p>最後會變成空字串 <code>""</code>，直接回傳即可。</p>
+          <h2 id="complexity">⏱️ 複雜度</h2>
+          <ul>
+            <li>時間複雜度：最壞可視為 <code>O(n^2)</code></li>
+            <li>空間複雜度：<code>O(1)</code></li>
+          </ul>
+          <h2 id="code">💻 程式碼實作</h2>
+          <pre><code class="language-cpp">class Solution {
 public:
     string trimTrailingVowels(string s) {
         int n = s.size();
@@ -57,10 +194,47 @@ public:
         return s;
     }
 };</code></pre>
-        <h2 id="link">🔗 題目連結</h2><p><a href="https://leetcode.com/problems/trim-trailing-vowels/" target="_blank" rel="noopener noreferrer">https://leetcode.com/problems/trim-trailing-vowels/</a></p>
-      </section></div>
-    <section class="term-block article-footer"><h2 class="article-footer__title">文章資訊</h2><div class="meta-grid"><div class="meta-field"><span class="meta-label">作者：</span><span class="meta-value">scottnick</span></div><div class="meta-field meta-field--date"><span class="meta-label">撰寫日期：</span><span class="meta-value">2026-03-01</span></div><div class="meta-field meta-field--full"><span class="meta-label">類別：</span><span class="meta-value"><span class="post-tags"><span class="post-tag">String</span><span class="post-tag">Weekly Contest 491</span><span class="post-tag">Easy</span></span></span></div><div class="meta-field meta-field--full"><span class="meta-label">原文連結：</span><span class="meta-value">https://scottnick.github.io/cpp-notes/all%20problems/3856-trim-trailing-vowels.html</span></div></div></section>
-  </main>
-  <script src="../../script.js"></script>
-</body>
+          <h2 id="link">🔗 題目連結</h2>
+          <p>
+            <a
+              href="https://leetcode.com/problems/trim-trailing-vowels/"
+              target="_blank"
+              rel="noopener noreferrer"
+              >https://leetcode.com/problems/trim-trailing-vowels/</a
+            >
+          </p>
+        </section>
+      </div>
+      <section class="term-block article-footer">
+        <h2 class="article-footer__title">文章資訊</h2>
+        <div class="meta-grid">
+          <div class="meta-field">
+            <span class="meta-label">作者：</span
+            ><span class="meta-value">scottnick</span>
+          </div>
+          <div class="meta-field meta-field--date">
+            <span class="meta-label">撰寫日期：</span
+            ><span class="meta-value">2026-03-01</span>
+          </div>
+          <div class="meta-field meta-field--full">
+            <span class="meta-label">類別：</span
+            ><span class="meta-value"
+              ><span class="post-tags"
+                ><span class="post-tag">String</span
+                ><span class="post-tag">Weekly Contest 491</span
+                ><span class="post-tag">Easy</span></span
+              ></span
+            >
+          </div>
+          <div class="meta-field meta-field--full">
+            <span class="meta-label">原文連結：</span
+            ><span class="meta-value"
+              >https://scottnick.github.io/cpp-notes/all%20problems/3856-trim-trailing-vowels.html</span
+            >
+          </div>
+        </div>
+      </section>
+    </main>
+    <script src="../../script.js"></script>
+  </body>
 </html>
