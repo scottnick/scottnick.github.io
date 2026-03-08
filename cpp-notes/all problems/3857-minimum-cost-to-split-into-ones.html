@@ -1,31 +1,174 @@
 <!-- all problems/3857-minimum-cost-to-split-into-ones.html: Weekly Contest 491 -->
 <!doctype html>
 <html lang="zh-Hant">
-<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>3857. Minimum Cost to Split into Ones</title><link rel="stylesheet" href="../../styles.css"></head>
-<body class="page-article">
-<header><nav class="navbar"><a class="brand" href="../../personal.html">scottnick 個人網頁</a><button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button><div class="nav-links" id="nav-links"><a href="../../index.html">主頁</a><a href="../../courses.html">修課紀錄</a><a href="../../cpp.html" class="active">C++學習筆記</a><a href="../../profile.html">個人檔案</a></div><div class="nav-actions"><a class="nav-action-link" href="../../categories.html">
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-       width="18" height="18" aria-hidden="true" focusable="false"
-       style="display:inline-block; vertical-align:-3px; margin-right:6px;">
-    <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
-    <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
-    <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
-    <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
-  </svg>
-  類別
-</a><button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題"><span id="theme-icon" aria-hidden="true">☀️</span></button></div></nav></header>
-<main>
-<nav class="breadcrumb" aria-label="文章路徑"><a href="../../cpp.html">C++學習筆記</a><span aria-hidden="true">/</span><a href="index.html">All problems</a><span aria-hidden="true">/</span><span>3857. Minimum Cost to Split into Ones</span></nav>
-<section class="hero"><h1>3857. Minimum Cost to Split into Ones</h1><p><strong>練習日期：</strong>2026-03-01</p><p><strong>難度：</strong>Medium</p><p><strong>類型：</strong>Math、Recursion、Weekly Contest 491</p></section>
-<div class="article-layout"><aside class="article-toc" aria-label="文章目錄"><button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">目錄</button><strong>目錄</strong><ul><li><a href="#statement">📘 題目敘述</a></li><li><a href="#approach">🧠 解題思路</a></li><li><a href="#steps">🪜 主要流程步驟</a></li><li><a href="#complexity">⏱️ 複雜度</a></li><li><a href="#code">💻 程式碼實作</a></li><li><a href="#link">🔗 題目連結</a></li></ul></aside>
-<section class="term-block article-content">
-<h2 id="statement">📘 題目敘述</h2><p>給你一個整數 <code>n</code>。一次操作中，你可以把整數 <code>x</code> 拆成兩個正整數 <code>a</code> 和 <code>b</code>，使得 <code>a + b = x</code>，花費是 <code>a * b</code>。請回傳把 <code>n</code> 拆成 <code>n</code> 個 <code>1</code> 的最小總花費。</p><h3>條件限制</h3><ul><li><code>1 &lt;= n &lt;= 500</code></li></ul>
-<h2 id="approach">🧠 解題思路</h2><p>我用遞迴拆分去累積花費：每次把 <code>k</code> 拆成 <code>a = k/2</code> 與 <code>b = k-a</code>，加上 <code>a*b</code> 後繼續拆。核心觀察是無論怎麼拆，總花費都會固定是 <code>n*(n-1)/2</code>，因為每一對不同的 <code>1</code> 只會在某一次被分開，且只計一次。</p>
-<h3>所有變數</h3><ul><li><code>cost</code>：累積總花費</li><li><code>split(k)</code>：把 <code>k</code> 拆到全是 1 的遞迴函式</li><li><code>a</code>、<code>b</code>：本次拆分的兩部分</li></ul>
-<h2 id="steps">🪜 主要流程步驟</h2><h3>1. 遞迴終止條件</h3><p><code>k == 1</code> 時直接回傳。</p><h3>2. 決定拆分</h3><p>令 <code>a = k/2</code>、<code>b = k-a</code>。</p><h3>3. 累加成本</h3><p>把 <code>a*b</code> 加到 <code>cost</code>。</p><h3>4. 繼續拆左右兩邊</h3><p>呼叫 <code>split(a)</code> 與 <code>split(b)</code>。</p><h3>5. 主函式回傳</h3><p><code>minCost(n)</code> 回傳 <code>cost</code>。</p>
-<h2 id="complexity">⏱️ 複雜度</h2><ul><li>時間複雜度：<code>O(n)</code></li><li>空間複雜度：<code>O(log n)</code></li></ul>
-<h2 id="code">💻 程式碼實作</h2>
-<pre><code class="language-cpp">class Solution {
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>3857. Minimum Cost to Split into Ones</title>
+    <link rel="stylesheet" href="../../styles.css" />
+  </head>
+  <body class="page-article">
+    <header>
+      <nav class="navbar">
+        <a class="brand" href="../../personal.html">scottnick 個人網頁</a
+        ><button
+          class="menu-btn"
+          id="menu-btn"
+          aria-label="開啟選單"
+          aria-expanded="false"
+        >
+          ☰
+        </button>
+        <div class="nav-links" id="nav-links">
+          <a href="../../index.html">主頁</a
+          ><a href="../../courses.html">修課紀錄</a
+          ><a href="../../cpp.html" class="active">C++學習筆記</a
+          ><a href="../../profile.html">個人檔案</a>
+        </div>
+        <div class="nav-actions">
+          <a class="nav-action-link" href="../../categories.html">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              width="18"
+              height="18"
+              aria-hidden="true"
+              focusable="false"
+              style="
+                display: inline-block;
+                vertical-align: -3px;
+                margin-right: 6px;
+              "
+            >
+              <rect
+                x="4"
+                y="4"
+                width="7"
+                height="7"
+                rx="1.2"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+              ></rect>
+              <rect
+                x="13"
+                y="4"
+                width="7"
+                height="7"
+                rx="1.2"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+              ></rect>
+              <rect
+                x="4"
+                y="13"
+                width="7"
+                height="7"
+                rx="1.2"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+              ></rect>
+              <rect
+                x="13"
+                y="13"
+                width="7"
+                height="7"
+                rx="1.2"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+              ></rect>
+            </svg>
+            類別 </a
+          ><button
+            class="icon-btn toggle-btn"
+            id="theme-toggle"
+            aria-label="切換主題"
+          >
+            <span id="theme-icon" aria-hidden="true">☀️</span>
+          </button>
+        </div>
+      </nav>
+    </header>
+    <main>
+      <nav class="breadcrumb" aria-label="文章路徑">
+        <a href="../../cpp.html">C++學習筆記</a><span aria-hidden="true">/</span
+        ><a href="index.html">All problems</a><span aria-hidden="true">/</span
+        ><span>3857. Minimum Cost to Split into Ones</span>
+      </nav>
+      <section class="hero">
+        <h1>3857. Minimum Cost to Split into Ones</h1>
+        <p><strong>練習日期：</strong>2026-03-01</p>
+        <p><strong>難度：</strong>Medium</p>
+        <p><strong>類型：</strong>Math、Recursion、Weekly Contest 491</p>
+      </section>
+      <div class="article-layout">
+        <aside class="article-toc" aria-label="文章目錄">
+          <button
+            class="toc-toggle"
+            id="article-toc-toggle"
+            type="button"
+            aria-expanded="false"
+          >
+            目錄</button
+          ><strong>目錄</strong>
+          <ul>
+            <li><a href="#statement">📘 題目敘述</a></li>
+            <li><a href="#approach">🧠 解題思路</a></li>
+            <li><a href="#steps">🪜 主要流程步驟</a></li>
+            <li><a href="#complexity">⏱️ 複雜度</a></li>
+            <li><a href="#code">💻 程式碼實作</a></li>
+            <li><a href="#link">🔗 題目連結</a></li>
+          </ul>
+        </aside>
+        <section class="term-block article-content">
+          <h2 id="statement">📘 題目敘述</h2>
+          <p>
+            給你一個整數 <code>n</code>。一次操作中，你可以把整數
+            <code>x</code> 拆成兩個正整數 <code>a</code> 和 <code>b</code>，使得
+            <code>a + b = x</code>，花費是 <code>a * b</code>。請回傳把
+            <code>n</code> 拆成 <code>n</code> 個 <code>1</code> 的最小總花費。
+          </p>
+          <h3>條件限制</h3>
+          <ul>
+            <li><code>1 &lt;= n &lt;= 500</code></li>
+          </ul>
+          <h2 id="approach">🧠 解題思路</h2>
+          <p>
+            我用遞迴拆分去累積花費：每次把 <code>k</code> 拆成
+            <code>a = k/2</code> 與 <code>b = k-a</code>，加上
+            <code>a*b</code> 後繼續拆。核心觀察是無論怎麼拆，總花費都會固定是
+            <code>n*(n-1)/2</code>，因為每一對不同的
+            <code>1</code> 只會在某一次被分開，且只計一次。
+          </p>
+          <h3>所有變數</h3>
+          <ul>
+            <li><code>cost</code>：累積總花費</li>
+            <li>
+              <code>split(k)</code>：把 <code>k</code> 拆到全是 1 的遞迴函式
+            </li>
+            <li><code>a</code>、<code>b</code>：本次拆分的兩部分</li>
+          </ul>
+          <h2 id="steps">🪜 主要流程步驟</h2>
+          <h3>1. 遞迴終止條件</h3>
+          <p><code>k == 1</code> 時直接回傳。</p>
+          <h3>2. 決定拆分</h3>
+          <p>令 <code>a = k/2</code>、<code>b = k-a</code>。</p>
+          <h3>3. 累加成本</h3>
+          <p>把 <code>a*b</code> 加到 <code>cost</code>。</p>
+          <h3>4. 繼續拆左右兩邊</h3>
+          <p>呼叫 <code>split(a)</code> 與 <code>split(b)</code>。</p>
+          <h3>5. 主函式回傳</h3>
+          <p><code>minCost(n)</code> 回傳 <code>cost</code>。</p>
+          <h2 id="complexity">⏱️ 複雜度</h2>
+          <ul>
+            <li>時間複雜度：<code>O(n)</code></li>
+            <li>空間複雜度：<code>O(log n)</code></li>
+          </ul>
+          <h2 id="code">💻 程式碼實作</h2>
+          <pre><code class="language-cpp">class Solution {
 public:
     int cost = 0;
     void split(int k) {
@@ -43,10 +186,48 @@ public:
         return cost;
     }
 };</code></pre>
-<h2 id="link">🔗 題目連結</h2><p><a href="https://leetcode.com/problems/minimum-cost-to-split-into-ones/" target="_blank" rel="noopener noreferrer">https://leetcode.com/problems/minimum-cost-to-split-into-ones/</a></p>
-</section></div>
-<section class="term-block article-footer"><h2 class="article-footer__title">文章資訊</h2><div class="meta-grid"><div class="meta-field"><span class="meta-label">作者：</span><span class="meta-value">scottnick</span></div><div class="meta-field meta-field--date"><span class="meta-label">撰寫日期：</span><span class="meta-value">2026-03-01</span></div><div class="meta-field meta-field--full"><span class="meta-label">類別：</span><span class="meta-value"><span class="post-tags"><span class="post-tag">Math</span><span class="post-tag">Recursion</span><span class="post-tag">Weekly Contest 491</span><span class="post-tag">Medium</span></span></span></div><div class="meta-field meta-field--full"><span class="meta-label">原文連結：</span><span class="meta-value">https://scottnick.github.io/cpp-notes/all%20problems/3857-minimum-cost-to-split-into-ones.html</span></div></div></section>
-</main>
-<script src="../../script.js"></script>
-</body>
+          <h2 id="link">🔗 題目連結</h2>
+          <p>
+            <a
+              href="https://leetcode.com/problems/minimum-cost-to-split-into-ones/"
+              target="_blank"
+              rel="noopener noreferrer"
+              >https://leetcode.com/problems/minimum-cost-to-split-into-ones/</a
+            >
+          </p>
+        </section>
+      </div>
+      <section class="term-block article-footer">
+        <h2 class="article-footer__title">文章資訊</h2>
+        <div class="meta-grid">
+          <div class="meta-field">
+            <span class="meta-label">作者：</span
+            ><span class="meta-value">scottnick</span>
+          </div>
+          <div class="meta-field meta-field--date">
+            <span class="meta-label">撰寫日期：</span
+            ><span class="meta-value">2026-03-01</span>
+          </div>
+          <div class="meta-field meta-field--full">
+            <span class="meta-label">類別：</span
+            ><span class="meta-value"
+              ><span class="post-tags"
+                ><span class="post-tag">Math</span
+                ><span class="post-tag">Recursion</span
+                ><span class="post-tag">Weekly Contest 491</span
+                ><span class="post-tag">Medium</span></span
+              ></span
+            >
+          </div>
+          <div class="meta-field meta-field--full">
+            <span class="meta-label">原文連結：</span
+            ><span class="meta-value"
+              >https://scottnick.github.io/cpp-notes/all%20problems/3857-minimum-cost-to-split-into-ones.html</span
+            >
+          </div>
+        </div>
+      </section>
+    </main>
+    <script src="../../script.js"></script>
+  </body>
 </html>
