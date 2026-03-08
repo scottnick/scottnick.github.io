@@ -1,6 +1,6 @@
 {
-  "buildId": "20260308055856",
-  "generatedAt": "2026-03-08T05:58:56.090810Z",
+  "buildId": "20260308075213",
+  "generatedAt": "2026-03-08T07:52:13.961859Z",
   "posts": [
     {
       "path": "courses.html",
@@ -245,7 +245,7 @@
     {
       "path": "cpp-notes/all%20problems/3858-minimum-bitwise-or-from-grid.html",
       "title": "3858. Minimum Bitwise OR From Grid",
-      "date": "2026-03-07",
+      "date": "2026-03-01",
       "tags": [
         "Bit Manipulation",
         "Dynamic Programming",
@@ -2589,7 +2589,7 @@
     {
       "path": "cpp-notes/contests/weekly-contest-491/q3-minimum-bitwise-or-from-grid.html",
       "title": "Q3. Minimum Bitwise OR From Grid",
-      "date": "2026-03-07",
+      "date": "2026-03-01",
       "tags": [
         "Weekly Contest 491",
         "Medium"
