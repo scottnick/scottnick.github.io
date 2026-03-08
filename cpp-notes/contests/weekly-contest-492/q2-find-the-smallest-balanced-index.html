@@ -1,0 +1,57 @@
+<!-- contests/weekly-contest-492-q2.-find-the-smallest-balanced-index.html: Weekly Contest 492 -->
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Q2. Find the Smallest Balanced Index</title>
+    <link rel="stylesheet" href="../../../styles.css" />
+  </head>
+  <body class="page-article">
+    <header><nav class="navbar"><a class="brand" href="../../../personal.html">scottnick 個人網頁</a><button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button><div class="nav-links" id="nav-links"><a href="../../../index.html">主頁</a><a href="../../../courses.html">修課紀錄</a><a href="../../../cpp.html" class="active">C++學習筆記</a><a href="../../../profile.html">個人檔案</a></div><div class="nav-actions"><a class="nav-action-link" href="../../../categories.html">類別</a><button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題"><span id="theme-icon" aria-hidden="true">☀️</span></button></div></nav></header>
+    <main>
+      <nav class="breadcrumb" aria-label="文章路徑"><a href="../../../cpp.html">C++學習筆記</a><span aria-hidden="true">/</span><a href="../index.html">Contests</a><span aria-hidden="true">/</span><a href="../weekly-contest-492.html">Weekly Contest 492</a><span aria-hidden="true">/</span><span>Q2. Find the Smallest Balanced Index</span></nav>
+      <section class="hero"><h1>Q2. Find the Smallest Balanced Index</h1><p><strong>練習日期：</strong>2026-03-08</p><p><strong>難度：</strong>Medium</p><p><strong>類型：</strong>Weekly Contest 492</p></section>
+      <div class="article-layout"><aside class="article-toc" aria-label="文章目錄"><button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">目錄</button><strong>目錄</strong><ul><li><a href="#statement">📘 題目敘述</a></li><li><a href="#approach">🧠 解題思路</a></li><li><a href="#steps">🪜 主要流程步驟</a></li><li><a href="#complexity">⏱️ 複雜度</a></li><li><a href="#code">💻 程式碼實作</a></li><li><a href="#link">🔗 題目連結</a></li></ul></aside><section class="term-block article-content">
+<h2 id="statement">📘 題目敘述</h2>
+<p>你會拿到一個整數陣列 <code>nums</code>。索引 <code>i</code> 是 balanced 當且僅當：左邊元素總和等於右邊元素乘積。左側空集合總和視為 <code>0</code>，右側空集合乘積視為 <code>1</code>。</p>
+<p>請回傳最小 balanced index，不存在則回傳 <code>-1</code>。</p>
+<h3>條件限制</h3><ul><li><code>1 &lt;= nums.length &lt;= 10^5</code></li><li><code>1 &lt;= nums[i] &lt;= 10^9</code></li></ul>
+<h2 id="approach">🧠 解題思路</h2><p>維護兩個累積量：<code>l</code>（左側總和）與 <code>r</code>（右側乘積）。先計算總和後，從右往左推進，每一步都可 <code>O(1)</code> 檢查是否平衡。</p><p>另外加入剪枝：若 <code>r &gt; l</code>，後續只會更不可能相等，可直接回傳 <code>-1</code>。</p>
+<h3>所有變數</h3><ul><li><code>l</code>：左側總和</li><li><code>r</code>：右側乘積</li><li><code>n</code>：陣列長度</li></ul>
+<h2 id="steps">🪜 主要流程步驟</h2><h3>1. 邊界處理</h3><p><code>nums.size() &lt;= 1</code> 時直接回傳 <code>-1</code>。</p><h3>2. 初始化 l/r</h3><p>先把所有元素加總到 <code>l</code>，<code>r</code> 初始為 <code>1</code>，並先檢查 index <code>n-1</code>。</p><h3>3. 從右往左更新並檢查</h3><p>每次更新 <code>r *= nums[j]</code> 與 <code>l -= nums[j-1]</code>，比較 <code>l == r</code>，若成立回傳對應索引。</p><h3>4. 未找到則回傳</h3><p>依目前程式碼最後回傳 <code>l</code>。</p>
+<h2 id="complexity">⏱️ 複雜度</h2><ul><li>時間複雜度：<code>O(n)</code></li><li>空間複雜度：<code>O(1)</code></li></ul>
+<h2 id="code">💻 程式碼實作</h2><pre><code class="language-cpp">class Solution {
+public:
+    int smallestBalancedIndex(vector&lt;int&gt;&amp; nums) {
+        if (nums.size() &lt;= 1) {
+            return -1;
+        }
+        long long l = 0, r = 1;
+        for (int i : nums) {
+            l += i;
+        }
+        int n = nums.size();
+        l -= nums[n - 1];
+        if (l == r) {
+            return n - 1;
+        }
+        for (int j = n - 1; j &gt; 0; j--) {
+            r *= nums[j];
+            l -= nums[j - 1];
+            if (l == r) {
+                return j - 1;
+            } else if (r &gt; l) {
+                return -1;
+            }
+        }
+        return l;
+    }
+};</code></pre>
+<h2 id="link">🔗 題目連結</h2><p><a href="https://leetcode.com/contest/weekly-contest-492/problems/find-the-smallest-balanced-index/" target="_blank" rel="noopener noreferrer">https://leetcode.com/contest/weekly-contest-492/problems/find-the-smallest-balanced-index/</a></p>
+</section></div>
+      <section class="term-block article-footer"><h2 class="article-footer__title">文章資訊</h2><div class="meta-grid"><div class="meta-field"><span class="meta-label">作者：</span><span class="meta-value">scottnick</span></div><div class="meta-field meta-field--date"><span class="meta-label">撰寫日期：</span><span class="meta-value">2026-03-08</span></div><div class="meta-field meta-field--full"><span class="meta-label">類別：</span><span class="meta-value"><span class="post-tags"><span class="post-tag">Weekly Contest 492</span><span class="post-tag">Medium</span></span></span></div><div class="meta-field meta-field--full"><span class="meta-label">原文連結：</span><span class="meta-value">https://scottnick.github.io/cpp-notes/contests/weekly-contest-492/q2-find-the-smallest-balanced-index.html</span></div></div></section>
+    </main>
+    <script src="../../../script.js"></script>
+  </body>
+</html>
