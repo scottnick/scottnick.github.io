@@ -1,0 +1,45 @@
+<!-- all problems/3858-minimum-bitwise-or-from-grid.html: Weekly Contest 491 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>3858. Minimum Bitwise OR From Grid</title><link rel="stylesheet" href="../../styles.css"></head>
+<body class="page-article">
+<header><nav class="navbar"><a class="brand" href="../../personal.html">scottnick 個人網頁</a><button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button><div class="nav-links" id="nav-links"><a href="../../index.html">主頁</a><a href="../../courses.html">修課紀錄</a><a href="../../cpp.html" class="active">C++學習筆記</a><a href="../../profile.html">個人檔案</a></div><div class="nav-actions"><a class="nav-action-link" href="../../categories.html">類別</a><button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題"><span id="theme-icon" aria-hidden="true">☀️</span></button></div></nav></header>
+<main>
+<nav class="breadcrumb" aria-label="文章路徑"><a href="../../cpp.html">C++學習筆記</a><span aria-hidden="true">/</span><a href="index.html">All problems</a><span aria-hidden="true">/</span><span>3858. Minimum Bitwise OR From Grid</span></nav>
+<section class="hero"><h1>3858. Minimum Bitwise OR From Grid</h1><p><strong>練習日期：</strong>2026-03-07</p><p><strong>難度：</strong>Medium</p><p><strong>類型：</strong>Bit Manipulation、Dynamic Programming、Weekly Contest 491</p></section>
+<div class="article-layout"><aside class="article-toc" aria-label="文章目錄"><button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">目錄</button><strong>目錄</strong><ul><li><a href="#statement">📘 題目敘述</a></li><li><a href="#approach">🧠 解題思路</a></li><li><a href="#steps">🪜 主要流程步驟</a></li><li><a href="#complexity">⏱️ 複雜度</a></li><li><a href="#code">💻 程式碼實作</a></li><li><a href="#link">🔗 題目連結</a></li></ul></aside>
+<section class="term-block article-content">
+<h2 id="statement">📘 題目敘述</h2><p>你會拿到一個大小為 <code>m x n</code> 的 2D 整數陣列 <code>grid</code>。你必須每一列剛好選出一個整數，回傳全部選值做 bitwise OR 後的最小可能值。</p><h3>條件限制</h3><ul><li><code>1 &lt;= m == grid.length &lt;= 10^5</code></li><li><code>1 &lt;= n == grid[i].length &lt;= 10^5</code></li><li><code>m * n &lt;= 10^5</code></li><li><code>1 &lt;= grid[i][j] &lt;= 10^5</code></li></ul>
+<h2 id="approach">🧠 解題思路</h2><p>我把「處理到第 i 列的所有可能 OR 值」存成集合。初始為 <code>{0}</code>，每加入一列就把上一輪集合中的每個值，和本列每個數做 OR，形成新集合。最後集合裡的最小值就是答案。</p>
+<h3>所有變數</h3><ul><li><code>s</code>：目前所有可能 OR 結果集合</li><li><code>ns</code>：下一列的新集合</li><li><code>ans</code>：最終最小 OR 值</li></ul>
+<h2 id="steps">🪜 主要流程步驟</h2><h3>1. 初始化</h3><p><code>s = {0}</code>。</p><h3>2. 逐列做狀態轉移</h3><p>枚舉 <code>s</code> 與當列所有數，將 <code>x | y</code> 放進 <code>ns</code>，再令 <code>s = ns</code>。</p><h3>3. 取最小值</h3><p>掃過最後的 <code>s</code> 取最小值。</p>
+<h2 id="complexity">⏱️ 複雜度</h2><ul><li>時間複雜度：概念上 <code>O(m * n * U)</code></li><li>空間複雜度：<code>O(U)</code></li></ul>
+<h2 id="code">💻 程式碼實作</h2>
+<pre><code class="language-cpp">class Solution {
+public:
+    int minimumOR(vector&lt;vector&lt;int&gt;&gt;&amp; grid) {
+        unordered_set&lt;int&gt; s;
+        s.insert(0);
+        for (auto&amp; a : grid) {
+            unordered_set&lt;int&gt; ns;
+            for (int x : s) {
+                for (int y : a) {
+                    ns.insert(x | y);
+                }
+            }
+            s = ns;
+        }
+        int ans = INT_MAX;
+        for (int z : s) {
+            ans = min(ans, z);
+        }
+        return ans;
+    }
+};</code></pre>
+<h2 id="link">🔗 題目連結</h2><p><a href="https://leetcode.com/contest/weekly-contest-491/problems/minimum-bitwise-or-from-grid/" target="_blank" rel="noopener noreferrer">https://leetcode.com/contest/weekly-contest-491/problems/minimum-bitwise-or-from-grid/</a></p>
+</section></div>
+<section class="term-block article-footer"><h2 class="article-footer__title">文章資訊</h2><div class="meta-grid"><div class="meta-field"><span class="meta-label">作者：</span><span class="meta-value">scottnick</span></div><div class="meta-field meta-field--date"><span class="meta-label">撰寫日期：</span><span class="meta-value">2026-03-07</span></div><div class="meta-field meta-field--full"><span class="meta-label">類別：</span><span class="meta-value"><span class="post-tags"><span class="post-tag">Bit Manipulation</span><span class="post-tag">Dynamic Programming</span><span class="post-tag">Weekly Contest 491</span><span class="post-tag">Medium</span></span></span></div><div class="meta-field meta-field--full"><span class="meta-label">原文連結：</span><span class="meta-value">https://scottnick.github.io/cpp-notes/all%20problems/3858-minimum-bitwise-or-from-grid.html</span></div></div></section>
+</main>
+<script src="../../script.js"></script>
+</body>
+</html>
