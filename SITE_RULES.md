@@ -41,6 +41,27 @@
 2. 修改後能指出本次改動對應的法律條文（可引用條號）
 3. 若未符合任何一條「必遵守」：必須撤回或修到符合為止
 
+### 0.6（新增法律）模板類修改的跨檔案一致性驗收（必做）
+
+* 只要本次修改涉及以下任一項：
+
+  * header / banner
+  * breadcrumb
+  * 類別按鈕（`.nav-action-link`）
+  * 題目連結格式
+  * 文章日期規則
+  * metadata / 類型 / 難度顯示
+  * TOC 模板
+  * 文章資訊卡模板
+* 就不得只修改單一頁面後直接視為完成。
+* 必須至少做：
+
+  1. **同類型頁面全掃描**
+  2. **同資料夾內頁面比對**
+  3. **舊模板殘留檢查**
+  4. **對應 all problems / contests 雙版本檢查（若適用）**
+* 若仍存在舊格式殘留，則本次模板修改視為未完成。
+
 ---
 
 ## 1) 類別系統（Categories / Index）總原則（全站規則）
@@ -141,11 +162,46 @@
   * **一定要有：文章資訊方塊（文章資訊卡）**
 * 缺一不可，除非我明確要求「其他格式」
 
-### 3.4 驗收條件（必做）
+### 3.4（新增法律）單篇文章頁上方 header / banner 模板必須統一
+
+* 所有**單篇文章頁**的上方 header / banner 模板必須一致。
+* 這裡的「一致」包含但不限於：
+
+  * site header 外觀與結構
+  * breadcrumb 容器
+  * hero 區塊主要結構
+  * 右上角「類別」按鈕 `.nav-action-link`
+  * icon 結構與文字格式
+* **只允許的差異**：
+
+  1. 路徑層級差異（例如 `../../` 與 `../../../`）
+  2. breadcrumb 因資料夾不同而產生的路徑文字差異
+* 不允許的差異（明確禁止）：
+
+  * 有的頁面只有純文字 `類別`
+  * 有的頁面用另一套 SVG icon
+  * 有的頁面用 `<span>類別</span>`、有的直接寫 `類別`
+  * 有的頁面 header 結構與其他文章頁不同
+* 規則本質：
+  **單篇文章頁模板要以「主流正確模板」為唯一標準，不得混用多套版本。**
+
+### 3.5（新增法律）模板一致性不只看畫面，也看 HTML 結構
+
+* 所謂「同模板」，不只是肉眼看起來差不多。
+* 若屬於同一模板的頁面，其 HTML 結構應盡量一致，尤其是：
+
+  * `.nav-action-link`
+  * breadcrumb
+  * hero 區塊
+  * article meta 容器
+* 禁止只做到「視覺近似」但底層 HTML 明顯不同。
+
+### 3.6 驗收條件（必做）
 
 1. 新增的頁面符合「文章頁定義」（內文 + TOC + 文章資訊方塊）
 2. 文章頁面包含 `.post-tag`，且可被 `site-index.json` 收錄
-3. 不符合者不得稱為「新增文章」，必須補齊結構
+3. 單篇文章頁的上方 header / banner 模板符合全站主流模板
+4. 不符合者不得稱為「新增文章」，必須補齊結構
 
 ---
 
@@ -206,18 +262,76 @@
 * 題單版本與 all problems 版本「允許不同」的只有：
 
   1. 檔案路徑（folder / URL 不同）
-  2. breadcrumb/站內導覽（因路徑不同而不同）
+  2. breadcrumb / 站內導覽（因路徑不同而不同）
   3. 文章資訊區塊中的「原文連結」（permalink 必須指向各自頁面的永久網址）
 * 不允許的差異（明確禁止）：
 
   * 因為換資料夾就改寫內容、改標題層級、增刪段落、重排原稿
 * 完成補充新增後，仍必須依第 6 節更新 `site-index.json` 並完成驗收。
 
-### 4.5 驗收條件（必做）
+### 4.5（新增法律）LeetCode 題目連結格式必須依資料夾語境分流
+
+#### 4.5.1 all problems 規則（必遵守）
+
+* 放在 `cpp-notes/all problems/` 的 C++ 題解文章：
+  `## 🔗 題目連結` 一律使用：
+
+```text
+https://leetcode.com/problems/<slug>/
+````
+
+* 明確禁止：
+
+  * `/description/`
+  * `/contest/weekly-contest-xxx/problems/...`
+  * `/contest/biweekly-contest-xxx/problems/...`
+
+#### 4.5.2 contests 規則（必遵守）
+
+* 放在 `cpp-notes/contests/weekly-contest-xxx/` 或 `cpp-notes/contests/biweekly-contest-xxx/` 的題解文章：
+  `## 🔗 題目連結` 必須使用對應 contest URL：
+
+```text
+https://leetcode.com/contest/weekly-contest-xxx/problems/<slug>/
+```
+
+或
+
+```text
+https://leetcode.com/contest/biweekly-contest-xxx/problems/<slug>/
+```
+
+#### 4.5.3 同題雙版本規則
+
+* 同一題若同時存在：
+
+  * `all problems` 版本
+  * `contests` 版本
+* 則兩份文章的題目連結**可以不同**，
+  但必須各自符合所在資料夾規則。
+* 也就是：
+
+  * `all problems` → `/problems/<slug>/`
+  * `contests` → `/contest/.../problems/<slug>/`
+
+### 4.6（新增法律）同場 Contest 題解日期一致性
+
+* 同一場 contest 產生的多篇題解文章，若無另外指定，日期應一致。
+* 若同一場 contest 的題目同時有：
+
+  * `all problems` 版本
+  * `contests` 版本
+* 且屬於同次整理，日期也應一致。
+* 僅在我明確指定某篇不同日期時，才可例外。
+
+### 4.7 驗收條件（必做）
 
 1. 新增 C++ 題解時：all problems 必定收錄（除非你明確免除）
 2. 題單補收錄時：題單版本與 all problems 版本內文完全一致（僅允許 4.4 所列差異）
 3. 若 all problems 已存在同題號：不得重複新增 all problems
+4. `all problems` 題目連結符合 `/problems/<slug>/`
+5. `contests` 題目連結符合 `/contest/.../problems/<slug>/`
+6. 同場 contest 多篇日期一致（除非我明確指定例外）
 
 ---
 
@@ -588,7 +702,7 @@ public:
 ### 10.0 最高優先級規則（必遵守）
 
 * **我上船的格式請完全遵守，不要自己刪除文字或修正。**
-* 我提供的「題目連結」必須照貼（LeetCode 原題 URL）
+* 我提供的「題目連結」必須照貼（LeetCode 原題 URL），但若屬於第 4.5 與第 11 節規則規定的雙版本情境，則必須依資料夾語境分流。
 * `練習日期 / 難度 / 類型` 依照 LeetCode 題目資訊與我練習當天為準（若我輸入不同，則以我的輸入為準）
 
 ### 10.1 每篇 C++ 題解文章必備段落（必遵守）
@@ -669,8 +783,12 @@ public:
 
 ### 10.8 題目連結（必遵守）
 
-* `## 🔗 題目連結` 必須照貼我提供的 LeetCode 原題 URL
-* 不得換短網址、不得改成其他頁面、不得加追蹤參數
+* `## 🔗 題目連結` 必須符合第 4.5 與第 11 節的資料夾語境規則。
+* 也就是：
+
+  * `all problems` → `https://leetcode.com/problems/<slug>/`
+  * `contests` → `https://leetcode.com/contest/.../problems/<slug>/`
+* 不得換短網址、不得加追蹤參數、不得混用不同資料夾的 URL 形式。
 
 ### 10.9 文章結尾仍需補上網站固定「文章資訊區塊」（必遵守）
 
@@ -734,7 +852,7 @@ all problems 版本的文章必須符合：
 * 題目編號：使用 **LeetCode 官方數字題號**（例如 `3828`、`3833`）
 * 標題命名：以 `題號-英文題名`（沿用 all problems 既有命名規則）
 * **必須顯示難度**（文章資訊區塊中要有 Easy/Medium/Hard）
-* `## 🔗 題目連結` 必須使用 **problems 連結**（LeetCode 的 `/problems/.../description/` 形式）
+* `## 🔗 題目連結` 必須使用 **problems 連結**（LeetCode 的 `/problems/<slug>/` 形式）
 
 ### 11.4（補充，依你最新回答）雙版本的「內文一致性」原則
 
@@ -749,17 +867,23 @@ all problems 版本的文章必須符合：
       必須依本條規則分流，不得混用
 * contests 文章仍要進 `site-index.json`（之後可能需要 count / 檢索），但不代表一定要顯示在 C++ scope 的類別文章清單中（見第 2 節與第 6.4）
 
-### 11.5 驗收條件（必做）
+### 11.5（新增法律）同場 Contest 日期一致性
+
+* 同一場 contest 內的多篇文章，若無另外指定，日期必須一致。
+* 若同一題同時有 contests / all problems 版本，且屬於同次整理，日期也應一致。
+
+### 11.6 驗收條件（必做）
 
 新增 Contest 題解後必須確認：
 
 1. contests 資料夾存在對應的 `Q1~Q4` 文章（題號為 Q）
 2. all problems 資料夾存在對應的官方題號文章（題號為數字）
 3. contests 文章的題目連結是 `/contest/.../problems/...`
-4. all problems 文章的題目連結是 `/problems/.../description/`
+4. all problems 文章的題目連結是 `/problems/<slug>/`
 5. contests 文章不出現難度；all problems 文章必須出現難度
-6. 兩份文章皆符合第 9 節與第 10 節的「原稿不得增刪改」規則
-7. 依第 6.2 / 6.3 規則更新 `site-index.json` 並完成驗收
+6. 同場 contest 多篇日期一致（除非我明確指定例外）
+7. 兩份文章皆符合第 9 節與第 10 節的「原稿不得增刪改」規則
+8. 依第 6.2 / 6.3 規則更新 `site-index.json` 並完成驗收
 
 ---
 
@@ -806,10 +930,110 @@ all problems 版本的文章必須符合：
 3. active 分頁按鈕可清楚辨識
 4. categories.html 的相關文章命中只依 title（不得混入 tags 等條件）
 
+---
+
 ## 13) LeetCode Topics 規則
 
-1) 每篇 LeetCode 題解文章的 Topics 必須以 LeetCode 官方 topicTags 為準（本次以 TOPICS_MAP 作為一次性來源）。
-2) Topics 必須完整且順序與官方一致。
-3) 上方「類型」與底部 post-tag 必須同步一致。
-4) Difficulty（Easy/Medium/Hard）不是 topic，但要保留並固定放最後（若原文沒有 difficulty，不可硬加）。
-5) contests 規則不同：不顯示難度，且此次不改 contests。
+1. 每篇 LeetCode 題解文章的 Topics 必須以 LeetCode 官方 topicTags 為準（本次以 TOPICS_MAP 作為一次性來源）。
+2. Topics 必須完整且順序與官方一致。
+3. 上方「類型」與底部 post-tag 必須同步一致。
+4. Difficulty（Easy/Medium/Hard）不是 topic，但要保留並固定放最後（若原文沒有 difficulty，不可硬加）。
+5. contests 規則不同：不顯示難度，且此次不改 contests。
+
+---
+
+## 14)（新增法律）單篇文章頁 HTML 原始碼排版與可維護性規則
+
+> 目的：避免畫面雖然正常，但 HTML 原始碼被壓成一坨，導致後續維護、比對 diff、人工檢查都困難。
+
+### 14.1 HTML 修改後必須保持可讀排版
+
+* 任何 HTML 檔修改後，原始碼必須保持可讀性。
+* 不得故意將大量結構壓成單行或難以維護的一坨。
+
+### 14.2 必須正常分行與縮排的區塊
+
+以下區塊在修改後，必須維持正常換行與縮排：
+
+* `<!doctype html>`
+* `<html>`
+* `<head>`
+* `<body>`
+* `<header>`
+* `<nav>`
+* `<main>`
+* `<section>`
+* `<aside>`
+* `breadcrumb`
+* `hero`
+* `article-layout`
+* `article-content`
+* `article-footer`
+* `meta-grid`
+* `meta-field`
+
+### 14.3 `<pre><code>` 區塊不得被排版工具破壞
+
+* 可以整理 `<pre><code>` 的外層縮排
+* 但不得修改其內部程式碼內容，包括：
+
+  * 原本縮排
+  * 原本換行
+  * 原本空白
+  * 原本字元內容
+
+### 14.4 HTML 排版也屬於驗收項目
+
+* 即使畫面功能正確，若原始碼可讀性明顯過差，仍視為未完成修改。
+* 原始碼排版不良，不能以「畫面看起來正常」作為驗收通過理由。
+
+### 14.5 驗收條件（必做）
+
+1. 修改後的 HTML 不再出現大段 header / main / article-footer 全擠成一行
+2. 結構區塊有正常縮排
+3. `<pre><code>` 內容未被破壞
+4. 以人工閱讀方式檢查，能快速辨識頁面結構
+
+---
+
+## 15)（新增法律）單篇文章頁 header / 類別按鈕模板規則
+
+> 目的：把你這次反覆修正的 banner / 類別按鈕模板正式寫成網站法律，避免之後再次混用多套樣式。
+
+### 15.1 單篇文章頁的上方模板必須一致
+
+* 所有單篇文章頁面的上方區塊，包含：
+
+  * site header
+  * breadcrumb
+  * hero 區塊
+  * 右上角「類別」按鈕
+* 必須使用統一模板。
+
+### 15.2 `.nav-action-link` 類別按鈕不得混用多套版本
+
+* 以下都視為舊格式或錯誤格式，不得再出現：
+
+  * 純文字 `類別`
+  * `<span>類別</span>` 混用版
+  * 不同座標/不同樣式的另一套 SVG icon
+* `all problems` 與 `contests` 的差異只允許：
+
+  * `href="../../categories.html"` vs `href="../../../categories.html"`
+* 除路徑層級外，HTML 結構、icon、文字格式都必須一致。
+
+### 15.3 標準模板必須作為唯一真相
+
+* 只要同屬於「單篇文章頁」，就必須比照主流正確模板。
+* 不得再以其他舊文章當作例外模板。
+
+### 15.4 驗收條件（必做）
+
+1. 不再出現純文字 `類別`
+2. 不再出現多套 SVG icon 混用
+3. `all problems` 與 `contests` 只差路徑層級
+4. 單篇文章頁上方區塊模板完全一致
+
+
+你下一步最適合做的是把這份直接放進 `SITE_RULES.md`，然後我再幫你順手檢查 `RELEASE_CHECKLIST.md` 要不要同步補幾條對應驗收。
+```
