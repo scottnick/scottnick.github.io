@@ -76,7 +76,8 @@
           <li><code>arr</code> 中 <code>1</code> 出現的次數恰好是 <code>one</code></li>
           <li><code>arr</code> 中每一個長度大於 <code>limit</code> 的子陣列，都必須同時包含 <code>0</code> 和 <code>1</code></li>
         </ul>
-        <p>請回傳 stable binary arrays 的總數。由於答案可能非常大，請將結果對 <code>10^9 + 7</code> 取模後回傳。</p>
+        <p>請回傳 stable binary arrays 的總數。</p>
+        <p>由於答案可能非常大，請將結果對 <code>10^9 + 7</code> 取模後回傳。</p>
 
         <h3>條件限制</h3>
         <ul>
@@ -84,70 +85,194 @@
         </ul>
 
         <h2 id="approach">🧠 解題思路</h2>
-        <p>核心在於：不能只記錄目前用了幾個 <code>0</code> 和幾個 <code>1</code>，還要知道「尾端是什麼數字」以及「尾端連續長度」。</p>
-        <p>因為題目要求任何長度大於 <code>limit</code> 的子陣列都不能是同一個值，等價於：</p>
+        <p>這題的重點不是只看目前放了幾個 <code>0</code> 跟幾個 <code>1</code>，還要知道：</p>
         <ul>
-          <li>不能有連續超過 <code>limit</code> 個 <code>0</code></li>
-          <li>不能有連續超過 <code>limit</code> 個 <code>1</code></li>
+          <li>最後一個數字是什麼</li>
+          <li>最後連續出現了幾個一樣的數字</li>
         </ul>
-        <p>因此用四維 DP 最直觀：</p>
-        <p><code>dp[z][o][b][l]</code>：已使用 <code>z</code> 個 <code>0</code>、<code>o</code> 個 <code>1</code>，最後數字是 <code>b</code>，尾端連續長度為 <code>l</code> 的合法方案數。</p>
+        <p>因為題目限制的是：不能出現長度超過 <code>limit</code> 的全 <code>0</code> 或全 <code>1</code> 子陣列。換句話說，就是 <strong>同一個數字最多只能連續出現 <code>limit</code> 次</strong>。</p>
+        <p>所以這題很適合用 DP 紀錄狀態。</p>
+        <p>我這份程式的做法是：</p>
+        <ul>
+          <li><code>z</code> 表示目前已經用了幾個 <code>0</code></li>
+          <li><code>o</code> 表示目前已經用了幾個 <code>1</code></li>
+          <li><code>b</code> 表示目前最後一個數字是 <code>0</code> 還是 <code>1</code></li>
+          <li><code>l</code> 表示目前尾端連續幾個 <code>b</code></li>
+        </ul>
+        <p>只要知道這四個資訊，就能決定下一步可不可以再放同樣的數字，或是改放另一種數字。</p>
+        <p>也就是說，這題的核心就是：</p>
+        <blockquote>
+          <p>用 <code>dp[z][o][b][l]</code> 表示：目前已經用了 <code>z</code> 個 <code>0</code>、<code>o</code> 個 <code>1</code>，最後一個數字是 <code>b</code>，而且尾端連續有 <code>l</code> 個 <code>b</code> 的 stable array 數量。</p>
+        </blockquote>
+        <p>接下來就從這個狀態去轉移：</p>
+        <ul>
+          <li>如果最後是 <code>0</code>
+            <ul>
+              <li>還可以再放 <code>0</code>，前提是 <code>z &lt; zero</code> 且 <code>l &lt; limit</code></li>
+              <li>也可以改放 <code>1</code>，前提是 <code>o &lt; one</code></li>
+            </ul>
+          </li>
+          <li>如果最後是 <code>1</code>
+            <ul>
+              <li>還可以再放 <code>1</code>，前提是 <code>o &lt; one</code> 且 <code>l &lt; limit</code></li>
+              <li>也可以改放 <code>0</code>，前提是 <code>z &lt; zero</code></li>
+            </ul>
+          </li>
+        </ul>
+        <p>最後把所有剛好用完 <code>zero</code> 個 <code>0</code>、<code>one</code> 個 <code>1</code> 的合法狀態加總起來，就是答案。</p>
 
         <h3>所有變數</h3>
         <ul>
-          <li><code>dp[201][201][2][201]</code>：DP 陣列</li>
-          <li><code>MOD</code>：<code>1000000007</code></li>
-          <li><code>z</code>：已使用 <code>0</code> 的數量</li>
-          <li><code>o</code>：已使用 <code>1</code> 的數量</li>
-          <li><code>b</code>：最後數字（<code>0</code> 或 <code>1</code>）</li>
-          <li><code>l</code>：尾端連續長度</li>
-          <li><code>now</code>：目前狀態方案數</li>
-          <li><code>ans</code>：最終答案</li>
-          <li><code>k</code>：加總答案時枚舉尾端連續長度</li>
+          <li><code>dp[201][201][2][201]</code>：DP 陣列，<code>dp[z][o][b][l]</code> 表示目前已用 <code>z</code> 個 <code>0</code>、<code>o</code> 個 <code>1</code>，最後數字是 <code>b</code>，尾端連續長度是 <code>l</code> 的合法陣列數量</li>
+          <li><code>MOD</code>：模數 <code>1000000007</code></li>
+          <li><code>z</code>：目前 DP 狀態中已經使用的 <code>0</code> 的數量</li>
+          <li><code>o</code>：目前 DP 狀態中已經使用的 <code>1</code> 的數量</li>
+          <li><code>b</code>：目前最後一個數字，<code>0</code> 代表最後是 <code>0</code>，<code>1</code> 代表最後是 <code>1</code></li>
+          <li><code>l</code>：目前尾端連續相同數字的長度</li>
+          <li><code>now</code>：目前這個 DP 狀態的方案數</li>
+          <li><code>ans</code>：最後答案</li>
+          <li><code>k</code>：最後加總答案時，枚舉尾端連續長度用的變數</li>
         </ul>
 
         <h2 id="steps">🪜 主要流程步驟</h2>
         <h3>1. 定義 DP 狀態</h3>
-        <p>用 <code>dp[z][o][b][l]</code> 完整描述「數量 + 尾端連續資訊」。</p>
+        <p>先開一個四維 DP：</p>
+        <pre><code class="language-cpp">dp[z][o][b][l]</code></pre>
+        <p>它代表：</p>
+        <ul>
+          <li>已經用了 <code>z</code> 個 <code>0</code></li>
+          <li>已經用了 <code>o</code> 個 <code>1</code></li>
+          <li>最後一個數字是 <code>b</code></li>
+          <li>最後連續有 <code>l</code> 個 <code>b</code></li>
+        </ul>
+        <p>這樣的設計很重要，因為題目限制跟「尾端連續長度」直接有關，所以不能只記錄用了幾個 <code>0</code> 和 <code>1</code>。</p>
+        <hr>
 
-        <h3>2. 初始化長度為 1 的狀態</h3>
+        <h3>2. 初始化長度為 1 的情況</h3>
+        <p>一開始可以先放一個 <code>0</code>，或者先放一個 <code>1</code>：</p>
         <pre><code class="language-cpp">dp[1][0][0][1] = 1;
 dp[0][1][1][1] = 1;</code></pre>
-
-        <h3>3. 枚舉所有狀態並轉移</h3>
-        <p>四層迴圈枚舉 <code>z</code>、<code>o</code>、<code>b</code>、<code>l</code>，若 <code>now == 0</code> 就跳過。</p>
-
-        <h3>4. 當最後是 0 時</h3>
+        <p>意思是：</p>
         <ul>
-          <li>若 <code>z &lt; zero</code> 且 <code>l &lt; limit</code>：可再放 <code>0</code>，變成 <code>dp[z + 1][o][0][l + 1]</code></li>
-          <li>若 <code>o &lt; one</code>：可改放 <code>1</code>，變成 <code>dp[z][o + 1][1][1]</code></li>
+          <li>用 1 個 <code>0</code>、0 個 <code>1</code>，最後是 <code>0</code>，而且尾端連續 1 個 <code>0</code>，有 1 種</li>
+          <li>用 0 個 <code>0</code>、1 個 <code>1</code>，最後是 <code>1</code>，而且尾端連續 1 個 <code>1</code>，有 1 種</li>
         </ul>
+        <p>這就是整個 DP 的起點。</p>
+        <hr>
 
-        <h3>5. 當最後是 1 時</h3>
+        <h3>3. 枚舉所有可能的狀態</h3>
+        <p>接著用四層迴圈枚舉所有可能的 DP 狀態：</p>
         <ul>
-          <li>若 <code>o &lt; one</code> 且 <code>l &lt; limit</code>：可再放 <code>1</code>，變成 <code>dp[z][o + 1][1][l + 1]</code></li>
-          <li>若 <code>z &lt; zero</code>：可改放 <code>0</code>，變成 <code>dp[z + 1][o][0][1]</code></li>
+          <li><code>z</code>：從 <code>0</code> 到 <code>zero</code></li>
+          <li><code>o</code>：從 <code>0</code> 到 <code>one</code></li>
+          <li><code>b</code>：<code>0</code> 或 <code>1</code></li>
+          <li><code>l</code>：從 <code>1</code> 到 <code>limit</code></li>
         </ul>
+        <p>每次先取出目前這格的方案數：</p>
+        <pre><code class="language-cpp">int now = dp[z][o][b][l];</code></pre>
+        <p>如果這格是 <code>0</code>，代表目前沒有任何合法方法走到這個狀態，就直接跳過：</p>
+        <pre><code class="language-cpp">if (now == 0) {
+    continue;
+}</code></pre>
+        <hr>
 
-        <h3>6. 加總最終答案</h3>
-        <p>把所有 <code>dp[zero][one][0][k]</code> 與 <code>dp[zero][one][1][k]</code>（<code>1 &lt;= k &lt;= limit</code>）加總即可。</p>
+        <h3>4. 如果最後一個數字是 0，就考慮接下來放什麼</h3>
+        <p>當 <code>b == 0</code> 時，代表目前陣列最後是 <code>0</code>。</p>
+        <p>這時有兩種選擇。</p>
+        <p>第一種是再放一個 <code>0</code>：</p>
+        <pre><code class="language-cpp">if (z &lt; zero &amp;&amp; l &lt; limit) {
+    dp[z + 1][o][0][l + 1] += now;
+    dp[z + 1][o][0][l + 1] %= MOD;
+}</code></pre>
+        <p>這段表示：</p>
+        <ul>
+          <li>還有 <code>0</code> 可以用，也就是 <code>z &lt; zero</code></li>
+          <li>而且目前尾端連續 <code>0</code> 的長度還沒到上限，也就是 <code>l &lt; limit</code></li>
+        </ul>
+        <p>那就可以再接一個 <code>0</code>，所以：</p>
+        <ul>
+          <li><code>z + 1</code></li>
+          <li><code>o</code> 不變</li>
+          <li>最後仍然是 <code>0</code></li>
+          <li>尾端連續長度從 <code>l</code> 變成 <code>l + 1</code></li>
+        </ul>
+        <p>第二種是改放一個 <code>1</code>：</p>
+        <pre><code class="language-cpp">if (o &lt; one) {
+    dp[z][o + 1][1][1] += now;
+    dp[z][o + 1][1][1] %= MOD;
+}</code></pre>
+        <p>這時因為尾端數字從 <code>0</code> 換成 <code>1</code>，所以新的連續長度要重設成 <code>1</code>。</p>
+        <hr>
+
+        <h3>5. 如果最後一個數字是 1，就考慮接下來放什麼</h3>
+        <p>當 <code>b == 1</code> 時，邏輯完全對稱。</p>
+        <p>如果還能再放 <code>1</code>，而且連續長度還沒超過 <code>limit</code>：</p>
+        <pre><code class="language-cpp">if (o &lt; one &amp;&amp; l &lt; limit) {
+    dp[z][o + 1][1][l + 1] += now;
+    dp[z][o + 1][1][l + 1] %= MOD;
+}</code></pre>
+        <p>這表示：</p>
+        <ul>
+          <li>再補一個 <code>1</code></li>
+          <li><code>o</code> 增加</li>
+          <li>最後仍然是 <code>1</code></li>
+          <li>尾端連續長度變成 <code>l + 1</code></li>
+        </ul>
+        <p>如果要改放 <code>0</code>：</p>
+        <pre><code class="language-cpp">if (z &lt; zero) {
+    dp[z + 1][o][0][1] += now;
+    dp[z + 1][o][0][1] %= MOD;
+}</code></pre>
+        <p>這時最後數字變成 <code>0</code>，所以尾端連續長度重新變成 <code>1</code>。</p>
+        <hr>
+
+        <h3>6. 為什麼這樣就能保證 stable</h3>
+        <p>題目說，任何長度大於 <code>limit</code> 的子陣列都必須同時包含 <code>0</code> 和 <code>1</code>。</p>
+        <p>這句其實等價於：</p>
+        <ul>
+          <li>不能有連續超過 <code>limit</code> 個 <code>0</code></li>
+          <li>不能有連續超過 <code>limit</code> 個 <code>1</code></li>
+        </ul>
+        <p>而這份程式正是靠 <code>l &lt; limit</code> 這個條件，保證不會把同樣的數字接到超過上限。</p>
+        <p>所以只要這個 DP 狀態合法，往後的轉移也都合法。</p>
+        <hr>
+
+        <h3>7. 最後把所有剛好用完 zero 和 one 的狀態加總</h3>
+        <p>最後答案不是只看某一個固定 <code>l</code>，因為尾端連續長度可能是 <code>1</code>、<code>2</code>、...、<code>limit</code>。</p>
+        <p>所以要把：</p>
+        <ul>
+          <li><code>dp[zero][one][0][k]</code></li>
+          <li><code>dp[zero][one][1][k]</code></li>
+        </ul>
+        <p>全部加起來：</p>
+        <pre><code class="language-cpp">for (int k = 1; k &lt;= limit; k++) {
+    ans = (ans + dp[zero][one][0][k]) % MOD;
+    ans = (ans + dp[zero][one][1][k]) % MOD;
+}</code></pre>
+        <p>這樣就把所有：</p>
+        <ul>
+          <li>用完 <code>zero</code> 個 <code>0</code></li>
+          <li>用完 <code>one</code> 個 <code>1</code></li>
+          <li>最後可能是 <code>0</code> 或 <code>1</code></li>
+          <li>尾端連續長度任意合法值</li>
+        </ul>
+        <p>的 stable arrays 全部統計進去了。</p>
 
         <h2 id="complexity">⏱️ 複雜度</h2>
         <ul>
-          <li>時間複雜度：<code>O(zero * one * limit)</code></li>
-          <li>空間複雜度：<code>O(zero * one * limit)</code></li>
+          <li>時間複雜度：<code>O(zero * one * limit)</code><br>四維狀態中，<code>b</code> 只有 2 種，所以可視為常數。</li>
+          <li>空間複雜度：<code>O(zero * one * limit)</code><br>需要一個四維 DP 陣列來記錄狀態。</li>
         </ul>
 
         <h2 id="code">💻 程式碼實作</h2>
         <pre><code class="language-cpp">class Solution {
 public:
     int numberOfStableArrays(int zero, int one, int limit) {
-        static int dp[201][201][2][201];
+        static int dp[201][201][2][201]; // 已用0、已用1、最後數字、最後長度
         memset(dp, 0, sizeof(dp));
         dp[1][0][0][1] = 1;
         dp[0][1][1][1] = 1;
         const int MOD = 1000000007;
-
         for (int z = 0; z &lt;= zero; z++) {
             for (int o = 0; o &lt;= one; o++) {
                 for (int b = 0; b &lt; 2; b++) {
@@ -157,25 +282,28 @@ public:
                             continue;
                         }
                         if (b == 0) {
-                            if (z &lt; zero &amp;&amp; l &lt; limit) {
-                                dp[z + 1][o][0][l + 1] = (dp[z + 1][o][0][l + 1] + now) % MOD;
+                            if (z &lt; zero &amp;&amp; l &lt; limit) { // 再放0
+                                dp[z + 1][o][0][l + 1] += now;
+                                dp[z + 1][o][0][l + 1] %= MOD;
                             }
-                            if (o &lt; one) {
-                                dp[z][o + 1][1][1] = (dp[z][o + 1][1][1] + now) % MOD;
+                            if (o &lt; one) { // 再放1
+                                dp[z][o + 1][1][1] += now;
+                                dp[z][o + 1][1][1] %= MOD;
                             }
                         } else {
-                            if (o &lt; one &amp;&amp; l &lt; limit) {
-                                dp[z][o + 1][1][l + 1] = (dp[z][o + 1][1][l + 1] + now) % MOD;
+                            if (o &lt; one &amp;&amp; l &lt; limit) { // 再放0
+                                dp[z][o + 1][1][l + 1] += now;
+                                dp[z][o + 1][1][l + 1] %= MOD;
                             }
-                            if (z &lt; zero) {
-                                dp[z + 1][o][0][1] = (dp[z + 1][o][0][1] + now) % MOD;
+                            if (z &lt; zero) { // 再放1
+                                dp[z + 1][o][0][1] += now;
+                                dp[z + 1][o][0][1] %= MOD;
                             }
                         }
                     }
                 }
             }
         }
-
         int ans = 0;
         for (int k = 1; k &lt;= limit; k++) {
             ans = (ans + dp[zero][one][0][k]) % MOD;
@@ -183,8 +311,7 @@ public:
         }
         return ans;
     }
-};
-</code></pre>
+};</code></pre>
 
         <h2 id="link">🔗 題目連結</h2>
         <p><a href="https://leetcode.com/problems/find-all-possible-stable-binary-arrays-i/">https://leetcode.com/problems/find-all-possible-stable-binary-arrays-i/</a></p>
