@@ -1,0 +1,223 @@
+<!-- all problems/3129-find-all-possible-stable-binary-arrays-i.html: 全部題單文章 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3129. Find All Possible Stable Binary Arrays I</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+               width="18" height="18" aria-hidden="true" focusable="false"
+               style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="../all problems/index.html">All problems</a>
+      <span aria-hidden="true">/</span>
+      <span>3129. Find All Possible Stable Binary Arrays I</span>
+    </nav>
+
+    <section class="hero">
+      <h1>3129. Find All Possible Stable Binary Arrays I</h1>
+      <p><strong>練習日期：</strong>2026-03-09</p>
+      <p><strong>難度：</strong>Medium</p>
+      <p><strong>類型：</strong>Dynamic Programming、Prefix Sum</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">目錄</button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#complexity">⏱️ 複雜度</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給你三個正整數 <code>zero</code>、<code>one</code> 和 <code>limit</code>。</p>
+        <p>如果一個二元陣列 <code>arr</code> 滿足以下條件，就稱它是 stable：</p>
+        <ul>
+          <li><code>arr</code> 中 <code>0</code> 出現的次數恰好是 <code>zero</code></li>
+          <li><code>arr</code> 中 <code>1</code> 出現的次數恰好是 <code>one</code></li>
+          <li><code>arr</code> 中每一個長度大於 <code>limit</code> 的子陣列，都必須同時包含 <code>0</code> 和 <code>1</code></li>
+        </ul>
+        <p>請回傳 stable binary arrays 的總數。由於答案可能非常大，請將結果對 <code>10^9 + 7</code> 取模後回傳。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>1 &lt;= zero, one, limit &lt;= 200</code></li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>核心在於：不能只記錄目前用了幾個 <code>0</code> 和幾個 <code>1</code>，還要知道「尾端是什麼數字」以及「尾端連續長度」。</p>
+        <p>因為題目要求任何長度大於 <code>limit</code> 的子陣列都不能是同一個值，等價於：</p>
+        <ul>
+          <li>不能有連續超過 <code>limit</code> 個 <code>0</code></li>
+          <li>不能有連續超過 <code>limit</code> 個 <code>1</code></li>
+        </ul>
+        <p>因此用四維 DP 最直觀：</p>
+        <p><code>dp[z][o][b][l]</code>：已使用 <code>z</code> 個 <code>0</code>、<code>o</code> 個 <code>1</code>，最後數字是 <code>b</code>，尾端連續長度為 <code>l</code> 的合法方案數。</p>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>dp[201][201][2][201]</code>：DP 陣列</li>
+          <li><code>MOD</code>：<code>1000000007</code></li>
+          <li><code>z</code>：已使用 <code>0</code> 的數量</li>
+          <li><code>o</code>：已使用 <code>1</code> 的數量</li>
+          <li><code>b</code>：最後數字（<code>0</code> 或 <code>1</code>）</li>
+          <li><code>l</code>：尾端連續長度</li>
+          <li><code>now</code>：目前狀態方案數</li>
+          <li><code>ans</code>：最終答案</li>
+          <li><code>k</code>：加總答案時枚舉尾端連續長度</li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+        <h3>1. 定義 DP 狀態</h3>
+        <p>用 <code>dp[z][o][b][l]</code> 完整描述「數量 + 尾端連續資訊」。</p>
+
+        <h3>2. 初始化長度為 1 的狀態</h3>
+        <pre><code class="language-cpp">dp[1][0][0][1] = 1;
+dp[0][1][1][1] = 1;</code></pre>
+
+        <h3>3. 枚舉所有狀態並轉移</h3>
+        <p>四層迴圈枚舉 <code>z</code>、<code>o</code>、<code>b</code>、<code>l</code>，若 <code>now == 0</code> 就跳過。</p>
+
+        <h3>4. 當最後是 0 時</h3>
+        <ul>
+          <li>若 <code>z &lt; zero</code> 且 <code>l &lt; limit</code>：可再放 <code>0</code>，變成 <code>dp[z + 1][o][0][l + 1]</code></li>
+          <li>若 <code>o &lt; one</code>：可改放 <code>1</code>，變成 <code>dp[z][o + 1][1][1]</code></li>
+        </ul>
+
+        <h3>5. 當最後是 1 時</h3>
+        <ul>
+          <li>若 <code>o &lt; one</code> 且 <code>l &lt; limit</code>：可再放 <code>1</code>，變成 <code>dp[z][o + 1][1][l + 1]</code></li>
+          <li>若 <code>z &lt; zero</code>：可改放 <code>0</code>，變成 <code>dp[z + 1][o][0][1]</code></li>
+        </ul>
+
+        <h3>6. 加總最終答案</h3>
+        <p>把所有 <code>dp[zero][one][0][k]</code> 與 <code>dp[zero][one][1][k]</code>（<code>1 &lt;= k &lt;= limit</code>）加總即可。</p>
+
+        <h2 id="complexity">⏱️ 複雜度</h2>
+        <ul>
+          <li>時間複雜度：<code>O(zero * one * limit)</code></li>
+          <li>空間複雜度：<code>O(zero * one * limit)</code></li>
+        </ul>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    int numberOfStableArrays(int zero, int one, int limit) {
+        static int dp[201][201][2][201];
+        memset(dp, 0, sizeof(dp));
+        dp[1][0][0][1] = 1;
+        dp[0][1][1][1] = 1;
+        const int MOD = 1000000007;
+
+        for (int z = 0; z &lt;= zero; z++) {
+            for (int o = 0; o &lt;= one; o++) {
+                for (int b = 0; b &lt; 2; b++) {
+                    for (int l = 1; l &lt;= limit; l++) {
+                        int now = dp[z][o][b][l];
+                        if (now == 0) {
+                            continue;
+                        }
+                        if (b == 0) {
+                            if (z &lt; zero &amp;&amp; l &lt; limit) {
+                                dp[z + 1][o][0][l + 1] = (dp[z + 1][o][0][l + 1] + now) % MOD;
+                            }
+                            if (o &lt; one) {
+                                dp[z][o + 1][1][1] = (dp[z][o + 1][1][1] + now) % MOD;
+                            }
+                        } else {
+                            if (o &lt; one &amp;&amp; l &lt; limit) {
+                                dp[z][o + 1][1][l + 1] = (dp[z][o + 1][1][l + 1] + now) % MOD;
+                            }
+                            if (z &lt; zero) {
+                                dp[z + 1][o][0][1] = (dp[z + 1][o][0][1] + now) % MOD;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        int ans = 0;
+        for (int k = 1; k &lt;= limit; k++) {
+            ans = (ans + dp[zero][one][0][k]) % MOD;
+            ans = (ans + dp[zero][one][1][k]) % MOD;
+        }
+        return ans;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p><a href="https://leetcode.com/problems/find-all-possible-stable-binary-arrays-i/">https://leetcode.com/problems/find-all-possible-stable-binary-arrays-i/</a></p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-03-09</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value"><span class="post-tags">
+              <span class="post-tag">Dynamic Programming</span>
+              <span class="post-tag">Prefix Sum</span>
+              <span class="post-tag">Medium</span>
+            </span></span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/all%20problems/3129-find-all-possible-stable-binary-arrays-i.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
