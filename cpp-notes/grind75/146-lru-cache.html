@@ -1,0 +1,257 @@
+<!-- grind75/146-lru-cache.html: Grind 75 文章 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>146. LRU Cache</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+               width="18" height="18" aria-hidden="true" focusable="false"
+               style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="../grind75/index.html">Grind 75</a>
+      <span aria-hidden="true">/</span>
+      <span>146. LRU Cache</span>
+    </nav>
+
+    <section class="hero">
+      <h1>146. LRU Cache</h1>
+      <p><strong>練習日期：</strong>2026-03-05</p>
+      <p><strong>難度：</strong>Medium</p>
+      <p><strong>類型：</strong>Hash Table、Linked List、Design、Doubly-Linked List</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#complexity">⏱️ 複雜度</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>設計一個資料結構，符合「最近最少使用」（Least Recently Used, LRU）快取的限制。</p>
+        <p>請實作 <code>LRUCache</code> 類別：</p>
+        <ul>
+          <li><code>LRUCache(int capacity)</code>：用正整數 <code>capacity</code> 初始化 LRU 快取容量。</li>
+          <li><code>int get(int key)</code>：如果 <code>key</code> 存在，回傳對應的值；否則回傳 <code>-1</code>。</li>
+          <li><code>void put(int key, int value)</code>：如果 <code>key</code> 已存在，更新其值；否則加入新的 <code>(key, value)</code>。如果這次加入後 key 的數量超過容量，請移除「最近最少使用」的 key。</li>
+        </ul>
+        <p><code>get</code> 與 <code>put</code> 都必須在平均 <code>O(1)</code> 時間內完成。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>1 &lt;= capacity &lt;= 3000</code></li>
+          <li><code>0 &lt;= key &lt;= 10^4</code></li>
+          <li><code>0 &lt;= value &lt;= 10^5</code></li>
+          <li><code>get</code> 和 <code>put</code> 的總呼叫次數最多為 <code>2 * 10^5</code></li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>LRU 的核心就是兩件事要同時做到，而且都要快：</p>
+        <ol>
+          <li><strong>O(1) 查某個 key 是否存在、並取得 value</strong></li>
+          <li><strong>O(1) 把「最近使用」更新到最前面，並在超容量時 O(1) 刪掉最久沒用的那個</strong></li>
+        </ol>
+        <p>所以我用兩個結構搭配：</p>
+        <ul>
+          <li>用 <code>list&lt;pair&lt;int,int&gt;&gt; nums</code> 存快取內容，並且維護「使用順序」
+            <ul>
+              <li>list 的前面是「最新使用」</li>
+              <li>list 的後面是「最久沒用」</li>
+            </ul>
+          </li>
+          <li>用 <code>unordered_map&lt;int, list&lt;pair&lt;int,int&gt;&gt;::iterator&gt; m</code> 做 key 到 list 節點位置的映射
+            <ul>
+              <li>這樣 <code>get(key)</code> 能 O(1) 直接找到 list 的那個節點</li>
+              <li>找到後用 <code>splice</code> 把節點搬到最前面，代表「剛被使用」</li>
+            </ul>
+          </li>
+        </ul>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>nums</code>：<code>list&lt;pair&lt;int,int&gt;&gt;</code>，每個節點存 <code>(key, value)</code>，並用節點順序表示 LRU 次序（前新後舊）</li>
+          <li><code>m</code>：<code>unordered_map&lt;int, list&lt;pair&lt;int,int&gt;&gt;::iterator&gt;</code>，把 <code>key</code> 對應到 <code>nums</code> 中那個 <code>(key,value)</code> 節點的位置</li>
+          <li><code>cap</code>：快取容量上限</li>
+          <li><code>now</code>：在 <code>get</code> / <code>put</code> 中用來接住 <code>m[key]</code> 的 iterator，指向 <code>nums</code> 裡的某個節點</li>
+          <li><code>val</code>：在 <code>get</code> 中取出的對應 value</li>
+          <li><code>k</code>：在 <code>put</code> 超容量時，抓 <code>nums.back()</code> 得到的最後一個節點 <code>(key,value)</code></li>
+          <li><code>del</code>：要被移除的 key（也就是最久沒用的那個 key）</li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+        <h3>1. 初始化：只記住容量 cap</h3>
+        <p>建構子只做一件事：把 <code>cap = capacity</code> 存起來。
+          <code>nums</code> 和 <code>m</code> 預設都是空的，從第一次 <code>put</code> 開始才會逐步塞資料。</p>
+
+        <hr />
+
+        <h3>2. get(key)：O(1) 查詢 + 更新為「最新使用」</h3>
+        <ul>
+          <li>如果 <code>m</code> 裡沒有 <code>key</code>，代表不在快取中，回傳 <code>-1</code>。</li>
+          <li>如果存在：
+            <ul>
+              <li><code>now = m[key]</code> 會拿到 list 節點位置</li>
+              <li><code>val = now-&gt;second</code> 取出 value</li>
+              <li>用 <code>nums.splice(nums.begin(), nums, now)</code> 把該節點搬到最前面。這一步是 LRU 的關鍵：表示這個 key 剛剛被使用，現在是「最新」。</li>
+              <li>回傳 <code>val</code></li>
+            </ul>
+          </li>
+        </ul>
+
+        <hr />
+
+        <h3>3. put(key, value)：分成「已存在」與「不存在」</h3>
+        <p>先看 <code>key</code> 是否已在 <code>m</code> 裡。</p>
+
+        <hr />
+
+        <h3>4. put：如果 key 已存在 → 更新值 + 搬到最前面</h3>
+        <ul>
+          <li><code>now = m[key]</code> 找到節點</li>
+          <li><code>now-&gt;second = value</code> 更新 value</li>
+          <li><code>nums.splice(nums.begin(), nums, now)</code> 搬到最前面，表示剛被使用</li>
+          <li>結束</li>
+        </ul>
+
+        <hr />
+
+        <h3>5. put：如果 key 不存在 → 可能要先淘汰，再插入新節點</h3>
+        <p>如果 <code>nums.size() == cap</code>，代表容量已滿：</p>
+        <ul>
+          <li><code>k = nums.back()</code> 取得最後面那個 <code>(key,value)</code>（最久沒用）</li>
+          <li><code>del = k.first</code> 取出要刪掉的 key</li>
+          <li><code>m.erase(del)</code> 把 map 裡的索引刪掉</li>
+          <li><code>nums.pop_back()</code> 把 list 最後的節點刪掉</li>
+        </ul>
+        <p>然後把新資料塞進去：</p>
+        <ul>
+          <li><code>nums.push_front({key, value})</code> 新節點放最前面（最新使用）</li>
+          <li><code>m[key] = nums.begin()</code> 把 key 對應到新節點位置</li>
+        </ul>
+
+        <h2 id="complexity">⏱️ 複雜度</h2>
+        <ul>
+          <li>時間複雜度：<code>get</code> 平均 <code>O(1)</code>，<code>put</code> 平均 <code>O(1)</code></li>
+          <li>空間複雜度：<code>O(capacity)</code>（list 與 hash table 最多存 <code>capacity</code> 筆）</li>
+        </ul>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class LRUCache {
+public:
+    list&lt;pair&lt;int, int&gt;&gt; nums;
+    unordered_map&lt;int, list&lt;pair&lt;int, int&gt;&gt;::iterator&gt; m;
+    int cap;
+
+    LRUCache(int capacity) {
+        cap = capacity;
+    }
+
+    int get(int key) {
+        if (!m.count(key)) {
+            return -1;
+        }
+        auto now = m[key]; // 指向 list 中的 iterator
+        int val = now-&gt;second;
+        nums.splice(nums.begin(), nums, now); // 插入最前面
+        return val;
+    }
+
+    void put(int key, int value) {
+        if (m.count(key)) {
+            auto now = m[key];
+            now-&gt;second = value;
+            nums.splice(nums.begin(), nums, now);
+            return;
+        }
+        if (nums.size() == cap) {
+            auto k = nums.back();
+            int del = k.first;
+            m.erase(del);
+            nums.pop_back();
+        }
+        nums.push_front({key, value});
+        m[key] = nums.begin();
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/lru-cache/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-03-05</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value"><span class="post-tags">
+              <span class="post-tag">Hash Table</span>
+              <span class="post-tag">Linked List</span>
+              <span class="post-tag">Design</span>
+              <span class="post-tag">Doubly-Linked List</span>
+              <span class="post-tag">Medium</span>
+            </span></span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/all%20problems/146-lru-cache.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
