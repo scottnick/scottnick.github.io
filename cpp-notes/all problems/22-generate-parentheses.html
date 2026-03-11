@@ -1,0 +1,417 @@
+<!-- all problems/22-generate-parentheses.html: All problems 文章 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>22. Generate Parentheses</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+               width="18" height="18" aria-hidden="true" focusable="false"
+               style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="index.html">All problems</a>
+      <span aria-hidden="true">/</span>
+      <span>22. Generate Parentheses</span>
+    </nav>
+
+    <section class="hero">
+      <h1>22. Generate Parentheses</h1>
+      <p><strong>練習日期：</strong>2026-03-11</p>
+      <p><strong>難度：</strong>Medium</p>
+      <p><strong>類型：</strong>String、Dynamic Programming、Backtracking</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach-1">🧠 解題思路（一）用遞迴</a></li>
+          <li><a href="#steps-1">🪜 主要流程步驟（一）</a></li>
+          <li><a href="#complexity-1">⏱️ 複雜度</a></li>
+          <li><a href="#code-1">💻 程式碼實作（一）</a></li>
+          <li><a href="#approach-2">🧠 解題思路（二）直接函數遞迴，但會重複 WA</a></li>
+          <li><a href="#steps-2">🪜 主要流程步驟（二）</a></li>
+          <li><a href="#complexity-2">⏱️ 複雜度（二）</a></li>
+          <li><a href="#code-2">💻 程式碼實作（二）</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給你 <code>n</code> 對括號，請寫一個函式，產生所有合法的括號組合。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>1 &lt;= n &lt;= 8</code></li>
+        </ul>
+
+        <h2 id="approach-1">🧠 解題思路（一）用遞迴</h2>
+        <p>這題的重點是：</p>
+        <p>我不是先把所有長度 <code>2n</code> 的括號字串都列出來再檢查，而是在遞迴的過程中，<strong>只往合法的方向繼續走</strong>。</p>
+        <p>因為一個合法括號字串要滿足兩件事：</p>
+        <ul>
+          <li>左括號 <code>(</code> 總數最後要剛好是 <code>n</code></li>
+          <li>任何一個過程中，右括號 <code>)</code> 的數量都不能超過左括號 <code>(</code> 的數量</li>
+        </ul>
+        <p>所以我在遞迴時只記兩個數：</p>
+        <ul>
+          <li><code>left</code>：目前已經放了幾個 <code>(</code></li>
+          <li><code>right</code>：目前已經放了幾個 <code>)</code></li>
+        </ul>
+        <p>然後用這兩個條件控制下一步：</p>
+        <ul>
+          <li>如果 <code>left &lt; len</code>，代表左括號還沒放滿，可以繼續放 <code>(</code></li>
+          <li>如果 <code>right &lt; left</code>，代表目前右括號數量還沒超過左括號，這時才可以放 <code>)</code></li>
+        </ul>
+        <p>這樣遞迴下去，到最後 <code>left == len &amp;&amp; right == len</code> 時，代表這個字串長度已經滿了，而且整段過程都沒有違反合法條件，所以它一定是一個合法答案，可以直接放進 <code>ans</code>。</p>
+        <p>這份程式的核心想法就是：</p>
+        <blockquote>
+          <p>用 DFS / backtracking 一個字一個字往後放，並且在過程中就把不合法的情況剪掉。</p>
+        </blockquote>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>ans</code>：存所有合法括號字串的答案陣列</li>
+          <li><code>len</code>：括號對數，也就是題目的 <code>n</code></li>
+          <li><code>left</code>：目前字串中已經放了幾個左括號 <code>(</code></li>
+          <li><code>right</code>：目前字串中已經放了幾個右括號 <code>)</code></li>
+          <li><code>s</code>：目前遞迴到這一步所組出來的括號字串</li>
+        </ul>
+
+        <h2 id="steps-1">🪜 主要流程步驟（一）</h2>
+        <h3>1. 先用 len 記住總共要放幾對括號</h3>
+        <p>在 <code>generateParenthesis</code> 裡，先把輸入的 <code>n</code> 存到成員變數 <code>len</code>：</p>
+        <pre><code class="language-cpp">len = n;</code></pre>
+        <p>這樣後面的遞迴函式 <code>dop</code> 就可以直接知道：</p>
+        <ul>
+          <li>左括號最多放到 <code>len</code></li>
+          <li>右括號最多也放到 <code>len</code></li>
+        </ul>
+        <hr>
+
+        <h3>2. 從空字串開始做遞迴</h3>
+        <p>接著從：</p>
+        <pre><code class="language-cpp">dop(0, 0, "");</code></pre>
+        <p>開始。</p>
+        <p>意思是：</p>
+        <ul>
+          <li>現在一個左括號都還沒放，所以 <code>left = 0</code></li>
+          <li>一個右括號也還沒放，所以 <code>right = 0</code></li>
+          <li>目前字串是空字串 <code>""</code></li>
+        </ul>
+        <p>然後讓 <code>dop</code> 一路往下去試所有合法的擴展方式。</p>
+        <hr>
+
+        <h3>3. 如果左括號還沒放滿，就可以先放一個左括號</h3>
+        <p>在 <code>dop</code> 裡先判斷：</p>
+        <pre><code class="language-cpp">if (left &lt; len) {
+    dop(left + 1, right, s + '(');
+}</code></pre>
+        <p>這段的意思是：</p>
+        <ul>
+          <li>只要目前左括號數量還沒到 <code>n</code></li>
+          <li>我就可以再補一個 <code>(</code></li>
+        </ul>
+        <p>所以遞迴到下一層時：</p>
+        <ul>
+          <li><code>left + 1</code></li>
+          <li><code>right</code> 不變</li>
+          <li><code>s</code> 後面多接一個 <code>'('</code></li>
+        </ul>
+        <p>這一步是在建立所有「可能的左括號延伸」。</p>
+        <hr>
+
+        <h3>4. 如果右括號數量還小於左括號，才可以放右括號</h3>
+        <p>接著判斷：</p>
+        <pre><code class="language-cpp">if (right &lt; left) {
+    dop(left, right + 1, s + ')');
+}</code></pre>
+        <p>這是這題最重要的合法性條件。</p>
+        <p>因為合法括號字串的任何前綴都不能出現：</p>
+        <ul>
+          <li>右括號比左括號還多</li>
+        </ul>
+        <p>所以只有在 <code>right &lt; left</code> 的時候，才代表目前可以安全地放一個 <code>)</code>。</p>
+        <p>這樣遞迴到下一層時：</p>
+        <ul>
+          <li><code>left</code> 不變</li>
+          <li><code>right + 1</code></li>
+          <li><code>s</code> 後面多接一個 <code>')'</code></li>
+        </ul>
+        <p>這一步其實就是在做剪枝：</p>
+        <ul>
+          <li>不合法的情況根本不往下遞迴</li>
+          <li>所以最後留下來的都會是合法答案</li>
+        </ul>
+        <hr>
+
+        <h3>5. 當左右括號都放滿時，就把這個字串加入答案</h3>
+        <pre><code class="language-cpp">if (left == len &amp;&amp; right == len) {
+    ans.push_back(s);
+}</code></pre>
+        <p>當這個條件成立時，表示：</p>
+        <ul>
+          <li>左括號已經放了 <code>n</code> 個</li>
+          <li>右括號也已經放了 <code>n</code> 個</li>
+        </ul>
+        <p>也就是整個字串長度已經到 <code>2n</code>，而且前面又都遵守 <code>right &lt; left</code> 的規則，所以這個 <code>s</code> 一定是合法括號字串。</p>
+        <p>這時就把它存進 <code>ans</code>。</p>
+        <hr>
+
+        <h3>6. 為什麼這樣能保證答案全部合法</h3>
+        <p>這份程式沒有額外寫一個檢查函式去驗證字串是否合法，因為合法性是直接在遞迴過程中保證的。</p>
+        <p>原因是：</p>
+        <ul>
+          <li>左括號最多只能放到 <code>n</code> 個</li>
+          <li>右括號最多只能放到 <code>n</code> 個</li>
+          <li>只有在 <code>right &lt; left</code> 時才能放 <code>)</code></li>
+        </ul>
+        <p>所以不可能出現像這種不合法前綴：</p>
+        <ul>
+          <li><code>")("</code></li>
+          <li><code>"())("</code></li>
+          <li><code>"))..."</code></li>
+        </ul>
+        <p>也就是說，程式不是「先亂生再篩」，而是「只生合法路徑」。</p>
+        <hr>
+
+        <h3>7. 最後回傳 ans</h3>
+        <p>當整棵遞迴樹都跑完之後，<code>ans</code> 裡面就會放好所有合法的括號組合。</p>
+        <p>所以最後直接：</p>
+        <pre><code class="language-cpp">return ans;</code></pre>
+        <p>就可以了。</p>
+
+        <h2 id="complexity-1">⏱️ 複雜度</h2>
+        <ul>
+          <li>時間複雜度：<code>O(答案總數 × n)</code>
+            每個合法字串長度都是 <code>2n</code>，而遞迴過程會把所有合法答案建出來。</li>
+          <li>空間複雜度：<code>O(答案總數 × n)</code>
+            需要儲存所有答案字串，遞迴本身也會有呼叫堆疊。</li>
+        </ul>
+
+        <h2 id="code-1">💻 程式碼實作（一）</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    vector&lt;string&gt; ans;
+    int len;
+    void dop(int left, int right, string s) {
+        if (left &lt; len) {
+            dop(left + 1, right, s + '(');
+        }
+        if (right &lt; left) {
+            dop(left, right + 1, s + ')');
+        }
+        if (left == len &amp;&amp; right == len) {
+            ans.push_back(s);
+        }
+        return;
+    }
+    vector&lt;string&gt; generateParenthesis(int n) {
+        len = n;
+        dop(0, 0, "");
+        return ans;
+    }
+};
+</code></pre>
+
+        <h2 id="approach-2">🧠 解題思路（二）直接函數遞迴，但會重複 WA</h2>
+        <p>我這份寫法是用函數遞迴去做：</p>
+        <p>先把 <code>n - 1</code> 對括號的所有合法答案算出來，然後對每個字串 <code>s</code>，再試著用三種方式把新的一對括號加進去：</p>
+        <ul>
+          <li>把整個 <code>s</code> 包起來：<code>'(' + s + ')'</code></li>
+          <li>把 <code>()</code> 放在左邊：<code>"()" + s</code></li>
+          <li>把 <code>()</code> 放在右邊：<code>s + "()"</code></li>
+        </ul>
+        <p>這樣的想法很直觀，因為看起來像是在把 <code>n - 1</code> 對括號擴充成 <code>n</code> 對括號。</p>
+        <p>不過這份程式也有一個重點要注意：</p>
+        <blockquote>
+          <p>這三種擴充方式不是唯一的，所以同一個合法答案可能會被重複產生。</p>
+        </blockquote>
+        <p>例如某些字串，可能既能從前一個答案做「右邊加 <code>()</code>」得到，也能從另一個答案做「外面包一層」得到。
+所以這種遞迴生成法的問題不是會產生非法字串，而是<strong>會產生重複答案</strong>。</p>
+        <p>也就是說，這份程式的核心想法是：</p>
+        <blockquote>
+          <p>先遞迴取得 <code>n - 1</code> 的所有合法括號字串，再對每個字串用三種方式擴充成 <code>n</code>。
+但因為不同來源可能生成同一個字串，所以結果裡會有重複。</p>
+        </blockquote>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>n</code>：目前要產生幾對括號</li>
+          <li><code>v</code>：遞迴取得的 <code>n - 1</code> 對括號的所有結果</li>
+          <li><code>ans</code>：目前這一層要回傳的答案陣列</li>
+          <li><code>s</code>：從 <code>v</code> 中取出的某一個合法括號字串</li>
+        </ul>
+
+        <h2 id="steps-2">🪜 主要流程步驟（二）</h2>
+        <h3>1. 先處理最小情況 n = 1</h3>
+        <pre><code class="language-cpp">if (n == 1) {
+    return {"()"};
+}</code></pre>
+        <p>如果只有一對括號，那答案只有一種，就是 <code>"()"</code>。</p>
+        <p>這也是整個遞迴的 base case。</p>
+        <hr>
+
+        <h3>2. 先遞迴求出 n - 1 對括號的所有答案</h3>
+        <pre><code class="language-cpp">vector&lt;string&gt; v;
+v = generateParenthesis(n - 1);</code></pre>
+        <p>這一步的意思是：</p>
+        <p>現在不直接處理 <code>n</code>，而是先把比較小的問題 <code>n - 1</code> 解出來。</p>
+        <p>所以 <code>v</code> 裡面會放所有 <code>n - 1</code> 對括號的合法字串。</p>
+        <hr>
+
+        <h3>3. 準備一個新的 ans 來存這一層產生的結果</h3>
+        <pre><code class="language-cpp">vector&lt;string&gt; ans;</code></pre>
+        <p>這個 <code>ans</code> 是這次 <code>generateParenthesis(n)</code> 要回傳的結果。</p>
+        <p>接下來會把從 <code>v</code> 擴充出來的所有字串都放進去。</p>
+        <hr>
+
+        <h3>4. 對每個 n - 1 的合法字串 s，試三種擴充方式</h3>
+        <pre><code class="language-cpp">for (string s : v) {
+    ans.push_back('(' + s + ')'); // 夾起來的
+    ans.push_back("()" + s);      // 左邊的
+    ans.push_back(s + "()");      // 右邊的
+}</code></pre>
+        <p>這一段是整份程式的核心。</p>
+        <p>假設目前 <code>s</code> 是一個 <code>n - 1</code> 對括號的合法字串，那我就把新的一對括號加進去，方法有三種：</p>
+        <ul>
+          <li><code>(' + s + ')'</code>
+            <ul>
+              <li>代表把原本整串包起來</li>
+            </ul>
+          </li>
+          <li><code>"()" + s</code>
+            <ul>
+              <li>代表把一對新的括號直接接到左邊</li>
+            </ul>
+          </li>
+          <li><code>s + "()"</code>
+            <ul>
+              <li>代表把一對新的括號直接接到右邊</li>
+            </ul>
+          </li>
+        </ul>
+        <p>這三種方式產生出來的字串都還是合法括號字串，所以都可以放進 <code>ans</code>。</p>
+        <hr>
+
+        <h3>5. 為什麼這樣會重複</h3>
+        <p>這份程式的問題就出在這裡：</p>
+        <p>不同的 <code>s</code>，經過不同擴充方式後，可能會產生一樣的結果。</p>
+        <p>也就是說，這個遞迴關係不是一對一的。</p>
+        <p>例如當 <code>n = 3</code> 時，<code>n - 1 = 2</code> 的答案有：</p>
+        <ul>
+          <li><code>"(())"</code></li>
+          <li><code>"()()"</code></li>
+        </ul>
+        <p>然後去做三種擴充時，有些最終字串可能會從不同來源重複被放進 <code>ans</code>。</p>
+        <p>所以這個方法雖然能生出很多合法括號字串，但<strong>沒有保證每個答案只出現一次</strong>。</p>
+        <hr>
+
+        <h3>6. 最後回傳 ans</h3>
+        <pre><code class="language-cpp">return ans;</code></pre>
+        <p>這份程式最後直接把 <code>ans</code> 回傳。</p>
+        <p>但因為前面提到的原因，這個 <code>ans</code> 可能會有重複答案，所以這份程式的遞迴想法可以理解，但結果並不是完整正確的去重版本。</p>
+
+        <h2 id="complexity-2">⏱️ 複雜度</h2>
+        <p>設 <code>T(n)</code> 表示這份遞迴程式在 <code>generateParenthesis(n)</code> 最後回傳的字串數量（包含重複）。</p>
+        <ul>
+          <li>時間複雜度：<code>O(T(n) · n)</code>
+            每個產生出來的字串長度大約是 <code>2n</code>，可視為 <code>O(n)</code>，而整體要處理 <code>T(n)</code> 個字串。</li>
+          <li>空間複雜度：<code>O(T(n) · n)</code>
+            需要儲存這一層產生的所有字串，而且每個字串長度是 <code>O(n)</code>。</li>
+        </ul>
+
+        <h2 id="code-2">💻 程式碼實作（二）</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    vector&lt;string&gt; generateParenthesis(int n) {
+        if (n == 1) {
+            return {"()"};
+        }
+        vector&lt;string&gt; v;
+        v = generateParenthesis(n - 1);
+        vector&lt;string&gt; ans;
+        for (string s : v) {
+            ans.push_back('(' + s + ')'); // 夾起來的
+            ans.push_back("()" + s);      // 左邊的
+            ans.push_back(s + "()");      // 右邊的
+        }
+        ans.pop_back();
+        return ans;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/generate-parentheses/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-03-11</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value"><span class="post-tags">
+              <span class="post-tag">String</span>
+              <span class="post-tag">Dynamic Programming</span>
+              <span class="post-tag">Backtracking</span>
+              <span class="post-tag">Medium</span>
+            </span></span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/all%20problems/22-generate-parentheses.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
