@@ -1,0 +1,192 @@
+<!-- neetcode150/518-coin-change-ii.html: 全部題單文章 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>518. Coin Change II</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+               width="18" height="18" aria-hidden="true" focusable="false"
+               style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="../neetcode150/index.html">NeetCode 150</a>
+      <span aria-hidden="true">/</span>
+      <span>518. Coin Change II</span>
+    </nav>
+
+    <section class="hero">
+      <h1>518. Coin Change II</h1>
+      <p><strong>練習日期：</strong>2026-02-23</p>
+      <p><strong>難度：</strong>Medium</p>
+      <p><strong>類型：</strong>Array、Dynamic Programming</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#complexity">⏱️ 複雜度</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給你一個整數 <code>amount</code>，以及一個整數陣列 <code>coins</code>，表示不同面額的硬幣。</p>
+        <p>請回傳可以湊出總金額 <code>amount</code> 的「組合數量」。</p>
+        <p>如果無法湊出該金額，回傳 <code>0</code>。</p>
+        <p>你可以假設每種硬幣的數量是無限的。</p>
+        <p>答案保證可以放進 32-bit 有號整數。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>1 &lt;= coins.length &lt;= 300</code></li>
+          <li><code>1 &lt;= coins[i] &lt;= 5000</code></li>
+          <li><code>0 &lt;= amount &lt;= 5000</code></li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>這題是典型的「完全背包」組合數 DP。</p>
+        <p>我用一維 DP <code>step[j]</code> 表示：</p>
+        <p>湊出金額 <code>j</code> 的組合數量（只使用目前處理到的那些硬幣種類）。</p>
+        <p>初始化 <code>step[0] = 1</code>，表示湊出 0 元只有一種方式：什麼都不選。</p>
+        <p>接著我用外層迴圈跑每一種硬幣 <code>i</code>，內層從 <code>j = i</code> 跑到 <code>amount</code>：</p>
+        <p><code>step[j] += step[j - i]</code></p>
+        <p>意思是：如果我要湊出 <code>j</code>，而且可以用面額 <code>i</code>，那我可以從「先湊出 <code>j - i</code>」的每一種方式後面再加一個 <code>i</code>，就會得到新的方式。</p>
+        <p>外層先跑硬幣、內層金額由小到大，這個順序能保證我們數到的是「組合」而不是「排列」（不會因為硬幣順序不同而重複計數）。</p>
+        <p>我用 <code>long long</code> 存 <code>step</code> 是避免中間加總溢位，並且如果超過 <code>INT_MAX</code> 就直接 cap 到 <code>INT_MAX</code>，讓回傳值仍符合題目 32-bit 的保證。</p>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>step</code>：DP 陣列，<code>step[j]</code> 表示湊出金額 <code>j</code> 的組合數量</li>
+          <li><code>i</code>：目前處理的硬幣面額</li>
+          <li><code>j</code>：目前要更新的金額</li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+        <h3>1. 建立 DP 陣列 step，並初始化 step[0] = 1</h3>
+        <p>我用 <code>step</code> 長度 <code>amount + 1</code>，一開始全部設 0。</p>
+        <p>把 <code>step[0] = 1</code>，代表湊 0 元只有一種方式。</p>
+
+        <hr>
+
+        <h3>2. 外層跑硬幣種類，內層跑金額（由小到大）</h3>
+        <p>對每個硬幣面額 <code>i</code>：</p>
+        <p>我讓 <code>j</code> 從 <code>i</code> 走到 <code>amount</code>：</p>
+        <ul>
+          <li><code>step[j] += step[j - i]</code></li>
+        </ul>
+        <p>代表把所有「湊出 j-i 的方法」延伸成「湊出 j 的方法」。</p>
+
+        <hr>
+
+        <h3>3. 用 INT_MAX 封頂，避免 long long 結果太大</h3>
+        <p>題目說答案一定在 32-bit 內，但中間加總我還是用 <code>long long</code> 存。</p>
+        <p>如果 <code>step[j] &gt; INT_MAX</code>，我就把它設成 <code>INT_MAX</code>，讓回傳值不會爆掉。</p>
+
+        <hr>
+
+        <h3>4. 回傳 step[amount]</h3>
+        <p>最後 <code>step[amount]</code> 就是湊出 <code>amount</code> 的組合數量。</p>
+
+        <h2 id="complexity">⏱️ 複雜度</h2>
+        <ul>
+          <li>時間複雜度：<code>O(amount * coins.length)</code>
+            每個硬幣都要更新一次 0..amount 的 DP。</li>
+          <li>空間複雜度：<code>O(amount)</code>
+            只用一個長度 <code>amount + 1</code> 的一維 DP。</li>
+        </ul>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    int change(int amount, vector&lt;int&gt;&amp; coins) {
+        vector&lt;long long&gt; step(amount + 1, 0);
+        step[0] = 1;
+        for (int i : coins) {
+            for (int j = i; j &lt;= amount; j++) {
+                step[j] += step[j - i];
+                if (step[j] &gt; INT_MAX) {
+                    step[j] = INT_MAX;
+                }
+            }
+        }
+        return step[amount];
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p><a href="https://leetcode.com/problems/coin-change-ii/">https://leetcode.com/problems/coin-change-ii/</a></p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-02-23</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value"><span class="post-tags">
+              <span class="post-tag">Array</span>
+              <span class="post-tag">Dynamic Programming</span>
+              <span class="post-tag">Medium</span>
+            </span></span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/neetcode150/518-coin-change-ii.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>

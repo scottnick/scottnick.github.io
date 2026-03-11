@@ -1,0 +1,186 @@
+<!-- neetcode150/746-min-cost-climbing-stairs.html: 全部題單文章 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>746. Min Cost Climbing Stairs</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+               width="18" height="18" aria-hidden="true" focusable="false"
+               style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="../neetcode150/index.html">NeetCode 150</a>
+      <span aria-hidden="true">/</span>
+      <span>746. Min Cost Climbing Stairs</span>
+    </nav>
+
+    <section class="hero">
+      <h1>746. Min Cost Climbing Stairs</h1>
+      <p><strong>練習日期：</strong>2026-02-24</p>
+      <p><strong>難度：</strong>Easy</p>
+      <p><strong>類型：</strong>Array、Dynamic Programming</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#complexity">⏱️ 複雜度</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給你一個整數陣列 <code>cost</code>，其中 <code>cost[i]</code> 是爬上第 <code>i</code> 階樓梯的花費。</p>
+        <p>當你支付 <code>cost[i]</code> 後，你可以從第 <code>i</code> 階往上爬 1 階或 2 階。</p>
+        <p>你可以選擇從第 <code>0</code> 階或第 <code>1</code> 階開始。</p>
+        <p>請回傳到達樓梯頂端的最小花費。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>2 &lt;= cost.length &lt;= 1000</code></li>
+          <li><code>0 &lt;= cost[i] &lt;= 999</code></li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>這題我用 DP，把「走到某一階時的最小花費」記下來。</p>
+        <p>我定義 <code>dp[i]</code> 表示：</p>
+        <p>走到第 <code>i</code> 階（並且踩上它、付出 <code>cost[i]</code>）的最小花費是多少。</p>
+        <p>那要到第 <code>i</code> 階，只可能從：</p>
+        <ul>
+          <li>第 <code>i-1</code> 階走 1 步上來</li>
+          <li>第 <code>i-2</code> 階走 2 步上來</li>
+        </ul>
+        <p>所以遞推式就是：</p>
+        <p><code>dp[i] = min(dp[i-1], dp[i-2]) + cost[i]</code></p>
+        <p>最後題目要到的是「樓梯頂端」，頂端是在 <code>n</code> 的位置，不算一個真正的階梯，所以最後一步可以從：</p>
+        <ul>
+          <li><code>n-1</code> 踩上去後走 1 步到頂</li>
+          <li><code>n-2</code> 踩上去後走 2 步到頂</li>
+        </ul>
+        <p>因此答案是：</p>
+        <p><code>min(dp[n-1], dp[n-2])</code></p>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>n</code>：樓梯階數（<code>cost.size()</code>）</li>
+          <li><code>dp</code>：DP 陣列，<code>dp[i]</code> 表示踩到第 <code>i</code> 階時的最小花費</li>
+          <li><code>i</code>：用來從 2 推到 n-1 的迴圈索引</li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+        <h3>1. 初始化 dp[0] 與 dp[1]</h3>
+        <p>因為可以從 0 或 1 開始，所以：</p>
+        <ul>
+          <li>踩到第 0 階的最小花費就是 <code>cost[0]</code></li>
+          <li>踩到第 1 階的最小花費就是 <code>cost[1]</code></li>
+        </ul>
+        <p>所以我先設：</p>
+        <p><code>dp[0] = cost[0]</code><br><code>dp[1] = cost[1]</code></p>
+        <hr />
+
+        <h3>2. 由小到大推 dp[i]</h3>
+        <p>從 <code>i = 2</code> 到 <code>n-1</code>：</p>
+        <p><code>dp[i] = min(dp[i-1], dp[i-2]) + cost[i]</code></p>
+        <hr />
+
+        <h3>3. 回傳到頂端的最小花費</h3>
+        <p>到頂端不用付費，所以只要看最後一步從哪一階上去最便宜：</p>
+        <p>回傳 <code>min(dp[n-1], dp[n-2])</code>。</p>
+
+        <h2 id="complexity">⏱️ 複雜度</h2>
+        <ul>
+          <li>時間複雜度：<code>O(n)</code></li>
+          <li>空間複雜度：<code>O(n)</code></li>
+        </ul>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    int minCostClimbingStairs(vector&lt;int&gt;&amp; cost) {
+        int n = cost.size();
+        vector&lt;int&gt; dp(n);
+        dp[0] = cost[0], dp[1] = cost[1];
+        for (int i = 2; i &lt; n; i++) {
+            dp[i] = min(dp[i - 1], dp[i - 2]) + cost[i];
+        }
+        return min(dp[n - 1], dp[n - 2]);
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/min-cost-climbing-stairs/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-02-24</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value"><span class="post-tags">
+              <span class="post-tag">Array</span>
+              <span class="post-tag">Dynamic Programming</span>
+              <span class="post-tag">Easy</span>
+            </span></span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/neetcode150/746-min-cost-climbing-stairs.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>

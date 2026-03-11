@@ -1,0 +1,179 @@
+<!-- neetcode150/215-kth-largest-element-in-an-array.html: NeetCode 150 文章 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>215. Kth Largest Element in an Array</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+               width="18" height="18" aria-hidden="true" focusable="false"
+               style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="../neetcode150/index.html">NeetCode 150</a>
+      <span aria-hidden="true">/</span>
+      <span>215. Kth Largest Element in an Array</span>
+    </nav>
+
+    <section class="hero">
+      <h1>215. Kth Largest Element in an Array</h1>
+      <p><strong>練習日期：</strong>2026-02-19</p>
+      <p><strong>難度：</strong>Medium</p>
+      <p><strong>類型：</strong>Array、Divide and Conquer、Sorting、Heap (Priority Queue)、Quickselect</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#complexity">⏱️ 複雜度</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給你一個整數陣列 <code>nums</code> 和一個整數 <code>k</code>，請回傳陣列中第 <code>k</code> 大的元素。</p>
+        <p>注意：你要找的是「排序後的第 <code>k</code> 大元素」，不是第 <code>k</code> 個不同的元素。</p>
+        <p>你能在不排序的情況下解出來嗎？</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>1 &lt;= k &lt;= nums.length &lt;= 10^5</code></li>
+          <li><code>-10^4 &lt;= nums[i] &lt;= 10^4</code></li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>我這題用的是「大小固定為 <code>k</code> 的最小堆（min-heap）」。</p>
+        <p>核心想法是：</p>
+        <ul>
+          <li>如果我手上永遠只保留「目前看過的元素裡最大的 <code>k</code> 個」</li>
+          <li>那麼這 <code>k</code> 個裡面最小的那個，就剛好是整體的第 <code>k</code> 大</li>
+        </ul>
+        <p>所以我用一個 min-heap <code>q</code>：</p>
+        <ul>
+          <li>每看到一個數字就丟進去</li>
+          <li>只要 heap 的大小超過 <code>k</code>，就把最小的那個彈掉，這代表「太小的元素不可能成為前 <code>k</code> 大」，直接丟掉就好</li>
+        </ul>
+        <p>最後 heap 裡剩下的就是「最大的 <code>k</code> 個」，而 <code>q.top()</code> 就是第 <code>k</code> 大。</p>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>q</code>：最小堆（min-heap），用來維持「目前最大的 k 個元素」，堆頂永遠是這 k 個裡最小的那個</li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+        <h3>1. 用 min-heap 維持「最大的 k 個元素」</h3>
+        <p>我宣告 <code>priority_queue&lt;int, vector&lt;int&gt;, greater&lt;int&gt;&gt; q;</code>，這樣 <code>q.top()</code> 會是目前 heap 裡最小的元素。</p>
+        <hr />
+
+        <h3>2. 逐一把 nums 的元素放進 heap</h3>
+        <p>每讀到一個 <code>nums</code> 裡的值，我就先 <code>q.push(i)</code>。</p>
+        <hr />
+
+        <h3>3. 如果 heap 超過 k 個，就把最小的丟掉</h3>
+        <p>一旦 <code>q.size() &gt; k</code>，就 <code>q.pop()</code>。</p>
+        <p>這一步等於在做：「我只想保留最大的 <code>k</code> 個，其他更小的就不用留」。</p>
+        <hr />
+
+        <h3>4. 最後 heap 的頂端就是答案</h3>
+        <p>跑完後 heap 內一定剩下 <code>k</code> 個元素，而且是「最大的 <code>k</code> 個」。因此 <code>q.top()</code> 就是第 <code>k</code> 大，直接回傳。</p>
+
+        <h2 id="complexity">⏱️ 複雜度</h2>
+        <ul>
+          <li>時間複雜度：<code>O(n log k)</code>，每個元素最多 push / pop 一次，heap 操作是 <code>log k</code></li>
+          <li>空間複雜度：<code>O(k)</code>，heap 最多只保留 <code>k</code> 個元素</li>
+        </ul>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    int findKthLargest(vector&lt;int&gt;&amp; nums, int k) {
+        priority_queue&lt;int, vector&lt;int&gt;, greater&lt;int&gt;&gt; q; // top是最小
+        for (int i : nums) {
+            q.push(i);
+            if (q.size() &gt; k) {
+                q.pop();
+            }
+        }
+        return q.top();
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/kth-largest-element-in-an-array/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-02-19</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value"><span class="post-tags">
+              <span class="post-tag">Array</span>
+              <span class="post-tag">Divide and Conquer</span>
+              <span class="post-tag">Sorting</span>
+              <span class="post-tag">Heap (Priority Queue)</span>
+              <span class="post-tag">Quickselect</span>
+              <span class="post-tag">Medium</span>
+            </span></span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/neetcode150/215-kth-largest-element-in-an-array.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
