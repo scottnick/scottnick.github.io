@@ -1,0 +1,480 @@
+<!-- all problems/207-course-schedule.html -->
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>207. Course Schedule</title>
+    <link rel="stylesheet" href="../../styles.css" />
+  </head>
+  <body class="page-article">
+    <header>
+      <nav class="navbar">
+        <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+        <button
+          class="menu-btn"
+          id="menu-btn"
+          aria-label="開啟選單"
+          aria-expanded="false"
+        >
+          ☰
+        </button>
+        <div class="nav-links" id="nav-links">
+          <a href="../../index.html">主頁</a>
+          <a href="../../courses.html">修課紀錄</a>
+          <a href="../../cpp.html" class="active">C++學習筆記</a>
+          <a href="../../profile.html">個人檔案</a>
+        </div>
+        <div class="nav-actions">
+          <a class="nav-action-link" href="../../categories.html">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              width="18"
+              height="18"
+              aria-hidden="true"
+              focusable="false"
+              style="
+                display: inline-block;
+                vertical-align: -3px;
+                margin-right: 6px;
+              "
+            >
+              <rect
+                x="4"
+                y="4"
+                width="7"
+                height="7"
+                rx="1.2"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+              ></rect>
+              <rect
+                x="13"
+                y="4"
+                width="7"
+                height="7"
+                rx="1.2"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+              ></rect>
+              <rect
+                x="4"
+                y="13"
+                width="7"
+                height="7"
+                rx="1.2"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+              ></rect>
+              <rect
+                x="13"
+                y="13"
+                width="7"
+                height="7"
+                rx="1.2"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+              ></rect>
+            </svg>
+            類別
+          </a>
+          <button
+            class="icon-btn toggle-btn"
+            id="theme-toggle"
+            aria-label="切換主題"
+          >
+            <span id="theme-icon" aria-hidden="true">☀️</span>
+          </button>
+        </div>
+      </nav>
+    </header>
+
+    <main>
+      <nav class="breadcrumb" aria-label="文章路徑">
+        <a href="../../cpp.html">C++學習筆記</a>
+        <span aria-hidden="true">/</span>
+        <a href="index.html">All problems</a>
+        <span aria-hidden="true">/</span>
+        <span>207. Course Schedule</span>
+      </nav>
+
+      <section class="hero">
+        <h1>207. Course Schedule</h1>
+        <p><strong>練習日期：</strong>2026-03-11</p>
+        <p><strong>難度：</strong>Medium</p>
+        <p>
+          <strong>類型：</strong>Depth-First Search、Breadth-First Search、Graph
+          Theory、Topological Sort
+        </p>
+      </section>
+
+      <div class="article-layout">
+        <aside class="article-toc" aria-label="文章目錄">
+          <button
+            class="toc-toggle"
+            id="article-toc-toggle"
+            type="button"
+            aria-expanded="false"
+          >
+            目錄
+          </button>
+          <strong>目錄</strong>
+          <ul>
+            <li><a href="#statement">📘 題目敘述</a></li>
+            <li><a href="#approach">🧠 解題思路</a></li>
+            <li><a href="#steps">🪜 主要流程步驟</a></li>
+            <li><a href="#complexity">⏱️ 複雜度</a></li>
+            <li><a href="#code">💻 程式碼實作</a></li>
+            <li><a href="#link">🔗 題目連結</a></li>
+          </ul>
+        </aside>
+
+        <section class="term-block article-content">
+          <h2 id="statement">📘 題目敘述</h2>
+          <p>
+            總共有 <code>numCourses</code> 門課要修，課程編號從 <code>0</code> 到
+            <code>numCourses - 1</code>。
+          </p>
+          <p>
+            給你一個陣列 <code>prerequisites</code>，其中
+            <code>prerequisites[i] = [ai, bi]</code> 表示：如果你想修課程
+            <code>ai</code>，你必須先修完課程 <code>bi</code>。
+          </p>
+          <p>
+            例如，配對 <code>[0, 1]</code> 表示：要修課程 <code>0</code>，你必須先修課程
+            <code>1</code>。
+          </p>
+          <p>
+            請回傳你是否能修完所有課程。 如果可以，回傳 <code>true</code>；否則回傳
+            <code>false</code>。
+          </p>
+
+          <h3>條件限制</h3>
+          <ul>
+            <li><code>1 &lt;= numCourses &lt;= 2000</code></li>
+            <li><code>0 &lt;= prerequisites.length &lt;= 5000</code></li>
+            <li><code>prerequisites[i].length == 2</code></li>
+            <li><code>0 &lt;= ai, bi &lt; numCourses</code></li>
+            <li><code>prerequisites</code> 中所有配對都互不相同</li>
+          </ul>
+
+          <h2 id="approach">🧠 解題思路</h2>
+          <p>這題的重點是判斷：課程之間的先修關係圖裡，有沒有環。</p>
+          <p>如果有環，就代表會出現這種情況：</p>
+          <ul>
+            <li>修 A 之前要先修 B</li>
+            <li>修 B 之前要先修 C</li>
+            <li>修 C 之前又要先修 A</li>
+          </ul>
+          <p>
+            那這樣就永遠沒辦法開始，所以答案是 <code>false</code>。
+          </p>
+          <p>
+            如果沒有環，代表這些課可以照某種順序一路修完，所以答案是
+            <code>true</code>。
+          </p>
+          <p>我這份寫法是用 DFS 來檢查圖中有沒有 cycle。</p>
+          <p>先把課程關係建成 adjacency list：</p>
+          <ul>
+            <li><code>course[b]</code> 裡面放的是：修完 <code>b</code> 之後，可以接到哪些課</li>
+            <li>也就是程式裡這個意思：</li>
+          </ul>
+          <pre><code class="language-cpp">course[b].push_back(a);</code></pre>
+          <p>接著我用一個 <code>check</code> 陣列記錄每個點目前的狀態：</p>
+          <ul>
+            <li><code>0</code>：還沒檢查過</li>
+            <li><code>1</code>：這個點目前正在 DFS 路徑上</li>
+            <li><code>2</code>：這個點已經確認沒問題，可以完成</li>
+          </ul>
+          <p>這樣做的關鍵是：</p>
+          <ul>
+            <li>如果 DFS 走到某個點時，發現它已經是 <code>1</code></li>
+            <li>代表我又走回目前遞迴路徑上的點了</li>
+            <li>這就表示圖中有環，直接回傳 <code>false</code></li>
+          </ul>
+          <p>
+            如果某個點已經是 <code>2</code>，代表它之前已經檢查過，而且從它出發不會遇到環，那這次就不用再重跑，直接回傳
+            <code>true</code>。
+          </p>
+          <p>所以這題核心就是：</p>
+          <blockquote>
+            <p>
+              用 DFS 檢查每個課程出發的路徑上有沒有回到「正在遞迴中的點」，如果有就是有環，不能完成所有課程。
+            </p>
+          </blockquote>
+
+          <h3>所有變數</h3>
+          <ul>
+            <li>
+              <code>course</code>：鄰接串列，<code>course[x]</code> 表示從課程
+              <code>x</code> 可以連到哪些後續課程
+            </li>
+            <li><code>check</code>：記錄每個課程的 DFS 狀態</li>
+            <li><code>0</code>：未檢查</li>
+            <li><code>1</code>：正在遞迴中</li>
+            <li><code>2</code>：已確認可完成</li>
+            <li>
+              <code>row</code>：在讀 <code>prerequisites</code> 時，代表其中一組
+              <code>[a, b]</code>
+            </li>
+          </ul>
+
+          <h2 id="steps">🪜 主要流程步驟</h2>
+          <h3>1. 先建立課程關係圖</h3>
+          <p>在 <code>canFinish</code> 裡，先把圖的空間開好：</p>
+          <pre><code class="language-cpp">course.resize(numCourses);
+check.assign(numCourses, 0);</code></pre>
+          <p>這裡：</p>
+          <ul>
+            <li><code>course.resize(numCourses)</code>：讓每門課都有自己的鄰接串列</li>
+            <li>
+              <code>check.assign(numCourses, 0)</code>：一開始所有課都還沒檢查，所以全部設成
+              <code>0</code>
+            </li>
+          </ul>
+          <p>接著讀 <code>prerequisites</code>：</p>
+          <pre><code class="language-cpp">for (auto&amp; row : prerequisites) {
+    int a = row[0];
+    int b = row[1];
+    course[b].push_back(a); // b可以到a
+}</code></pre>
+          <p>
+            如果 <code>[a, b]</code> 表示修 <code>a</code> 前要先修
+            <code>b</code>，那圖上就建一條：
+          </p>
+          <ul>
+            <li><code>b -&gt; a</code></li>
+          </ul>
+          <p>意思是：修完 <code>b</code> 之後，才有可能往 <code>a</code> 走。</p>
+
+          <hr />
+
+          <h3>2. 對每一門課都嘗試做 DFS 檢查</h3>
+          <pre><code class="language-cpp">for (int i = 0; i &lt; numCourses; i++) {
+    if (!dfs(i)) {
+        return false;
+    }
+}</code></pre>
+          <p>這一步是因為圖不一定連通。</p>
+          <p>也就是說：</p>
+          <ul>
+            <li>有些課程可能在同一個連通塊</li>
+            <li>有些課程可能完全獨立</li>
+            <li>有些課程可能在另一群先修關係裡</li>
+          </ul>
+          <p>
+            所以不能只從某一個點開始 DFS，而是要把每門課都檢查一次。
+          </p>
+          <p>
+            只要其中有任何一門課在 DFS 過程中發現環，就直接回傳
+            <code>false</code>。
+          </p>
+
+          <hr />
+
+          <h3>3. dfs(n) 一進來先看這個點現在是什麼狀態</h3>
+          <pre><code class="language-cpp">if (check[n] == 1) {
+    return false;
+}
+if (check[n] == 2) {
+    return true;
+}</code></pre>
+          <p>這兩個判斷是整份程式的核心。</p>
+          <p>第一個：</p>
+          <ul>
+            <li>如果 <code>check[n] == 1</code></li>
+            <li>代表這個點現在正在目前的遞迴路徑上</li>
+          </ul>
+          <p>
+            此時如果又走回它，就表示出現 cycle，所以直接回傳
+            <code>false</code>。
+          </p>
+          <p>第二個：</p>
+          <ul>
+            <li>如果 <code>check[n] == 2</code></li>
+            <li>代表這個點之前已經完整檢查過，確定從它出發不會形成環</li>
+          </ul>
+          <p>所以這次不用重算，直接回傳 <code>true</code>。</p>
+
+          <hr />
+
+          <h3>4. 把目前這個點標記成「正在檢查」</h3>
+          <pre><code class="language-cpp">check[n] = 1;</code></pre>
+          <p>這一步的意思是：</p>
+          <ul>
+            <li>我現在開始 DFS 這個課程 <code>n</code></li>
+            <li>所以先把它標記成「正在遞迴中」</li>
+          </ul>
+          <p>
+            這樣如果之後沿著它的後續課程一路走，又繞回來看到它，就能判斷出有環。
+          </p>
+
+          <hr />
+
+          <h3>5. 遞迴檢查所有後續課程</h3>
+          <pre><code class="language-cpp">for (int j : course[n]) {
+    if (!dfs(j)) {
+        return false;
+    }
+}</code></pre>
+          <p>這裡會把 <code>n</code> 的所有鄰接點都往下檢查。</p>
+          <p>意思是：</p>
+          <ul>
+            <li>如果修完 <code>n</code> 之後，可能接到很多課 <code>j</code></li>
+            <li>那每一條路都要確認不會形成環</li>
+          </ul>
+          <p>
+            只要其中任何一個 <code>dfs(j)</code> 回傳 <code>false</code>，就代表某條路上有
+            cycle，那整體就不可能完成所有課程，所以直接回傳
+            <code>false</code>。
+          </p>
+
+          <hr />
+
+          <h3>6. 如果所有後續都沒問題，就把它標成「可完成」</h3>
+          <pre><code class="language-cpp">check[n] = 2;
+return true;</code></pre>
+          <p>如果程式走到這裡，代表：</p>
+          <ul>
+            <li><code>n</code> 的所有後續課程都檢查完了</li>
+            <li>沒有任何一條路形成環</li>
+          </ul>
+          <p>
+            所以 <code>n</code> 這個點可以安全完成，之後如果別的 DFS 又走到它，就不必重新檢查了，直接知道它是合法的。
+          </p>
+          <p>
+            這也是 <code>check == 2</code> 的用途：做記憶化，避免重複 DFS。
+          </p>
+
+          <hr />
+
+          <h3>7. 為什麼這樣就能判斷能不能修完所有課</h3>
+          <p>這題本質上就是在問：</p>
+          <ul>
+            <li>先修課程關係圖是不是 DAG（Directed Acyclic Graph）</li>
+          </ul>
+          <p>如果是 DAG：</p>
+          <ul>
+            <li>一定存在某種修課順序</li>
+            <li>所以可以完成所有課程</li>
+          </ul>
+          <p>如果不是 DAG，也就是有環：</p>
+          <ul>
+            <li>某些課彼此互相依賴</li>
+            <li>永遠無法開始</li>
+            <li>所以不能完成所有課程</li>
+          </ul>
+          <p>而這份程式就是用 DFS 遞迴時的三種狀態：</p>
+          <ul>
+            <li><code>0</code> 未檢查</li>
+            <li><code>1</code> 正在檢查</li>
+            <li><code>2</code> 已確認安全</li>
+          </ul>
+          <p>來抓出有沒有環。</p>
+
+          <h2 id="complexity">⏱️ 複雜度</h2>
+          <ul>
+            <li>
+              時間複雜度：<code>O(numCourses + prerequisites.length)</code>
+              每個課程與每條先修邊最多被 DFS 檢查一次。
+            </li>
+            <li>
+              空間複雜度：<code>O(numCourses + prerequisites.length)</code>
+              需要鄰接串列儲存圖，另外 <code>check</code> 與遞迴堆疊最多也會用到
+              <code>O(numCourses)</code>。
+            </li>
+          </ul>
+
+          <h2 id="code">💻 程式碼實作</h2>
+          <pre><code class="language-cpp">class Solution {
+public:
+    vector&lt;vector&lt;int&gt;&gt; course;
+    vector&lt;int&gt; check; // 0是無，1是正在，2是可
+
+    bool dfs(int n) {
+        if (check[n] == 1) {
+            return false;
+        }
+        if (check[n] == 2) {
+            return true;
+        }
+        check[n] = 1;
+        for (int j : course[n]) {
+            if (!dfs(j)) {
+                return false;
+            }
+        }
+        check[n] = 2;
+        return true;
+    }
+
+    bool canFinish(int numCourses, vector&lt;vector&lt;int&gt;&gt;&amp; prerequisites) {
+        course.resize(numCourses);
+        check.assign(numCourses, 0);
+        for (auto&amp; row : prerequisites) {
+            int a = row[0];
+            int b = row[1];
+            course[b].push_back(a); // b可以到a
+        }
+        for (int i = 0; i &lt; numCourses; i++) {
+            if (!dfs(i)) {
+                return false;
+            }
+        }
+        return true;
+    }
+};</code></pre>
+
+          <h2 id="link">🔗 題目連結</h2>
+          <p>
+            <a
+              href="https://leetcode.com/problems/course-schedule/"
+              target="_blank"
+              rel="noopener noreferrer"
+              >https://leetcode.com/problems/course-schedule/</a
+            >
+          </p>
+        </section>
+      </div>
+
+      <section class="term-block article-footer">
+        <h2 class="article-footer__title">文章資訊</h2>
+        <div class="meta-grid">
+          <div class="meta-field">
+            <span class="meta-label">作者：</span
+            ><span class="meta-value">scottnick</span>
+          </div>
+          <div class="meta-field meta-field--date">
+            <span class="meta-label">撰寫日期：</span
+            ><span class="meta-value">2026-03-11</span>
+          </div>
+          <div class="meta-field meta-field--full">
+            <span class="meta-label">類別：</span>
+            <span class="meta-value">
+              <span class="post-tags">
+                <span class="post-tag">Depth-First Search</span>
+                <span class="post-tag">Breadth-First Search</span>
+                <span class="post-tag">Graph Theory</span>
+                <span class="post-tag">Topological Sort</span>
+                <span class="post-tag">Medium</span>
+              </span>
+            </span>
+          </div>
+          <div class="meta-field meta-field--full">
+            <span class="meta-label">原文連結：</span
+            ><span class="meta-value"
+              >https://scottnick.github.io/cpp-notes/all%20problems/207-course-schedule.html</span
+            >
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script src="../../script.js"></script>
+  </body>
+</html>
