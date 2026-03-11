@@ -1,0 +1,185 @@
+<!-- neetcode150/104-maximum-depth-of-binary-tree.html: NeetCode 150 文章 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>104. Maximum Depth of Binary Tree</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+               width="18" height="18" aria-hidden="true" focusable="false"
+               style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="../neetcode150/index.html">NeetCode 150</a>
+      <span aria-hidden="true">/</span>
+      <span>104. Maximum Depth of Binary Tree</span>
+    </nav>
+
+    <section class="hero">
+      <h1>104. Maximum Depth of Binary Tree</h1>
+      <p><strong>練習日期：</strong>2026-02-01</p>
+      <p><strong>難度：</strong>Easy</p>
+      <p><strong>類型：</strong>Tree、Depth-First Search、Breadth-First Search、Binary Tree</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給你一棵二元樹的根節點 <code>root</code>，請回傳它的最大深度。</p>
+        <p>二元樹的最大深度是指：從根節點一路往下到最遠葉節點的最長路徑上，包含的節點數量。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li>樹的節點數量在 <code>[0, 10^4]</code> 範圍內。</li>
+          <li><code>-100 &lt;= Node.val &lt;= 100</code>。</li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>我用遞迴去算深度（DFS），概念很直接：</p>
+        <ul>
+          <li>一棵樹的最大深度 = <code>max(左子樹最大深度, 右子樹最大深度) + 1</code></li>
+          <li>如果 <code>root == nullptr</code>（空樹 / 走到葉子下面），深度就是 <code>0</code></li>
+        </ul>
+        <blockquote>
+          <p><strong>核心不變式</strong>：<br>
+          <code>maxDepth(node)</code> 回傳的是「以 <code>node</code> 為根的子樹」的最大深度。<br>
+          所以只要把左、右子樹的答案拿回來取最大，再加上自己這一層的 <code>1</code> 就結束。</p>
+        </blockquote>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>root</code>：目前子樹的根節點指標</li>
+          <li><code>l</code>：<code>root-&gt;left</code> 子樹的最大深度</li>
+          <li><code>r</code>：<code>root-&gt;right</code> 子樹的最大深度</li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+        <h3>1. 遇到空節點就回傳 0</h3>
+        <ul>
+          <li><code>if (root == nullptr) return 0;</code></li>
+          <li>代表：沒有節點就沒有深度（這也是遞迴的停止條件）</li>
+        </ul>
+        <hr />
+
+        <h3>2. 遞迴取得左右子樹深度</h3>
+        <ul>
+          <li><code>l = maxDepth(root-&gt;left);</code></li>
+          <li><code>r = maxDepth(root-&gt;right);</code></li>
+          <li>這兩行會把「左右子樹的最大深度」算出來</li>
+        </ul>
+        <hr />
+
+        <h3>3. 回傳本層答案</h3>
+        <ul>
+          <li><code>return max(l, r) + 1;</code></li>
+          <li><code>+1</code> 是把「目前這個 root 節點」算進路徑長度</li>
+        </ul>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left),
+ * right(right) {}
+ * };
+ */
+class Solution {
+public:
+    int maxDepth(TreeNode* root) {
+        if (root == nullptr) {
+            return 0;
+        }
+        int l = maxDepth(root-&gt;left);
+        int r = maxDepth(root-&gt;right);
+        return max(l, r) + 1;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/maximum-depth-of-binary-tree/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-02-01</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value"><span class="post-tags">
+              <span class="post-tag">Tree</span>
+              <span class="post-tag">Depth-First Search</span>
+              <span class="post-tag">Breadth-First Search</span>
+              <span class="post-tag">Binary Tree</span>
+              <span class="post-tag">Easy</span>
+            </span></span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/neetcode150/104-maximum-depth-of-binary-tree.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>

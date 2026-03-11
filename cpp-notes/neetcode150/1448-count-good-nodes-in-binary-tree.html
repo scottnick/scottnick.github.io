@@ -1,0 +1,196 @@
+<!-- neetcode150/1448-count-good-nodes-in-binary-tree.html: NeetCode 150 文章 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>1448. Count Good Nodes in Binary Tree</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+               width="18" height="18" aria-hidden="true" focusable="false"
+               style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="../neetcode150/index.html">NeetCode 150</a>
+      <span aria-hidden="true">/</span>
+      <span>1448. Count Good Nodes in Binary Tree</span>
+    </nav>
+
+    <section class="hero">
+      <h1>1448. Count Good Nodes in Binary Tree</h1>
+      <p><strong>練習日期：</strong>2026-02-10</p>
+      <p><strong>難度：</strong>Medium</p>
+      <p><strong>類型：</strong>Tree、Depth-First Search、Breadth-First Search、Binary Tree</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給你一棵二元樹的根節點 <code>root</code>。</p>
+        <p>如果在從根節點到某個節點 <code>X</code> 的路徑上，沒有任何節點的值大於 <code>X</code> 的值，則稱節點 <code>X</code> 為 good。</p>
+        <p>請回傳二元樹中 good 節點的數量。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li>二元樹中的節點數量在範圍 <code>[1, 10^5]</code></li>
+          <li><code>-10^4 &lt;= Node.val &lt;= 10^4</code></li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>我在走訪樹的時候，只要能一直知道一件事就夠了：</p>
+        <blockquote>
+          <p><strong>從根走到目前這個節點的路徑上，出現過的最大值是多少。</strong></p>
+        </blockquote>
+        <p>我把這個「路徑最大值」用一個參數 <code>best</code> 帶進遞迴。</p>
+        <p>當我走到某個節點 <code>root</code>：</p>
+        <ul>
+          <li>如果 <code>root-&gt;val &gt;= best</code>，代表它不小於路徑上任何一個值，所以它就是 good node，<code>count++</code></li>
+        </ul>
+        <p>接著我往左右子樹遞迴時，要更新路徑最大值：</p>
+        <ul>
+          <li>新的路徑最大值就是 <code>max(best, root-&gt;val)</code></li>
+        </ul>
+        <p>這樣每個節點只需要被走一次，就能判斷它是不是 good。</p>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>root</code>：題目輸入的樹根節點（也是 <code>check</code> 目前檢查的節點）</li>
+          <li><code>count</code>：good nodes 的數量（全域累加，最後回傳）</li>
+          <li><code>best</code>：從根到目前節點這條路徑上的最大值</li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+        <h3>1. 用 <code>best</code> 代表「走到目前為止的路徑最大值」</h3>
+        <p>我設計 <code>check(root, best)</code>，其中 <code>best</code> 永遠代表「從根到 <code>root</code> 的路徑上出現過的最大值」。</p>
+        <hr />
+
+        <h3>2. 每到一個節點就判斷它是不是 good</h3>
+        <p>如果 <code>root-&gt;val &gt;= best</code>，就代表路徑上沒有比它更大的值，所以它是 good node，直接 <code>count++</code>。</p>
+        <hr />
+
+        <h3>3. 往左右子樹遞迴時更新 best</h3>
+        <p>往下走之後，路徑最大值要包含目前節點，所以我用 <code>max(root-&gt;val, best)</code> 把它傳給下一層，確保子節點判斷時拿到的是正確的路徑最大值。</p>
+        <hr />
+
+        <h3>4. 從根開始呼叫 check，最後回傳 count</h3>
+        <p>在 <code>goodNodes(root)</code> 中：</p>
+        <ul>
+          <li>我用 <code>check(root, root-&gt;val)</code> 讓起始路徑最大值先等於根本身</li>
+          <li>走完整棵樹後回傳 <code>count</code></li>
+        </ul>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left),
+ * right(right) {}
+ * };
+ */
+class Solution {
+public:
+    int count = 0;
+    void check(TreeNode* root, int best) {
+        if (root) {
+            if (root-&gt;val &gt;= best) {
+                count++;
+            }
+            check(root-&gt;left, max(root-&gt;val, best));
+            check(root-&gt;right, max(root-&gt;val, best));
+        } else {
+            return;
+        }
+    }
+    int goodNodes(TreeNode* root) {
+        check(root, root-&gt;val);
+        return count;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/count-good-nodes-in-binary-tree/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-02-10</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value"><span class="post-tags">
+              <span class="post-tag">Tree</span>
+              <span class="post-tag">Depth-First Search</span>
+              <span class="post-tag">Breadth-First Search</span>
+              <span class="post-tag">Binary Tree</span>
+              <span class="post-tag">Medium</span>
+            </span></span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/neetcode150/1448-count-good-nodes-in-binary-tree.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>

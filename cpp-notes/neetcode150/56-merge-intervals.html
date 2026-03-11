@@ -1,0 +1,198 @@
+<!-- neetcode150/56-merge-intervals.html: 56. Merge Intervals -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>56. Merge Intervals</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+               width="18" height="18" aria-hidden="true" focusable="false"
+               style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="../neetcode150/index.html">NeetCode 150</a>
+      <span aria-hidden="true">/</span>
+      <span>56. Merge Intervals</span>
+    </nav>
+
+    <section class="hero">
+      <h1>56. Merge Intervals</h1>
+      <p><strong>練習日期：</strong>2026-03-04</p>
+      <p><strong>難度：</strong>Medium</p>
+      <p><strong>類型：</strong>Array、Sorting</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#complexity">⏱️ 複雜度</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給你一個區間陣列 <code>intervals</code>，其中 <code>intervals[i] = [start_i, end_i]</code>。請合併所有重疊的區間，並回傳一個不重疊的區間陣列，且這些區間要能涵蓋輸入中的所有區間。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>1 &lt;= intervals.length &lt;= 10^4</code></li>
+          <li><code>intervals[i].length == 2</code></li>
+          <li><code>0 &lt;= start_i &lt;= end_i &lt;= 10^4</code></li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>這題的核心是：先排序，再線性掃描合併。</p>
+        <p>我先把 <code>intervals</code> 依照起點排序（<code>sort(intervals.begin(), intervals.end())</code>），排序後有一個很重要的性質：</p>
+        <p>只要目前掃到的區間起點 <code>i[0]</code> 沒有超過我正在維護的右界 <code>r</code>，就代表它跟目前區間重疊（或相接），可以合併，右界更新成 <code>max(r, i[1])</code>。</p>
+        <p>如果 <code>i[0] &gt; r</code>，代表它跟目前區間完全不重疊，這時我就把目前 <code>[l, r]</code> 放進答案，然後把新的區間起點終點更新成這個區間。</p>
+        <p>最後掃完後，還要把最後一段 <code>[l, r]</code> 放進答案。</p>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>l</code>：目前正在合併中的區間左界</li>
+          <li><code>r</code>：目前正在合併中的區間右界</li>
+          <li><code>ans</code>：最後回傳的合併後區間列表</li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+        <h3>1. 先把 intervals 排序</h3>
+        <p>排序後區間會依照起點由小到大排列，這樣我只要往右掃，就能用一個 <code>[l, r]</code> 合併所有重疊區間。</p>
+
+        <hr>
+
+        <h3>2. 用 l, r 維護當前正在合併的區間</h3>
+        <p>我先用第一個區間初始化：</p>
+        <ul>
+          <li><code>l = intervals[0][0]</code></li>
+          <li><code>r = intervals[0][0]</code>（你的寫法是這樣初始化）</li>
+        </ul>
+        <p>之後每掃到一個區間 <code>i</code>，就根據它的起點決定是否能合併。</p>
+
+        <hr>
+
+        <h3>3. 如果新的區間起點 &gt; r，代表不重疊，要先結算上一段</h3>
+        <p>當 <code>i[0] &gt; r</code>：</p>
+        <ul>
+          <li>代表目前的 <code>[l, r]</code> 已經結束</li>
+          <li>把 <code>[l, r]</code> push 進 <code>ans</code></li>
+          <li>更新 <code>l = i[0]</code>、<code>r = i[1]</code>，開始合併新的段落</li>
+        </ul>
+
+        <hr>
+
+        <h3>4. 否則代表重疊或相接，更新 r</h3>
+        <p>當 <code>i[0] &lt;= r</code>：</p>
+        <ul>
+          <li>代表可以合併</li>
+          <li>我只需要把 <code>r</code> 擴大到 <code>max(r, i[1])</code></li>
+        </ul>
+
+        <hr>
+
+        <h3>5. 掃完後把最後的 [l, r] 加進答案</h3>
+        <p>因為最後一段不會在迴圈內被推進 <code>ans</code>，所以最後補一行：</p>
+        <p><code>ans.push_back({l, r});</code></p>
+
+        <h2 id="complexity">⏱️ 複雜度</h2>
+        <ul>
+          <li>時間複雜度：<code>O(n log n)</code><br>排序花 <code>n log n</code>，掃描合併是 <code>O(n)</code>。</li>
+          <li>空間複雜度：<code>O(n)</code><br><code>ans</code> 最壞可能存下所有區間。</li>
+        </ul>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    vector&lt;vector&lt;int&gt;&gt; merge(vector&lt;vector&lt;int&gt;&gt;&amp; intervals) {
+        sort(intervals.begin(), intervals.end());
+        int l = intervals[0][0], r = intervals[0][0];
+        vector&lt;vector&lt;int&gt;&gt; ans;
+        for (auto&amp; i : intervals) {
+            if (i[0] &gt; r) {
+                ans.push_back({l, r});
+                l = i[0];
+                r = i[1];
+            } else {
+                r = max(r, i[1]);
+            }
+        }
+        ans.push_back({l, r});
+        return ans;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/merge-intervals/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-03-04</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value"><span class="post-tags">
+              <span class="post-tag">Array</span>
+              <span class="post-tag">Sorting</span>
+              <span class="post-tag">Medium</span>
+            </span></span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/neetcode150/56-merge-intervals.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
