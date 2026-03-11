@@ -1,0 +1,235 @@
+<!-- all problems/1009-complement-of-base-10-integer.html: LeetCode 1009 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>1009. Complement of Base 10 Integer</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+               width="18" height="18" aria-hidden="true" focusable="false"
+               style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="index.html">All problems</a>
+      <span aria-hidden="true">/</span>
+      <span>1009. Complement of Base 10 Integer</span>
+    </nav>
+
+    <section class="hero">
+      <h1>1009. Complement of Base 10 Integer</h1>
+      <p><strong>練習日期：</strong>2026-03-11</p>
+      <p><strong>難度：</strong>Easy</p>
+      <p><strong>類型：</strong>Bit Manipulation</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#complexity">⏱️ 複雜度</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>整數的 complement，指的是把它的二進位表示中的每一個 <code>0</code> 變成 <code>1</code>，每一個 <code>1</code> 變成 <code>0</code> 之後得到的整數。</p>
+        <p>例如，整數 <code>5</code> 的二進位是 <code>"101"</code>，它的 complement 是 <code>"010"</code>，也就是十進位的 <code>2</code>。</p>
+        <p>給你一個整數 <code>n</code>，請回傳它的 complement。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>0 &lt;= n &lt; 10^9</code></li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>這題的想法很直接：</p>
+        <p>先找出 <code>n</code> 的二進位總共有幾位，然後做出一個「同樣位數、每一位都是 <code>1</code>」的數，再直接拿它減掉 <code>n</code> 就可以了。</p>
+        <p>例如：</p>
+        <ul>
+          <li><code>n = 5</code></li>
+          <li>二進位是 <code>101</code></li>
+          <li>它有 3 位</li>
+          <li>3 位全部都是 <code>1</code> 的數就是 <code>111</code>，也就是十進位的 <code>7</code></li>
+          <li><code>7 - 5 = 2</code></li>
+        </ul>
+        <p>而 <code>2</code> 的二進位剛好就是 <code>010</code>，這就是 <code>5</code> 的 complement。</p>
+        <p>所以這題的核心就是：</p>
+        <blockquote>
+          <p>先找到這個位數對應的 <code>111...111</code> 是多少，再直接減掉 <code>n</code>。</p>
+        </blockquote>
+        <p>不過這題有一個特例要先處理：</p>
+        <ul>
+          <li>如果 <code>n == 0</code></li>
+          <li>它的二進位可以看成 <code>"0"</code></li>
+          <li>把它翻轉之後會得到 <code>"1"</code></li>
+          <li>所以答案是 <code>1</code></li>
+        </ul>
+        <p>其餘情況就：</p>
+        <ol>
+          <li>算出 <code>n</code> 的二進位位數 <code>len</code></li>
+          <li>做出 <code>len</code> 位全部都是 <code>1</code> 的數 <code>sum</code></li>
+          <li>回傳 <code>sum - n</code></li>
+        </ol>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>len</code>：<code>n</code> 的二進位位數</li>
+          <li><code>sum</code>：和 <code>n</code> 同樣位數、每一位都是 <code>1</code> 的數</li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+        <h3>1. 先處理 n = 0 的特例</h3>
+        <pre><code class="language-cpp">if (n == 0) {
+    return 1;
+}
+</code></pre>
+        <p>這一步要先做，因為如果直接去算 <code>log2(0)</code> 會有問題。</p>
+        <p>而且題目的 complement 定義下：</p>
+        <ul>
+          <li><code>0</code> 的二進位看成 <code>0</code></li>
+          <li>翻轉後就是 <code>1</code></li>
+        </ul>
+        <p>所以這個情況直接回傳 <code>1</code>。</p>
+        <hr />
+
+        <h3>2. 算出 n 的二進位位數 len</h3>
+        <pre><code class="language-cpp">int len = log2(n) + 1;
+</code></pre>
+        <p>這行的意思是：</p>
+        <ul>
+          <li><code>log2(n)</code> 可以找到最高位 <code>1</code> 在第幾層</li>
+          <li>再加 <code>1</code>，就是總位數</li>
+        </ul>
+        <p>例如：</p>
+        <ul>
+          <li><code>n = 5</code>，二進位是 <code>101</code></li>
+          <li><code>log2(5)</code> 介於 <code>2</code> 和 <code>3</code> 之間，取整後是 <code>2</code></li>
+          <li>所以 <code>len = 3</code></li>
+        </ul>
+        <p>代表 <code>5</code> 的二進位有 3 位。</p>
+        <hr />
+
+        <h3>3. 做出同樣位數的全 1 數字</h3>
+        <pre><code class="language-cpp">int sum = pow(2, len) - 1;
+</code></pre>
+        <p>這一步是在做：</p>
+        <ul>
+          <li><code>2^len</code> 會得到 <code>1000...000</code></li>
+          <li>再減 <code>1</code>，就會變成 <code>111...111</code></li>
+        </ul>
+        <p>例如：</p>
+        <ul>
+          <li><code>len = 3</code></li>
+          <li><code>2^3 = 8</code>，二進位是 <code>1000</code></li>
+          <li><code>8 - 1 = 7</code>，二進位是 <code>111</code></li>
+        </ul>
+        <p>這就是和 <code>n</code> 同樣位數的「全 1」數字。</p>
+        <hr />
+
+        <h3>4. 用全 1 數字直接減掉 n</h3>
+        <pre><code class="language-cpp">return sum - n;
+</code></pre>
+        <p>因為 <code>sum</code> 的每一位都是 <code>1</code>，所以拿它減掉 <code>n</code>，效果就等於把 <code>n</code> 的每一個 bit 翻轉。</p>
+        <p>例如：</p>
+        <ul>
+          <li><code>n = 10</code></li>
+          <li>二進位是 <code>1010</code></li>
+          <li><code>len = 4</code></li>
+          <li><code>sum = 1111</code>，也就是十進位 <code>15</code></li>
+          <li><code>15 - 10 = 5</code></li>
+        </ul>
+        <p>而 <code>5</code> 的二進位就是 <code>0101</code>，剛好就是 <code>1010</code> 翻轉後的結果。</p>
+
+        <h2 id="complexity">⏱️ 複雜度</h2>
+        <ul>
+          <li>時間複雜度：<code>O(1)</code> 只有幾次數學運算。</li>
+          <li>空間複雜度：<code>O(1)</code> 只用了幾個整數變數。</li>
+        </ul>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    int bitwiseComplement(int n) {
+        if (n == 0) {
+            return 1;
+        }
+        int len = log2(n) + 1;
+        int sum = pow(2, len) - 1;
+        return sum - n;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/complement-of-base-10-integer/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-03-11</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value"><span class="post-tags">
+              <span class="post-tag">Bit Manipulation</span>
+              <span class="post-tag">Easy</span>
+            </span></span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/all%20problems/1009-complement-of-base-10-integer.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
