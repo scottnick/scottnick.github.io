@@ -73,11 +73,12 @@
         <h2 id="statement">📘 題目敘述</h2>
         <p>給你一個二元字串 <code>s</code>。你可以對字串進行任意次、任意順序的以下兩種操作：</p>
         <ul>
-          <li>Type-1：移除字串 <code>s</code> 開頭的字元，並把它接到字串尾端。</li>
-          <li>Type-2：選擇字串中的任意一個字元並翻轉它，也就是如果它是 <code>'0'</code> 就變成 <code>'1'</code>，如果它是 <code>'1'</code> 就變成 <code>'0'</code>。</li>
+          <li>Type-1：移除字串 <code>s</code> 開頭的字元，並把它接到字串尾端</li>
+          <li>Type-2：選擇字串中的任意一個字元並翻轉它，也就是如果它是 <code>'0'</code> 就變成 <code>'1'</code>，如果它是 <code>'1'</code> 就變成 <code>'0'</code></li>
         </ul>
         <p>請回傳最少需要做幾次 Type-2 操作，才能讓 <code>s</code> 變成 alternating。</p>
-        <p>如果一個字串中沒有任何兩個相鄰字元相同，就稱這個字串是 alternating。例如 <code>"010"</code> 和 <code>"1010"</code> 是 alternating，而 <code>"0100"</code> 不是。</p>
+        <p>如果一個字串中沒有任何兩個相鄰字元相同，就稱這個字串是 alternating。</p>
+        <p>例如，<code>"010"</code> 和 <code>"1010"</code> 是 alternating，而 <code>"0100"</code> 不是。</p>
 
         <h3>條件限制</h3>
         <ul>
@@ -86,41 +87,111 @@
         </ul>
 
         <h2 id="approach">🧠 解題思路</h2>
-        <p>這題看起來有兩種操作，但真正麻煩的是 Type-1 造成的「旋轉」。</p>
-        <p>因為 alternating 字串只有兩種型態：</p>
+        <p>這題可以做兩種操作，但真正麻煩的其實是 Type-1，也就是把前面一個字元丟到後面。</p>
+        <p>我一開始的想法是：</p>
         <ul>
-          <li><code>010101...</code></li>
-          <li><code>101010...</code></li>
+          <li>先先算目前這個字串如果要變成交錯字串，需要幾次 flip</li>
+          <li>然後每次把最前面那一位想成「丟到最後面」</li>
+          <li>在這個過程中，持續更新目前要變成 alternating 的代價</li>
         </ul>
-        <p>所以我們不用真的把字串翻來翻去，只要知道目前和兩種型態各差幾個位置，答案就是 <code>min(c0, c1)</code>。</p>
-        <p>其中：</p>
+        <p>這題的關鍵觀察是：</p>
         <ul>
-          <li><code>c0</code>：和 <code>010101...</code> 比對時不相同的個數</li>
-          <li><code>c1</code>：和 <code>101010...</code> 比對時不相同的個數</li>
+          <li>alternating 字串只可能有兩種型態
+            <ul>
+              <li><code>010101...</code></li>
+              <li><code>101010...</code></li>
+            </ul>
+          </li>
         </ul>
-        <p>若字串長度是偶數，旋轉後各位置的奇偶性結構不會改變，所以一開始算完就可以直接得到答案。</p>
-        <p>若長度是奇數，每旋轉一次，所有字元的奇偶位置角色會對調，因此每次旋轉都要更新 <code>c0</code>、<code>c1</code>，並持續維護最小值。</p>
+        <p>所以只要知道目前字串和這兩種型態各差多少位，就能知道最少要翻幾次。</p>
+        <p>我這份程式用兩個變數：</p>
+        <ul>
+          <li><code>c0</code>：目前字串和「從 <code>0</code> 開始的交錯字串」相比，有幾個位置不一樣</li>
+          <li><code>c1</code>：目前字串和「從 <code>1</code> 開始的交錯字串」相比，有幾個位置不一樣</li>
+        </ul>
+        <p>先掃一遍原字串，把這兩個值算出來。</p>
+        <p>接著分成兩種情況：</p>
+        <ul>
+          <li><strong>如果字串長度是偶數</strong>
+            <ul>
+              <li>那不管怎麼把前面丟到後面，奇偶位置的結構不會真的改變本質</li>
+              <li>所以旋轉後的答案其實不會比原本更特別，直接回傳 <code>min(c0, c1)</code> 就好</li>
+            </ul>
+          </li>
+          <li><strong>如果字串長度是奇數</strong>
+            <ul>
+              <li>每做一次 Type-1，整個字串的奇偶位置角色都會對調</li>
+              <li>原本對 <code>0101...</code> 算錯的位置，旋轉後會變成對 <code>1010...</code> 那邊去</li>
+              <li>所以可以在每次移動一個字元時，直接用 O(1) 更新 <code>c0</code> 和 <code>c1</code></li>
+            </ul>
+          </li>
+        </ul>
+        <p>也就是說，這題雖然表面上像是在試很多輪旋轉，但實際上不用真的建新字串，只要維護這兩個 mismatch 計數就夠了。</p>
 
         <h3>所有變數</h3>
         <ul>
-          <li><code>c0</code>：目前字串相對於 <code>010101...</code> 的 mismatch 數量</li>
-          <li><code>c1</code>：目前字串相對於 <code>101010...</code> 的 mismatch 數量</li>
+          <li><code>c0</code>：目前字串相對於 <code>010101...</code> 這種型態的錯誤數量</li>
+          <li><code>c1</code>：目前字串相對於 <code>101010...</code> 這種型態的錯誤數量</li>
           <li><code>n</code>：字串長度</li>
-          <li><code>ans</code>：所有旋轉情況中的最小 flip 次數</li>
+          <li><code>ans</code>：目前所有旋轉情況中的最小 flip 次數</li>
         </ul>
 
         <h2 id="steps">🪜 主要流程步驟</h2>
-        <h3>1. 先掃一次字串，算出 c0 與 c1</h3>
-        <p>逐位比對兩種 alternating 型態，統計 mismatch 數量。</p>
+        <h3>1. 先掃一次字串，算出原本字串對兩種 alternating 型態的差異數</h3>
+        <p>我先把字串和兩種可能的交錯型態比較：</p>
+        <ul>
+          <li>一種是從 <code>0</code> 開始：<code>010101...</code></li>
+          <li>一種是從 <code>1</code> 開始：<code>101010...</code></li>
+        </ul>
+        <p>程式中是這樣判斷的：</p>
+        <pre><code class="language-cpp">if (s[i] - '0' == i % 2) {
+    c0++;
+} else {
+    c1++;
+}
+</code></pre>
+        <p>這裡的意思是：</p>
+        <ul>
+          <li>如果 <code>s[i]</code> 剛好等於 <code>i % 2</code>
+            <ul>
+              <li>代表它符合 <code>010101...</code> 這個型態</li>
+              <li>那它對另一種 <code>101010...</code> 就一定是不符合的</li>
+            </ul>
+          </li>
+          <li>否則就反過來</li>
+        </ul>
+        <p>所以掃完整串之後：</p>
+        <ul>
+          <li><code>c0</code> 代表符合 <code>0101...</code> 的位置數</li>
+          <li><code>c1</code> 代表符合 <code>1010...</code> 的位置數</li>
+        </ul>
+        <p>而最後真正需要 flip 的次數，其實就是看哪一種型態比較接近。</p>
+        <p>在這份寫法裡，兩個值在旋轉更新時會互相調整，所以後面直接取 <code>min(c0, c1)</code> 來更新答案。</p>
 
-        <h3>2. 偶數長度可直接回傳</h3>
-        <p>若 <code>n</code> 是偶數，旋轉後奇偶結構不會本質互換，答案就是 <code>min(c0, c1)</code>。</p>
+        <h3>2. 如果字串長度是偶數，直接回傳答案</h3>
+        <pre><code class="language-cpp">if (n % 2 == 0) {
+    return min(c0, c1);
+}
+</code></pre>
+        <p>這一步是這題最重要的觀察之一。</p>
+        <p>因為當字串長度是偶數時，把最前面一個字元丟到最後面，相當於整體平移一格，但 alternating 的奇偶結構不會產生「兩種型態互換」那種效果。</p>
+        <p>所以：</p>
+        <ul>
+          <li>原本最接近哪一種 alternating 型態</li>
+          <li>旋轉之後本質上還是同樣的情況</li>
+        </ul>
+        <p>因此偶數長度不需要模擬每次旋轉，直接回傳原本的最小 flip 數就可以。</p>
 
-        <h3>3. 奇數長度要模擬每次旋轉</h3>
-        <p>若 <code>n</code> 是奇數，每轉一次，所有位置的奇偶角色都會對調，所以每次都要更新 <code>c0</code> 與 <code>c1</code>。</p>
+        <h3>3. 如果字串長度是奇數，就要模擬每次把最前面一位丟到最後面</h3>
+        <p>如果 <code>n</code> 是奇數，每次做一次 Type-1，整串字元的奇偶位置都會翻轉。</p>
+        <p>這就是為什麼奇數長度要特別處理。</p>
+        <p>先把原本答案設成：</p>
+        <pre><code class="language-cpp">int ans = min(c0, c1);
+</code></pre>
+        <p>然後對每個位置 <code>i</code>，把 <code>s[i]</code> 想成從前面被移到後面。</p>
 
-        <h3>4. 用 O(1) 轉移更新 mismatch 計數</h3>
-        <p>把前端字元移到尾端時，不必重掃整串，只要根據該字元原本在當前奇偶位置下的匹配狀態，做常數時間更新：</p>
+        <h3>4. 更新 c0 和 c1，表示這次旋轉後的新狀態</h3>
+        <p>程式裡這段是核心：</p>
         <pre><code class="language-cpp">if (s[i] - '0' == i % 2) {
     c1++;
     c0--;
@@ -129,50 +200,69 @@
     c1--;
 }
 </code></pre>
+        <p>這段的意思是：</p>
+        <p>當 <code>s[i]</code> 從前面移到最後面後，因為字串長度是奇數，所以其他字元的奇偶角色全部翻轉。</p>
+        <p>因此原本對某種型態「符合」的字元，旋轉後會變成對另一種型態去計算。</p>
+        <p>所以這裡不是重新掃一遍整串，而是直接把這一位對 <code>c0</code>、<code>c1</code> 的貢獻做轉換：</p>
+        <ul>
+          <li>如果這一位原本是符合 <code>i % 2</code> 的那邊
+            <ul>
+              <li>旋轉後它的角色改變，就要從原本那邊扣掉，補到另一邊</li>
+            </ul>
+          </li>
+          <li>否則就反過來</li>
+        </ul>
+        <p>這樣每次旋轉都只要 O(1) 更新。</p>
 
-        <h3>5. 每次旋轉都更新最小答案</h3>
-        <p>每次更新完計數後，取 <code>min(c0, c1)</code>，再與全域答案比較，維護最小值。</p>
+        <h3>5. 每次旋轉後都更新答案</h3>
+        <pre><code class="language-cpp">ans = min(ans, min(c0, c1));
+</code></pre>
+        <p>因為每旋轉一次，都得到一個新的字串排列。</p>
+        <p>對這個排列：</p>
+        <ul>
+          <li>變成 <code>0101...</code> 需要的 flip 數</li>
+          <li>變成 <code>1010...</code> 需要的 flip 數</li>
+        </ul>
+        <p>兩者取較小值，就是這次旋轉的最少 flip 次數。</p>
+        <p>再和全域答案 <code>ans</code> 比較，留下最小值。</p>
 
-        <h3>6. 走完全部旋轉，回傳 ans</h3>
-        <p>跑完 <code>n</code> 次後，等於考慮過所有 possible rotation，回傳最小值即可。</p>
+        <h3>6. 全部旋轉情況看完後回傳答案</h3>
+        <p>當 <code>i</code> 從 <code>0</code> 到 <code>n - 1</code> 全部跑完，代表所有可能的 Type-1 起點都考慮過了。</p>
+        <p>最後回傳 <code>ans</code>，就是所有旋轉方式中，最少需要的 Type-2 次數。</p>
 
         <h2 id="complexity">⏱️ 複雜度</h2>
         <ul>
-          <li>時間複雜度：<code>O(n)</code></li>
-          <li>空間複雜度：<code>O(1)</code></li>
+          <li>時間複雜度：<code>O(n)</code><br>先掃一次字串，奇數長度時再模擬一輪旋轉更新，總共仍是線性時間。</li>
+          <li>空間複雜度：<code>O(1)</code><br>只用了幾個整數變數來記錄計數與答案。</li>
         </ul>
 
         <h2 id="code">💻 程式碼實作</h2>
         <pre><code class="language-cpp">class Solution {
 public:
     int minFlips(string s) {
-        int c0 = 0, c1 = 0;
+        int c0 = 0, c1 = 0; // c0是0開始
         int n = s.size();
-
         for (int i = 0; i &lt; n; i++) {
             if (s[i] - '0' == i % 2) {
-                c1++;
-            } else {
                 c0++;
+            } else {
+                c1++;
             }
         }
-
         if (n % 2 == 0) {
             return min(c0, c1);
         }
-
         int ans = min(c0, c1);
         for (int i = 0; i &lt; n; i++) {
             if (s[i] - '0' == i % 2) {
-                c1--;
-                c0++;
-            } else {
-                c0--;
                 c1++;
+                c0--;
+            } else {
+                c0++;
+                c1--;
             }
             ans = min(ans, min(c0, c1));
         }
-
         return ans;
     }
 };
