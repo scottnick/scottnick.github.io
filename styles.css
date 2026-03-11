@@ -1078,7 +1078,7 @@ body.dark-mode .article-content p {
   padding: 16px;
   border-radius: 12px;
   overflow-x: auto;
-  margin: 12px 0 0;
+  margin: 12px 0;
 }
 
 body.dark-mode .article-box pre,
