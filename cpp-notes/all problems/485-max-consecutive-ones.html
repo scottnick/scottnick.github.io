@@ -1,0 +1,242 @@
+<!-- all problems/485-max-consecutive-ones.html: 全部題單文章 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>485. Max Consecutive Ones</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+               width="18" height="18" aria-hidden="true" focusable="false"
+               style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="index.html">All problems</a>
+      <span aria-hidden="true">/</span>
+      <span>485. Max Consecutive Ones</span>
+    </nav>
+
+    <section class="hero">
+      <h1>485. Max Consecutive Ones</h1>
+      <p><strong>練習日期：</strong>2026-03-12</p>
+      <p><strong>難度：</strong>Easy</p>
+      <p><strong>類型：</strong>Array</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#complexity">⏱️ 複雜度</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給你一個二元陣列 <code>nums</code>，請回傳陣列中連續出現的 <code>1</code> 的最大數量。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>1 &lt;= nums.length &lt;= 10^5</code></li>
+          <li><code>nums[i]</code> 只會是 <code>0</code> 或 <code>1</code></li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>這題很直接，就是一路掃過整個陣列，邊走邊記：</p>
+        <ul>
+          <li>目前這一段連續 <code>1</code> 有幾個</li>
+          <li>到目前為止，最大的連續 <code>1</code> 有幾個</li>
+        </ul>
+        <p>所以我用兩個變數：</p>
+        <ul>
+          <li><code>count</code>：目前連續 <code>1</code> 的長度</li>
+          <li><code>ans</code>：目前遇過的最大連續 <code>1</code> 長度</li>
+        </ul>
+        <p>掃描陣列時：</p>
+        <ul>
+          <li>
+            <p>如果現在這個數字是 <code>1</code></p>
+            <ul>
+              <li>代表目前這段連續 <code>1</code> 還可以延長，所以 <code>count++</code></li>
+            </ul>
+          </li>
+          <li>
+            <p>如果現在這個數字是 <code>0</code></p>
+            <ul>
+              <li>代表連續 <code>1</code> 被中斷，所以 <code>count = 0</code></li>
+            </ul>
+          </li>
+        </ul>
+        <p>每一步都順便更新：</p>
+        <ul>
+          <li><code>ans = max(ans, count)</code></li>
+        </ul>
+        <p>這樣整個陣列掃完之後，<code>ans</code> 就是答案。</p>
+        <p>也就是說，這題的核心就是：</p>
+        <blockquote>
+          <p>掃一次陣列，用 <code>count</code> 記目前連續 <code>1</code> 的長度，用 <code>ans</code> 記最大值。</p>
+        </blockquote>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>ans</code>：目前為止遇到的最大連續 <code>1</code> 數量</li>
+          <li><code>count</code>：目前這一段連續 <code>1</code> 的數量</li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+        <h3>1. 先準備 ans 和 count</h3>
+        <pre><code class="language-cpp">int ans = 0;
+int count = 0;
+</code></pre>
+        <p>這裡：</p>
+        <ul>
+          <li><code>ans</code> 一開始設成 <code>0</code>，表示目前還沒看到任何連續 <code>1</code></li>
+          <li><code>count</code> 一開始也設成 <code>0</code>，表示目前這段連續 <code>1</code> 的長度是 <code>0</code></li>
+        </ul>
+        <hr />
+
+        <h3>2. 掃過整個陣列 nums</h3>
+        <pre><code class="language-cpp">for (int i : nums) {
+</code></pre>
+        <p>這裡用 range-based for，把 <code>nums</code> 裡的每個元素依序取出來。</p>
+        <p>每次迴圈都處理目前這個數字 <code>i</code>。</p>
+        <hr />
+
+        <h3>3. 如果目前是 1，就把連續長度加一</h3>
+        <pre><code class="language-cpp">if (i == 1) {
+    count++;
+}
+</code></pre>
+        <p>如果目前這格是 <code>1</code>，代表這一段連續 <code>1</code> 還沒中斷，所以直接把 <code>count</code> 加一。</p>
+        <p>例如原本這段已經有 2 個連續 <code>1</code>，現在又讀到一個 <code>1</code>，那就變成 3 個。</p>
+        <hr />
+
+        <h3>4. 如果目前是 0，就把 count 歸零</h3>
+        <pre><code class="language-cpp">else {
+    count = 0;
+}
+</code></pre>
+        <p>如果目前這格是 <code>0</code>，代表連續 <code>1</code> 到這裡中斷了。</p>
+        <p>所以之前那段連續 <code>1</code> 已經結束，現在要重新開始計算，因此把 <code>count</code> 重設成 <code>0</code>。</p>
+        <hr />
+
+        <h3>5. 每一步都更新目前最大值 ans</h3>
+        <pre><code class="language-cpp">ans = max(ans, count);
+</code></pre>
+        <p>不管目前是 <code>1</code> 還是 <code>0</code>，每一步都可以更新一次最大值。</p>
+        <p>因為：</p>
+        <ul>
+          <li>如果目前是 <code>1</code>，<code>count</code> 可能剛剛變大</li>
+          <li>如果目前是 <code>0</code>，<code>count</code> 會變成 <code>0</code>，這時更新也不會有問題</li>
+        </ul>
+        <p>所以這樣一路掃下來，<code>ans</code> 會一直記住最大那段連續 <code>1</code> 的長度。</p>
+        <hr />
+
+        <h3>6. 最後回傳 ans</h3>
+        <pre><code class="language-cpp">return ans;
+</code></pre>
+        <p>當整個陣列掃完之後，<code>ans</code> 就是全陣列中最長的連續 <code>1</code> 數量，直接回傳即可。</p>
+
+        <h2 id="complexity">⏱️ 複雜度</h2>
+        <ul>
+          <li>
+            <p>時間複雜度：<code>O(n)</code><br>
+              其中 <code>n = nums.length</code>，整個陣列只掃一次。</p>
+          </li>
+          <li>
+            <p>空間複雜度：<code>O(1)</code><br>
+              只用了固定數量的變數。</p>
+          </li>
+        </ul>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    int findMaxConsecutiveOnes(vector&lt;int&gt;&amp; nums) {
+        int ans = 0;
+        int count = 0;
+        for (int i : nums) {
+            if (i == 1) {
+                count++;
+            } else {
+                count = 0;
+            }
+            ans = max(ans, count);
+        }
+        return ans;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/max-consecutive-ones/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-03-12</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value"><span class="post-tags">
+              <span class="post-tag">Array</span>
+              <span class="post-tag">Easy</span>
+            </span></span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/all%20problems/485-max-consecutive-ones.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
