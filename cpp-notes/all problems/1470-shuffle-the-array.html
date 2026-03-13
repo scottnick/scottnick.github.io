@@ -1,0 +1,215 @@
+<!-- all problems/1470-shuffle-the-array.html: 1470. Shuffle the Array -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>1470. Shuffle the Array</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false" style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題"><span id="theme-icon" aria-hidden="true">☀️</span></button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="index.html">All problems</a>
+      <span aria-hidden="true">/</span>
+      <span>1470. Shuffle the Array</span>
+    </nav>
+
+    <section class="hero">
+      <h1>1470. Shuffle the Array</h1>
+      <p><strong>練習日期：</strong>2026-03-12</p>
+      <p><strong>難度：</strong>Easy</p>
+      <p><strong>類型：</strong>Array</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">目錄</button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#complexity">⏱️ 複雜度</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給你一個陣列 <code>nums</code>，它共有 <code>2n</code> 個元素，格式為：</p>
+        <p><code>[x1, x2, ..., xn, y1, y2, ..., yn]</code></p>
+        <p>請回傳重新排列後的陣列：</p>
+        <p><code>[x1, y1, x2, y2, ..., xn, yn]</code></p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>1 &lt;= n &lt;= 500</code></li>
+          <li><code>nums.length == 2n</code></li>
+          <li><code>1 &lt;= nums[i] &lt;= 10^3</code></li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>這題的重點很直接：</p>
+        <p>題目已經把原本陣列切成兩半了：</p>
+        <ul>
+          <li>前半段是 <code>x1 ~ xn</code></li>
+          <li>後半段是 <code>y1 ~ yn</code></li>
+        </ul>
+        <p>而我要做的事情，就是把這兩半交錯放進答案陣列裡：</p>
+        <ul>
+          <li>第 <code>0</code> 個位置放 <code>x1</code></li>
+          <li>第 <code>1</code> 個位置放 <code>y1</code></li>
+          <li>第 <code>2</code> 個位置放 <code>x2</code></li>
+          <li>第 <code>3</code> 個位置放 <code>y2</code></li>
+        </ul>
+        <p>一路這樣排下去。</p>
+        <p>所以我用一個迴圈跑 <code>i = 0 ~ n-1</code>，每次處理一組：</p>
+        <ul>
+          <li><code>nums[i]</code> 是第 <code>i+1</code> 個 <code>x</code></li>
+          <li><code>nums[i+n]</code> 是第 <code>i+1</code> 個 <code>y</code></li>
+        </ul>
+        <p>然後把它們放到答案陣列的：</p>
+        <ul>
+          <li><code>ans[2*i]</code></li>
+          <li><code>ans[2*i+1]</code></li>
+        </ul>
+        <p>也就是說，這題的核心就是：</p>
+        <blockquote>
+          <p>前半段和後半段各取一個元素，依序交錯放進答案陣列。</p>
+        </blockquote>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>n</code>：前半段 <code>x</code> 的數量，也是後半段 <code>y</code> 的數量</li>
+          <li><code>ans</code>：答案陣列，大小是 <code>2 * n</code></li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+        <h3>1. 先建立大小為 2n 的答案陣列</h3>
+        <pre><code class="language-cpp">vector&lt;int&gt; ans(2 * n);
+</code></pre>
+        <p>因為最後答案會有 <code>2n</code> 個位置，所以先直接開好。</p>
+        <p>這樣後面就可以用 index 直接把對應位置填進去。</p>
+
+        <hr>
+
+        <h3>2. 跑一圈 i = 0 ~ n - 1，每次處理一組 x 和 y</h3>
+        <pre><code class="language-cpp">for (int i = 0; i &lt; n; i++) {
+</code></pre>
+        <p>這裡每一個 <code>i</code> 都代表：</p>
+        <ul>
+          <li><code>nums[i]</code> 是一個 <code>x</code></li>
+          <li><code>nums[i + n]</code> 是和它對應的 <code>y</code></li>
+        </ul>
+        <p>因為前半段長度就是 <code>n</code>，所以後半段第一個元素的位置就是 <code>n</code>。</p>
+
+        <hr>
+
+        <h3>3. 把 x 放到偶數位置，把 y 放到下一個奇數位置</h3>
+        <pre><code class="language-cpp">ans[2 * i] = nums[i];
+ans[2 * i + 1] = nums[i + n];
+</code></pre>
+        <p>這一段是整題的核心。</p>
+        <p>對於第 <code>i</code> 組資料：</p>
+        <ul>
+          <li><code>nums[i]</code> 放到 <code>ans[2*i]</code></li>
+          <li><code>nums[i+n]</code> 放到 <code>ans[2*i+1]</code></li>
+        </ul>
+        <p>例如：</p>
+        <ul>
+          <li><code>i = 0</code>
+            <ul>
+              <li><code>ans[0] = x1</code></li>
+              <li><code>ans[1] = y1</code></li>
+            </ul>
+          </li>
+          <li><code>i = 1</code>
+            <ul>
+              <li><code>ans[2] = x2</code></li>
+              <li><code>ans[3] = y2</code></li>
+            </ul>
+          </li>
+        </ul>
+        <p>所以最後整個答案就會自然變成：</p>
+        <p><code>[x1, y1, x2, y2, ..., xn, yn]</code></p>
+
+        <hr>
+
+        <h3>4. 回傳答案陣列</h3>
+        <pre><code class="language-cpp">return ans;
+</code></pre>
+        <p>當整個迴圈跑完後，答案陣列就已經依照題目要求排好了，直接回傳即可。</p>
+
+        <h2 id="complexity">⏱️ 複雜度</h2>
+        <ul>
+          <li>時間複雜度：<code>O(n)</code>
+            只掃一次前半段與後半段配對。</li>
+          <li>空間複雜度：<code>O(n)</code>
+            額外建立了一個長度為 <code>2n</code> 的答案陣列，常數忽略後為 <code>O(n)</code>。</li>
+        </ul>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    vector&lt;int&gt; shuffle(vector&lt;int&gt;&amp; nums, int n) {
+        vector&lt;int&gt; ans(2 * n);
+        for (int i = 0; i &lt; n; i++) {
+            ans[2 * i] = nums[i];
+            ans[2 * i + 1] = nums[i + n];
+        }
+        return ans;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/shuffle-the-array/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field"><span class="meta-label">作者：</span><span class="meta-value">scottnick</span></div>
+        <div class="meta-field meta-field--date"><span class="meta-label">撰寫日期：</span><span class="meta-value">2026-03-12</span></div>
+        <div class="meta-field meta-field--full"><span class="meta-label">類別：</span><span class="meta-value"><span class="post-tags">
+              <span class="post-tag">Array</span>
+              <span class="post-tag">Easy</span>
+            </span></span></div>
+        <div class="meta-field meta-field--full"><span class="meta-label">原文連結：</span><span class="meta-value">https://scottnick.github.io/cpp-notes/all%20problems/1470-shuffle-the-array.html</span></div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
