@@ -1,0 +1,223 @@
+<!-- all problems/1929-concatenation-of-array.html: All problems 文章 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>1929. Concatenation of Array</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+               width="18" height="18" aria-hidden="true" focusable="false"
+               style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="index.html">All problems</a>
+      <span aria-hidden="true">/</span>
+      <span>1929. Concatenation of Array</span>
+    </nav>
+
+    <section class="hero">
+      <h1>1929. Concatenation of Array</h1>
+      <p><strong>練習日期：</strong>2026-03-11</p>
+      <p><strong>難度：</strong>Easy</p>
+      <p><strong>類型：</strong>Array、Simulation</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">目錄</button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#complexity">⏱️ 複雜度</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給你一個長度為 <code>n</code> 的整數陣列 <code>nums</code>，你想建立一個長度為 <code>2n</code> 的陣列 <code>ans</code>，使得對所有 <code>0 &lt;= i &lt; n</code>：</p>
+        <ul>
+          <li><code>ans[i] == nums[i]</code></li>
+          <li><code>ans[i + n] == nums[i]</code></li>
+        </ul>
+        <p>也就是說，<code>ans</code> 是把兩個 <code>nums</code> 陣列串接起來後得到的結果。</p>
+        <p>請回傳陣列 <code>ans</code>。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>n == nums.length</code></li>
+          <li><code>1 &lt;= n &lt;= 1000</code></li>
+          <li><code>1 &lt;= nums[i] &lt;= 1000</code></li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>這題很直接，題目已經把 <code>ans</code> 要長什麼樣子講得很清楚了：</p>
+        <ul>
+          <li>前半段放一份 <code>nums</code></li>
+          <li>後半段再放一份 <code>nums</code></li>
+        </ul>
+        <p>所以我直接先開一個長度為 <code>2n</code> 的陣列 <code>ans</code>，然後跑一圈 <code>nums</code>：</p>
+        <ul>
+          <li>把 <code>nums[i]</code> 放到 <code>ans[i]</code></li>
+          <li>再把同一個 <code>nums[i]</code> 放到 <code>ans[i + n]</code></li>
+        </ul>
+        <p>這樣一圈做完後，<code>ans</code> 的前半和後半就都填好了。</p>
+        <p>也就是說，這題的核心就是：</p>
+        <blockquote>
+          <p>掃一次 <code>nums</code>，把每個元素同時放到答案陣列的前半和後半對應位置。</p>
+        </blockquote>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>n</code>：<code>nums</code> 的長度</li>
+          <li><code>ans</code>：答案陣列，大小是 <code>2 * n</code></li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+        <h3>1. 先取得 nums 的長度 n</h3>
+        <pre><code class="language-cpp" data-id="7q1kza">int n = nums.size();
+</code></pre>
+        <p>這一步先把陣列長度存起來，因為後面要用來：</p>
+        <ul>
+          <li>開 <code>2n</code> 大小的答案陣列</li>
+          <li>計算後半段的位置 <code>i + n</code></li>
+        </ul>
+        <hr />
+
+        <h3>2. 開一個長度為 2n 的答案陣列</h3>
+        <pre><code class="language-cpp" data-id="e4v6mk">vector&lt;int&gt; ans(2 * n);
+</code></pre>
+        <p>因為題目要的答案長度就是 <code>2n</code>，所以直接先開好空間。</p>
+        <p>這樣後面就可以直接用 index 指定位置填值。</p>
+        <hr />
+
+        <h3>3. 掃一次 nums，把每個元素複製到前半和後半</h3>
+        <pre><code class="language-cpp" data-id="b8r2yw">for (int i = 0; i &lt; n; i++) {
+    ans[i] = nums[i];
+    ans[i + n] = nums[i];
+}
+</code></pre>
+        <p>這一段就是整題的核心。</p>
+        <p>對每個 <code>nums[i]</code>：</p>
+        <ul>
+          <li><code>ans[i] = nums[i]</code>
+            <ul>
+              <li>放到答案陣列前半段</li>
+            </ul>
+          </li>
+          <li><code>ans[i + n] = nums[i]</code>
+            <ul>
+              <li>再放到答案陣列後半段</li>
+            </ul>
+          </li>
+        </ul>
+        <p>所以最後會變成：</p>
+        <ul>
+          <li><code>ans[0 ... n-1]</code> 是第一份 <code>nums</code></li>
+          <li><code>ans[n ... 2n-1]</code> 是第二份 <code>nums</code></li>
+        </ul>
+        <hr />
+
+        <h3>4. 回傳 ans</h3>
+        <pre><code class="language-cpp" data-id="m3u9hp">return ans;
+</code></pre>
+        <p>當整個 <code>nums</code> 都掃完後，答案陣列就已經完整組好了，直接回傳即可。</p>
+
+        <h2 id="complexity">⏱️ 複雜度</h2>
+        <ul>
+          <li>時間複雜度：<code>O(n)</code>
+            <ul>
+              <li>只掃一次 <code>nums</code>。</li>
+            </ul>
+          </li>
+          <li>空間複雜度：<code>O(n)</code>
+            <ul>
+              <li>額外建立了一個長度為 <code>2n</code> 的答案陣列，常數忽略後為 <code>O(n)</code>。</li>
+            </ul>
+          </li>
+        </ul>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp" data-id="c6x4nb">class Solution {
+public:
+    vector&lt;int&gt; getConcatenation(vector&lt;int&gt;&amp; nums) {
+        int n = nums.size();
+        vector&lt;int&gt; ans(2 * n);
+        for (int i = 0; i &lt; n; i++) {
+            ans[i] = nums[i];
+            ans[i + n] = nums[i];
+        }
+        return ans;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/concatenation-of-array/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-03-11</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value"><span class="post-tags">
+              <span class="post-tag">Array</span>
+              <span class="post-tag">Simulation</span>
+              <span class="post-tag">Easy</span>
+            </span></span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/all%20problems/1929-concatenation-of-array.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
