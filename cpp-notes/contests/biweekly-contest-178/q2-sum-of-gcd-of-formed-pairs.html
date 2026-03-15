@@ -1,0 +1,92 @@
+<!-- contests/biweekly-contest-178-q2.html: Biweekly Contest 178 Q2 -->
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Q2. Sum of GCD of Formed Pairs</title>
+    <link rel="stylesheet" href="../../../styles.css" />
+  </head>
+  <body class="page-article">
+    <header><nav class="navbar"><a class="brand" href="../../../personal.html">scottnick 個人網頁</a><button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button><div class="nav-links" id="nav-links"><a href="../../../index.html">主頁</a><a href="../../../courses.html">修課紀錄</a><a href="../../../cpp.html" class="active">C++學習筆記</a><a href="../../../profile.html">個人檔案</a></div><div class="nav-actions"><a class="nav-action-link" href="../../../categories.html"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false" style="display:inline-block; vertical-align:-3px; margin-right:6px;"><rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect><rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect><rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect><rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect></svg>類別</a><button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題"><span id="theme-icon" aria-hidden="true">☀️</span></button></div></nav></header>
+    <main>
+      <nav class="breadcrumb" aria-label="文章路徑"><a href="../../../cpp.html">C++學習筆記</a><span aria-hidden="true">/</span><a href="../index.html">Contests</a><span aria-hidden="true">/</span><a href="../biweekly-contest-178.html">Biweekly Contest 178</a><span aria-hidden="true">/</span><span>Q2. Sum of GCD of Formed Pairs</span></nav>
+      <section class="hero">
+        <h1>Q2. Sum of GCD of Formed Pairs</h1>
+        <p><strong>練習日期：</strong>2026-03-14</p>
+        <p><strong>難度：</strong>Medium</p>
+        <p><strong>類型：</strong>Biweekly Contest 178</p>
+      </section>
+      <div class="article-layout">
+        <aside class="article-toc" aria-label="文章目錄"><button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">目錄</button><strong>目錄</strong><ul><li><a href="#statement">📘 題目敘述</a></li><li><a href="#approach">🧠 解題思路</a></li><li><a href="#steps">🪜 主要流程步驟</a></li><li><a href="#complexity">⏱️ 複雜度</a></li><li><a href="#code">💻 程式碼實作</a></li><li><a href="#link">🔗 題目連結</a></li></ul></aside>
+        <section class="term-block article-content">
+<h2 id="statement">📘 題目敘述</h2>
+<p>給你一個長度為 <code>n</code> 的整數陣列 <code>nums</code>。</p>
+<p>請先建立陣列 <code>prefixGcd</code>，對每個 index <code>i</code>：</p>
+<ul><li><code>mxi = max(nums[0], nums[1], ..., nums[i])</code></li><li><code>prefixGcd[i] = gcd(nums[i], mxi)</code></li></ul>
+<p>建立完後先排序 <code>prefixGcd</code>，再每次用最小未配對與最大未配對元素配對，累加每組 <code>gcd</code>。若 <code>n</code> 是奇數，排序後中間元素忽略。</p>
+<h3>條件限制</h3><ul><li><code>1 &lt;= n == nums.length &lt;= 10^5</code></li><li><code>1 &lt;= nums[i] &lt;= 10^9</code></li></ul>
+<h2 id="approach">🧠 解題思路</h2>
+<p>依題意分三段：先建出 <code>prefixGcd</code>、再排序、最後雙指標由兩端往中間配對並加總每組 <code>gcd</code>。</p>
+<p>掃描 <code>nums</code> 時持續維護前綴最大值 <code>mxi</code>。每到 <code>i</code> 就先更新 <code>mxi</code>，再算 <code>pfg[i] = gcd(nums[i], mxi)</code>。</p>
+<p>排序後使用 <code>l</code>、<code>r</code> 指向最小與最大未配對值，反覆計算 <code>gcd(pfg[l], pfg[r])</code> 累加。<code>while (l &lt; r)</code> 會自然略過奇數長度的中間值。</p>
+<h3>所有變數</h3><ul><li><code>n</code>：陣列長度</li><li><code>pfg</code>：題目中的 <code>prefixGcd</code> 陣列</li><li><code>mxi</code>：目前前綴最大值</li><li><code>ans</code>：配對 <code>gcd</code> 總和</li><li><code>l</code>、<code>r</code>：左右雙指標</li></ul>
+<h2 id="steps">🪜 主要流程步驟</h2>
+<h3>1. 先準備 prefixGcd 陣列和前綴最大值</h3>
+<pre><code class="language-cpp">int n = nums.size();
+vector&lt;int&gt; pfg(n);
+int mxi = INT_MIN;</code></pre>
+<hr />
+<h3>2. 掃一次 nums，依題意建出 prefixGcd</h3>
+<pre><code class="language-cpp">for (int i = 0; i &lt; n; i++) {
+    mxi = max(mxi, nums[i]);
+    pfg[i] = gcd(nums[i], mxi);
+}</code></pre>
+<hr />
+<h3>3. 把 prefixGcd 排序</h3>
+<pre><code class="language-cpp">sort(pfg.begin(), pfg.end());</code></pre>
+<hr />
+<h3>4. 用雙指標從最左和最右開始配對</h3>
+<pre><code class="language-cpp">long long ans = 0;
+int l = 0, r = n - 1;
+while (l &lt; r) {
+    ans += gcd(pfg[l], pfg[r]);
+    l++;
+    r--;
+}</code></pre>
+<hr />
+<h3>5. 最後回傳答案</h3>
+<pre><code class="language-cpp">return ans;</code></pre>
+<h2 id="complexity">⏱️ 複雜度</h2>
+<ul><li>時間複雜度：<code>O(n log n)</code></li><li>空間複雜度：<code>O(n)</code></li></ul>
+<h2 id="code">💻 程式碼實作</h2>
+<pre><code class="language-cpp">class Solution {
+public:
+    long long gcdSum(vector&lt;int&gt;&amp; nums) {
+        int n = nums.size();
+        vector&lt;int&gt; pfg(n);
+        int mxi = INT_MIN;
+        for (int i = 0; i &lt; n; i++) {
+            mxi = max(mxi, nums[i]);
+            pfg[i] = gcd(nums[i], mxi);
+        }
+        sort(pfg.begin(), pfg.end());
+        long long ans = 0;
+        int l = 0, r = n - 1;
+        while (l &lt; r) {
+            ans += gcd(pfg[l], pfg[r]);
+            l++;
+            r--;
+        }
+        return ans;
+    }
+};</code></pre>
+<h2 id="link">🔗 題目連結</h2>
+<p><a href="https://leetcode.com/contest/biweekly-contest-178/problems/sum-of-gcd-of-formed-pairs/">https://leetcode.com/contest/biweekly-contest-178/problems/sum-of-gcd-of-formed-pairs/</a></p>
+        </section>
+      </div>
+      <section class="term-block article-footer"><h2 class="article-footer__title">文章資訊</h2><div class="meta-grid"><div class="meta-field"><span class="meta-label">作者：</span><span class="meta-value">scottnick</span></div><div class="meta-field meta-field--date"><span class="meta-label">撰寫日期：</span><span class="meta-value">2026-03-14</span></div><div class="meta-field meta-field--full"><span class="meta-label">類別：</span><span class="meta-value"><span class="post-tags"><span class="post-tag">Biweekly Contest 178</span><span class="post-tag">Medium</span></span></span></div><div class="meta-field meta-field--full"><span class="meta-label">原文連結：</span><span class="meta-value">https://scottnick.github.io/cpp-notes/contests/biweekly-contest-178/q2-sum-of-gcd-of-formed-pairs.html</span></div></div></section>
+    </main>
+    <script src="../../../script.js"></script>
+  </body>
+</html>
