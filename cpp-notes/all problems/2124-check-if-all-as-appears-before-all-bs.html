@@ -62,8 +62,10 @@
         <ul>
           <li><a href="#statement">📘 題目敘述</a></li>
           <li><a href="#approach-1">🧠 解題思路（一）bool判斷</a></li>
+          <li><a href="#steps-1">🪜 主要流程步驟</a></li>
           <li><a href="#code-1">💻 程式碼實作（一）</a></li>
           <li><a href="#approach-2">🧠 解題思路（二）直接find</a></li>
+          <li><a href="#steps-2">🪜 主要流程步驟</a></li>
           <li><a href="#code-2">💻 程式碼實作（二）</a></li>
           <li><a href="#link">🔗 題目連結</a></li>
         </ul>
@@ -94,7 +96,7 @@
           <li><code>check</code>：是否已經遇到過 <code>'b'</code>（一旦為 <code>true</code>，後面就不允許再出現 <code>'a'</code>）</li>
         </ul>
 
-        <h2>🪜 主要流程步驟</h2>
+        <h2 id="steps-1">🪜 主要流程步驟</h2>
         <ul>
           <li>初始化 <code>check = false</code>，代表目前還沒遇到任何 <code>b</code></li>
           <li>從左到右掃描字串
@@ -145,7 +147,7 @@ public:
           <li><code>s</code>：題目輸入字串</li>
         </ul>
 
-        <h2>🪜 主要流程步驟</h2>
+        <h2 id="steps-2">🪜 主要流程步驟</h2>
         <ul>
           <li>用 <code>s.find("ba")</code> 檢查字串中是否存在子字串 <code>"ba"</code></li>
           <li>如果回傳值是 <code>string::npos</code>（找不到）
