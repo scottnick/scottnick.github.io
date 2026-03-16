@@ -20,7 +20,14 @@
     <main>
       <nav class="breadcrumb" aria-label="文章路徑"><a href="../../../cpp.html">C++學習筆記</a><span aria-hidden="true">/</span><a href="../index.html">Contests</a><span aria-hidden="true">/</span><a href="../weekly-contest-492.html">Weekly Contest 492</a><span aria-hidden="true">/</span><span>Q3. Minimum Operations to Sort a String</span></nav>
       <section class="hero"><h1>Q3. Minimum Operations to Sort a String</h1><p><strong>練習日期：</strong>2026-03-08</p><p><strong>難度：</strong>Medium</p><p><strong>類型：</strong>Weekly Contest 492</p></section>
-      <div class="article-layout"><aside class="article-toc" aria-label="文章目錄"><button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">目錄</button><strong>目錄</strong><ul><li><a href="#statement">📘 題目敘述</a></li><li><a href="#approach">🧠 解題思路</a></li><li><a href="#steps">🪜 主要流程步驟</a></li><li><a href="#complexity">⏱️ 複雜度</a></li><li><a href="#code">💻 程式碼實作</a></li><li><a href="#link">🔗 題目連結</a></li></ul></aside><section class="term-block article-content">
+      <div class="article-layout"><aside class="article-toc" aria-label="文章目錄"><button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">目錄</button><strong>目錄</strong><ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#complexity">⏱️ 複雜度</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul></aside><section class="term-block article-content">
 <h2 id="statement">📘 題目敘述</h2><p>給你只包含小寫字母的字串 <code>s</code>。每次操作可選任意非整串的子字串，並將其遞增排序。請求把 <code>s</code> 變成整體遞增排序所需最少操作次數，不可能則回傳 <code>-1</code>。</p>
 <h3>條件限制</h3><ul><li><code>1 &lt;= s.length &lt;= 10^5</code></li><li><code>s</code> 只由小寫英文字母組成</li></ul>
 <h2 id="approach">🧠 解題思路</h2><p>先得到排序後目標字串 <code>t</code>，再以字首、字尾是否已在正確位置做分類判斷，直接推得最少操作次數。</p>

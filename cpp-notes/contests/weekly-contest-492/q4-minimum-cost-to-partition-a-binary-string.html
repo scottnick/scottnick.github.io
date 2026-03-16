@@ -20,7 +20,14 @@
     <main>
       <nav class="breadcrumb" aria-label="文章路徑"><a href="../../../cpp.html">C++學習筆記</a><span aria-hidden="true">/</span><a href="../index.html">Contests</a><span aria-hidden="true">/</span><a href="../weekly-contest-492.html">Weekly Contest 492</a><span aria-hidden="true">/</span><span>Q4. Minimum Cost to Partition a Binary String</span></nav>
       <section class="hero"><h1>Q4. Minimum Cost to Partition a Binary String</h1><p><strong>練習日期：</strong>2026-03-08</p><p><strong>難度：</strong>Hard</p><p><strong>類型：</strong>Weekly Contest 492</p></section>
-      <div class="article-layout"><aside class="article-toc" aria-label="文章目錄"><button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">目錄</button><strong>目錄</strong><ul><li><a href="#statement">📘 題目敘述</a></li><li><a href="#approach">🧠 解題思路</a></li><li><a href="#steps">🪜 主要流程步驟</a></li><li><a href="#complexity">⏱️ 複雜度</a></li><li><a href="#code">💻 程式碼實作</a></li><li><a href="#link">🔗 題目連結</a></li></ul></aside><section class="term-block article-content">
+      <div class="article-layout"><aside class="article-toc" aria-label="文章目錄"><button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">目錄</button><strong>目錄</strong><ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#complexity">⏱️ 複雜度</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul></aside><section class="term-block article-content">
 <h2 id="statement">📘 題目敘述</h2><p>給你二進位字串 <code>s</code>、<code>encCost</code>、<code>flatCost</code>。每段 segment 依是否含有 <code>'1'</code> 計算成本，且只有偶數長度 segment 可切成兩段連續等長 segment。請求最小總成本。</p>
 <h3>條件限制</h3><ul><li><code>1 &lt;= s.length &lt;= 10^5</code></li><li><code>1 &lt;= encCost, flatCost &lt;= 10^5</code></li></ul>
 <h2 id="approach">🧠 解題思路</h2><p>核心是遞迴 <code>dfs(l, r)</code>，回傳區間 <code>[l, r)</code> 的最小成本。先以 <code>countone(l, r)</code> 計算此段 <code>'1'</code> 數量，再比較「不切分」與「可切半時切分」兩者最小值。</p>
