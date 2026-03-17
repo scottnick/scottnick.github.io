@@ -21,23 +21,177 @@
           <li><a href="#link">🔗 題目連結</a></li>
         </ul></aside>
       <section class="term-block article-content">
-        <h2 id="statement">📘 題目敘述</h2><p>建立 <code>prefixGcd</code> 後排序，依序把最小與最大未配對元素配對，回傳所有配對 <code>gcd</code> 的總和。</p>
-        <h3>條件限制</h3><ul><li><code>1 &lt;= n == nums.length &lt;= 10^5</code></li><li><code>1 &lt;= nums[i] &lt;= 10^9</code></li></ul>
-        <h2 id="approach">🧠 解題思路</h2><p>先線性掃描建出 <code>pfg</code>（每格是當前值和前綴最大值的 gcd），再排序後雙指標配對並累加每組 gcd。</p>
-        <h3>所有變數</h3><ul><li><code>pfg</code>：prefixGcd 陣列</li><li><code>mxi</code>：前綴最大值</li><li><code>l</code>、<code>r</code>：左右雙指標</li><li><code>ans</code>：答案</li></ul>
-        <h2 id="steps">🪜 主要流程步驟</h2>
-        <h3>1. 建立 prefixGcd</h3><pre><code class="language-cpp">for (int i = 0; i &lt; n; i++) {
+<h2 id="statement">📘 題目敘述</h2>
+<p>給你一個長度為 <code>n</code> 的整數陣列 <code>nums</code>。</p>
+<p>請先建立一個陣列 <code>prefixGcd</code>，對每個 index <code>i</code>：</p>
+<ul>
+<li>令 <code>mxi = max(nums[0], nums[1], ..., nums[i])</code></li>
+<li><code>prefixGcd[i] = gcd(nums[i], mxi)</code></li>
+</ul>
+<p>建立完 <code>prefixGcd</code> 後：</p>
+<ul>
+<li>先將 <code>prefixGcd</code> 依非遞減順序排序</li>
+<li>然後每次取目前<strong>最小的未配對元素</strong>和<strong>最大的未配對元素</strong>配成一組</li>
+<li>重複這個動作，直到不能再配對為止</li>
+</ul>
+<p>對每一組配對，計算這兩個數的 <code>gcd</code>。</p>
+<p>如果 <code>n</code> 是奇數，排序後中間那個元素不會被配對，直接忽略。</p>
+<p>請回傳所有配對的 <code>gcd</code> 值總和。</p>
+<p><code>gcd(a, b)</code> 表示 <code>a</code> 和 <code>b</code> 的最大公因數。</p>
+<h3>條件限制</h3>
+<ul>
+<li><code>1 &lt;= n == nums.length &lt;= 10^5</code></li>
+<li><code>1 &lt;= nums[i] &lt;= 10^9</code></li>
+</ul>
+<h2 id="approach">🧠 解題思路</h2>
+<p>這題照題目要求一步一步做就可以。</p>
+<p>整體分成三段：</p>
+<ol>
+<li>先建出 <code>prefixGcd</code></li>
+<li>把 <code>prefixGcd</code> 排序</li>
+<li>用雙指標從最小和最大往中間配對，累加每組的 <code>gcd</code></li>
+</ol>
+<p>先看第一段。</p>
+<p>題目定義：</p>
+<ul>
+<li><code>mxi</code> 是前綴最大值</li>
+<li><code>prefixGcd[i] = gcd(nums[i], mxi)</code></li>
+</ul>
+<p>所以我在掃 <code>nums</code> 的時候，會一路維護目前前綴最大值 <code>mxi</code>。<br />
+每到一個位置 <code>i</code>：</p>
+<ul>
+<li>先更新 <code>mxi = max(mxi, nums[i])</code></li>
+<li>再算 <code>pfg[i] = gcd(nums[i], mxi)</code></li>
+</ul>
+<p>這樣 <code>pfg</code> 就是題目要的 <code>prefixGcd</code>。</p>
+<p>接著第二段，把 <code>pfg</code> 排序。</p>
+<p>排序之後，題目說配對方式是：</p>
+<ul>
+<li>最小的配最大的</li>
+<li>次小的配次大的</li>
+<li>一直做下去</li>
+</ul>
+<p>所以第三段就很自然地用雙指標：</p>
+<ul>
+<li><code>l</code> 指向最左邊</li>
+<li><code>r</code> 指向最右邊</li>
+</ul>
+<p>每次把：</p>
+<ul>
+<li><code>gcd(pfg[l], pfg[r])</code></li>
+</ul>
+<p>加進答案，然後：</p>
+<ul>
+<li><code>l++</code></li>
+<li><code>r--</code></li>
+</ul>
+<p>如果長度是奇數，最後中間那個元素會自己剩下來，而 <code>while (l &lt; r)</code> 本來就不會去配它，所以剛好符合題意。</p>
+<p>也就是說，這題的核心就是：</p>
+<blockquote>
+<p>先依題意建出 <code>prefixGcd</code>，排序後再用雙指標從兩端往中間配對並累加每組的 <code>gcd</code>。</p>
+</blockquote>
+<h3>所有變數</h3>
+<ul>
+<li><code>n</code>：陣列長度</li>
+<li><code>pfg</code>：題目中的 <code>prefixGcd</code> 陣列</li>
+<li><code>mxi</code>：目前掃到位置 <code>i</code> 時，前綴 <code>nums[0...i]</code> 的最大值</li>
+<li><code>ans</code>：所有配對 <code>gcd</code> 的總和</li>
+<li><code>l</code>：排序後 <code>pfg</code> 的左指標，指向目前最小的未配對元素</li>
+<li><code>r</code>：排序後 <code>pfg</code> 的右指標，指向目前最大的未配對元素</li>
+</ul>
+<h2 id="steps">🪜 主要流程步驟</h2>
+<h3>1. 先準備 prefixGcd 陣列和前綴最大值</h3>
+<pre><code class="language-cpp">int n = nums.size();
+vector&lt;int&gt; pfg(n);
+int mxi = INT_MIN;</code></pre>
+<p>這裡：</p>
+<ul>
+<li><code>n</code> 是陣列長度</li>
+<li><code>pfg</code> 用來存題目要的 <code>prefixGcd</code></li>
+<li><code>mxi</code> 用來記目前前綴中的最大值</li>
+</ul>
+<p>一開始 <code>mxi</code> 先設成很小，之後每掃到一個元素就更新。</p>
+<hr />
+<h3>2. 掃一次 nums，依題意建出 prefixGcd</h3>
+<pre><code class="language-cpp">for (int i = 0; i &lt; n; i++) {
     mxi = max(mxi, nums[i]);
     pfg[i] = gcd(nums[i], mxi);
-}</code></pre><hr />
-        <h3>2. 排序</h3><pre><code class="language-cpp">sort(pfg.begin(), pfg.end());</code></pre><hr />
-        <h3>3. 雙指標配對累加</h3><pre><code class="language-cpp">while (l &lt; r) {
+}</code></pre>
+<p>這一步是照題目定義直接做。</p>
+<p>對每個位置 <code>i</code>：</p>
+<ul>
+<li><p><code>mxi = max(mxi, nums[i])</code></p>
+<ul>
+<li>把目前前綴最大值更新好</li>
+</ul></li>
+<li><p><code>pfg[i] = gcd(nums[i], mxi)</code></p>
+<ul>
+<li>這就是題目定義的 <code>prefixGcd[i]</code></li>
+</ul></li>
+</ul>
+<p>例如如果前面最大值一路變成：</p>
+<ul>
+<li><code>2</code></li>
+<li><code>6</code></li>
+<li><code>6</code></li>
+</ul>
+<p>那對應位置就會分別去算：</p>
+<ul>
+<li><code>gcd(nums[i], 2)</code></li>
+<li><code>gcd(nums[i], 6)</code></li>
+<li><code>gcd(nums[i], 6)</code></li>
+</ul>
+<p>這樣整個 <code>pfg</code> 就建好了。</p>
+<hr />
+<h3>3. 把 prefixGcd 排序</h3>
+<pre><code class="language-cpp">sort(pfg.begin(), pfg.end());</code></pre>
+<p>因為題目接下來要求的配對方式是：</p>
+<ul>
+<li>最小的未配對元素</li>
+<li>配最大的未配對元素</li>
+</ul>
+<p>所以一定要先排序。</p>
+<p>排序完之後，整個配對順序就很清楚了。</p>
+<hr />
+<h3>4. 用雙指標從最左和最右開始配對</h3>
+<pre><code class="language-cpp">long long ans = 0;
+int l = 0, r = n - 1;
+while (l &lt; r) {
     ans += gcd(pfg[l], pfg[r]);
     l++;
     r--;
 }</code></pre>
-        <h2 id="complexity">⏱️ 複雜度</h2><ul><li>時間複雜度：<code>O(n log n)</code></li><li>空間複雜度：<code>O(n)</code></li></ul>
-        <h2 id="code">💻 程式碼實作</h2><pre><code class="language-cpp">class Solution {
+<p>這一段是在做題目指定的配對方式。</p>
+<ul>
+<li><code>l</code> 指向目前最小的未配對元素</li>
+<li><code>r</code> 指向目前最大的未配對元素</li>
+</ul>
+<p>每次都把這兩個數配成一組，並把它們的 <code>gcd</code> 加到 <code>ans</code> 裡。</p>
+<p>然後：</p>
+<ul>
+<li><code>l++</code></li>
+<li><code>r--</code></li>
+</ul>
+<p>表示這一組已經配完，改處理下一組。</p>
+<p>如果 <code>n</code> 是奇數，最後會剩下一個中間元素：</p>
+<ul>
+<li>例如 <code>l == r</code></li>
+</ul>
+<p>但因為迴圈條件是 <code>while (l &lt; r)</code>，所以那個中間元素不會被拿去配對，剛好符合題目要求「中間元素忽略」。</p>
+<hr />
+<h3>5. 最後回傳答案</h3>
+<pre><code class="language-cpp">return ans;</code></pre>
+<p>當所有可以配對的元素都處理完後，<code>ans</code> 就是所有 formed pairs 的 <code>gcd</code> 總和，直接回傳即可。</p>
+<h2 id="complexity">⏱️ 複雜度</h2>
+<p>設 <code>n = nums.length</code>。</p>
+<ul>
+<li><p>時間複雜度：<code>O(n log n)</code><br />
+建立 <code>prefixGcd</code> 需要掃一次陣列，排序需要 <code>O(n log n)</code>，最後雙指標再掃一半，整體由排序主導。</p></li>
+<li><p>空間複雜度：<code>O(n)</code><br />
+額外使用了一個長度為 <code>n</code> 的 <code>pfg</code> 陣列。</p></li>
+</ul>
+<h2 id="code">💻 程式碼實作</h2>
+<pre><code class="language-cpp">class Solution {
 public:
     long long gcdSum(vector&lt;int&gt;&amp; nums) {
         int n = nums.size();
@@ -58,8 +212,9 @@ public:
         return ans;
     }
 };</code></pre>
-        <h2 id="link">🔗 題目連結</h2><p><a href="https://leetcode.com/problems/sum-of-gcd-of-formed-pairs/">https://leetcode.com/problems/sum-of-gcd-of-formed-pairs/</a></p>
-      </section></div>
+<h2 id="link">🔗 題目連結</h2>
+<p><a href="https://leetcode.com/contest/biweekly-contest-178/problems/sum-of-gcd-of-formed-pairs/">https://leetcode.com/contest/biweekly-contest-178/problems/sum-of-gcd-of-formed-pairs/</a></p>
+      </section>
       <section class="term-block article-footer"><h2 class="article-footer__title">文章資訊</h2><div class="meta-grid"><div class="meta-field"><span class="meta-label">作者：</span><span class="meta-value">scottnick</span></div><div class="meta-field meta-field--date"><span class="meta-label">撰寫日期：</span><span class="meta-value">2026-03-14</span></div><div class="meta-field meta-field--full"><span class="meta-label">類別：</span><span class="meta-value"><span class="post-tags"><span class="post-tag">Array</span><span class="post-tag">Math</span><span class="post-tag">Sorting</span><span class="post-tag">Biweekly Contest 178</span><span class="post-tag">Medium</span></span></span></div><div class="meta-field meta-field--full"><span class="meta-label">原文連結：</span><span class="meta-value">https://scottnick.github.io/cpp-notes/all%20problems/3867-sum-of-gcd-of-formed-pairs.html</span></div></div></section>
     </main>
     <script src="../../script.js"></script>
