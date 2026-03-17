@@ -1,0 +1,356 @@
+<!-- all problems/1727-largest-submatrix-with-rearrangements.html: 全部題單文章 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>1727. Largest Submatrix With Rearrangements</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+               width="18" height="18" aria-hidden="true" focusable="false"
+               style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="../all%20problems/index.html">All problems</a>
+      <span aria-hidden="true">/</span>
+      <span>1727. Largest Submatrix With Rearrangements</span>
+    </nav>
+
+    <section class="hero">
+      <h1>1727. Largest Submatrix With Rearrangements</h1>
+      <p><strong>練習日期：</strong>2026-03-17</p>
+      <p><strong>難度：</strong>Medium</p>
+      <p><strong>類型：</strong>Array、Greedy、Sorting、Matrix</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#complexity">⏱️ 複雜度</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給你一個大小為 <code>m x n</code> 的二元矩陣 <code>matrix</code>，你可以任意重新排列矩陣的欄。</p>
+        <p>請回傳在最佳欄位重排之後，所有元素都是 <code>1</code> 的最大子矩陣面積。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>m == matrix.length</code></li>
+          <li><code>n == matrix[i].length</code></li>
+          <li><code>1 &lt;= m * n &lt;= 10^5</code></li>
+          <li><code>matrix[i][j]</code> 只會是 <code>0</code> 或 <code>1</code></li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>這題的重點不是直接去想怎麼交換欄，而是先想：</p>
+        <blockquote>
+          <p>如果我固定看某一列當作子矩陣的最底部，那我能往上延伸多高？</p>
+        </blockquote>
+        <p>所以我先做一個 <code>ones</code> 矩陣，<code>ones[i][j]</code> 表示：</p>
+        <ul>
+          <li>在位置 <code>(i, j)</code> 這格，如果它是 <code>1</code></li>
+          <li>那它往上連續有幾個 <code>1</code></li>
+        </ul>
+        <p>例如某一欄如果長這樣：</p>
+        <ul>
+          <li><code>1</code></li>
+          <li><code>1</code></li>
+          <li><code>0</code></li>
+          <li><code>1</code></li>
+        </ul>
+        <p>那對應的連續高度就會是：</p>
+        <ul>
+          <li><code>1</code></li>
+          <li><code>2</code></li>
+          <li><code>0</code></li>
+          <li><code>1</code></li>
+        </ul>
+        <p>有了這個高度之後，每一列就可以想成：</p>
+        <ul>
+          <li>這一列有哪些欄，能提供多高的「1 的柱子」</li>
+        </ul>
+        <p>而題目允許重新排列欄，所以對某一列來說，我可以把高的柱子排在一起。
+既然如此，對每一列我只要把高度由大到小排序，然後試：</p>
+        <ul>
+          <li>取前 <code>1</code> 個欄時，面積是多少</li>
+          <li>取前 <code>2</code> 個欄時，面積是多少</li>
+          <li>...</li>
+          <li>取前 <code>k</code> 個欄時，面積是多少</li>
+        </ul>
+        <p>如果排序後某列是：</p>
+        <ul>
+          <li><code>[4, 3, 3, 1]</code></li>
+        </ul>
+        <p>那：</p>
+        <ul>
+          <li>取前 1 個欄，面積是 <code>4 * 1</code></li>
+          <li>取前 2 個欄，面積是 <code>3 * 2</code></li>
+          <li>取前 3 個欄，面積是 <code>3 * 3</code></li>
+          <li>取前 4 個欄，面積是 <code>1 * 4</code></li>
+        </ul>
+        <p>因為當你取前 <code>k</code> 個欄時，真正能形成矩形的高度，會被第 <code>k</code> 高那根柱子限制住。</p>
+        <p>所以這題的核心就是：</p>
+        <ol>
+          <li>先把每格往上連續的 <code>1</code> 高度算出來</li>
+          <li>對每一列把這些高度排序</li>
+          <li>枚舉這一列拿幾個欄一起組矩形，更新最大面積</li>
+        </ol>
+        <p>也就是說，這題真正不是在模擬欄怎麼換，而是：</p>
+        <blockquote>
+          <p>對每一列，把它當成矩形底邊，算出這一列各欄能提供的高度，再利用排序模擬最佳欄位重排。</p>
+        </blockquote>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>ones</code>：<code>ones[i][j]</code> 表示位置 <code>(i, j)</code> 往上連續有幾個 <code>1</code></li>
+          <li><code>ans</code>：目前找到的最大子矩陣面積</li>
+          <li><code>row</code>：在掃 <code>ones</code> 時，代表其中一列高度資料</li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+        <h3>1. 先開一個 ones 矩陣，記錄每格往上連續 1 的高度</h3>
+        <pre><code class="language-cpp">int m = matrix.size();
+int n = matrix[0].size();
+vector&lt;vector&lt;int&gt;&gt; ones(m, vector&lt;int&gt;(n));</code></pre>
+        <p>這裡先把矩陣大小存起來，並建立一個同大小的 <code>ones</code>。</p>
+        <p>之後 <code>ones[i][j]</code> 不是單純記 <code>0</code> 或 <code>1</code>，而是要記：</p>
+        <ul>
+          <li>這格當作底部時，往上連續有幾個 <code>1</code></li>
+        </ul>
+
+        <hr>
+
+        <h3>2. 逐格建立 ones，高度由上往下累積</h3>
+        <pre><code class="language-cpp">for (int i = 0; i &lt; m; i++) {
+    for (int j = 0; j &lt; n; j++) {
+        if (i == 0) {
+            ones[i][j] = matrix[i][j];
+            continue;
+        }
+        if (matrix[i][j] == 1) {
+            ones[i][j] = ones[i - 1][j] + 1;
+        } else {
+            ones[i][j] = 0;
+        }
+    }
+}</code></pre>
+        <p>這一步是在建立每格的高度資訊。</p>
+        <p>先看第一列：</p>
+        <ul>
+          <li>如果 <code>i == 0</code></li>
+          <li>那往上沒有別的列了</li>
+          <li>所以 <code>ones[0][j]</code> 就直接等於 <code>matrix[0][j]</code></li>
+        </ul>
+        <p>也就是：</p>
+        <ul>
+          <li>如果這格是 <code>1</code>，高度就是 <code>1</code></li>
+          <li>如果這格是 <code>0</code>，高度就是 <code>0</code></li>
+        </ul>
+        <p>接著看其他列：</p>
+        <ul>
+          <li>如果 <code>matrix[i][j] == 1</code>
+            <ul>
+              <li>代表這格可以接在上面那格的連續 <code>1</code> 下面</li>
+              <li>所以高度是 <code>ones[i - 1][j] + 1</code></li>
+            </ul>
+          </li>
+          <li>如果 <code>matrix[i][j] == 0</code>
+            <ul>
+              <li>代表這格不能形成連續 <code>1</code></li>
+              <li>高度直接歸零</li>
+            </ul>
+          </li>
+        </ul>
+        <p>做完這一步後，<code>ones</code> 裡每一格就都變成「以這格為底，往上有多高」。</p>
+
+        <hr>
+
+        <h3>3. 對每一列排序，模擬把高的欄位排在一起</h3>
+        <pre><code class="language-cpp">int ans = 0;
+for (auto&amp; row : ones) {
+    sort(row.begin(), row.end(), greater&lt;int&gt;());</code></pre>
+        <p>因為題目允許重新排列整個欄，所以對某一列來說，只要知道每個欄位的高度就夠了。</p>
+        <p>而要形成最大面積的矩形，直覺上就會希望：</p>
+        <ul>
+          <li>高的欄位排在前面</li>
+          <li>這樣取前幾個欄時，最矮的那根也盡量高</li>
+        </ul>
+        <p>所以這裡把每一列的高度由大到小排序。</p>
+        <p>這其實就是在模擬：</p>
+        <ul>
+          <li>如果我可以任意重排欄位</li>
+          <li>那這一列最好的排列方式就是讓高的柱子集中在一起</li>
+        </ul>
+
+        <hr>
+
+        <h3>4. 枚舉這一列取前幾個欄，計算可能的矩形面積</h3>
+        <pre><code class="language-cpp">    for (int l = 0; l &lt; n; l++) {
+        ans = max(ans, row[l] * (l + 1));
+    }
+}</code></pre>
+        <p>這一段是整題最核心的面積計算。</p>
+        <p>假設某列排序後長這樣：</p>
+        <ul>
+          <li><code>row = [5, 4, 4, 2]</code></li>
+        </ul>
+        <p>那代表：</p>
+        <ul>
+          <li>如果只取前 1 個欄，矩形高度是 <code>5</code>，寬度是 <code>1</code></li>
+          <li>如果取前 2 個欄，矩形高度會被第 2 根柱子限制成 <code>4</code>，寬度是 <code>2</code></li>
+          <li>如果取前 3 個欄，高度還是 <code>4</code>，寬度是 <code>3</code></li>
+          <li>如果取前 4 個欄，高度變成 <code>2</code>，寬度是 <code>4</code></li>
+        </ul>
+        <p>所以每次取前 <code>l + 1</code> 個欄時：</p>
+        <ul>
+          <li>高度就是 <code>row[l]</code></li>
+          <li>寬度就是 <code>l + 1</code></li>
+        </ul>
+        <p>因此面積就是：</p>
+        <ul>
+          <li><code>row[l] * (l + 1)</code></li>
+        </ul>
+        <p>把所有列、所有可能寬度都試過一遍，更新最大值即可。</p>
+
+        <hr>
+
+        <h3>5. 為什麼這樣就等於最佳重排後的答案</h3>
+        <p>題目允許你重排欄位，但不能改變每一欄上下原本的結構。</p>
+        <p>而 <code>ones[i][j]</code> 已經完整描述了：</p>
+        <ul>
+          <li>如果第 <code>j</code> 欄在第 <code>i</code> 列當底，最多可以提供多高的連續 <code>1</code></li>
+        </ul>
+        <p>所以對每一列來說，真正重要的不是欄原本順序，而是：</p>
+        <ul>
+          <li>這列有哪些高度可以用</li>
+        </ul>
+        <p>一旦把高度排序，就等於在模擬最佳欄位重排。
+接著再試每個可能的寬度，就能得到以這一列為底時的最大面積。</p>
+        <p>最後對所有列取最大值，就是整體答案。</p>
+
+        <hr>
+
+        <h3>6. 最後回傳 ans</h3>
+        <pre><code class="language-cpp">return ans;</code></pre>
+        <p>當所有列都處理完後，<code>ans</code> 就是最佳欄位重排後，全 <code>1</code> 子矩陣的最大面積。</p>
+
+        <h2 id="complexity">⏱️ 複雜度</h2>
+        <p>設 <code>m = matrix.length</code>，<code>n = matrix[0].length</code>。</p>
+        <ul>
+          <li>時間複雜度：<code>O(mn log n)</code>
+            建立 <code>ones</code> 需要 <code>O(mn)</code>，之後每一列排序需要 <code>O(n log n)</code>，共 <code>m</code> 列。</li>
+          <li>空間複雜度：<code>O(mn)</code>
+            額外使用了一個 <code>ones</code> 矩陣來記錄每格的高度。</li>
+        </ul>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    int largestSubmatrix(vector&lt;vector&lt;int&gt;&gt;&amp; matrix) {
+        int m = matrix.size();
+        int n = matrix[0].size();
+        vector&lt;vector&lt;int&gt;&gt; ones(m, vector&lt;int&gt;(n));
+
+        for (int i = 0; i &lt; m; i++) {
+            for (int j = 0; j &lt; n; j++) {
+                if (i == 0) {
+                    ones[i][j] = matrix[i][j];
+                    continue;
+                }
+                if (matrix[i][j] == 1) {
+                    ones[i][j] = ones[i - 1][j] + 1;
+                } else {
+                    ones[i][j] = 0;
+                }
+            }
+        }
+
+        int ans = 0;
+        for (auto&amp; row : ones) {
+            sort(row.begin(), row.end(), greater&lt;int&gt;());
+            for (int l = 0; l &lt; n; l++) {
+                ans = max(ans, row[l] * (l + 1));
+            }
+        }
+        return ans;
+    }
+};</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p><a href="https://leetcode.com/problems/largest-submatrix-with-rearrangements/">https://leetcode.com/problems/largest-submatrix-with-rearrangements/</a></p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-03-17</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value"><span class="post-tags">
+              <span class="post-tag">Array</span>
+              <span class="post-tag">Greedy</span>
+              <span class="post-tag">Sorting</span>
+              <span class="post-tag">Matrix</span>
+              <span class="post-tag">Medium</span>
+            </span></span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/all%20problems/1727-largest-submatrix-with-rearrangements.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
