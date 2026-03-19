@@ -1,0 +1,356 @@
+<!-- all problems/3212-count-submatrices-with-equal-frequency-of-x-and-y.html: 3212. Count Submatrices With Equal Frequency of X and Y -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3212. Count Submatrices With Equal Frequency of X and Y</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false" style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題"><span id="theme-icon" aria-hidden="true">☀️</span></button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="index.html">All problems</a>
+      <span aria-hidden="true">/</span>
+      <span>3212. Count Submatrices With Equal Frequency of X and Y</span>
+    </nav>
+
+    <section class="hero">
+      <h1>3212. Count Submatrices With Equal Frequency of X and Y</h1>
+      <p><strong>練習日期：</strong>2026-03-19</p>
+      <p><strong>難度：</strong>Medium</p>
+      <p><strong>類型：</strong>Array、Matrix、Prefix Sum</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">目錄</button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#complexity">⏱️ 複雜度</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給你一個二維字元矩陣 <code>grid</code>，其中 <code>grid[i][j]</code> 只會是 <code>'X'</code>、<code>'Y'</code> 或 <code>'.'</code>。</p>
+        <p>請回傳符合以下條件的子矩陣數量：</p>
+        <ul>
+          <li>包含 <code>grid[0][0]</code></li>
+          <li><code>'X'</code> 和 <code>'Y'</code> 的出現次數相同</li>
+          <li>至少包含一個 <code>'X'</code></li>
+        </ul>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>1 &lt;= grid.length, grid[i].length &lt;= 1000</code></li>
+          <li><code>grid[i][j]</code> 只會是 <code>'X'</code>、<code>'Y'</code> 或 <code>'.'</code></li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>這題最重要的一個觀察是：</p>
+        <blockquote>
+          <p>題目要求子矩陣一定要包含 <code>grid[0][0]</code></p>
+        </blockquote>
+        <p>這代表我們要數的子矩陣，其實都一定是：</p>
+        <ul>
+          <li>左上角固定在 <code>(0, 0)</code></li>
+          <li>右下角是某個 <code>(i, j)</code></li>
+        </ul>
+        <p>也就是說，這題不是在數任意位置的所有子矩陣，而是在數：</p>
+        <ul>
+          <li>從 <code>(0,0)</code> 出發的前綴子矩陣</li>
+        </ul>
+        <p>這樣事情就簡單很多了。</p>
+        <p>因為只要我知道每個前綴矩陣 <code>(0,0) ~ (i,j)</code> 裡：</p>
+        <ul>
+          <li>有幾個 <code>'X'</code></li>
+          <li>有幾個 <code>'Y'</code></li>
+        </ul>
+        <p>我就能直接判斷這個前綴子矩陣是否符合條件。</p>
+        <p>所以我這份程式開了兩個 prefix sum 矩陣：</p>
+        <ul>
+          <li><code>countx[i][j]</code>：前綴矩陣 <code>(0,0) ~ (i,j)</code> 中 <code>'X'</code> 的數量</li>
+          <li><code>county[i][j]</code>：前綴矩陣 <code>(0,0) ~ (i,j)</code> 中 <code>'Y'</code> 的數量</li>
+        </ul>
+        <p>接著對每個位置 <code>(i, j)</code> 算完之後，直接檢查：</p>
+        <ul>
+          <li><code>countx[i][j] == county[i][j]</code></li>
+          <li>而且 <code>countx[i][j] &gt; 0</code></li>
+        </ul>
+        <p>如果成立，就代表：</p>
+        <ul>
+          <li><code>'X'</code> 和 <code>'Y'</code> 數量一樣</li>
+          <li>而且至少有一個 <code>'X'</code></li>
+        </ul>
+        <p>這個前綴子矩陣就要計入答案。</p>
+        <p>也就是說，這題的核心就是：</p>
+        <blockquote>
+          <p>因為子矩陣必須包含 <code>grid[0][0]</code>，所以所有合法子矩陣都可以視為前綴矩陣。只要用 prefix sum 算出每個前綴矩陣中的 <code>X</code>、<code>Y</code> 數量，再逐格檢查即可。</p>
+        </blockquote>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>m</code>：列數</li>
+          <li><code>n</code>：行數</li>
+          <li><code>countx</code>：二維前綴和，<code>countx[i][j]</code> 表示前綴矩陣中 <code>'X'</code> 的數量</li>
+          <li><code>county</code>：二維前綴和，<code>county[i][j]</code> 表示前綴矩陣中 <code>'Y'</code> 的數量</li>
+          <li><code>ans</code>：符合條件的子矩陣數量</li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+        <h3>1. 先建立兩個 prefix sum 矩陣，分別記錄 X 和 Y 的數量</h3>
+        <pre><code class="language-cpp">int m = grid.size();
+int n = grid[0].size();
+vector&lt;vector&lt;int&gt;&gt; countx(m, vector&lt;int&gt;(n, 0));
+vector&lt;vector&lt;int&gt;&gt; county(m, vector&lt;int&gt;(n, 0));
+</code></pre>
+        <p>這裡我沒有用一個矩陣同時記錄差值，而是直接分開記：</p>
+        <ul>
+          <li><code>countx</code></li>
+          <li><code>county</code></li>
+        </ul>
+        <p>這樣後面判斷會比較直觀：</p>
+        <ul>
+          <li><code>countx[i][j] == county[i][j]</code></li>
+          <li><code>countx[i][j] &gt; 0</code></li>
+        </ul>
+
+        <hr>
+
+        <h3>2. 先處理左上角 <code>(0, 0)</code></h3>
+        <pre><code class="language-cpp">if (grid[0][0] == 'X') {
+    countx[0][0]++;
+} else if (grid[0][0] == 'Y') {
+    county[0][0]++;
+}
+</code></pre>
+        <p>這一步是在初始化 prefix sum 的起點。</p>
+        <p>因為 <code>(0,0)</code> 這格沒有上面和左邊可以參考，所以先單獨處理：</p>
+        <ul>
+          <li>如果是 <code>'X'</code>，就讓 <code>countx[0][0] = 1</code></li>
+          <li>如果是 <code>'Y'</code>，就讓 <code>county[0][0] = 1</code></li>
+          <li>如果是 <code>'.'</code>，兩個都維持 <code>0</code></li>
+        </ul>
+        <p>注意這份程式沒有在這裡直接判斷答案，因為如果只有 <code>(0,0)</code> 一格，想要 <code>'X'</code> 和 <code>'Y'</code> 數量一樣且至少一個 <code>'X'</code>，其實不可能成立。</p>
+
+        <hr>
+
+        <h3>3. 先處理第一欄，因為它只能從上面累積</h3>
+        <pre><code class="language-cpp">int ans = 0;
+for (int i = 1; i &lt; m; i++) {
+    if (grid[i][0] == 'X') {
+        countx[i][0]++;
+    } else if (grid[i][0] == 'Y') {
+        county[i][0]++;
+    }
+    countx[i][0] += countx[i - 1][0];
+    county[i][0] += county[i - 1][0];
+    if (countx[i][0] - county[i][0] == 0 &amp;&amp; countx[i][0] &gt; 0) {
+        ans++;
+    }
+}
+</code></pre>
+        <p>第一欄的位置 <code>(i,0)</code> 沒有左邊，所以前綴和只需要從上面累加。</p>
+        <p>這段的邏輯是：</p>
+        <ol>
+          <li>先看目前這格是不是 <code>'X'</code> 或 <code>'Y'</code></li>
+          <li>把它加到目前這格自己的計數</li>
+          <li>再加上上面那格的 prefix sum</li>
+          <li>最後檢查這個前綴子矩陣是否符合題意</li>
+        </ol>
+        <p>判斷條件：</p>
+        <ul>
+          <li><code>countx[i][0] - county[i][0] == 0</code>
+            <ul>
+              <li>代表 <code>X</code> 和 <code>Y</code> 一樣多</li>
+            </ul>
+          </li>
+          <li><code>countx[i][0] &gt; 0</code>
+            <ul>
+              <li>代表至少有一個 <code>X</code></li>
+            </ul>
+          </li>
+        </ul>
+
+        <hr>
+
+        <h3>4. 再處理第一列，因為它只能從左邊累積</h3>
+        <p>這邊和第一欄完全對稱。</p>
+        <p>第一列的位置 <code>(0,j)</code> 沒有上面，所以 prefix sum 只能從左邊累積。</p>
+        <p>做完這一步後：</p>
+        <ul>
+          <li>第一列和第一欄的 prefix sum 都處理好了</li>
+        </ul>
+
+        <hr>
+
+        <h3>5. 一般位置用二維 prefix sum 公式計算 X 和 Y 的數量</h3>
+        <p>這一段是整題最核心的地方。</p>
+        <p>對每個一般位置 <code>(k,l)</code>：</p>
+        <p>如果這格是 <code>'X'</code>，先給目前格子一個 <code>1</code>。
+如果這格是 <code>'Y'</code>，先給 <code>county[k][l]</code> 一個 <code>1</code>。</p>
+        <p>然後套用二維 prefix sum 的公式：</p>
+        <pre><code class="language-cpp">prefix[i][j] = 上面 + 左邊 - 左上角重複部分 + 自己這格
+</code></pre>
+        <p>所以這裡：</p>
+        <ul>
+          <li><code>countx[k][l]</code>
+            <ul>
+              <li>表示 <code>(0,0) ~ (k,l)</code> 裡 <code>'X'</code> 的總數</li>
+            </ul>
+          </li>
+          <li><code>county[k][l]</code>
+            <ul>
+              <li>表示 <code>(0,0) ~ (k,l)</code> 裡 <code>'Y'</code> 的總數</li>
+            </ul>
+          </li>
+        </ul>
+        <p>算完後就可以直接檢查這個前綴矩陣是不是合法答案。</p>
+
+        <hr>
+
+        <h3>6. 為什麼這樣數到的剛好就是題目要的子矩陣</h3>
+        <p>因為題目要求子矩陣必須包含 <code>grid[0][0]</code>。</p>
+        <p>所以任一合法子矩陣的左上角一定只能是 <code>(0,0)</code>，不然就不可能包含這格。</p>
+        <p>也就是說，所有合法子矩陣其實都可以唯一表示成：</p>
+        <ul>
+          <li><code>(0,0)</code> 到 <code>(i,j)</code></li>
+        </ul>
+        <p>這正好就是 prefix sum 最適合處理的形式。</p>
+        <p>所以這份程式不是在枚舉所有子矩陣，而是在枚舉所有可能的右下角 <code>(i,j)</code>，再檢查對應的前綴矩陣是否符合條件。</p>
+
+        <hr>
+
+        <h3>7. 最後回傳答案</h3>
+        <pre><code class="language-cpp">return ans;
+</code></pre>
+        <p>當所有位置都處理完後，<code>ans</code> 就是符合條件的子矩陣總數。</p>
+
+        <h2 id="complexity">⏱️ 複雜度</h2>
+        <p>設 <code>m = grid.length</code>，<code>n = grid[0].length</code>。</p>
+        <ul>
+          <li>時間複雜度：<code>O(mn)</code>
+            <p>每個位置都只被處理一次。</p>
+          </li>
+          <li>空間複雜度：<code>O(mn)</code>
+            <p>額外使用了兩個 <code>m x n</code> 的 prefix sum 矩陣 <code>countx</code> 和 <code>county</code>。</p>
+          </li>
+        </ul>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    int numberOfSubmatrices(vector&lt;vector&lt;char&gt;&gt;&amp; grid) {
+        int m = grid.size();
+        int n = grid[0].size();
+        vector&lt;vector&lt;int&gt;&gt; countx(m, vector&lt;int&gt;(n, 0)); // 前綴和計算X,Y數量
+        vector&lt;vector&lt;int&gt;&gt; county(m, vector&lt;int&gt;(n, 0));
+        if (grid[0][0] == 'X') {
+            countx[0][0]++;
+        } else if (grid[0][0] == 'Y') {
+            county[0][0]++;
+        }
+
+        int ans = 0; // 一樣的次數
+        for (int i = 1; i &lt; m; i++) {
+            if (grid[i][0] == 'X') {
+                countx[i][0]++;
+            } else if (grid[i][0] == 'Y') {
+                county[i][0]++;
+            }
+            countx[i][0] += countx[i - 1][0];
+            county[i][0] += county[i - 1][0];
+            if (countx[i][0] - county[i][0] == 0 &amp;&amp; countx[i][0] &gt; 0) {
+                ans++;
+            }
+        }
+        for (int j = 1; j &lt; n; j++) {
+            if (grid[0][j] == 'X') {
+                countx[0][j]++;
+            } else if (grid[0][j] == 'Y') {
+                county[0][j]++;
+            }
+            countx[0][j] += countx[0][j - 1];
+            county[0][j] += county[0][j - 1];
+            if (countx[0][j] - county[0][j] == 0 &amp;&amp; countx[0][j] &gt; 0) {
+                ans++;
+            }
+        }
+        for (int k = 1; k &lt; m; k++) {
+            for (int l = 1; l &lt; n; l++) {
+                if (grid[k][l] == 'X') {
+                    countx[k][l]++;
+                } else if (grid[k][l] == 'Y') {
+                    county[k][l]++;
+                }
+                countx[k][l] += (countx[k - 1][l] + countx[k][l - 1]);
+                countx[k][l] -= countx[k - 1][l - 1];
+                county[k][l] += (county[k - 1][l] + county[k][l - 1]);
+                county[k][l] -= county[k - 1][l - 1];
+                if (countx[k][l] - county[k][l] == 0 &amp;&amp; countx[k][l] &gt; 0) {
+                    ans++;
+                }
+            }
+        }
+        return ans;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/count-submatrices-with-equal-frequency-of-x-and-y/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field"><span class="meta-label">作者：</span><span class="meta-value">scottnick</span></div>
+        <div class="meta-field meta-field--date"><span class="meta-label">撰寫日期：</span><span class="meta-value">2026-03-19</span></div>
+        <div class="meta-field meta-field--full"><span class="meta-label">類別：</span><span class="meta-value"><span class="post-tags">
+              <span class="post-tag">Array</span>
+              <span class="post-tag">Matrix</span>
+              <span class="post-tag">Prefix Sum</span>
+              <span class="post-tag">Medium</span>
+            </span></span></div>
+        <div class="meta-field meta-field--full"><span class="meta-label">原文連結：</span><span class="meta-value">https://scottnick.github.io/cpp-notes/all%20problems/3212-count-submatrices-with-equal-frequency-of-x-and-y.html</span></div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
