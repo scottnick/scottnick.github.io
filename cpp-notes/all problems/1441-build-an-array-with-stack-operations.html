@@ -1,0 +1,285 @@
+<!-- all problems/1441-build-an-array-with-stack-operations.html: All problems 文章 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>1441. Build an Array With Stack Operations</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+               width="18" height="18" aria-hidden="true" focusable="false"
+               style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="index.html">All problems</a>
+      <span aria-hidden="true">/</span>
+      <span>1441. Build an Array With Stack Operations</span>
+    </nav>
+
+    <section class="hero">
+      <h1>1441. Build an Array With Stack Operations</h1>
+      <p><strong>練習日期：</strong>2026-03-18</p>
+      <p><strong>難度：</strong>Medium</p>
+      <p><strong>類型：</strong>Array、Stack、Simulation</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#complexity">⏱️ 複雜度</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給你一個整數陣列 <code>target</code> 和一個整數 <code>n</code>。</p>
+        <p>你有一個空 stack，並且可以做以下兩種操作：</p>
+        <ul>
+          <li><code>"Push"</code>：把一個整數推到 stack 頂端</li>
+          <li><code>"Pop"</code>：移除 stack 頂端的整數</li>
+        </ul>
+        <p>你另外還有一個從 <code>1</code> 到 <code>n</code> 的整數串流。</p>
+        <p>請使用這兩種 stack 操作，讓 stack 中的元素（從底到頂）剛好等於 <code>target</code>。<br>
+        你必須遵守以下規則：</p>
+        <ul>
+          <li>如果整數串流還沒用完，就要讀取下一個整數，並把它 push 到 stack 頂端</li>
+          <li>如果 stack 不為空，就可以把 stack 頂端元素 pop 掉</li>
+          <li>如果在某個時刻，stack 中的元素（從底到頂）已經等於 <code>target</code>，就要立刻停止，不能再繼續讀新的整數，也不能再做更多操作</li>
+        </ul>
+        <p>請回傳建出 <code>target</code> 所需要的操作序列。<br>
+        如果有多種合法答案，回傳任意一種即可。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>1 &lt;= target.length &lt;= 100</code></li>
+          <li><code>1 &lt;= n &lt;= 100</code></li>
+          <li><code>1 &lt;= target[i] &lt;= n</code></li>
+          <li><code>target</code> 是嚴格遞增的</li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>這題的重點是：</p>
+        <p>串流的數字只能照 <code>1, 2, 3, ...</code> 這樣一路讀下去，不能跳。<br>
+        所以如果目前應該要讀到的數字不是 <code>target</code> 裡想要的那個，我也還是得先把它讀進來，再立刻把它丟掉。</p>
+        <p>我這份寫法是用一個 <code>now</code> 代表：</p>
+        <blockquote>
+          <p>目前串流下一個要讀的數字是誰。</p>
+        </blockquote>
+        <p>一開始 <code>now = 1</code>。</p>
+        <p>接著我依序處理 <code>target</code> 裡的每個數字 <code>i</code>。</p>
+        <p>如果目前 <code>now &lt; i</code>，代表：</p>
+        <ul>
+          <li><code>now</code> 這個數字不是我要留下來的</li>
+          <li>但我不能跳過它</li>
+          <li>所以只能做：</li>
+        </ul>
+        <ul>
+          <li><code>"Push"</code></li>
+          <li><code>"Pop"</code></li>
+        </ul>
+        <p>然後 <code>now++</code>，繼續看下一個串流數字。</p>
+        <p>當 <code>now</code> 終於等於 <code>i</code> 的時候，代表這個數字就是 <code>target</code> 需要的，那就只做一次 <code>"Push"</code>，把它留下來，再讓 <code>now++</code>。</p>
+        <p>因為 <code>target</code> 是嚴格遞增的，所以這樣照順序一路處理就可以，不需要回頭，也不會有歧義。</p>
+        <p>也就是說，這題的核心就是：</p>
+        <blockquote>
+          <p>用 <code>now</code> 模擬串流目前讀到哪個數字，遇到不需要的數字就 <code>"Push"</code> 再 <code>"Pop"</code>，遇到 target 需要的數字就只 <code>"Push"</code> 留下來。</p>
+        </blockquote>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>now</code>：目前串流下一個要讀的數字</li>
+          <li><code>ans</code>：最後要回傳的操作序列</li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+        <h3>1. 先用 now 記錄目前串流要讀到哪個數字</h3>
+        <pre><code class="language-cpp">int now = 1;
+vector&lt;string&gt; ans;
+</code></pre>
+        <p>這裡：</p>
+        <ul>
+          <li><code>now = 1</code> 表示串流一開始會先讀到 <code>1</code></li>
+          <li><code>ans</code> 用來記錄最後所有操作</li>
+        </ul>
+        <p>之後整個過程都只是模擬：</p>
+        <ul>
+          <li>串流現在走到哪個數字</li>
+          <li>這個數字要留下還是要丟掉</li>
+        </ul>
+
+        <hr />
+
+        <h3>2. 依序處理 target 裡每個要留下來的數字</h3>
+        <pre><code class="language-cpp">for (int i : target) {
+</code></pre>
+        <p>這裡的 <code>i</code> 代表：</p>
+        <ul>
+          <li>現在 <code>target</code> 希望下一個留下來的數字是 <code>i</code></li>
+        </ul>
+        <p>因為 <code>target</code> 本身是嚴格遞增的，所以我可以照順序一路做，不用擔心前後衝突。</p>
+
+        <hr />
+
+        <h3>3. 如果 now 還比 i 小，代表這些數字都不是我要的，要先 Push 再 Pop</h3>
+        <pre><code class="language-cpp">while (now &lt; i) {
+    ans.push_back("Push");
+    ans.push_back("Pop");
+    now++;
+}
+</code></pre>
+        <p>這一步是整題最核心的地方。</p>
+        <p>如果現在我要的數字是 <code>i</code>，但串流還在 <code>now</code>，而且 <code>now &lt; i</code>，那表示：</p>
+        <ul>
+          <li><code>now</code> 這個數字不是 target 要保留的</li>
+          <li>但題目規定串流不能跳讀</li>
+          <li>所以一定得先把它讀進 stack</li>
+        </ul>
+        <p>既然它不是我要保留的，唯一能做的就是：</p>
+        <ol>
+          <li><code>"Push"</code>：先把它放進 stack</li>
+          <li><code>"Pop"</code>：立刻把它移掉</li>
+        </ol>
+        <p>這樣就等於「讀過了，但不留下」。</p>
+        <p>做完後 <code>now++</code>，表示串流往下一個數字前進。</p>
+
+        <hr />
+
+        <h3>4. 當 now 等於 i 時，這個數字就是 target 要的，只要 Push 留下來</h3>
+        <pre><code class="language-cpp">ans.push_back("Push");
+now++;
+</code></pre>
+        <p>當前面的 <code>while (now &lt; i)</code> 結束時，代表現在一定有：</p>
+        <ul>
+          <li><code>now == i</code></li>
+        </ul>
+        <p>這時這個數字就是 <code>target</code> 需要的，所以不能 pop 掉，只要做一次 <code>"Push"</code> 把它留下來即可。</p>
+        <p>接著 <code>now++</code>，表示串流繼續往後。</p>
+
+        <hr />
+
+        <h3>5. 為什麼做到 target 最後一個數字就可以停</h3>
+        <p>題目規定：</p>
+        <ul>
+          <li>只要 stack 中的元素已經等於 <code>target</code></li>
+          <li>就要立刻停止</li>
+          <li>不能再繼續讀新的串流數字</li>
+        </ul>
+        <p>而這份程式剛好就是只處理到 <code>target</code> 的最後一個元素為止。</p>
+        <p>所以當 <code>for (int i : target)</code> 跑完後：</p>
+        <ul>
+          <li>stack 裡留下的數字就正好是 <code>target</code></li>
+          <li>不會再多讀任何不需要的數字</li>
+        </ul>
+        <p>這也符合題目要求。</p>
+
+        <hr />
+
+        <h3>6. 最後回傳操作序列</h3>
+        <pre><code class="language-cpp">return ans;
+</code></pre>
+        <p>當整個 <code>target</code> 都建立完成後，<code>ans</code> 裡記錄的就是完整合法操作序列，直接回傳即可。</p>
+
+        <h2 id="complexity">⏱️ 複雜度</h2>
+        <p>設 <code>m = target.length</code>，並設 <code>target[m - 1]</code> 為 <code>target</code> 的最後一個元素。</p>
+        <ul>
+          <li>時間複雜度：<code>O(target[m - 1])</code><br>
+          串流從 <code>1</code> 一路模擬到 <code>target</code> 的最後一個值，每個數字最多處理一次。</li>
+          <li>空間複雜度：<code>O(target[m - 1])</code><br>
+          最多需要記錄從 <code>1</code> 到 <code>target</code> 最後一個值所對應的操作序列。</li>
+        </ul>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    vector&lt;string&gt; buildArray(vector&lt;int&gt;&amp; target, int n) {
+        int now = 1;
+        vector&lt;string&gt; ans;
+        for (int i : target) {
+            while (now &lt; i) {
+                ans.push_back("Push");
+                ans.push_back("Pop");
+                now++;
+            }
+            ans.push_back("Push");
+            now++;
+        }
+        return ans;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/build-an-array-with-stack-operations/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-03-18</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value"><span class="post-tags">
+              <span class="post-tag">Array</span>
+              <span class="post-tag">Stack</span>
+              <span class="post-tag">Simulation</span>
+              <span class="post-tag">Medium</span>
+            </span></span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/all%20problems/1441-build-an-array-with-stack-operations.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
