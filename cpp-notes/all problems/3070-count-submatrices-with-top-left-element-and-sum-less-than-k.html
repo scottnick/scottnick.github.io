@@ -1,0 +1,297 @@
+<!-- all problems/3070-count-submatrices-with-top-left-element-and-sum-less-than-k.html: 3070. Count Submatrices with Top-Left Element and Sum Less Than k -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3070. Count Submatrices with Top-Left Element and Sum Less Than k</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false" style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題"><span id="theme-icon" aria-hidden="true">☀️</span></button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="index.html">All problems</a>
+      <span aria-hidden="true">/</span>
+      <span>3070. Count Submatrices with Top-Left Element and Sum Less Than k</span>
+    </nav>
+
+    <section class="hero">
+      <h1>3070. Count Submatrices with Top-Left Element and Sum Less Than k</h1>
+      <p><strong>練習日期：</strong>2026-03-18</p>
+      <p><strong>難度：</strong>Medium</p>
+      <p><strong>類型：</strong>Array、Matrix、Prefix Sum</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">目錄</button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#complexity">⏱️ 複雜度</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給你一個 0-indexed 的整數矩陣 <code>grid</code> 和一個整數 <code>k</code>。</p>
+        <p>請回傳包含 <code>grid</code> 左上角元素的子矩陣中，總和小於等於 <code>k</code> 的子矩陣數量。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>m == grid.length</code></li>
+          <li><code>n == grid[i].length</code></li>
+          <li><code>1 &lt;= n, m &lt;= 1000</code></li>
+          <li><code>0 &lt;= grid[i][j] &lt;= 1000</code></li>
+          <li><code>1 &lt;= k &lt;= 10^9</code></li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>這題最重要的觀察是：</p>
+        <blockquote>
+          <p>題目要求子矩陣一定要包含左上角元素。</p>
+        </blockquote>
+        <p>所以所有合法子矩陣，其實左上角都固定是 <code>(0,0)</code>。
+也就是說，我們要數的子矩陣都可以寫成：</p>
+        <ul>
+          <li>左上角固定 <code>(0,0)</code></li>
+          <li>右下角是某個 <code>(i,j)</code></li>
+        </ul>
+        <p>這樣一來，題目就變成：</p>
+        <ul>
+          <li>對每個 <code>(i,j)</code></li>
+          <li>算出前綴矩陣 <code>(0,0) ~ (i,j)</code> 的總和</li>
+          <li>如果這個總和 <code>&lt;= k</code>，那這個子矩陣就算一個答案</li>
+        </ul>
+        <p>所以我這份程式就是直接做二維 prefix sum。</p>
+        <p>我用 <code>sum[i][j]</code> 表示：</p>
+        <ul>
+          <li>從左上角 <code>(0,0)</code> 到 <code>(i,j)</code> 這整塊矩形的總和</li>
+        </ul>
+        <p>這樣每算出一格 <code>sum[i][j]</code>，就可以直接判斷：</p>
+        <ul>
+          <li><code>sum[i][j] &lt;= k</code> 嗎？</li>
+        </ul>
+        <p>如果是，就代表這個以前綴形式表示的子矩陣符合條件，答案加一。</p>
+        <p>也就是說，這題的核心就是：</p>
+        <blockquote>
+          <p>因為所有合法子矩陣都一定從 <code>(0,0)</code> 開始，所以只要算每個位置的二維前綴和，再檢查是否 <code>&lt;= k</code> 即可。</p>
+        </blockquote>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>m</code>：列數</li>
+          <li><code>n</code>：行數</li>
+          <li><code>sum</code>：二維 prefix sum，<code>sum[i][j]</code> 表示從 <code>(0,0)</code> 到 <code>(i,j)</code> 的總和</li>
+          <li><code>count</code>：符合條件的子矩陣數量</li>
+          <li><code>now</code>：目前位置 <code>(i,j)</code> 的前綴矩陣總和</li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+        <h3>1. 先建立 prefix sum 矩陣，並初始化左上角</h3>
+        <p>這裡先記下矩陣大小，然後建立一個同大小的 <code>sum</code>。</p>
+        <p>其中：</p>
+        <ul>
+          <li><code>sum[0][0]</code> 就是只包含左上角一格的前綴矩陣總和</li>
+          <li>所以它直接等於 <code>grid[0][0]</code></li>
+        </ul>
+
+        <hr>
+
+        <h3>2. 先判斷左上角這一格本身是不是答案</h3>
+        <pre><code class="language-cpp">int count = 0;
+if (sum[0][0] &lt;= k) {
+    count++;
+} else {
+    return 0;
+}
+</code></pre>
+        <p>因為所有合法子矩陣都一定包含 <code>(0,0)</code>，
+所以最小的候選子矩陣就是只包含 <code>(0,0)</code> 這一格。</p>
+        <p>如果這一格的值都已經大於 <code>k</code>，那後面任何更大的前綴矩陣只會更大，不可能再小於等於 <code>k</code>。</p>
+        <p>所以這裡如果 <code>sum[0][0] &gt; k</code>，就可以直接回傳 <code>0</code>。</p>
+
+        <hr>
+
+        <h3>3. 先處理第一欄，因為它只能從上面累加</h3>
+        <pre><code class="language-cpp">for (int s = 1; s &lt; m; s++) {
+    sum[s][0] = grid[s][0] + sum[s - 1][0];
+    if (sum[s][0] &lt;= k) {
+        count++;
+    }
+}
+</code></pre>
+        <p>第一欄的前綴矩陣只有一種延伸方式：</p>
+        <ul>
+          <li>從上面一直往下加</li>
+        </ul>
+        <p>所以：</p>
+        <ul>
+          <li><code>sum[s][0] = grid[s][0] + sum[s - 1][0]</code></li>
+        </ul>
+        <p>這代表 <code>(0,0) ~ (s,0)</code> 這條直條矩形的總和。</p>
+        <p>每算完一格，就檢查一次是否 <code>&lt;= k</code>，如果是就把它算進答案。</p>
+
+        <hr>
+
+        <h3>4. 再處理第一列，因為它只能從左邊累加</h3>
+        <p>第一列和第一欄是對稱的。</p>
+        <p>這裡的 <code>sum[0][l]</code> 表示：</p>
+        <ul>
+          <li><code>(0,0) ~ (0,l)</code> 這條橫向矩形的總和</li>
+        </ul>
+        <p>因為第一列沒有上面可以參考，所以只要一路往左邊累加即可。</p>
+
+        <hr>
+
+        <h3>5. 一般位置用二維 prefix sum 公式計算</h3>
+        <p>這一段是整題最核心的部分。</p>
+        <p>對一般位置 <code>(i,j)</code>，<code>sum[i][j]</code> 要表示從 <code>(0,0)</code> 到 <code>(i,j)</code> 的總和。</p>
+        <p>所以使用標準二維 prefix sum 公式：</p>
+        <ul>
+          <li>上面那塊：<code>sum[i - 1][j]</code></li>
+          <li>左邊那塊：<code>sum[i][j - 1]</code></li>
+          <li>左上角那塊被重複算了一次，所以要扣掉：<code>sum[i - 1][j - 1]</code></li>
+          <li>最後再加上目前這格 <code>grid[i][j]</code></li>
+        </ul>
+        <p>也就是：</p>
+        <pre><code class="language-cpp">sum[i][j] = grid[i][j] + sum[i - 1][j] + sum[i][j - 1] - sum[i - 1][j - 1];
+</code></pre>
+        <p>你的程式裡是先用 <code>now</code> 暫存，再存回 <code>sum[i][j]</code>。</p>
+        <p>每算完這個前綴矩陣的總和後，就立刻檢查：</p>
+        <ul>
+          <li><code>now &lt;= k</code></li>
+        </ul>
+        <p>如果成立，表示這個以 <code>(0,0)</code> 為左上角、<code>(i,j)</code> 為右下角的子矩陣符合條件，答案加一。</p>
+
+        <hr>
+
+        <h3>6. 為什麼這樣就數到了所有合法子矩陣</h3>
+        <p>因為題目要求：</p>
+        <ul>
+          <li>子矩陣一定要包含左上角元素</li>
+        </ul>
+        <p>所以任何合法子矩陣都不可能從別的地方開始，它的左上角一定是 <code>(0,0)</code>。</p>
+        <p>因此所有合法子矩陣都能唯一對應到一個右下角 <code>(i,j)</code>。</p>
+        <p>也就是說：</p>
+        <ul>
+          <li>枚舉所有 <code>(i,j)</code></li>
+          <li>計算 <code>(0,0) ~ (i,j)</code> 的總和</li>
+          <li>判斷是否 <code>&lt;= k</code></li>
+        </ul>
+        <p>這樣就完整數到了所有答案，而且不會重複。</p>
+
+        <hr>
+
+        <h3>7. 最後回傳 count</h3>
+        <pre><code class="language-cpp">return count;
+</code></pre>
+        <p>當所有位置都處理完後，<code>count</code> 就是符合條件的子矩陣總數。</p>
+
+        <h2 id="complexity">⏱️ 複雜度</h2>
+        <p>設 <code>m = grid.length</code>，<code>n = grid[0].length</code>。</p>
+        <ul>
+          <li>時間複雜度：<code>O(mn)</code>
+            <p>每個位置都只會被處理一次。</p>
+          </li>
+          <li>空間複雜度：<code>O(mn)</code>
+            <p>額外使用了一個 <code>m x n</code> 的 <code>sum</code> 矩陣來記錄前綴和。</p>
+          </li>
+        </ul>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    int countSubmatrices(vector&lt;vector&lt;int&gt;&gt;&amp; grid, int k) {
+        int m = grid.size();
+        int n = grid[0].size();
+        vector&lt;vector&lt;int&gt;&gt; sum(m, vector&lt;int&gt;(n));
+        sum[0][0] = grid[0][0];
+        int count = 0;
+        if (sum[0][0] &lt;= k) {
+            count++;
+        } else {
+            return 0;
+        }
+        for (int s = 1; s &lt; m; s++) {
+            sum[s][0] = grid[s][0] + sum[s - 1][0];
+            if (sum[s][0] &lt;= k) {
+                count++;
+            }
+        }
+        for (int l = 1; l &lt; n; l++) {
+            sum[0][l] = grid[0][l] + sum[0][l - 1];
+            if (sum[0][l] &lt;= k) {
+                count++;
+            }
+        }
+        for (int i = 1; i &lt; m; i++) {
+            for (int j = 1; j &lt; n; j++) {
+                int now = grid[i][j];
+                now = now + sum[i - 1][j] + sum[i][j - 1] - sum[i - 1][j - 1];
+                sum[i][j] = now;
+                if (now &lt;= k) {
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/count-submatrices-with-top-left-element-and-sum-less-than-k/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field"><span class="meta-label">作者：</span><span class="meta-value">scottnick</span></div>
+        <div class="meta-field meta-field--date"><span class="meta-label">撰寫日期：</span><span class="meta-value">2026-03-18</span></div>
+        <div class="meta-field meta-field--full"><span class="meta-label">類別：</span><span class="meta-value"><span class="post-tags">
+              <span class="post-tag">Array</span>
+              <span class="post-tag">Matrix</span>
+              <span class="post-tag">Prefix Sum</span>
+              <span class="post-tag">Medium</span>
+            </span></span></div>
+        <div class="meta-field meta-field--full"><span class="meta-label">原文連結：</span><span class="meta-value">https://scottnick.github.io/cpp-notes/all%20problems/3070-count-submatrices-with-top-left-element-and-sum-less-than-k.html</span></div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
