@@ -1,0 +1,283 @@
+<!-- all problems/739-daily-temperatures.html: 全部題單文章 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>739. Daily Temperatures</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+               width="18" height="18" aria-hidden="true" focusable="false"
+               style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="index.html">All problems</a>
+      <span aria-hidden="true">/</span>
+      <span>739. Daily Temperatures</span>
+    </nav>
+
+    <section class="hero">
+      <h1>739. Daily Temperatures</h1>
+      <p><strong>練習日期：</strong>2026-03-20</p>
+      <p><strong>難度：</strong>Medium</p>
+      <p><strong>類型：</strong>Array、Stack、Monotonic Stack</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#complexity">⏱️ 複雜度</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給你一個整數陣列 <code>temperatures</code>，表示每天的氣溫。</p>
+        <p>請回傳一個陣列 <code>answer</code>，其中 <code>answer[i]</code> 表示：在第 <code>i</code> 天之後，還要等幾天才會遇到更高的溫度。</p>
+        <p>如果之後都不會再有更高溫，則 <code>answer[i] == 0</code>。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>1 &lt;= temperatures.length &lt;= 10^5</code></li>
+          <li><code>30 &lt;= temperatures[i] &lt;= 100</code></li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>這題如果直接做，會是：</p>
+        <ul>
+          <li>對每一天 <code>i</code></li>
+          <li>往右找第一個比 <code>temperatures[i]</code> 更高的溫度</li>
+        </ul>
+        <p>但這樣很多位置會一直重複往右掃。</p>
+        <p>我這份做法是用 stack 來記：</p>
+        <blockquote>
+          <p>前面那些還沒找到「下一個更高溫」的日期 index。</p>
+        </blockquote>
+        <p>當我現在走到第 <code>i</code> 天，溫度是 <code>temperatures[i]</code> 時，</p>
+        <p>我就拿今天的溫度去看 stack 頂端那些還沒解決的日期。</p>
+        <p>如果：</p>
+        <ul>
+          <li><code>temperatures[s.top()] &lt; temperatures[i]</code></li>
+        </ul>
+        <p>代表今天比 stack 頂端那天還熱，</p>
+        <p>那今天就是它要找的第一個更高溫日。</p>
+        <p>所以那一天的答案就可以直接算成：</p>
+        <ul>
+          <li><code>i - s.top()</code></li>
+        </ul>
+        <p>然後把那個 index 從 stack 裡 pop 掉。</p>
+        <p>如果 stack 頂端那天的溫度大於等於今天，表示：</p>
+        <ul>
+          <li>今天還不夠熱</li>
+          <li>不能當它的答案</li>
+        </ul>
+        <p>那就先停下來，最後再把今天這個 index push 進 stack，表示：</p>
+        <ul>
+          <li>今天也還沒找到以後更高溫的那一天</li>
+          <li>要等未來的日子來幫它解決</li>
+        </ul>
+        <p>最後如果 stack 裡還有剩下的 index，代表那些天之後都沒有更高溫，</p>
+        <p>而這份程式一開始就把 <code>ans</code> 設成 <code>0</code>，所以它們自然就維持 <code>0</code>。</p>
+        <p>也就是說，這題的核心就是：</p>
+        <blockquote>
+          <p>用 stack 存前面還沒找到更高溫的日期，當新溫度出現時，就幫那些比它低的日期直接結算答案。</p>
+        </blockquote>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>s</code>：stack，存還沒找到下一個更高溫的日期 index</li>
+          <li><code>n</code>：陣列長度</li>
+          <li><code>ans</code>：答案陣列，<code>ans[i]</code> 表示第 <code>i</code> 天還要等幾天才會遇到更高溫</li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+        <h3>1. 先準備 stack 和答案陣列</h3>
+        <pre><code class="language-cpp">stack&lt;int&gt; s;
+int n = temperatures.size();
+vector&lt;int&gt; ans(n, 0);
+</code></pre>
+        <p>這裡：</p>
+        <ul>
+          <li><code>s</code> 用來放那些還沒找到更高溫日期的 index</li>
+          <li><code>ans</code> 一開始全部設成 <code>0</code></li>
+        </ul>
+        <p>這樣最後如果某些日期一直沒找到更高溫，就不用再另外補，直接保留 <code>0</code> 即可。</p>
+
+        <hr />
+
+        <h3>2. 依序掃過每一天的溫度</h3>
+        <pre><code class="language-cpp">for (int i = 0; i &lt; n; i++) {
+</code></pre>
+        <p>這裡的 <code>i</code> 就是目前正在看的日期。</p>
+        <p>現在的目標是：</p>
+        <ul>
+          <li>用今天的溫度</li>
+          <li>去幫前面那些還沒找到答案的日期做結算</li>
+        </ul>
+
+        <hr />
+
+        <h3>3. 只要今天比 stack 頂端那天更熱，就幫那天算答案</h3>
+        <p>如果今天的溫度 <code>temperatures[i]</code> 比 stack 頂端那天高，代表：</p>
+        <ul>
+          <li>今天就是那一天之後第一個更高溫的日子</li>
+        </ul>
+        <p>所以直接把答案設成：</p>
+        <ul>
+          <li><code>i - s.top()</code></li>
+        </ul>
+        <p>意思就是從那一天等到今天，總共隔了幾天。</p>
+        <p>然後把那個已經找到答案的 index pop 掉。</p>
+        <p>如果 stack 頂端那天的溫度大於等於今天，表示今天不夠熱，</p>
+        <p>那它的答案還不能決定，所以先停下來。</p>
+
+        <hr />
+
+        <h3>4. 為什麼今天一定是它「第一個」更高溫的日子</h3>
+        <p>因為我們是從左到右掃。</p>
+        <p>某一天一旦第一次遇到右邊有更高的溫度，</p>
+        <p>那一天就是題目要的最小 index。</p>
+        <p>而 stack 裡放的都是：</p>
+        <ul>
+          <li>前面還沒找到答案的日期</li>
+        </ul>
+        <p>所以當某個日期第一次被今天這個溫度結算時，</p>
+        <p>今天自然就是它右邊第一個更高溫的日子。</p>
+
+        <hr />
+
+        <h3>5. 把今天這個日期 push 進 stack，等未來更熱的天來處理它</h3>
+        <pre><code class="language-cpp">s.push(i);
+</code></pre>
+        <p>當前面能被今天解決的日期都處理完之後，</p>
+        <p>就把今天的 index <code>i</code> 放進 stack。</p>
+        <p>代表：</p>
+        <ul>
+          <li>今天目前還沒找到未來更高溫的日子</li>
+          <li>之後要靠右邊新的溫度來幫它結算</li>
+        </ul>
+
+        <hr />
+
+        <h3>6. 為什麼最後不用特別處理 stack 裡剩下的日期</h3>
+        <p>因為你的 <code>ans</code> 是這樣初始化的：</p>
+        <pre><code class="language-cpp">vector&lt;int&gt; ans(n, 0);
+</code></pre>
+        <p>所以如果某些日期一路到最後都沒有被 pop 出來，</p>
+        <p>代表它們之後沒有更高溫。</p>
+        <p>而題目要求這種情況答案就是 <code>0</code>，所以直接保持原本的值就可以，不需要再額外補。</p>
+
+        <hr />
+
+        <h3>7. 最後回傳答案</h3>
+        <pre><code class="language-cpp">return ans;
+</code></pre>
+        <p>當整個陣列都掃完後，<code>ans</code> 就是每一天要等多久才會遇到更高溫的結果。</p>
+
+        <h2 id="complexity">⏱️ 複雜度</h2>
+        <p>設 <code>n = temperatures.length</code>。</p>
+        <ul>
+          <li>時間複雜度：<code>O(n)</code><br>
+            每個 index 最多只會被 push 進 stack 一次、pop 出來一次。</li>
+          <li>空間複雜度：<code>O(n)</code><br>
+            stack 最壞情況下可能存下所有日期 index，答案陣列也需要 <code>O(n)</code> 空間。</li>
+        </ul>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    vector&lt;int&gt; dailyTemperatures(vector&lt;int&gt;&amp; temperatures) {
+        stack&lt;int&gt; s;
+        int n = temperatures.size();
+        vector&lt;int&gt; ans(n, 0);
+        for (int i = 0; i &lt; n; i++) {
+            while (!s.empty()) {
+                if (temperatures[s.top()] &lt; temperatures[i]) {
+                    ans[s.top()] = i - s.top();
+                    s.pop();
+                } else {
+                    break;
+                }
+            }
+            s.push(i);
+        }
+        return ans;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/daily-temperatures/description/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-03-20</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value"><span class="post-tags">
+              <span class="post-tag">Array</span>
+              <span class="post-tag">Stack</span>
+              <span class="post-tag">Monotonic Stack</span>
+              <span class="post-tag">Medium</span>
+            </span></span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/all%20problems/739-daily-temperatures.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
