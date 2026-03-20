@@ -1,0 +1,407 @@
+<!-- all problems/636-exclusive-time-of-functions.html: 636. Exclusive Time of Functions -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>636. Exclusive Time of Functions</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false" style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題"><span id="theme-icon" aria-hidden="true">☀️</span></button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="index.html">All problems</a>
+      <span aria-hidden="true">/</span>
+      <span>636. Exclusive Time of Functions</span>
+    </nav>
+
+    <section class="hero">
+      <h1>636. Exclusive Time of Functions</h1>
+      <p><strong>練習日期：</strong>2026-03-18</p>
+      <p><strong>難度：</strong>Medium</p>
+      <p><strong>類型：</strong>Array、Stack</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">目錄</button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#complexity">⏱️ 複雜度</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>在單執行緒 CPU 上，我們執行一個包含 <code>n</code> 個函式的程式。每個函式都有唯一的 ID，範圍是 <code>0</code> 到 <code>n - 1</code>。</p>
+        <p>函式呼叫會存在一個 call stack 中：</p>
+        <ul>
+          <li>當函式開始執行時，它的 ID 會被 push 進 stack</li>
+          <li>當函式結束時，它的 ID 會從 stack 中 pop 出來</li>
+        </ul>
+        <p>stack 最上面的函式，就是目前正在執行的函式。</p>
+        <p>每當一個函式開始或結束時，都會記下一筆 log，內容包含：</p>
+        <ul>
+          <li>函式 ID</li>
+          <li>是開始還是結束</li>
+          <li>timestamp</li>
+        </ul>
+        <p>你會拿到一個字串陣列 <code>logs</code>，其中 <code>logs[i]</code> 的格式是：</p>
+        <p><code>"{function_id}:{"start" | "end"}:{timestamp}"</code></p>
+        <p>例如：</p>
+        <ul>
+          <li><code>"0:start:3"</code> 表示函式 <code>0</code> 在 timestamp <code>3</code> 的開始時刻開始執行</li>
+          <li><code>"1:end:2"</code> 表示函式 <code>1</code> 在 timestamp <code>2</code> 的結束時刻結束執行</li>
+        </ul>
+        <p>注意：</p>
+        <ul>
+          <li>一個函式可能會被呼叫多次</li>
+          <li>也可能遞迴呼叫自己</li>
+        </ul>
+        <p>函式的 exclusive time，表示它真正執行的總時間，不包含它呼叫其他函式時被暫停的時間。</p>
+        <p>請回傳一個長度為 <code>n</code> 的陣列，其中第 <code>i</code> 個位置表示函式 <code>i</code> 的 exclusive time。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>1 &lt;= n &lt;= 100</code></li>
+          <li><code>2 &lt;= logs.length &lt;= 500</code></li>
+          <li><code>0 &lt;= function_id &lt; n</code></li>
+          <li><code>0 &lt;= timestamp &lt;= 10^9</code></li>
+          <li>不會有兩個 start event 發生在同一個 timestamp</li>
+          <li>不會有兩個 end event 發生在同一個 timestamp</li>
+          <li>每個函式的每個 <code>start</code> log 都一定會有對應的 <code>end</code> log</li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>這題的關鍵是要搞清楚：</p>
+        <blockquote>
+          <p>現在 stack 最上面的函式，才是真正正在跑的那個函式。</p>
+        </blockquote>
+        <p>所以我這份做法是：</p>
+        <ol>
+          <li>先把每一筆 log 解析成比較好處理的結構</li>
+          <li>用一個 stack <code>now</code> 記目前正在呼叫鏈上的函式</li>
+          <li>用一個 <code>pos</code> 記「目前這段執行時間，是從哪個 timestamp 開始算的」</li>
+        </ol>
+        <p>接著一筆一筆看 logs。</p>
+        <p>如果某筆 log 是 <code>"start"</code>：</p>
+        <ul>
+          <li>代表有一個新函式要開始跑了</li>
+          <li>那在它開始之前，原本 stack 頂端那個函式已經先跑了一段時間</li>
+          <li>所以要先把這段時間加到那個函式身上</li>
+          <li>然後再把新函式 push 進 stack，並把 <code>pos</code> 更新成這個新函式開始的時間</li>
+        </ul>
+        <p>如果某筆 log 是 <code>"end"</code>：</p>
+        <ul>
+          <li>代表 stack 頂端這個函式執行到這裡結束</li>
+          <li>題目說 end 是在該 timestamp 的<strong>結束時刻</strong></li>
+          <li>所以這一段時間長度要算：</li>
+        </ul>
+        <ul>
+          <li><code>l.time + 1 - pos</code></li>
+        </ul>
+        <p>加完之後把它 pop 掉</p>
+        <ul>
+          <li>然後把 <code>pos</code> 更新成 <code>l.time + 1</code></li>
+        </ul>
+        <ul>
+          <li>因為下一個真正恢復執行的函式，是從下一個時間點開始算</li>
+        </ul>
+        <p>所以這題最重要的不是單純用 stack，而是：</p>
+        <ul>
+          <li>stack 負責知道現在誰在跑</li>
+          <li><code>pos</code> 負責知道目前這段時間從哪裡開始算</li>
+        </ul>
+        <p>也就是說，這題的核心就是：</p>
+        <blockquote>
+          <p>用 stack 維護目前正在執行的函式，用 <code>pos</code> 記錄當前這段 CPU 時間的起點，遇到 start / end 時把這段時間正確加到 stack 頂端函式身上。</p>
+        </blockquote>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>Log</code>：自訂結構，存一筆 log 解析後的內容
+            <ul>
+              <li><code>id</code>：函式 ID</li>
+              <li><code>s</code>：這筆 log 是 <code>"start"</code> 還是 <code>"end"</code></li>
+              <li><code>time</code>：timestamp</li>
+            </ul>
+          </li>
+          <li><code>tolog</code>：把 log 字串轉成 <code>Log</code> 結構的函式</li>
+          <li><code>u</code>：傳進 <code>tolog</code> 的原始 log 字串</li>
+          <li><code>p1</code>：第一個 <code>':'</code> 的位置</li>
+          <li><code>p2</code>：第二個 <code>':'</code> 的位置</li>
+          <li><code>cur</code>：解析後的 <code>Log</code></li>
+          <li><code>n</code>：函式總數</li>
+          <li><code>logs</code>：輸入的 log 字串陣列</li>
+          <li><code>now</code>：stack，存目前呼叫鏈上的函式 ID</li>
+          <li><code>len</code>：答案陣列，<code>len[i]</code> 表示函式 <code>i</code> 的 exclusive time</li>
+          <li><code>pos</code>：目前這段正在累積的執行時間起點</li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+        <h3>1. 先把 log 字串拆成結構化資料</h3>
+        <p>這個函式的用途是把像：</p>
+        <ul>
+          <li><code>"0:start:3"</code></li>
+        </ul>
+        <p>這種字串拆成：</p>
+        <ul>
+          <li><code>id = 0</code></li>
+          <li><code>s = "start"</code></li>
+          <li><code>time = 3</code></li>
+        </ul>
+        <p>這樣後面主流程在判斷時會比較清楚，不用每次都重新切字串。</p>
+
+        <hr>
+
+        <h3>2. 先準備 stack、答案陣列和時間起點 pos</h3>
+        <pre><code id="b7v3tn" class="language-cpp">stack&lt;int&gt; now;
+vector&lt;int&gt; len(n, 0);
+int pos = 0;
+</code></pre>
+        <p>這裡三個東西的角色分別是：</p>
+        <ul>
+          <li><code>now</code>
+            <ul>
+              <li>記目前呼叫堆疊上的函式</li>
+              <li>stack 頂端就是現在真正正在執行的函式</li>
+            </ul>
+          </li>
+          <li><code>len</code>
+            <ul>
+              <li>最後答案</li>
+              <li><code>len[i]</code> 表示函式 <code>i</code> 的 exclusive time</li>
+            </ul>
+          </li>
+          <li><code>pos</code>
+            <ul>
+              <li>記目前這段 CPU 執行時間，是從哪個 timestamp 開始計</li>
+            </ul>
+          </li>
+        </ul>
+
+        <hr>
+
+        <h3>3. 依序處理每一筆 log</h3>
+        <pre><code id="c2q6yw" class="language-cpp">for (string t : logs) {
+    Log l = tolog(t);
+</code></pre>
+        <p>這裡先把每一筆原始字串 <code>t</code> 解析成 <code>Log l</code>，接著再看它是 <code>start</code> 還是 <code>end</code>。</p>
+
+        <hr>
+
+        <h3>4. 如果遇到 start，先把前一個正在跑的函式補上時間</h3>
+        <pre><code id="d9x4hc" class="language-cpp">if (l.s == "start") {
+    if (!now.empty()) {
+        len[now.top()] += l.time - pos;
+    }
+    now.push(l.id);
+    pos = l.time;
+}
+</code></pre>
+        <p>這段的意思是：</p>
+        <p>如果有新的函式在 <code>l.time</code> 開始，那表示在這之前：</p>
+        <ul>
+          <li>原本 stack 頂端那個函式</li>
+          <li>已經從 <code>pos</code> 跑到 <code>l.time - 1</code></li>
+        </ul>
+        <p>所以它應該先累加這一段長度：</p>
+        <ul>
+          <li><code>l.time - pos</code></li>
+        </ul>
+        <p>注意這裡不是 <code>+1</code>，因為新函式是在 <code>l.time</code> 的<strong>開始時刻</strong>進來的，所以舊函式只跑到前一刻。</p>
+        <p>接著：</p>
+        <ul>
+          <li>把新函式 <code>l.id</code> push 進 stack</li>
+          <li>把 <code>pos</code> 更新成 <code>l.time</code></li>
+        </ul>
+        <p>表示從現在開始，CPU 的時間要算到新函式頭上。</p>
+
+        <hr>
+
+        <h3>5. 如果遇到 end，表示 stack 頂端函式要結束了</h3>
+        <pre><code id="e5r1zb" class="language-cpp">else {
+    len[now.top()] += l.time + 1 - pos;
+    now.pop();
+    pos = l.time + 1;
+}
+</code></pre>
+        <p>這段是整題最關鍵的地方。</p>
+        <p>題目特別說：</p>
+        <ul>
+          <li><code>"end"</code> 是在該 timestamp 的<strong>結束時刻</strong>結束</li>
+        </ul>
+        <p>所以如果某個函式從 <code>pos</code> 開始跑，到 <code>l.time</code> 結束，那它這段真正跑的長度是：</p>
+        <ul>
+          <li><code>l.time - pos + 1</code></li>
+          <li>也就是程式裡的 <code>l.time + 1 - pos</code></li>
+        </ul>
+        <p>這段時間要加到目前 stack 頂端那個函式身上。</p>
+        <p>加完後：</p>
+        <ul>
+          <li><code>now.pop()</code>
+            <ul>
+              <li>因為這個函式已經結束了</li>
+            </ul>
+          </li>
+          <li><code>pos = l.time + 1</code>
+            <ul>
+              <li>因為接下來如果有上一層函式恢復執行，會是從下一個時間點開始</li>
+            </ul>
+          </li>
+        </ul>
+
+        <hr>
+
+        <h3>6. 為什麼 pos 更新成 <code>l.time + 1</code></h3>
+        <p>這一點很重要。</p>
+        <p>假設某個函式在時間 <code>5</code> 的<strong>結束時刻</strong>結束，那它其實已經完整佔用了 timestamp <code>5</code>。</p>
+        <p>所以之後下一個恢復執行的函式，不是從 <code>5</code> 開始，而是從：</p>
+        <ul>
+          <li><code>6</code></li>
+        </ul>
+        <p>也就是：</p>
+        <pre><code id="f8k3rm" class="language-cpp">pos = l.time + 1;
+</code></pre>
+        <p>這樣下一段時間計算才不會重複。</p>
+
+        <hr>
+
+        <h3>7. 為什麼這樣就能正確算 exclusive time</h3>
+        <p>因為在單執行緒 CPU 上，同一時間只會有一個函式真正執行。</p>
+        <p>所以每次處理 log 時：</p>
+        <ul>
+          <li>stack 頂端就是目前在跑的函式</li>
+          <li><code>pos</code> 到這次事件時間之間的那一段 CPU 使用時間，一定全部屬於它</li>
+        </ul>
+        <p>當遇到：</p>
+        <ul>
+          <li><code>start</code>
+            <ul>
+              <li>表示舊函式先暫停，新函式接手</li>
+            </ul>
+          </li>
+          <li><code>end</code>
+            <ul>
+              <li>表示目前函式跑完，上一層可能恢復</li>
+            </ul>
+          </li>
+        </ul>
+        <p>所以只要每次事件發生時，把事件前那一段時間正確補到 stack 頂端函式，就能把每個函式真正獨占 CPU 的時間全部累加出來。</p>
+
+        <hr>
+
+        <h3>8. 最後回傳 len</h3>
+        <pre><code id="g2t4ph" class="language-cpp">return len;
+</code></pre>
+        <p>當所有 logs 都處理完之後，<code>len[i]</code> 就是函式 <code>i</code> 的 exclusive time，直接回傳即可。</p>
+
+        <h2 id="complexity">⏱️ 複雜度</h2>
+        <p>設 <code>m = logs.length</code>。</p>
+        <ul>
+          <li>時間複雜度：<code>O(m)</code><br>每一筆 log 都只會被解析與處理一次。</li>
+          <li>空間複雜度：<code>O(n + m)</code><br><code>len</code> 需要 <code>O(n)</code>，stack 在最壞情況下可能累積到 <code>O(m)</code> 層呼叫深度。</li>
+        </ul>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code id="h6p1wk" class="language-cpp">class Solution {
+public:
+    struct Log {
+        int id;   // function id
+        string s; // start or end
+        int time; // time
+    };
+    Log tolog(const string u) {
+        int p1 = u.find(':');
+        int p2 = u.find(':', p1 + 1);
+
+        Log cur;
+        cur.id = stoi(u.substr(0, p1));
+        cur.s = u.substr(p1 + 1, p2 - p1 - 1);
+        cur.time = stoi(u.substr(p2 + 1));
+        return cur;
+    }
+    vector<int> exclusiveTime(int n, vector<string>& logs) {
+        stack<int> now;
+        vector<int> len(n, 0);
+        int pos = 0;
+        for (string t : logs) {
+            Log l = tolog(t);
+            if (l.s == "start") {
+                if (!now.empty()) {
+                    len[now.top()] += l.time - pos;
+                }
+                now.push(l.id);
+                pos = l.time;
+            } else {
+                len[now.top()] += l.time + 1 - pos;
+                now.pop();
+                pos = l.time + 1;
+            }
+        }
+        return len;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p><a href="https://leetcode.com/problems/exclusive-time-of-functions/">https://leetcode.com/problems/exclusive-time-of-functions/</a></p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field"><span class="meta-label">作者：</span><span class="meta-value">scottnick</span></div>
+        <div class="meta-field meta-field--date"><span class="meta-label">撰寫日期：</span><span class="meta-value">2026-03-18</span></div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value"><span class="post-tags">
+              <span class="post-tag">Array</span>
+              <span class="post-tag">Stack</span>
+              <span class="post-tag">Medium</span>
+            </span></span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/all%20problems/636-exclusive-time-of-functions.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>

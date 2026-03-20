@@ -1,6 +1,6 @@
 {
-  "buildId": "20260320084338",
-  "generatedAt": "2026-03-20T08:43:38.755470Z",
+  "buildId": "20260320084637",
+  "generatedAt": "2026-03-20T08:46:37.703808Z",
   "posts": [
     {
       "path": "courses.html",
@@ -106,6 +106,17 @@
         "Array",
         "Matrix",
         "Easy"
+      ],
+      "folder": "cpp-notes/all problems"
+    },
+    {
+      "path": "cpp-notes/all%20problems/636-exclusive-time-of-functions.html",
+      "title": "636. Exclusive Time of Functions",
+      "date": "2026-03-18",
+      "tags": [
+        "Array",
+        "Stack",
+        "Medium"
       ],
       "folder": "cpp-notes/all problems"
     },
@@ -4357,7 +4368,7 @@
     }
   ],
   "folderCounts": {
-    "cpp-notes/all%20problems/index.html": 189,
+    "cpp-notes/all%20problems/index.html": 190,
     "cpp-notes/top-interview-150/index.html": 25,
     "cpp-notes/contests/index.html": 49,
     "cpp-notes/grind75/index.html": 17,
