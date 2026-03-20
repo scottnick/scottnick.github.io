@@ -1,0 +1,308 @@
+<!-- all problems/1475-final-prices-with-a-special-discount-in-a-shop.html: 全部題單文章 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>1475. Final Prices With a Special Discount in a Shop</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+               width="18" height="18" aria-hidden="true" focusable="false"
+               style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="../all%20problems/index.html">All problems</a>
+      <span aria-hidden="true">/</span>
+      <span>1475. Final Prices With a Special Discount in a Shop</span>
+    </nav>
+
+    <section class="hero">
+      <h1>1475. Final Prices With a Special Discount in a Shop</h1>
+      <p><strong>練習日期：</strong>2026-03-18</p>
+      <p><strong>難度：</strong>Easy</p>
+      <p><strong>類型：</strong>Array、Stack、Monotonic Stack</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#complexity">⏱️ 複雜度</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給你一個整數陣列 <code>prices</code>，其中 <code>prices[i]</code> 表示商店中第 <code>i</code> 個商品的價格。</p>
+        <p>商店有一個特別折扣規則：</p>
+        <p>如果你買第 <code>i</code> 個商品，你會得到一個折扣，折扣值等於 <code>prices[j]</code>，其中 <code>j</code> 是滿足以下條件的最小 index：</p>
+        <ul>
+          <li><code>j &gt; i</code></li>
+          <li><code>prices[j] &lt;= prices[i]</code></li>
+        </ul>
+        <p>如果不存在這樣的 <code>j</code>，那這個商品就沒有折扣。</p>
+        <p>請回傳一個整數陣列 <code>answer</code>，其中 <code>answer[i]</code> 表示第 <code>i</code> 個商品套用折扣後的最終價格。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>1 &lt;= prices.length &lt;= 500</code></li>
+          <li><code>1 &lt;= prices[i] &lt;= 1000</code></li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>這題如果直接做，會是：</p>
+        <ul>
+          <li>對每個位置 <code>i</code></li>
+          <li>往右找第一個 <code>prices[j] &lt;= prices[i]</code></li>
+        </ul>
+        <p>但這樣會一直重複往右掃。</p>
+        <p>我這份做法是用 stack 來記：</p>
+        <blockquote>
+          <p>前面那些還沒找到折扣的商品 index。</p>
+        </blockquote>
+        <p>當我現在走到一個新價格 <code>np = prices[i]</code> 時，
+我就拿它去看 stack 頂端那些商品，能不能把它當成它們的折扣。</p>
+        <p>如果 stack 頂端那個商品價格 <code>prices[s.top()] &gt;= np</code>，代表：</p>
+        <ul>
+          <li>現在這個 <code>np</code></li>
+          <li>就是它右邊第一個小於等於它的價格</li>
+        </ul>
+        <p>所以它的答案就可以直接算成：</p>
+        <ul>
+          <li><code>prices[s.top()] - np</code></li>
+        </ul>
+        <p>然後把那個 index 從 stack pop 掉。</p>
+        <p>如果 stack 頂端那個商品價格比 <code>np</code> 還小，表示：</p>
+        <ul>
+          <li>現在這個 <code>np</code> 不能當它的折扣</li>
+          <li>而且更早的那些商品也先不用看了</li>
+          <li>所以可以先停下來</li>
+        </ul>
+        <p>等把所有能被 <code>np</code> 折扣的商品都處理完後，再把目前這個 index <code>i</code> push 進 stack，表示：</p>
+        <ul>
+          <li>它自己現在也還沒找到折扣</li>
+          <li>要留給之後右邊的價格來處理</li>
+        </ul>
+        <p>最後 stack 裡還剩下的那些 index，代表它們一路看到結尾都沒有找到折扣，所以答案就是原價。</p>
+        <p>也就是說，這題的核心就是：</p>
+        <blockquote>
+          <p>用 stack 存前面還沒找到折扣的商品，當新價格出現時，就幫那些價格大於等於它的商品直接結算折扣。</p>
+        </blockquote>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>n</code>：<code>prices</code> 的長度</li>
+          <li><code>s</code>：stack，存還沒找到折扣的商品 index</li>
+          <li><code>ans</code>：答案陣列，<code>ans[i]</code> 表示第 <code>i</code> 個商品最後價格</li>
+          <li><code>np</code>：目前商品價格，也就是 <code>prices[i]</code></li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+        <h3>1. 先準備答案陣列和 stack</h3>
+        <pre><code class="language-cpp">int n = prices.size();
+stack&lt;int&gt; s;
+vector&lt;int&gt; ans(n);
+</code></pre>
+        <p>這裡：</p>
+        <ul>
+          <li><code>s</code> 用來放還沒找到折扣的商品 index</li>
+          <li><code>ans</code> 用來存最後答案</li>
+        </ul>
+        <p>這份寫法不是一開始就把 <code>ans</code> 設成原價，
+而是先保留空間，等找到折扣時直接填，最後沒折扣的再補原價。</p>
+
+        <hr />
+
+        <h3>2. 依序掃過每個商品</h3>
+        <pre><code class="language-cpp">for (int i = 0; i &lt; n; i++) {
+    int np = prices[i];
+</code></pre>
+        <p>這裡的 <code>np</code> 就是目前走到的價格。</p>
+        <p>現在要做的事情是：</p>
+        <ul>
+          <li>看這個 <code>np</code></li>
+          <li>能不能成為前面某些商品的折扣</li>
+        </ul>
+
+        <hr />
+
+        <h3>3. 只要 stack 頂端商品價格大於等於目前價格，就幫它結算折扣</h3>
+        <p>題目要找的是：</p>
+        <ul>
+          <li>右邊第一個</li>
+          <li>小於等於自己價格的商品</li>
+        </ul>
+        <p>所以如果目前 <code>np</code> 滿足：</p>
+        <ul>
+          <li><code>prices[s.top()] &gt;= np</code></li>
+        </ul>
+        <p>那表示對 stack 頂端這個商品來說，現在這個 <code>np</code> 就是它要找的折扣。</p>
+        <p>因此直接做：</p>
+        <ul>
+          <li><code>ans[s.top()] = prices[s.top()] - np</code></li>
+        </ul>
+        <p>然後把這個已經找到折扣的商品從 stack 裡拿掉。</p>
+        <p>如果 stack 頂端那個商品價格小於 <code>np</code>，那表示：</p>
+        <ul>
+          <li>目前這個價格不能折扣它</li>
+          <li>所以先停下來</li>
+        </ul>
+
+        <hr />
+
+        <h3>4. 為什麼這個 <code>np</code> 一定是「第一個」合法折扣</h3>
+        <p>因為我們是從左到右掃描。</p>
+        <p>某個商品一旦第一次遇到右邊有一個價格 <code>&lt;=</code> 它，
+那就是題目要的最小 index <code>j</code>。</p>
+        <p>而 stack 裡放的就是那些還沒找到折扣的商品，
+所以當它第一次被某個 <code>np</code> 結算時，這個 <code>np</code> 自然就是它右邊第一個合法折扣。</p>
+
+        <hr />
+
+        <h3>5. 把目前商品 index 放進 stack，等之後右邊價格來處理它</h3>
+        <pre><code class="language-cpp">s.push(i);
+</code></pre>
+        <p>當前面能用 <code>np</code> 結算的商品都處理完後，
+就把目前這個商品 <code>i</code> 放進 stack。</p>
+        <p>表示：</p>
+        <ul>
+          <li>它現在還沒找到折扣</li>
+          <li>之後如果右邊出現更小或相等的價格，再來幫它結算</li>
+        </ul>
+
+        <hr />
+
+        <h3>6. 最後還留在 stack 裡的商品都沒有折扣</h3>
+        <pre><code class="language-cpp">while (!s.empty()) {
+    ans[s.top()] = prices[s.top()];
+    s.pop();
+}
+</code></pre>
+        <p>如果某個商品一直留到最後都沒被 pop 掉，表示：</p>
+        <ul>
+          <li>它右邊根本沒有任何一個價格 <code>&lt;=</code> 它</li>
+        </ul>
+        <p>所以它沒有折扣，答案就是原價。</p>
+        <p>這裡就把它們補成：</p>
+        <ul>
+          <li><code>ans[index] = prices[index]</code></li>
+        </ul>
+
+        <hr />
+
+        <h3>7. 最後回傳答案</h3>
+        <pre><code class="language-cpp">return ans;
+</code></pre>
+        <p>當所有商品都處理完後，<code>ans</code> 就是每個商品套用折扣後的最終價格。</p>
+
+        <h2 id="complexity">⏱️ 複雜度</h2>
+        <p>設 <code>n = prices.length</code>。</p>
+        <ul>
+          <li>時間複雜度：<code>O(n)</code>
+            每個 index 最多只會被 push 進 stack 一次、pop 出來一次。</li>
+          <li>空間複雜度：<code>O(n)</code>
+            stack 最壞情況下可能存下所有 index，答案陣列也需要 <code>O(n)</code> 空間。</li>
+        </ul>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    vector&lt;int&gt; finalPrices(vector&lt;int&gt;&amp; prices) {
+        int n = prices.size();
+        stack&lt;int&gt; s;
+        vector&lt;int&gt; ans(n);
+        for (int i = 0; i &lt; n; i++) {
+            int np = prices[i];
+            while (!s.empty()) {
+                if (prices[s.top()] &gt;= np) {
+                    ans[s.top()] = prices[s.top()] - np;
+                    s.pop();
+                } else {
+                    break;
+                }
+            }
+            s.push(i);
+        }
+        while (!s.empty()) {
+            ans[s.top()] = prices[s.top()];
+            s.pop();
+        }
+        return ans;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/final-prices-with-a-special-discount-in-a-shop/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-03-18</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value"><span class="post-tags">
+              <span class="post-tag">Array</span>
+              <span class="post-tag">Stack</span>
+              <span class="post-tag">Monotonic Stack</span>
+              <span class="post-tag">Easy</span>
+            </span></span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/all%20problems/1475-final-prices-with-a-special-discount-in-a-shop.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
