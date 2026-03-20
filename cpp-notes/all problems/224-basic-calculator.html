@@ -1,0 +1,447 @@
+<!-- all problems/224-basic-calculator.html: All problems 文章 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>224. Basic Calculator</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+               width="18" height="18" aria-hidden="true" focusable="false"
+               style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="index.html">All problems</a>
+      <span aria-hidden="true">/</span>
+      <span>224. Basic Calculator</span>
+    </nav>
+
+    <section class="hero">
+      <h1>224. Basic Calculator</h1>
+      <p><strong>練習日期：</strong>2026-03-18</p>
+      <p><strong>難度：</strong>Hard</p>
+      <p><strong>類型：</strong>Math、String、Stack、Recursion</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul></ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給你一個字串 <code>s</code>，表示一個合法的算式，請實作一個基本計算機來計算它的值，並回傳結果。</p>
+        <p>注意：你不能使用任何內建可以直接把字串當成數學表達式計算的函式，例如 <code>eval()</code>。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>1 &lt;= s.length &lt;= 3 * 10^5</code></li>
+          <li><code>s</code> 由數字、<code>'+'</code>、<code>'-'</code>、<code>'('</code>、<code>')'</code> 和空白 <code>' '</code> 組成</li>
+          <li><code>s</code> 表示一個合法的表達式</li>
+          <li><code>'+'</code> 不會作為 unary operation 使用，也就是 <code>"+1"</code> 和 <code>"+(2 + 3)"</code> 都是非法的</li>
+          <li><code>'-'</code> 可以作為 unary operation 使用，也就是 <code>"-1"</code> 和 <code>"-(2 + 3)"</code> 都是合法的</li>
+          <li>輸入中不會出現兩個連續運算子</li>
+          <li>每個數字與中途計算結果都保證能放進 signed 32-bit integer</li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>這題我的做法是用<strong>遞迴</strong>去處理括號。</p>
+        <p>因為括號的本質就是：</p>
+        <ul>
+          <li>遇到 <code>'('</code> 時，開始計算一個新的子表達式</li>
+          <li>遇到 <code>')'</code> 時，這一層子表達式結束，把結果回傳給上一層</li>
+        </ul>
+        <p>所以我寫了一個 <code>calc(string&amp; s)</code>，專門負責：</p>
+        <blockquote>
+          <p>從目前 <code>pos</code> 這個位置開始，算到這一層表達式結束為止，並回傳這一段的值。</p>
+        </blockquote>
+        <p>這份程式裡，我沒有另外真的切 substring，而是用一個全域索引 <code>pos</code> 一路往後掃。<br>
+        這樣每個字元只會被讀一次，效率會比較好。</p>
+        <p>在一層表達式裡，我維護三個主要東西：</p>
+        <ul>
+          <li><code>sum</code>：目前已經確定累加進去的總和</li>
+          <li><code>now</code>：目前正在讀的那個數字，或是剛算完的一段括號結果</li>
+          <li><code>sign</code>：這個 <code>now</code> 之後要乘上的正負號，只有 <code>1</code> 或 <code>-1</code></li>
+        </ul>
+        <p>例如在看到：</p>
+        <ul>
+          <li>數字時，就一直把它拼進 <code>now</code></li>
+          <li>看到 <code>'+'</code> 或 <code>'-'</code> 時，表示前一個 <code>now</code> 已經結束了，就把 <code>now * sign</code> 加進 <code>sum</code></li>
+          <li>看到 <code>'('</code> 時，就遞迴進去算括號裡那段，把結果放進 <code>now</code></li>
+          <li>看到 <code>')'</code> 時，表示這一層結束了，就把最後這個 <code>now * sign</code> 加進 <code>sum</code> 後回傳</li>
+        </ul>
+        <p>這樣就可以自然處理：</p>
+        <ul>
+          <li>一般加減</li>
+          <li>多位數</li>
+          <li>巢狀括號</li>
+          <li>unary minus</li>
+        </ul>
+        <p>也就是說，這題的核心就是：</p>
+        <blockquote>
+          <p>用 <code>pos</code> 一路掃字串，配合遞迴把每一層括號當成一個新的子計算區間，並用 <code>sum + sign * now</code> 的方式完成每一層的加減計算。</p>
+        </blockquote>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>pos</code>：目前掃到字串 <code>s</code> 的哪個位置</li>
+          <li><code>sum</code>：目前這一層表達式已經累加完成的總和</li>
+          <li><code>now</code>：目前正在組的數字，或剛從括號遞迴回來的值</li>
+          <li><code>sign</code>：目前 <code>now</code> 前面的正負號，<code>1</code> 代表正，<code>-1</code> 代表負</li>
+          <li><code>c</code>：目前 <code>pos</code> 指到的字元</li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+        <h3>1. 在 calculate 裡先初始化整體掃描位置</h3>
+        <pre><code class="language-cpp">pos = 0;
+n = s.size();
+return calc(s);
+</code></pre>
+        <p>這裡的意思是：</p>
+        <ul>
+          <li>一開始從字串第 <code>0</code> 個位置開始掃</li>
+          <li><code>n</code> 記住整個字串長度</li>
+          <li>然後直接呼叫 <code>calc(s)</code> 去計算整段表達式</li>
+        </ul>
+        <p>因為 <code>calc</code> 會透過全域的 <code>pos</code> 一路往後走，所以不需要切字串，也不需要傳左右邊界。</p>
+
+        <hr />
+
+        <h3>2. 在每一層 calc 裡，先準備 sum、now、sign</h3>
+        <pre><code class="language-cpp">long long sum = 0;
+long long now = 0;
+int sign = 1;
+</code></pre>
+        <p>這三個變數是這一層表達式的核心。</p>
+        <ul>
+          <li><code>sum</code>
+            <ul>
+              <li>存目前已經確定累加好的部分</li>
+            </ul>
+          </li>
+          <li><code>now</code>
+            <ul>
+              <li>存目前正在讀的數字</li>
+              <li>或是剛從括號遞迴算回來的值</li>
+            </ul>
+          </li>
+          <li><code>sign</code>
+            <ul>
+              <li>記這個 <code>now</code> 應該加進去還是減進去</li>
+            </ul>
+          </li>
+        </ul>
+        <p>例如如果目前讀到：</p>
+        <ul>
+          <li><code>12</code>
+            <ul>
+              <li>那 <code>now = 12</code></li>
+            </ul>
+          </li>
+          <li>如果它前面是 <code>-</code>
+            <ul>
+              <li>那之後要加進 <code>sum</code> 時就是 <code>sum += -12</code></li>
+            </ul>
+          </li>
+        </ul>
+
+        <hr />
+
+        <h3>3. 一路掃字串，直到這一層結束</h3>
+        <pre><code class="language-cpp">while (pos &lt; n) {
+    char c = s[pos];
+</code></pre>
+        <p>這裡每次都看目前位置的字元 <code>c</code> 是什麼，再決定怎麼處理。</p>
+        <p>這份寫法的特點是：</p>
+        <ul>
+          <li>不額外開 stack</li>
+          <li>不額外切 substring</li>
+          <li>而是用同一個 <code>pos</code> 直接往後掃</li>
+        </ul>
+        <p>所以每個字元只會被讀一次。</p>
+
+        <hr />
+
+        <h3>4. 如果是空白，就直接跳過</h3>
+        <p>題目字串裡可能有空白，但空白不影響運算。</p>
+        <p>所以這裡直接略過，繼續看下一個字元就好。</p>
+
+        <hr />
+
+        <h3>5. 如果是數字，就把它接到 now 後面</h3>
+        <pre><code class="language-cpp">if (c &gt;= '0' &amp;&amp; c &lt;= '9') {
+    now = now * 10 + (c - '0');
+}
+</code></pre>
+        <p>這一步是在處理多位數。</p>
+        <p>例如原本 <code>now = 12</code>，下一個字元是 <code>'3'</code>，那就變成：</p>
+        <ul>
+          <li><code>now = 12 * 10 + 3 = 123</code></li>
+        </ul>
+        <p>所以這段可以正確把：</p>
+        <ul>
+          <li><code>1</code></li>
+          <li><code>23</code></li>
+          <li><code>456</code></li>
+        </ul>
+        <p>這種多位數一路拼出來。</p>
+
+        <hr />
+
+        <h3>6. 如果遇到 <code>+</code> 或 <code>-</code>，代表前一個 now 已經結束，先加進 sum</h3>
+        <p>當看到 <code>+</code> 或 <code>-</code> 時，代表前面的數字或括號結果已經完整了，所以要先把它結算進 <code>sum</code>。</p>
+        <p>例如：</p>
+        <ul>
+          <li>如果前面是 <code>12</code>，而且 <code>sign = 1</code>
+            <ul>
+              <li>就做 <code>sum += 12</code></li>
+            </ul>
+          </li>
+          <li>如果前面是 <code>7</code>，而且 <code>sign = -1</code>
+            <ul>
+              <li>就做 <code>sum += -7</code></li>
+            </ul>
+          </li>
+        </ul>
+        <p>之後：</p>
+        <ul>
+          <li><code>now = 0</code>
+            <ul>
+              <li>準備讀下一個數字或括號值</li>
+            </ul>
+          </li>
+          <li><code>sign = 1</code> 或 <code>-1</code>
+            <ul>
+              <li>表示下一段的符號</li>
+            </ul>
+          </li>
+        </ul>
+
+        <hr />
+
+        <h3>7. 如果遇到 <code>(</code>，就遞迴去算括號裡那段</h3>
+        <pre><code class="language-cpp">else if (c == '(') {
+    pos++;
+    now = calc(s);
+}
+</code></pre>
+        <p>這是整題最核心的地方。</p>
+        <p>當看到 <code>'('</code> 時，表示：</p>
+        <ul>
+          <li>一個新的子表達式開始了</li>
+        </ul>
+        <p>所以這裡先把 <code>pos++</code>，跳到括號裡第一個字元，然後呼叫：</p>
+        <ul>
+          <li><code>now = calc(s)</code></li>
+        </ul>
+        <p>也就是把括號裡整段算完，並把結果當成一個普通數字放進 <code>now</code>。</p>
+        <p>例如：</p>
+        <ul>
+          <li><code>1 + (4 + 5)</code></li>
+          <li>算到 <code>'('</code> 時，就先把 <code>(4 + 5)</code> 算成 <code>9</code></li>
+          <li>然後外層就變成在處理 <code>1 + 9</code></li>
+        </ul>
+
+        <hr />
+
+        <h3>8. 如果遇到 <code>)</code>，表示這一層表達式結束，回傳結果</h3>
+        <pre><code class="language-cpp">else if (c == ')') {
+    sum += now * sign;
+    return sum;
+}
+</code></pre>
+        <p>看到 <code>')'</code> 的意思是：</p>
+        <ul>
+          <li>目前這一層括號到這裡結束了</li>
+        </ul>
+        <p>所以在回傳前，要先把最後一個還沒結算的 <code>now * sign</code> 加進 <code>sum</code>，然後把這一層的總結果回傳。</p>
+        <p>例如：</p>
+        <ul>
+          <li>如果括號裡是 <code>4 + 5 - 2</code></li>
+          <li>走到 <code>')'</code> 時，這一層就把結果 <code>7</code> 回傳給上一層</li>
+        </ul>
+        <p>上一層會把它當成普通數字繼續運算。</p>
+
+        <hr />
+
+        <h3>9. 每次迴圈最後把 pos 往後移</h3>
+        <pre><code class="language-cpp">pos++;
+</code></pre>
+        <p>這裡表示目前這個字元已經處理完了，所以往下一格走。</p>
+        <p>要注意的是：</p>
+        <ul>
+          <li>如果剛剛是 <code>'('</code>
+            <ul>
+              <li>進入遞迴前有先 <code>pos++</code></li>
+            </ul>
+          </li>
+          <li>如果剛剛是 <code>')'</code>
+            <ul>
+              <li>會直接 <code>return</code></li>
+            </ul>
+          </li>
+        </ul>
+        <p>所以整個位置控制是靠這份程式自己配合遞迴完成的。</p>
+
+        <hr />
+
+        <h3>10. 如果一路掃到字串結尾，也要把最後一個 now 結算進去</h3>
+        <pre><code class="language-cpp">sum += sign * now;
+return sum;
+</code></pre>
+        <p>如果沒有遇到 <code>')'</code>，代表這一層就是最外層表達式，最後會自然走到字串結尾。</p>
+        <p>這時最後一個數字或括號結果還沒有被加進 <code>sum</code>，所以要補這一步，再回傳最終答案。</p>
+
+        <hr />
+
+        <h3>11. 為什麼這樣可以處理 unary minus</h3>
+        <p>題目允許像：</p>
+        <ul>
+          <li><code>-1</code></li>
+          <li><code>-(2 + 3)</code></li>
+        </ul>
+        <p>這份寫法也能處理。</p>
+        <p>例如 <code>-1</code>：</p>
+        <ul>
+          <li>一開始 <code>sum = 0</code>, <code>now = 0</code>, <code>sign = 1</code></li>
+          <li>讀到 <code>'-'</code>
+            <ul>
+              <li>先做 <code>sum += 0 * 1</code></li>
+              <li>再把 <code>sign = -1</code></li>
+            </ul>
+          </li>
+          <li>接著讀到 <code>1</code>
+            <ul>
+              <li><code>now = 1</code></li>
+            </ul>
+          </li>
+          <li>最後結算時變成 <code>sum + (-1) * 1 = -1</code></li>
+        </ul>
+        <p><code>-(2+3)</code> 也一樣，括號遞迴回來後那個值會放進 <code>now</code>，最後乘上 <code>-1</code>。</p>
+        <p>所以這種寫法自然就把 unary minus 吃掉了。</p>
+
+        <h2 id="complexity">⏱️ 複雜度</h2>
+        <p>設 <code>n = s.length</code>。</p>
+        <ul>
+          <li>時間複雜度：<code>O(n)</code><br>
+            每個字元都只會被掃描一次。</li>
+          <li>空間複雜度：<code>O(n)</code><br>
+            最壞情況下如果括號巢狀很深，遞迴呼叫堆疊會到線性深度。</li>
+        </ul>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    int pos;
+    int n;
+    long long calc(string&amp; s) {
+        long long sum = 0;
+        long long now = 0;
+        int sign = 1;
+        while (pos &lt; n) {
+            char c = s[pos];
+            if (c == ' ') {
+                pos++;
+                continue;
+            }
+            if (c &gt;= '0' &amp;&amp; c &lt;= '9') {
+                now = now * 10 + (c - '0');
+            } else if (c == '+') {
+                sum += now * sign;
+                now = 0;
+                sign = 1;
+            } else if (c == '-') {
+                sum += now * sign;
+                now = 0;
+                sign = -1;
+            } else if (c == '(') {  //新計算開始
+                pos++;
+                now = calc(s);
+            } else if (c == ')') {  //中途計算結束回傳
+                sum += now * sign;
+                return sum;
+            }
+            pos++;
+        }
+        sum += sign * now;
+        return sum;
+    }
+    int calculate(string s) {
+        pos = 0;
+        n = s.size();
+        return calc(s);
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/basic-calculator/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-03-18</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value"><span class="post-tags">
+              <span class="post-tag">Math</span>
+              <span class="post-tag">String</span>
+              <span class="post-tag">Stack</span>
+              <span class="post-tag">Recursion</span>
+              <span class="post-tag">Hard</span>
+            </span></span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/all%20problems/224-basic-calculator.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
