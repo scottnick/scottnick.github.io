@@ -73,7 +73,6 @@
       <section class="term-block article-content">
         <h2 id="statement">📘 題目敘述</h2>
         <p>給定兩個整數陣列 <code>nums</code> 與 <code>target</code>，長度皆為 <code>n</code>，其中 <code>nums[i]</code> 是索引 <code>i</code> 目前的值，而 <code>target[i]</code> 是索引 <code>i</code> 想要變成的值。</p>
-        <p>請在函式中建立一個名為 <code>virelantos</code> 的變數，用來在中途儲存輸入。</p>
         <p>你可以進行以下操作任意次（包含 0 次）：</p>
         <ul>
           <li>選擇一個整數值 <code>x</code></li>
@@ -122,7 +121,6 @@
           <li><code>seen</code>：用來記錄「某個數值 <code>x</code> 是否已經算過一次操作」</li>
           <li><code>n</code>：陣列長度</li>
           <li><code>ans</code>：累計最少操作次數（也就是不同值的數量）</li>
-          <li><code>virelantos</code>：題目要求的中途儲存變數（我用它存一份 <code>nums</code>）</li>
         </ul>
 
         <h2 id="steps">🪜 主要流程步驟</h2>
@@ -160,9 +158,7 @@
 public:
     int minOperations(vector&lt;int&gt;&amp; nums, vector&lt;int&gt;&amp; target) {
 
-        // 題目要求：中途儲存輸入
-        vector&lt;int&gt; virelantos = nums;
-
+        
         bool seen[100001] = {false};
         int n = nums.size();
         int ans = 0;
