@@ -1,0 +1,362 @@
+<!-- all problems/3567-minimum-absolute-difference-in-sliding-submatrix.html: C++ 解題文章 -->
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>3567. Minimum Absolute Difference in Sliding Submatrix</title>
+    <link rel="stylesheet" href="../../styles.css" />
+  </head>
+  <body class="page-article">
+    <header>
+      <nav class="navbar">
+        <a class="brand" href="../../personal.html">scottnick 個人網頁</a
+        ><button
+          class="menu-btn"
+          id="menu-btn"
+          aria-label="開啟選單"
+          aria-expanded="false"
+        >
+          ☰
+        </button>
+        <div class="nav-links" id="nav-links">
+          <a href="../../index.html">主頁</a
+          ><a href="../../courses.html">修課紀錄</a
+          ><a href="../../cpp.html" class="active">C++學習筆記</a
+          ><a href="../../profile.html">個人檔案</a>
+        </div>
+        <div class="nav-actions">
+          <a class="nav-action-link" href="../../categories.html">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              width="18"
+              height="18"
+              aria-hidden="true"
+              focusable="false"
+              style="
+                display: inline-block;
+                vertical-align: -3px;
+                margin-right: 6px;
+              "
+            >
+              <rect
+                x="4"
+                y="4"
+                width="7"
+                height="7"
+                rx="1.2"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+              ></rect>
+              <rect
+                x="13"
+                y="4"
+                width="7"
+                height="7"
+                rx="1.2"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+              ></rect>
+              <rect
+                x="4"
+                y="13"
+                width="7"
+                height="7"
+                rx="1.2"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+              ></rect>
+              <rect
+                x="13"
+                y="13"
+                width="7"
+                height="7"
+                rx="1.2"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+              ></rect>
+            </svg>
+            類別 </a
+          ><button
+            class="icon-btn toggle-btn"
+            id="theme-toggle"
+            aria-label="切換主題"
+          >
+            <span id="theme-icon" aria-hidden="true">☀️</span>
+          </button>
+        </div>
+      </nav>
+    </header>
+    <main>
+      <nav class="breadcrumb" aria-label="文章路徑">
+        <a href="../../cpp.html">C++學習筆記</a><span aria-hidden="true">/</span
+        ><a href="index.html">All problems</a><span aria-hidden="true">/</span
+        ><span>3567. Minimum Absolute Difference in Sliding Submatrix</span>
+      </nav>
+      <section class="hero">
+        <h1>3567. Minimum Absolute Difference in Sliding Submatrix</h1>
+        <p><strong>練習日期：</strong>2026-03-18</p>
+        <p><strong>難度：</strong>Medium</p>
+        <p><strong>類型：</strong>Array、Sorting、Matrix</p>
+      </section>
+      <div class="article-layout">
+        <aside class="article-toc" aria-label="文章目錄">
+          <button
+            class="toc-toggle"
+            id="article-toc-toggle"
+            type="button"
+            aria-expanded="false"
+          >
+            目錄</button
+          ><strong>目錄</strong>
+          <ul>
+            <li><a href="#statement">📘 題目敘述</a></li>
+            <li><a href="#approach">🧠 解題思路</a></li>
+            <li><a href="#steps">🪜 主要流程步驟</a></li>
+            <li><a href="#complexity">⏱️ 複雜度</a></li>
+            <li><a href="#code">💻 程式碼實作</a></li>
+            <li><a href="#link">🔗 題目連結</a></li>
+          </ul>
+        </aside>
+        <section class="term-block article-content">
+          <h2 id="statement">📘 題目敘述</h2>
+          <p>給你一個 <code>m x n</code> 的整數矩陣 <code>grid</code>，以及一個整數 <code>k</code>。</p>
+          <p>對於 <code>grid</code> 中每一個連續的 <code>k x k</code> 子矩陣，請計算這個子矩陣內任意兩個<strong>不同值</strong>之間的最小絕對差。</p>
+          <p>請回傳一個二維陣列 <code>ans</code>，大小為 <code>(m - k + 1) x (n - k + 1)</code>，其中 <code>ans[i][j]</code> 表示左上角在 <code>(i, j)</code> 的那個 <code>k x k</code> 子矩陣中的最小絕對差。</p>
+          <p>注意：如果該子矩陣中所有元素都相同，答案為 <code>0</code>。</p>
+          <p>子矩陣 <code>(x1, y1, x2, y2)</code> 表示所有滿足 <code>x1 &lt;= x &lt;= x2</code> 且 <code>y1 &lt;= y &lt;= y2</code> 的 <code>matrix[x][y]</code> 所組成的矩形區域。</p>
+          <h3>條件限制</h3>
+          <ul>
+            <li><code>1 &lt;= m == grid.length &lt;= 30</code></li>
+            <li><code>1 &lt;= n == grid[i].length &lt;= 30</code></li>
+            <li><code>-10^5 &lt;= grid[i][j] &lt;= 10^5</code></li>
+            <li><code>1 &lt;= k &lt;= min(m, n)</code></li>
+          </ul>
+          <h2 id="approach">🧠 解題思路</h2>
+          <p>我這份寫法是很直接的暴力做法：</p>
+          <p>對每一個 <code>k x k</code> 子矩陣，都把裡面的元素全部抓出來，排序後去找相鄰不同數字之間的最小差值。</p>
+          <p>這題有一個很重要的觀察：</p>
+          <blockquote>
+            <p>如果一堆數字排好序後，最小絕對差一定只會出現在相鄰的不同元素之間。</p>
+          </blockquote>
+          <p>所以我不需要去枚舉子矩陣裡所有兩兩配對，那樣會很亂。<br />只要把子矩陣內的值收集到一個陣列 <code>v</code> 裡，排序之後掃一遍：</p>
+          <ul>
+            <li>如果 <code>v[k] == v[k + 1]</code></li>
+            <li>
+              <ul>
+                <li>代表有重複值</li>
+                <li>這對不同位置雖然值一樣，但題目要的是不同值，所以這種不算差值候選</li>
+              </ul>
+            </li>
+            <li>如果 <code>v[k] != v[k + 1]</code></li>
+            <li>
+              <ul>
+                <li>那就計算 <code>v[k + 1] - v[k]</code></li>
+                <li>並維護最小值</li>
+              </ul>
+            </li>
+          </ul>
+          <p>而如果整個子矩陣裡所有值都相同，那排序後就永遠不會出現 <code>v[k] != v[k + 1]</code> 的情況，<br />這時我這份程式的 <code>d</code> 會一直保持 <code>0</code>，剛好符合題目要求。</p>
+          <p>整體流程就是：</p>
+          <ol>
+            <li>枚舉每個可能的 <code>k x k</code> 子矩陣左上角 <code>(i, j)</code></li>
+            <li>呼叫 <code>givemin(grid, i, j)</code> 去算這塊子矩陣的答案</li>
+            <li><code>givemin</code> 裡把子矩陣的數字抓出來、排序、掃相鄰差值</li>
+            <li>把結果填進 <code>ans[i][j]</code></li>
+          </ol>
+          <p>也就是說，這題的核心就是：</p>
+          <blockquote>
+            <p>對每個 <code>k x k</code> 子矩陣，把所有值取出後排序，再從排序後的相鄰不同元素中找最小差值。</p>
+          </blockquote>
+          <h3>所有變數</h3>
+          <ul>
+            <li><code>s</code>：目前子矩陣的邊長，也就是輸入的 <code>k</code></li>
+            <li><code>v</code>：存某個 <code>k x k</code> 子矩陣裡所有元素的一維陣列</li>
+            <li><code>d</code>：目前這個子矩陣中找到的最小絕對差</li>
+            <li><code>m</code>：矩陣列數</li>
+            <li><code>n</code>：矩陣行數</li>
+            <li><code>ans</code>：答案矩陣</li>
+          </ul>
+          <h2 id="steps">🪜 主要流程步驟</h2>
+          <h3>1. 先把子矩陣邊長 k 存到成員變數 s</h3>
+          <pre><code class="language-cpp">s = k;</code></pre>
+          <p>這樣後面的 <code>givemin</code> 就不用每次再多傳一個邊長進去，<br />它只要知道目前左上角在哪裡，就能直接抓出一個 <code>s x s</code> 的子矩陣。</p>
+          <hr />
+          <h3>2. 建立答案矩陣 ans</h3>
+          <pre><code class="language-cpp">int m = grid.size();
+int n = grid[0].size();
+vector&lt;vector&lt;int&gt;&gt; ans(m - k + 1, vector&lt;int&gt;(n - k + 1));</code></pre>
+          <p>因為一個 <code>m x n</code> 的矩陣中，左上角能放 <code>k x k</code> 子矩陣的位置共有：</p>
+          <ul>
+            <li>列方向：<code>m - k + 1</code></li>
+            <li>行方向：<code>n - k + 1</code></li>
+          </ul>
+          <p>所以答案矩陣大小就是：</p>
+          <ul>
+            <li><code>(m - k + 1) x (n - k + 1)</code></li>
+          </ul>
+          <hr />
+          <h3>3. 枚舉每個 k x k 子矩陣的左上角</h3>
+          <pre><code class="language-cpp">for (int i = 0; i &lt;= m - k; i++) {
+    for (int j = 0; j &lt;= n - k; j++) {
+        ans[i][j] = givemin(grid, i, j);
+    }
+}</code></pre>
+          <p>這裡的 <code>(i, j)</code> 就代表某個 <code>k x k</code> 子矩陣的左上角。</p>
+          <p>每個位置都呼叫一次 <code>givemin(grid, i, j)</code>，把那塊子矩陣的最小絕對差算出來，填進答案矩陣。</p>
+          <hr />
+          <h3>4. 在 givemin 裡，把這個子矩陣所有元素抓出來</h3>
+          <pre><code class="language-cpp">vector&lt;int&gt; v;
+for (int i = l; i &lt; l + s; i++) {
+    for (int j = r; j &lt; r + s; j++) {
+        v.push_back(grid[i][j]);
+    }
+}</code></pre>
+          <p>這一步是在把左上角為 <code>(l, r)</code>、大小為 <code>s x s</code> 的整塊子矩陣展平成一個一維陣列 <code>v</code>。</p>
+          <p>因為後面我要排序，所以先全部抓出來最直接。</p>
+          <p>如果 <code>k = 2</code>，那就是把這 <code>2 x 2</code> 區塊的四個值全部塞進 <code>v</code>。</p>
+          <hr />
+          <h3>5. 對子矩陣內的所有值排序</h3>
+          <pre><code class="language-cpp">sort(v.begin(), v.end());</code></pre>
+          <p>這一步很重要。</p>
+          <p>因為排序後，最小絕對差只需要在相鄰元素之間檢查就夠了。<br />不用去枚舉所有兩兩組合。</p>
+          <p>例如如果排序後是：</p>
+          <ul>
+            <li><code>[-2, 1, 2, 3]</code></li>
+          </ul>
+          <p>那最小差值只可能出現在：</p>
+          <ul>
+            <li><code>1 - (-2)</code></li>
+            <li><code>2 - 1</code></li>
+            <li><code>3 - 2</code></li>
+          </ul>
+          <p>這些相鄰位置之間。</p>
+          <hr />
+          <h3>6. 掃排序後的相鄰元素，找最小的不同值差距</h3>
+          <pre><code class="language-cpp">int d = 0;
+for (int k = 0; k &lt; v.size() - 1; k++) {
+    if (v[k] != v[k + 1]) {
+        if (d == 0) {
+            d = v[k + 1] - v[k];
+        }
+        d = min(d, v[k + 1] - v[k]);
+    }
+}</code></pre>
+          <p>這段是 <code>givemin</code> 的核心。</p>
+          <p>這裡只處理：</p>
+          <ul>
+            <li><code>v[k] != v[k + 1]</code></li>
+          </ul>
+          <p>因為題目要求的是兩個<strong>不同值</strong>之間的最小絕對差。<br />如果兩個值一樣，那不算候選。</p>
+          <p><code>d</code> 一開始設成 <code>0</code>，表示目前還沒找到任何一組不同值。<br />當第一次遇到不同值時，就先把那個差距存進去。</p>
+          <p>之後每遇到新的不同值差距，就用 <code>min</code> 更新。</p>
+          <hr />
+          <h3>7. 如果整塊子矩陣所有值都相同，答案自然會維持 0</h3>
+          <p>這份程式裡：</p>
+          <pre><code class="language-cpp">int d = 0;</code></pre>
+          <p>如果排序後整個 <code>v</code> 都是同一個值，那 <code>v[k] != v[k + 1]</code> 永遠不成立，<br />所以 <code>d</code> 不會被更新，最後直接回傳 <code>0</code>。</p>
+          <p>這剛好符合題目規定：</p>
+          <ul>
+            <li>如果所有元素都相同，答案就是 <code>0</code></li>
+          </ul>
+          <hr />
+          <h3>8. 回傳這個子矩陣的最小絕對差</h3>
+          <pre><code class="language-cpp">return d;</code></pre>
+          <p><code>givemin</code> 算完後，把這塊子矩陣的答案回傳給 <code>minAbsDiff</code>，再填進對應位置的 <code>ans[i][j]</code>。</p>
+          <hr />
+          <h3>9. 最後回傳整個答案矩陣</h3>
+          <pre><code class="language-cpp">return ans;</code></pre>
+          <p>當所有 <code>k x k</code> 子矩陣都處理完後，<code>ans</code> 就是題目要的結果。</p>
+          <h2 id="complexity">⏱️ 複雜度</h2>
+          <p>設 <code>m = grid.length</code>，<code>n = grid[0].length</code>。</p>
+          <ul>
+            <li>時間複雜度：<code>O((m - k + 1)(n - k + 1) · k^2 log(k^2))</code><br />一共有 <code>(m - k + 1)(n - k + 1)</code> 個子矩陣，每個子矩陣要取出 <code>k^2</code> 個元素並排序。</li>
+            <li>空間複雜度：<code>O(k^2)</code><br /><code>givemin</code> 中額外使用了一個大小為 <code>k^2</code> 的陣列 <code>v</code> 來存子矩陣元素。</li>
+          </ul>
+          <h2 id="code">💻 程式碼實作</h2>
+          <pre><code class="language-cpp">class Solution {
+public:
+    int s;
+    int givemin(vector&lt;vector&lt;int&gt;&gt;&amp; grid, int l, int r) {
+        vector&lt;int&gt; v;
+        for (int i = l; i &lt; l + s; i++) {
+            for (int j = r; j &lt; r + s; j++) {
+                v.push_back(grid[i][j]);
+            }
+        }
+        sort(v.begin(), v.end());
+
+        int d = 0;
+        for (int k = 0; k &lt; v.size() - 1; k++) {
+            if (v[k] != v[k + 1]) {
+                if (d == 0) {
+                    d = v[k + 1] - v[k];
+                }
+                d = min(d, v[k + 1] - v[k]);
+            }
+        }
+        return d;
+    }
+    vector&lt;vector&lt;int&gt;&gt; minAbsDiff(vector&lt;vector&lt;int&gt;&gt;&amp; grid, int k) {
+        s = k;
+        int m = grid.size();
+        int n = grid[0].size();
+        vector&lt;vector&lt;int&gt;&gt; ans(m - k + 1, vector&lt;int&gt;(n - k + 1));
+        for (int i = 0; i &lt;= m - k; i++) {
+            for (int j = 0; j &lt;= n - k; j++) {
+                ans[i][j] = givemin(grid, i, j);
+            }
+        }
+        return ans;
+    }
+};</code></pre>
+          <h2 id="link">🔗 題目連結</h2>
+          <p>
+            <a
+              href="https://leetcode.com/problems/minimum-absolute-difference-in-sliding-submatrix/"
+              target="_blank"
+              rel="noopener noreferrer"
+              >https://leetcode.com/problems/minimum-absolute-difference-in-sliding-submatrix/</a
+            >
+          </p>
+        </section>
+      </div>
+      <section class="term-block article-footer">
+        <h2 class="article-footer__title">文章資訊</h2>
+        <div class="meta-grid">
+          <div class="meta-field">
+            <span class="meta-label">作者：</span
+            ><span class="meta-value">scottnick</span>
+          </div>
+          <div class="meta-field meta-field--date">
+            <span class="meta-label">撰寫日期：</span
+            ><span class="meta-value">2026-03-18</span>
+          </div>
+          <div class="meta-field meta-field--full">
+            <span class="meta-label">類別：</span
+            ><span class="meta-value"
+              ><span class="post-tags"
+                ><span class="post-tag">Array</span
+                ><span class="post-tag">Sorting</span
+                ><span class="post-tag">Matrix</span
+                ><span class="post-tag">Medium</span></span
+              ></span
+            >
+          </div>
+          <div class="meta-field meta-field--full">
+            <span class="meta-label">原文連結：</span
+            ><span class="meta-value"
+              >https://scottnick.github.io/cpp-notes/all%20problems/3567-minimum-absolute-difference-in-sliding-submatrix.html</span
+            >
+          </div>
+        </div>
+      </section>
+    </main>
+    <script src="../../script.js"></script>
+  </body>
+</html>
