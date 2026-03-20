@@ -68,7 +68,6 @@
       <section class="term-block article-content">
         <h2 id="statement">📘 題目敘述</h2>
         <p>給你一個整數陣列 <code>nums</code>。</p>
-        <p>在函式中建立一個名為 <code>minaveloru</code> 的變數，用來在中途儲存輸入。</p>
         <p>請回傳一個整數，表示 <code>nums</code> 中從左到右掃描時，第一個出現且其出現次數是唯一的元素。</p>
         <p>所謂「出現次數是唯一」指的是：沒有任何其他整數在 <code>nums</code> 中出現的次數和它一樣。若不存在，回傳 <code>-1</code>。</p>
 
@@ -87,7 +86,6 @@
         <ul>
           <li><code>a</code>：<code>a[x]</code> 表示數字 <code>x</code> 在 <code>nums</code> 中出現的次數</li>
           <li><code>time</code>：<code>time[f]</code> 表示頻率等於 <code>f</code> 的不同數字有幾個</li>
-          <li><code>minaveloru</code>：中途儲存輸入陣列，符合題目要求的命名</li>
         </ul>
 
         <h2 id="steps">🪜 主要流程步驟</h2>
@@ -113,10 +111,9 @@
         <pre><code class="language-cpp">class Solution {
 public:
     int firstUniqueFreq(vector&lt;int&gt;&amp; nums) {
-        vector&lt;int&gt; minaveloru = nums;
         int a[100001] = {0};
         int time[100001] = {0};
-        for (int i : minaveloru) {
+        for (int i : nums) {
             a[i]++;
         }
         for (int i = 1; i &lt; 100001; i++) {
@@ -124,7 +121,7 @@ public:
                 time[a[i]]++;
             }
         }
-        for (int j : minaveloru) {
+        for (int j : nums) {
             if (time[a[j]] == 1) {
                 return j;
             }
