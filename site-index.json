@@ -1,6 +1,6 @@
 {
-  "buildId": "20260320084637",
-  "generatedAt": "2026-03-20T08:46:37.703808Z",
+  "buildId": "20260320090414",
+  "generatedAt": "2026-03-20T09:04:14.044257Z",
   "posts": [
     {
       "path": "courses.html",
@@ -106,17 +106,6 @@
         "Array",
         "Matrix",
         "Easy"
-      ],
-      "folder": "cpp-notes/all problems"
-    },
-    {
-      "path": "cpp-notes/all%20problems/636-exclusive-time-of-functions.html",
-      "title": "636. Exclusive Time of Functions",
-      "date": "2026-03-18",
-      "tags": [
-        "Array",
-        "Stack",
-        "Medium"
       ],
       "folder": "cpp-notes/all problems"
     },
@@ -248,6 +237,17 @@
         "Array",
         "Binary Search",
         "Easy"
+      ],
+      "folder": "cpp-notes/all problems"
+    },
+    {
+      "path": "cpp-notes/all%20problems/636-exclusive-time-of-functions.html",
+      "title": "636. Exclusive Time of Functions",
+      "date": "2026-03-18",
+      "tags": [
+        "Array",
+        "Stack",
+        "Medium"
       ],
       "folder": "cpp-notes/all problems"
     },
