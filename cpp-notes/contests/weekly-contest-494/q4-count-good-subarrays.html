@@ -1,0 +1,191 @@
+<!-- contests/weekly-contest-494/q4-count-good-subarrays.html: Weekly Contest 494 Q4 -->
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Q4. Count Good Subarrays</title>
+    <link rel="stylesheet" href="../../../styles.css" />
+  </head>
+  <body class="page-article">
+    <header><nav class="navbar"><a class="brand" href="../../../personal.html">scottnick 個人網頁</a><button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button><div class="nav-links" id="nav-links"><a href="../../../index.html">主頁</a><a href="../../../courses.html">修課紀錄</a><a href="../../../cpp.html" class="active">C++學習筆記</a><a href="../../../profile.html">個人檔案</a></div><div class="nav-actions"><a class="nav-action-link" href="../../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false" style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a><button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題"><span id="theme-icon" aria-hidden="true">☀️</span></button></div></nav></header>
+    <main>
+      <nav class="breadcrumb" aria-label="文章路徑"><a href="../../../cpp.html">C++學習筆記</a><span aria-hidden="true">/</span><a href="../index.html">Contests</a><span aria-hidden="true">/</span><a href="../weekly-contest-494.html">Weekly Contest 494</a><span aria-hidden="true">/</span><span>Q4. Count Good Subarrays</span></nav>
+      <section class="hero"><h1>Q4. Count Good Subarrays</h1><p><strong>練習日期：</strong>2026-03-22</p><p><strong>類型：</strong>Weekly Contest 494</p></section>
+      <div class="article-layout"><aside class="article-toc" aria-label="文章目錄"><button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">目錄</button><strong>目錄</strong><ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#complexity">⏱️ 複雜度</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul></aside><section class="term-block article-content">
+<h2 id="statement">📘 題目敘述</h2>
+<p>給你一個整數陣列 <code>nums</code>。</p>
+<p>如果一個子陣列中，所有元素的 bitwise OR 結果，剛好等於這個子陣列中至少一個元素，則這個子陣列稱為 good。</p>
+<p>請回傳 good subarray 的數量。</p>
+<p>子陣列指的是陣列中一段連續且非空的區間。</p>
+<p>這裡兩個整數 <code>a</code> 和 <code>b</code> 的 bitwise OR 記作 <code>a | b</code>。</p>
+<h3>條件限制</h3>
+<ul>
+<li><code>1 &lt;= nums.length &lt;= 10^5</code></li>
+<li><code>0 &lt;= nums[i] &lt;= 10^9</code></li>
+</ul>
+<h2 id="approach">🧠 解題思路（最後TLE）</h2>
+<p>我這份寫法是直接枚舉每一個子陣列。</p>
+<p>對每個起點 <code>i</code>，我一路往右延伸終點 <code>j</code>，同時維護：</p>
+<ul>
+<li>目前這段子陣列的 OR 值 <code>now</code></li>
+<li>這段子陣列裡出現過哪些數字</li>
+</ul>
+<p>只要某一段 <code>[i..j]</code> 的 OR 值 <code>now</code>，剛好有出現在這段子陣列裡，那這段就是 good subarray，答案加一。</p>
+<p>這個想法本身是直接照題意檢查，所以很好理解。</p>
+<p>但它的問題也很明顯：</p>
+<ul>
+<li>我把所有子陣列都枚舉出來了</li>
+<li>每一段還要維護一個 <code>set</code></li>
+</ul>
+<p>所以在 <code>n</code> 很大時，這份寫法會太慢，沒有辦法通過題目的完整限制。</p>
+<h3>所有變數</h3>
+<ul>
+<li><code>n</code>：陣列長度</li>
+<li><code>ans</code>：good subarray 的數量</li>
+<li><code>s</code>：目前子陣列中出現過的數字集合</li>
+<li><code>now</code>：目前子陣列所有元素的 bitwise OR 值</li>
+</ul>
+<h2 id="steps">🪜 主要流程步驟</h2>
+<h3>1. 先枚舉每個子陣列的起點 i</h3>
+<pre><code class="language-cpp">
+for (int i = 0; i &lt; n; i++) {
+</code></pre>
+<p>我先固定左邊界 <code>i</code>，接著去看所有從 <code>i</code> 開始的子陣列。</p>
+<hr>
+<h3>2. 每次固定一個新起點時，重新準備集合和目前 OR 值</h3>
+<pre><code class="language-cpp">
+set&lt;int&gt; s;
+int now = nums[i];
+</code></pre>
+<p>這裡：</p>
+<ul>
+<li><code>s</code> 用來記目前這段子陣列中有哪些值</li>
+<li><code>now</code> 用來記目前這段子陣列的 OR 值</li>
+</ul>
+<p>因為接下來我要從 <code>i</code> 一路往右擴，所以每換一個新的起點，都要重新開始。</p>
+<hr>
+<h3>3. 枚舉終點 j，讓子陣列從 <code>[i..i]</code> 一路擴到 <code>[i..n-1]</code></h3>
+<pre><code class="language-cpp">
+for (int j = i; j &lt; n; j++) {
+</code></pre>
+<p>這裡的意思是：</p>
+<ul>
+<li>先看只包含一個元素的子陣列 <code>[i..i]</code></li>
+<li>再看 <code>[i..i+1]</code></li>
+<li>再看 <code>[i..i+2]</code></li>
+<li>一路擴到最後</li>
+</ul>
+<p>這樣就能把所有以 <code>i</code> 為左端點的子陣列都檢查到。</p>
+<hr>
+<h3>4. 更新目前子陣列的 OR 值，並把新元素放進集合</h3>
+<pre><code class="language-cpp">
+now = now | nums[j];
+s.insert(nums[j]);
+</code></pre>
+<p>每次把右端點擴到 <code>j</code> 時：</p>
+<ul>
+<li><code>now = now | nums[j]</code></li>
+</ul>
+<ul>
+<li>表示把 <code>nums[j]</code> 這個新元素一起納入目前子陣列的 OR</li>
+<li><code>s.insert(nums[j])</code></li>
+</ul>
+<ul>
+<li>表示把這個值記進目前子陣列出現過的元素集合</li>
+</ul>
+<p>這樣我就同時維護了：</p>
+<ul>
+<li>整段的 OR</li>
+<li>整段有哪些元素</li>
+</ul>
+<hr>
+<h3>5. 如果目前 OR 值有出現在子陣列裡，這段就是 good subarray</h3>
+<pre><code class="language-cpp">
+if (s.count(now)) {
+    ans++;
+}
+</code></pre>
+<p>題目要的條件就是：</p>
+<ul>
+<li>子陣列整段 OR 的結果</li>
+<li>必須等於子陣列中的某個元素</li>
+</ul>
+<p>而 <code>s.count(now)</code> 就是在問：</p>
+<ul>
+<li>目前這段子陣列裡，有沒有出現 <code>now</code> 這個值</li>
+</ul>
+<p>如果有，代表這段子陣列符合題意，答案就加一。</p>
+<hr>
+<h3>6. 最後回傳 ans</h3>
+<pre><code class="language-cpp">
+return ans;
+</code></pre>
+<p>當所有起點、終點都枚舉完後，<code>ans</code> 就是 good subarray 的總數。</p>
+<hr>
+<h3>7. 這份寫法的問題在哪裡</h3>
+<p>這份程式邏輯上是直接照題意做，所以單看想法是很直觀的。</p>
+<p>但它的時間複雜度太高：</p>
+<ul>
+<li>外層枚舉起點</li>
+<li>內層枚舉終點</li>
+<li>中間還有 <code>set</code> 操作</li>
+</ul>
+<p>因此整體會接近 <code>O(n^2 log n)</code>。</p>
+<p>而題目 <code>n</code> 可以到 <code>10^5</code>，所以這份寫法會超時。</p>
+<p>也就是說，這比較像是我在比賽時先寫出的暴力檢查版本，能正確描述 good subarray 的判斷方式，但還不是最終能通過完整測資的做法。</p>
+<h2 id="complexity">⏱️ 複雜度</h2>
+<p>設 <code>n = nums.length</code>。</p>
+<ul>
+<li>時間複雜度：<code>O(n^2 log n)</code></li>
+</ul>
+<p>  共有 <code>O(n^2)</code> 個子陣列需要檢查，而 <code>set</code> 的插入與查詢是 <code>O(log n)</code>。</p>
+<ul>
+<li>空間複雜度：<code>O(n)</code></li>
+</ul>
+<p>  對每個固定起點，<code>set</code> 最多可能存到 <code>O(n)</code> 個元素。</p>
+<h2 id="code">💻 程式碼實作</h2>
+<pre><code class="language-cpp">
+class Solution {
+public:
+    long long countGoodSubarrays(vector&lt;int&gt;&amp; nums) {
+        int n = nums.size();
+        long long ans = 0;
+        for (int i = 0; i &lt; n; i++) {
+            set&lt;int&gt; s;
+            int now = nums[i];
+            for (int j = i; j &lt; n; j++) {
+                now = now | nums[j];
+                s.insert(nums[j]);
+                if (s.count(now)) {
+                    ans++;
+                }
+            }
+        }
+        return ans;
+    }
+};
+</code></pre>
+<h2 id="link">🔗 題目連結</h2>
+<p><a href="https://leetcode.com/contest/weekly-contest-494/problems/count-good-subarrays/" target="_blank" rel="noopener noreferrer">https://leetcode.com/contest/weekly-contest-494/problems/count-good-subarrays/</a></p>
+</section></div>
+      <section class="term-block article-footer"><h2 class="article-footer__title">文章資訊</h2><div class="meta-grid"><div class="meta-field"><span class="meta-label">作者：</span><span class="meta-value">scottnick</span></div><div class="meta-field meta-field--date"><span class="meta-label">撰寫日期：</span><span class="meta-value">2026-03-22</span></div><div class="meta-field meta-field--full"><span class="meta-label">類別：</span><span class="meta-value"><span class="post-tags"><span class="post-tag">Weekly Contest 494</span></span></span></div><div class="meta-field meta-field--full"><span class="meta-label">原文連結：</span><span class="meta-value">https://scottnick.github.io/cpp-notes/contests/weekly-contest-494/q4-count-good-subarrays.html</span></div></div></section>
+    </main>
+    <script src="../../../script.js"></script>
+  </body>
+</html>
