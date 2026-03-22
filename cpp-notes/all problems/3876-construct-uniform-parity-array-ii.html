@@ -8,142 +8,274 @@
     <link rel="stylesheet" href="../../styles.css" />
   </head>
   <body class="page-article">
-    <header><nav class="navbar"><a class="brand" href="../../personal.html">scottnick 個人網頁</a><button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button><div class="nav-links" id="nav-links"><a href="../../index.html">主頁</a><a href="../../courses.html">修課紀錄</a><a href="../../cpp.html" class="active">C++學習筆記</a><a href="../../profile.html">個人檔案</a></div><div class="nav-actions"><a class="nav-action-link" href="../../categories.html">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false" style="display:inline-block; vertical-align:-3px; margin-right:6px;">
-            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
-            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
-            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
-            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
-          </svg>
-          類別
-        </a><button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題"><span id="theme-icon" aria-hidden="true">☀️</span></button></div></nav></header>
+    <header>
+      <nav class="navbar">
+        <a class="brand" href="../../personal.html">scottnick 個人網頁</a
+        ><button
+          class="menu-btn"
+          id="menu-btn"
+          aria-label="開啟選單"
+          aria-expanded="false"
+        >
+          ☰
+        </button>
+        <div class="nav-links" id="nav-links">
+          <a href="../../index.html">主頁</a
+          ><a href="../../courses.html">修課紀錄</a
+          ><a href="../../cpp.html" class="active">C++學習筆記</a
+          ><a href="../../profile.html">個人檔案</a>
+        </div>
+        <div class="nav-actions">
+          <a class="nav-action-link" href="../../categories.html">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              width="18"
+              height="18"
+              aria-hidden="true"
+              focusable="false"
+              style="
+                display: inline-block;
+                vertical-align: -3px;
+                margin-right: 6px;
+              "
+            >
+              <rect
+                x="4"
+                y="4"
+                width="7"
+                height="7"
+                rx="1.2"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+              ></rect>
+              <rect
+                x="13"
+                y="4"
+                width="7"
+                height="7"
+                rx="1.2"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+              ></rect>
+              <rect
+                x="4"
+                y="13"
+                width="7"
+                height="7"
+                rx="1.2"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+              ></rect>
+              <rect
+                x="13"
+                y="13"
+                width="7"
+                height="7"
+                rx="1.2"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+              ></rect>
+            </svg>
+            類別 </a
+          ><button
+            class="icon-btn toggle-btn"
+            id="theme-toggle"
+            aria-label="切換主題"
+          >
+            <span id="theme-icon" aria-hidden="true">☀️</span>
+          </button>
+        </div>
+      </nav>
+    </header>
     <main>
-      <nav class="breadcrumb" aria-label="文章路徑"><a href="../../cpp.html">C++學習筆記</a><span aria-hidden="true">/</span><a href="index.html">All problems</a><span aria-hidden="true">/</span><span>3876. Construct Uniform Parity Array II</span></nav>
-      <section class="hero"><h1>3876. Construct Uniform Parity Array II</h1><p><strong>練習日期：</strong>2026-03-22</p><p><strong>難度：</strong>Medium</p><p><strong>類型：</strong>Weekly Contest 494</p></section>
-      <div class="article-layout"><aside class="article-toc" aria-label="文章目錄"><button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">目錄</button><strong>目錄</strong><ul>
-          <li><a href="#statement">📘 題目敘述</a></li>
-          <li><a href="#approach">🧠 解題思路</a></li>
-          <li><a href="#steps">🪜 主要流程步驟</a></li>
-          <li><a href="#complexity">⏱️ 複雜度</a></li>
-          <li><a href="#code">💻 程式碼實作</a></li>
-          <li><a href="#link">🔗 題目連結</a></li>
-        </ul></aside><section class="term-block article-content">
-<h2 id="statement">📘 題目敘述</h2>
-<p>給你一個長度為 <code>n</code> 的陣列 <code>nums1</code>，其中所有整數都互不相同。</p>
-<p>你想要建出另一個長度也是 <code>n</code> 的陣列 <code>nums2</code>，並且讓 <code>nums2</code> 裡的元素要嘛全部都是奇數，要嘛全部都是偶數。</p>
-<p>對每個 index <code>i</code>，你必須剛好從下面兩種方式中選一種來決定 <code>nums2[i]</code>：</p>
-<ul>
-<li><code>nums2[i] = nums1[i]</code></li>
-<li><code>nums2[i] = nums1[i] - nums1[j]</code>，其中 <code>j != i</code>，且 <code>nums1[i] - nums1[j] &gt;= 1</code></li>
-</ul>
-<p>請回傳是否有可能建出這樣的 <code>nums2</code>。</p>
-<h3>條件限制</h3>
-<ul>
-<li><code>1 &lt;= n == nums1.length &lt;= 10^5</code></li>
-<li><code>1 &lt;= nums1[i] &lt;= 10^9</code></li>
-<li><code>nums1</code> 中所有整數都互不相同</li>
-</ul>
-<h2 id="approach">🧠 解題思路</h2>
-<p>這題本質上還是在看奇偶性。</p>
-<p>差別是這次做差值時，必須滿足結果 <code>&gt;= 1</code>，所以不能隨便拿一個數去減另一個數，而是只能用<strong>比較大的數減比較小的數</strong>。</p>
-<p>因此排序之後，最小值會變得很重要。因為最小值不可能再透過減法變成別的奇偶性，它幾乎只能保留自己原本的奇偶性。</p>
-<p>所以我先排序，然後看最小值是奇數還是偶數：</p>
-<ul>
-<li>如果最小值是奇數，那我可以把整個陣列都做成奇數</li>
-<li>如果最小值是偶數，那我只能檢查整個陣列是不是全偶數</li>
-</ul>
-<p>最後就能直接判斷答案。</p>
-<h3>所有變數</h3>
-<ul>
-<li><code>nums1</code>：輸入陣列</li>
-<li><code>i</code>：掃描 <code>nums1</code> 時取出的元素值</li>
-</ul>
-<h2 id="steps">🪜 主要流程步驟</h2>
-<h3>1. 先把陣列排序</h3>
-<pre><code class="language-cpp">
+      <nav class="breadcrumb" aria-label="文章路徑">
+        <a href="../../cpp.html">C++學習筆記</a><span aria-hidden="true">/</span
+        ><a href="index.html">All problems</a><span aria-hidden="true">/</span
+        ><span>3876. Construct Uniform Parity Array II</span>
+      </nav>
+      <section class="hero">
+        <h1>3876. Construct Uniform Parity Array II</h1>
+        <p><strong>練習日期：</strong>2026-03-22</p>
+        <p><strong>難度：</strong>Medium</p>
+        <p><strong>類型：</strong>Weekly Contest 494</p>
+      </section>
+      <div class="article-layout">
+        <aside class="article-toc" aria-label="文章目錄">
+          <button
+            class="toc-toggle"
+            id="article-toc-toggle"
+            type="button"
+            aria-expanded="false"
+          >
+            目錄</button
+          ><strong>目錄</strong>
+          <ul>
+            <li><a href="#statement">📘 題目敘述</a></li>
+            <li><a href="#approach">🧠 解題思路</a></li>
+            <li><a href="#steps">🪜 主要流程步驟</a></li>
+            <li><a href="#complexity">⏱️ 複雜度</a></li>
+            <li><a href="#code">💻 程式碼實作</a></li>
+            <li><a href="#link">🔗 題目連結</a></li>
+          </ul>
+        </aside>
+        <section class="term-block article-content">
+          <h2 id="statement">📘 題目敘述</h2>
+          <p>
+            給你一個長度為 <code>n</code> 的陣列
+            <code>nums1</code>，其中所有整數都互不相同。
+          </p>
+          <p>
+            你想要建出另一個長度也是 <code>n</code> 的陣列
+            <code>nums2</code>，並且讓
+            <code>nums2</code> 裡的元素要嘛全部都是奇數，要嘛全部都是偶數。
+          </p>
+          <p>
+            對每個 index <code>i</code>，你必須剛好從下面兩種方式中選一種來決定
+            <code>nums2[i]</code>：
+          </p>
+          <ul>
+            <li><code>nums2[i] = nums1[i]</code></li>
+            <li>
+              <code>nums2[i] = nums1[i] - nums1[j]</code>，其中
+              <code>j != i</code>，且 <code>nums1[i] - nums1[j] &gt;= 1</code>
+            </li>
+          </ul>
+          <p>請回傳是否有可能建出這樣的 <code>nums2</code>。</p>
+          <h3>條件限制</h3>
+          <ul>
+            <li><code>1 &lt;= n == nums1.length &lt;= 10^5</code></li>
+            <li><code>1 &lt;= nums1[i] &lt;= 10^9</code></li>
+            <li><code>nums1</code> 中所有整數都互不相同</li>
+          </ul>
+          <h2 id="approach">🧠 解題思路</h2>
+          <p>這題本質上還是在看奇偶性。</p>
+          <p>
+            差別是這次做差值時，必須滿足結果
+            <code>&gt;= 1</code
+            >，所以不能隨便拿一個數去減另一個數，而是只能用<strong>比較大的數減比較小的數</strong>。
+          </p>
+          <p>
+            因此排序之後，最小值會變得很重要。因為最小值不可能再透過減法變成別的奇偶性，它幾乎只能保留自己原本的奇偶性。
+          </p>
+          <p>所以我先排序，然後看最小值是奇數還是偶數：</p>
+          <ul>
+            <li>如果最小值是奇數，那我可以把整個陣列都做成奇數</li>
+            <li>如果最小值是偶數，那我只能檢查整個陣列是不是全偶數</li>
+          </ul>
+          <p>最後就能直接判斷答案。</p>
+          <h3>所有變數</h3>
+          <ul>
+            <li><code>nums1</code>：輸入陣列</li>
+            <li><code>i</code>：掃描 <code>nums1</code> 時取出的元素值</li>
+          </ul>
+          <h2 id="steps">🪜 主要流程步驟</h2>
+          <h3>1. 先把陣列排序</h3>
+          <pre><code class="language-cpp">
 sort(nums1.begin(), nums1.end());
 </code></pre>
-<p>我先排序，因為這題多了一個條件：</p>
-<ul>
-<li><code>nums1[i] - nums1[j] &gt;= 1</code></li>
-</ul>
-<p>這代表我只能用比較大的數去減比較小的數。</p>
-<p>所以排序之後，<code>nums1[0]</code> 就是最小值，而它的奇偶性會直接影響整題能不能成功。</p>
-<hr>
-<h3>2. 如果最小值是奇數，答案一定是 true</h3>
-<pre><code class="language-cpp">
+          <p>我先排序，因為這題多了一個條件：</p>
+          <ul>
+            <li><code>nums1[i] - nums1[j] &gt;= 1</code></li>
+          </ul>
+          <p>這代表我只能用比較大的數去減比較小的數。</p>
+          <p>
+            所以排序之後，<code>nums1[0]</code>
+            就是最小值，而它的奇偶性會直接影響整題能不能成功。
+          </p>
+          <hr />
+          <h3>2. 如果最小值是奇數，答案一定是 true</h3>
+          <pre><code class="language-cpp">
 if (nums1[0] % 2 == 1) {
     return true;
 }
 </code></pre>
-<p>這一步是整題最關鍵的判斷。</p>
-<p>如果最小值是奇數，我就可以把整個 <code>nums2</code> 都做成奇數。</p>
-<p>原因是：</p>
-<ul>
-<li>如果某個數本來就是奇數，我可以直接保留它</li>
-<li>如果某個數本來是偶數，因為最小值是奇數，而且它一定比最小值大，所以我可以用：</li>
-</ul>
-<ul>
-<li>偶數 - 奇數 = 奇數</li>
-</ul>
-<p>而且這個差值一定 <code>&gt;= 1</code>，因為是比較大的數減比較小的數。</p>
-<p>所以只要最小值是奇數，整體一定做得出來，直接回傳 <code>true</code>。</p>
-<hr>
-<h3>3. 如果最小值是偶數，就不能把全部做成奇數</h3>
-<p>最小值如果是偶數，它自己沒有辦法再透過減法變成奇數。</p>
-<p>因為它已經是最小值了，找不到更小的數讓它去減，所以它只能：</p>
-<ul>
-<li>直接保留自己</li>
-</ul>
-<p>那它就一定還是偶數。</p>
-<p>所以這種情況下，整個陣列不可能全部做成奇數。</p>
-<p>因此我只剩下一條路可以試：</p>
-<ul>
-<li>看能不能全部做成偶數</li>
-</ul>
-<hr>
-<h3>4. 如果最小值是偶數，那只要出現奇數就失敗</h3>
-<pre><code class="language-cpp">
+          <p>這一步是整題最關鍵的判斷。</p>
+          <p>
+            如果最小值是奇數，我就可以把整個 <code>nums2</code> 都做成奇數。
+          </p>
+          <p>原因是：</p>
+          <ul>
+            <li>如果某個數本來就是奇數，我可以直接保留它</li>
+            <li>
+              如果某個數本來是偶數，因為最小值是奇數，而且它一定比最小值大，所以我可以用：
+            </li>
+          </ul>
+          <ul>
+            <li>偶數 - 奇數 = 奇數</li>
+          </ul>
+          <p>
+            而且這個差值一定
+            <code>&gt;= 1</code>，因為是比較大的數減比較小的數。
+          </p>
+          <p>
+            所以只要最小值是奇數，整體一定做得出來，直接回傳 <code>true</code>。
+          </p>
+          <hr />
+          <h3>3. 如果最小值是偶數，就不能把全部做成奇數</h3>
+          <p>最小值如果是偶數，它自己沒有辦法再透過減法變成奇數。</p>
+          <p>因為它已經是最小值了，找不到更小的數讓它去減，所以它只能：</p>
+          <ul>
+            <li>直接保留自己</li>
+          </ul>
+          <p>那它就一定還是偶數。</p>
+          <p>所以這種情況下，整個陣列不可能全部做成奇數。</p>
+          <p>因此我只剩下一條路可以試：</p>
+          <ul>
+            <li>看能不能全部做成偶數</li>
+          </ul>
+          <hr />
+          <h3>4. 如果最小值是偶數，那只要出現奇數就失敗</h3>
+          <pre><code class="language-cpp">
 for (int i : nums1) {
     if (i % 2 == 1) {
         return false;
     }
 }
 </code></pre>
-<p>現在我要的是全偶數。</p>
-<p>如果某個數本來就是偶數，那直接保留自己就好。</p>
-<p>但如果某個數是奇數，它想變成偶數，就必須做：</p>
-<ul>
-<li>奇數 - 奇數 = 偶數</li>
-</ul>
-<p>也就是說，它前面必須要有一個更小的奇數可以給它減。</p>
-<p>可是現在最小值已經是偶數了，表示整個陣列最前面根本不是奇數。</p>
-<p>所以一旦陣列中出現奇數，就會有某個奇數找不到更小的奇數去配，整體就不可能全部變成偶數。</p>
-<p>因此只要看到奇數，就直接回傳 <code>false</code>。</p>
-<hr>
-<h3>5. 如果一路都沒看到奇數，代表全偶數，答案就是 true</h3>
-<pre><code class="language-cpp">
+          <p>現在我要的是全偶數。</p>
+          <p>如果某個數本來就是偶數，那直接保留自己就好。</p>
+          <p>但如果某個數是奇數，它想變成偶數，就必須做：</p>
+          <ul>
+            <li>奇數 - 奇數 = 偶數</li>
+          </ul>
+          <p>也就是說，它前面必須要有一個更小的奇數可以給它減。</p>
+          <p>可是現在最小值已經是偶數了，表示整個陣列最前面根本不是奇數。</p>
+          <p>
+            所以一旦陣列中出現奇數，就會有某個奇數找不到更小的奇數去配，整體就不可能全部變成偶數。
+          </p>
+          <p>因此只要看到奇數，就直接回傳 <code>false</code>。</p>
+          <hr />
+          <h3>5. 如果一路都沒看到奇數，代表全偶數，答案就是 true</h3>
+          <pre><code class="language-cpp">
 return true;
 </code></pre>
-<p>如果程式能走到這裡，表示：</p>
-<ul>
-<li>最小值是偶數</li>
-<li>而且整個陣列都沒有奇數</li>
-</ul>
-<p>也就是說，整個陣列本來就全是偶數。</p>
-<p>那我直接把每個位置都保留原值，就已經符合題目要求，所以答案是 <code>true</code>。</p>
-<h2 id="complexity">⏱️ 複雜度</h2>
-<p>設 <code>n = nums1.length</code>。</p>
-<ul>
-<li>時間複雜度：<code>O(n log n)</code></li>
-</ul>
-<p>  主要花在排序，後面掃描一次是 <code>O(n)</code>。</p>
-<ul>
-<li>空間複雜度：<code>O(1)</code></li>
-</ul>
-<p>  如果不計排序內部使用的額外空間，額外只用了固定變數。</p>
-<h2 id="code">💻 程式碼實作</h2>
-<pre><code class="language-cpp">
+          <p>如果程式能走到這裡，表示：</p>
+          <ul>
+            <li>最小值是偶數</li>
+            <li>而且整個陣列都沒有奇數</li>
+          </ul>
+          <p>也就是說，整個陣列本來就全是偶數。</p>
+          <p>
+            那我直接把每個位置都保留原值，就已經符合題目要求，所以答案是
+            <code>true</code>。
+          </p>
+          <h2 id="complexity">⏱️ 複雜度</h2>
+          <p>設 <code>n = nums1.length</code>。</p>
+          <ul>
+            <li>時間複雜度：<code>O(n log n)</code></li>
+          </ul>
+          <p>主要花在排序，後面掃描一次是 <code>O(n)</code>。</p>
+          <ul>
+            <li>空間複雜度：<code>O(1)</code></li>
+          </ul>
+          <p>如果不計排序內部使用的額外空間，額外只用了固定變數。</p>
+          <h2 id="code">💻 程式碼實作</h2>
+          <pre><code class="language-cpp">
 class Solution {
 public:
     bool uniformArray(vector&lt;int&gt;&amp; nums1) {
@@ -160,10 +292,45 @@ public:
     }
 };
 </code></pre>
-<h2 id="link">🔗 題目連結</h2>
-<p><a href="https://leetcode.com/problems/construct-uniform-parity-array-ii/" target="_blank" rel="noopener noreferrer">https://leetcode.com/problems/construct-uniform-parity-array-ii/</a></p>
-</section></div>
-      <section class="term-block article-footer"><h2 class="article-footer__title">文章資訊</h2><div class="meta-grid"><div class="meta-field"><span class="meta-label">作者：</span><span class="meta-value">scottnick</span></div><div class="meta-field meta-field--date"><span class="meta-label">撰寫日期：</span><span class="meta-value">2026-03-22</span></div><div class="meta-field meta-field--full"><span class="meta-label">類別：</span><span class="meta-value"><span class="post-tags"><span class="post-tag">Weekly Contest 494</span><span class="post-tag">Medium</span></span></span></div><div class="meta-field meta-field--full"><span class="meta-label">原文連結：</span><span class="meta-value">https://scottnick.github.io/cpp-notes/all%20problems/3876-construct-uniform-parity-array-ii.html</span></div></div></section>
+          <h2 id="link">🔗 題目連結</h2>
+          <p>
+            <a
+              href="https://leetcode.com/problems/construct-uniform-parity-array-ii/"
+              target="_blank"
+              rel="noopener noreferrer"
+              >https://leetcode.com/problems/construct-uniform-parity-array-ii/</a
+            >
+          </p>
+        </section>
+      </div>
+      <section class="term-block article-footer">
+        <h2 class="article-footer__title">文章資訊</h2>
+        <div class="meta-grid">
+          <div class="meta-field">
+            <span class="meta-label">作者：</span
+            ><span class="meta-value">scottnick</span>
+          </div>
+          <div class="meta-field meta-field--date">
+            <span class="meta-label">撰寫日期：</span
+            ><span class="meta-value">2026-03-22</span>
+          </div>
+          <div class="meta-field meta-field--full">
+            <span class="meta-label">類別：</span
+            ><span class="meta-value"
+              ><span class="post-tags"
+                ><span class="post-tag">Weekly Contest 494</span
+                ><span class="post-tag">Medium</span></span
+              ></span
+            >
+          </div>
+          <div class="meta-field meta-field--full">
+            <span class="meta-label">原文連結：</span
+            ><span class="meta-value"
+              >https://scottnick.github.io/cpp-notes/all%20problems/3876-construct-uniform-parity-array-ii.html</span
+            >
+          </div>
+        </div>
+      </section>
     </main>
     <script src="../../script.js"></script>
   </body>
