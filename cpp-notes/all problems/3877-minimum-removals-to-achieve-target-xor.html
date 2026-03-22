@@ -1,0 +1,222 @@
+<!-- all problems/3877-minimum-removals-to-achieve-target-xor.html: Weekly Contest 494 -->
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>3877. Minimum Removals to Achieve Target XOR</title>
+    <link rel="stylesheet" href="../../styles.css" />
+  </head>
+  <body class="page-article">
+    <header><nav class="navbar"><a class="brand" href="../../personal.html">scottnick 個人網頁</a><button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button><div class="nav-links" id="nav-links"><a href="../../index.html">主頁</a><a href="../../courses.html">修課紀錄</a><a href="../../cpp.html" class="active">C++學習筆記</a><a href="../../profile.html">個人檔案</a></div><div class="nav-actions"><a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false" style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a><button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題"><span id="theme-icon" aria-hidden="true">☀️</span></button></div></nav></header>
+    <main>
+      <nav class="breadcrumb" aria-label="文章路徑"><a href="../../cpp.html">C++學習筆記</a><span aria-hidden="true">/</span><a href="index.html">All problems</a><span aria-hidden="true">/</span><span>3877. Minimum Removals to Achieve Target XOR</span></nav>
+      <section class="hero"><h1>3877. Minimum Removals to Achieve Target XOR</h1><p><strong>練習日期：</strong>2026-03-22</p><p><strong>難度：</strong>Medium</p><p><strong>類型：</strong>Weekly Contest 494</p></section>
+      <div class="article-layout"><aside class="article-toc" aria-label="文章目錄"><button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">目錄</button><strong>目錄</strong><ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#complexity">⏱️ 複雜度</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul></aside><section class="term-block article-content">
+<h2 id="statement">📘 題目敘述</h2>
+<p>給你一個整數陣列 <code>nums</code> 和一個整數 <code>target</code>。</p>
+<p>你可以從 <code>nums</code> 中移除任意多個元素（也可以一個都不移除）。</p>
+<p>請回傳最少需要移除多少個元素，才能讓剩下元素的 bitwise XOR 恰好等於 <code>target</code>。</p>
+<p>如果做不到，請回傳 <code>-1</code>。</p>
+<p>空陣列的 XOR 定義為 <code>0</code>。</p>
+<h3>條件限制</h3>
+<ul>
+<li><code>1 &lt;= nums.length &lt;= 40</code></li>
+<li><code>0 &lt;= nums[i] &lt;= 10^4</code></li>
+<li><code>0 &lt;= target &lt;= 10^4</code></li>
+</ul>
+<h2 id="approach">🧠 解題思路</h2>
+<p>這題表面上是在問「最少刪掉幾個」，但我換個角度想會比較自然：</p>
+<blockquote><p>我其實是在找，最多能保留幾個元素，讓這些保留下來的元素 XOR 剛好等於 <code>target</code>。</p></blockquote>
+<p>因為如果我能保留的最多元素數量是 <code>k</code>，那最少刪除數量就是：</p>
+<ul>
+<li><code>nums.size() - k</code></li>
+</ul>
+<p>所以我這份做法是用 DP 去記：</p>
+<ul>
+<li>某個 XOR 值能不能做到</li>
+<li>如果能做到，最多可以保留幾個元素</li>
+</ul>
+<p>然後我一個一個處理 <code>nums</code> 裡的數字，決定要不要把它選進來。</p>
+<p>如果把它選進來，XOR 會從 <code>x</code> 變成 <code>x ^ i</code>，而保留元素數量就會多 <code>1</code>。</p>
+<p>最後只要看：</p>
+<ul>
+<li><code>dp[target]</code></li>
+</ul>
+<p>如果它還是無法達成，就回傳 <code>-1</code>；</p>
+<p>如果可以達成，就回傳總長度減掉最多保留數量。</p>
+<h3>所有變數</h3>
+<ul>
+<li><code>M</code>：DP 狀態範圍上限，這份程式設成 <code>16384</code></li>
+<li><code>dp</code>：<code>dp[x]</code> 表示 XOR 值為 <code>x</code> 時，最多可以保留幾個元素；如果做不到則為 <code>-1</code></li>
+<li><code>ndp</code>：這一輪更新用的暫存 DP</li>
+</ul>
+<h2 id="steps">🪜 主要流程步驟</h2>
+<h3>1. 先定義 DP 的意義</h3>
+<pre><code class="language-cpp">
+const int M = 16384;
+vector&lt;int&gt; dp(M, -1);
+dp[0] = 0;
+</code></pre>
+<p>我這裡把 <code>dp[x]</code> 定義成：</p>
+<ul>
+<li>XOR 恰好等於 <code>x</code> 時</li>
+<li>最多可以保留幾個元素</li>
+</ul>
+<p>如果某個 XOR 值目前做不到，就記成 <code>-1</code>。</p>
+<p>一開始什麼都不選時：</p>
+<ul>
+<li>XOR = <code>0</code></li>
+<li>保留元素數量 = <code>0</code></li>
+</ul>
+<p>所以：</p>
+<pre><code class="language-cpp">
+dp[0] = 0;
+</code></pre>
+<p>這就是整個 DP 的起點。</p>
+<hr>
+<h3>2. 依序處理 nums 裡的每個元素</h3>
+<pre><code class="language-cpp">
+for (int i : nums) {
+    vector&lt;int&gt; ndp = dp;
+</code></pre>
+<p>這裡我一個一個看 <code>nums</code> 裡的數字 <code>i</code>。</p>
+<p>每次都先複製一份 <code>dp</code> 到 <code>ndp</code>，意思是：</p>
+<ul>
+<li>如果這輪我不選 <code>i</code></li>
+<li>那原本能做到的狀態還是保留</li>
+</ul>
+<p>所以 <code>ndp = dp</code> 代表「不選這個數字」的情況先全部繼承下來。</p>
+<hr>
+<h3>3. 嘗試把目前這個數字選進來</h3>
+<pre><code class="language-cpp">
+for (int x = 0; x &lt; M; x++) {
+    if (ndp[x] != -1) {
+        ndp[x ^ i] = max(ndp[x ^ i], dp[x] + 1);
+    }
+}
+</code></pre>
+<p>這裡的想法是：</p>
+<p>如果原本 XOR = <code>x</code> 這個狀態做得到，</p>
+<p>那我把目前數字 <code>i</code> 選進來之後，新的 XOR 就會變成：</p>
+<ul>
+<li><code>x ^ i</code></li>
+</ul>
+<p>而且保留元素數量會變成：</p>
+<ul>
+<li><code>dp[x] + 1</code></li>
+</ul>
+<p>所以我就更新：</p>
+<ul>
+<li><code>ndp[x ^ i]</code></li>
+</ul>
+<p>代表「做到這個新 XOR 值時，最多能保留幾個元素」。</p>
+<hr>
+<h3>4. 這裡為什麼要用 <code>dp[x]</code> 而不是 <code>ndp[x]</code></h3>
+<p>更新時你寫的是：</p>
+<pre><code class="language-cpp">
+ndp[x ^ i] = max(ndp[x ^ i], dp[x] + 1);
+</code></pre>
+<p>不是用 <code>ndp[x] + 1</code>。</p>
+<p>這很重要，因為我希望：</p>
+<ul>
+<li>每個元素 <code>i</code> 這一輪最多只能被使用一次</li>
+</ul>
+<p>如果我用 <code>ndp[x]</code> 去更新，可能就會把同一輪剛更新出來的結果再拿來繼續轉移，等於同一個數字被重複選很多次。</p>
+<p>所以這裡一定要從「上一輪的 <code>dp</code>」轉移到「這一輪的 <code>ndp</code>」，這樣才是正確的 0/1 選或不選。</p>
+<hr>
+<h3>5. 每輪更新完後，把結果存回 dp</h3>
+<pre><code class="language-cpp">
+dp = ndp;
+</code></pre>
+<p>當前這個數字 <code>i</code> 的所有轉移都做完後，</p>
+<p>就把這一輪的新結果正式存回 <code>dp</code>，讓下一個數字繼續接著做。</p>
+<hr>
+<h3>6. 最後看 target 能不能做到</h3>
+<pre><code class="language-cpp">
+return dp[target] &lt; 0 ? -1 : nums.size() - dp[target];
+</code></pre>
+<p>最後我只要檢查：</p>
+<ul>
+<li><code>dp[target]</code></li>
+</ul>
+<p>如果它還是小於 <code>0</code>，表示 XOR 做不到 <code>target</code>，那答案就是 <code>-1</code>。</p>
+<p>如果做得到，<code>dp[target]</code> 表示：</p>
+<ul>
+<li>XOR 等於 <code>target</code> 時</li>
+<li>最多能保留多少元素</li>
+</ul>
+<p>而題目要的是最少刪除數量，所以答案就是：</p>
+<ul>
+<li><code>nums.size() - dp[target]</code></li>
+</ul>
+<hr>
+<h3>7. 為什麼這樣就等於最少移除數量</h3>
+<p>因為每個元素只有兩種選擇：</p>
+<ul>
+<li>保留</li>
+<li>移除</li>
+</ul>
+<p>而總元素數固定。</p>
+<p>所以：</p>
+<ul>
+<li>最少移除數量</li>
+<li>等價於最多保留數量</li>
+</ul>
+<p>只要我找出「XOR 剛好等於 <code>target</code> 時最多能保留幾個元素」，</p>
+<p>最後用總長度去減，就自然得到最少刪除數量。</p>
+<h2 id="complexity">⏱️ 複雜度</h2>
+<p>設 <code>n = nums.length</code>。</p>
+<ul>
+<li>時間複雜度：<code>O(nM)</code></li>
+</ul>
+<p>  其中 <code>M = 16384</code>，每個元素都會掃過所有 XOR 狀態一次。</p>
+<ul>
+<li>空間複雜度：<code>O(M)</code></li>
+</ul>
+<p>  使用了 <code>dp</code> 和 <code>ndp</code> 兩個長度為 <code>M</code> 的陣列。</p>
+<h2 id="code">💻 程式碼實作</h2>
+<pre><code class="language-cpp">
+class Solution {
+public:
+    int minRemovals(vector&lt;int&gt;&amp; nums, int target) {
+        const int M = 16384;
+        vector&lt;int&gt; dp(M, -1);
+        dp[0] = 0;
+        for (int i : nums) {
+            vector&lt;int&gt; ndp = dp;
+            for (int x = 0; x &lt; M; x++) {
+                if (ndp[x] != -1) {
+                    ndp[x ^ i] = max(ndp[x ^ i], dp[x] + 1);
+                }
+            }
+            dp = ndp;
+        }
+
+        return dp[target] &lt; 0 ? -1 : nums.size() - dp[target];
+    }
+};
+</code></pre>
+<h2 id="link">🔗 題目連結</h2>
+<p><a href="https://leetcode.com/problems/minimum-removals-to-achieve-target-xor/" target="_blank" rel="noopener noreferrer">https://leetcode.com/problems/minimum-removals-to-achieve-target-xor/</a></p>
+</section></div>
+      <section class="term-block article-footer"><h2 class="article-footer__title">文章資訊</h2><div class="meta-grid"><div class="meta-field"><span class="meta-label">作者：</span><span class="meta-value">scottnick</span></div><div class="meta-field meta-field--date"><span class="meta-label">撰寫日期：</span><span class="meta-value">2026-03-22</span></div><div class="meta-field meta-field--full"><span class="meta-label">類別：</span><span class="meta-value"><span class="post-tags"><span class="post-tag">Weekly Contest 494</span><span class="post-tag">Medium</span></span></span></div><div class="meta-field meta-field--full"><span class="meta-label">原文連結：</span><span class="meta-value">https://scottnick.github.io/cpp-notes/all%20problems/3877-minimum-removals-to-achieve-target-xor.html</span></div></div></section>
+    </main>
+    <script src="../../script.js"></script>
+  </body>
+</html>

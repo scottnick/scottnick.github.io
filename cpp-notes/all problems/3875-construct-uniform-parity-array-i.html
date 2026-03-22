@@ -1,0 +1,149 @@
+<!-- all problems/3875-construct-uniform-parity-array-i.html: Weekly Contest 494 -->
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>3875. Construct Uniform Parity Array I</title>
+    <link rel="stylesheet" href="../../styles.css" />
+  </head>
+  <body class="page-article">
+    <header><nav class="navbar"><a class="brand" href="../../personal.html">scottnick 個人網頁</a><button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button><div class="nav-links" id="nav-links"><a href="../../index.html">主頁</a><a href="../../courses.html">修課紀錄</a><a href="../../cpp.html" class="active">C++學習筆記</a><a href="../../profile.html">個人檔案</a></div><div class="nav-actions"><a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false" style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a><button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題"><span id="theme-icon" aria-hidden="true">☀️</span></button></div></nav></header>
+    <main>
+      <nav class="breadcrumb" aria-label="文章路徑"><a href="../../cpp.html">C++學習筆記</a><span aria-hidden="true">/</span><a href="index.html">All problems</a><span aria-hidden="true">/</span><span>3875. Construct Uniform Parity Array I</span></nav>
+      <section class="hero"><h1>3875. Construct Uniform Parity Array I</h1><p><strong>練習日期：</strong>2026-03-22</p><p><strong>難度：</strong>Easy</p><p><strong>類型：</strong>Weekly Contest 494</p></section>
+      <div class="article-layout"><aside class="article-toc" aria-label="文章目錄"><button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">目錄</button><strong>目錄</strong><ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#complexity">⏱️ 複雜度</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul></aside><section class="term-block article-content">
+<h2 id="statement">📘 題目敘述</h2>
+<p>給你一個長度為 <code>n</code> 的陣列 <code>nums1</code>，其中所有整數都互不相同。</p>
+<p>你想要再建出另一個長度也是 <code>n</code> 的陣列 <code>nums2</code>，並且讓 <code>nums2</code> 裡的元素要嘛全部都是奇數，要嘛全部都是偶數。</p>
+<p>對每個 index <code>i</code>，你必須剛好從下面兩種方式中選一種來決定 <code>nums2[i]</code>：</p>
+<ul>
+<li><code>nums2[i] = nums1[i]</code></li>
+<li><code>nums2[i] = nums1[i] - nums1[j]</code>，其中 <code>j != i</code></li>
+</ul>
+<p>請回傳是否有可能建出這樣的 <code>nums2</code>。</p>
+<h3>條件限制</h3>
+<ul>
+<li><code>1 &lt;= n == nums1.length &lt;= 100</code></li>
+<li><code>1 &lt;= nums1[i] &lt;= 100</code></li>
+<li><code>nums1</code> 中所有整數都互不相同</li>
+</ul>
+<h2 id="approach">🧠 解題思路</h2>
+<p>這題最後其實只跟陣列裡：</p>
+<ul>
+<li>有沒有奇數</li>
+<li>有沒有偶數</li>
+</ul>
+<p>有關。</p>
+<p>分情況看：</p>
+<h4>情況 1：全部都是偶數</h4>
+<p>那直接全部保留原值，<code>nums2</code> 全偶，答案是 <code>true</code>。</p>
+<h4>情況 2：全部都是奇數</h4>
+<p>那直接全部保留原值，<code>nums2</code> 全奇，答案也是 <code>true</code>。</p>
+<h4>情況 3：同時有奇數和偶數</h4>
+<p>這時更簡單，因為：</p>
+<ul>
+<li>對奇數位置，可以直接保留成奇數</li>
+<li>對偶數位置，可以找一個奇數做差，變成奇數</li>
+</ul>
+<p>所以全部做成奇數一定可以。</p>
+<p>例如：</p>
+<ul>
+<li>偶數 - 奇數 = 奇數</li>
+</ul>
+<p>而且題目保證數字互不相同，只要陣列裡同時有奇數和偶數，就一定找得到對應的 <code>j != i</code>。</p>
+<p>所以這種情況答案也一定是 <code>true</code>。</p>
+<hr>
+<p>所以最後結論其實是：</p>
+<blockquote><p>這題永遠都是 <code>true</code>。</p></blockquote>
+<p>因為不管 <code>nums1</code> 裡是：</p>
+<ul>
+<li>全奇</li>
+<li>全偶</li>
+<li>奇偶混合</li>
+</ul>
+<p>都能建出一個全部同奇偶的 <code>nums2</code>。</p>
+<h3>所有變數</h3>
+<ul>
+<li>根本不需要XD</li>
+</ul>
+<h2 id="steps">🪜 主要流程步驟</h2>
+<h3>1. 觀察題目只在乎奇偶性</h3>
+<p>這題不是要你算特定值，而是只問最後能不能讓整個 <code>nums2</code>：</p>
+<ul>
+<li>全奇</li>
+<li>或全偶</li>
+</ul>
+<p>所以真正該分析的是操作會怎麼改變奇偶性。</p>
+<hr>
+<h3>2. 分析兩種操作的奇偶效果</h3>
+<p>對每個位置 <code>i</code>，可以做兩種事：</p>
+<ul>
+<li>直接取 <code>nums1[i]</code></li>
+<li>取差值 <code>nums1[i] - nums1[j]</code></li>
+</ul>
+<p>其中差值的奇偶規則是：</p>
+<ul>
+<li>同奇偶相減會得到偶數</li>
+<li>不同奇偶相減會得到奇數</li>
+</ul>
+<hr>
+<h3>3. 分情況討論原陣列的奇偶組成</h3>
+<h4>全部都是偶數</h4>
+<p>直接全部保留原值，就已經是全偶數，所以可以。</p>
+<h4>全部都是奇數</h4>
+<p>直接全部保留原值，就已經是全奇數，所以可以。</p>
+<h4>同時有奇數和偶數</h4>
+<p>這時我可以選擇把全部做成奇數：</p>
+<ul>
+<li>原本是奇數的位置，直接保留</li>
+<li>原本是偶數的位置，拿它減掉某個奇數</li>
+</ul>
+<ul>
+<li>偶數 - 奇數 = 奇數</li>
+</ul>
+<p>所以也可以成功。</p>
+<hr>
+<h3>4. 因此答案永遠是 true</h3>
+<p>不管輸入怎麼分布，都能建出符合要求的 <code>nums2</code>，所以直接回傳 <code>true</code> 即可。</p>
+<h2 id="complexity">⏱️ 複雜度</h2>
+<ul>
+<li>時間複雜度：<code>O(1)</code></li>
+</ul>
+<p>  這份程式直接回傳答案，沒有額外掃描。</p>
+<ul>
+<li>空間複雜度：<code>O(1)</code></li>
+</ul>
+<p>  只使用固定空間。</p>
+<h2 id="code">💻 程式碼實作</h2>
+<pre><code class="language-cpp">
+class Solution {
+public:
+    bool uniformArray(vector&lt;int&gt;&amp; nums1) {
+        return true;
+    }
+};
+</code></pre>
+<h2 id="link">🔗 題目連結</h2>
+<p><a href="https://leetcode.com/problems/construct-uniform-parity-array-i/" target="_blank" rel="noopener noreferrer">https://leetcode.com/problems/construct-uniform-parity-array-i/</a></p>
+</section></div>
+      <section class="term-block article-footer"><h2 class="article-footer__title">文章資訊</h2><div class="meta-grid"><div class="meta-field"><span class="meta-label">作者：</span><span class="meta-value">scottnick</span></div><div class="meta-field meta-field--date"><span class="meta-label">撰寫日期：</span><span class="meta-value">2026-03-22</span></div><div class="meta-field meta-field--full"><span class="meta-label">類別：</span><span class="meta-value"><span class="post-tags"><span class="post-tag">Weekly Contest 494</span><span class="post-tag">Easy</span></span></span></div><div class="meta-field meta-field--full"><span class="meta-label">原文連結：</span><span class="meta-value">https://scottnick.github.io/cpp-notes/all%20problems/3875-construct-uniform-parity-array-i.html</span></div></div></section>
+    </main>
+    <script src="../../script.js"></script>
+  </body>
+</html>
