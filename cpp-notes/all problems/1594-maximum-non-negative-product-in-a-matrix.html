@@ -1,0 +1,319 @@
+<!-- all problems/1594-maximum-non-negative-product-in-a-matrix.html: 全部題單文章 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>1594. Maximum Non Negative Product in a Matrix</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+               width="18" height="18" aria-hidden="true" focusable="false"
+               style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="index.html">All problems</a>
+      <span aria-hidden="true">/</span>
+      <span>1594. Maximum Non Negative Product in a Matrix</span>
+    </nav>
+
+    <section class="hero">
+      <h1>1594. Maximum Non Negative Product in a Matrix</h1>
+      <p><strong>練習日期：</strong>2026-03-23</p>
+      <p><strong>難度：</strong>Medium</p>
+      <p><strong>類型：</strong>Array、Dynamic Programming、Matrix</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#complexity">⏱️ 複雜度</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給你一個 <code>m x n</code> 的矩陣 <code>grid</code>。一開始我站在左上角 <code>(0, 0)</code>，每一步只能往右或往下走。</p>
+        <p>在所有從左上角 <code>(0, 0)</code> 走到右下角 <code>(m - 1, n - 1)</code> 的路徑中，請找出<strong>乘積最大且非負</strong>的那條路徑。</p>
+        <p>一條路徑的乘積，指的是路徑上所有格子的數值全部相乘。</p>
+        <p>請回傳這個最大非負乘積對 <code>10^9 + 7</code> 取模後的結果。</p>
+        <p>如果最大乘積是負數，請回傳 <code>-1</code>。</p>
+        <p>注意：要先得到真正的最大乘積，再做取模。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>m == grid.length</code></li>
+          <li><code>n == grid[i].length</code></li>
+          <li><code>1 &lt;= m, n &lt;= 15</code></li>
+          <li><code>-4 &lt;= grid[i][j] &lt;= 4</code></li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>這題的重點是：</p>
+        <p>因為格子裡可能有負數，所以「目前最大的乘積」乘上一個負數之後，反而可能變成很小；相反地，「目前最小的乘積」乘上一個負數之後，反而可能翻成很大。</p>
+        <p>所以我不能只記一個最大值，而是要同時記：</p>
+        <ul>
+          <li>走到某格時，<strong>最大的乘積</strong></li>
+          <li>走到某格時，<strong>最小的乘積</strong></li>
+        </ul>
+        <p>這樣之後遇到正數、負數、零時，才有辦法正確轉移。</p>
+        <p>所以我用 DP，對每個位置都維護兩個狀態：</p>
+        <ul>
+          <li><code>max</code></li>
+          <li><code>min</code></li>
+        </ul>
+        <p>最後看右下角的最大值是不是非負即可。</p>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>m</code>：列數</li>
+          <li><code>n</code>：行數</li>
+          <li><code>dp</code>：三維 DP，<code>dp[i][j][0]</code> 表示走到 <code>(i,j)</code> 的最大乘積，<code>dp[i][j][1]</code> 表示走到 <code>(i,j)</code> 的最小乘積</li>
+          <li><code>M</code>：模數 <code>10^9 + 7</code></li>
+          <li><code>nmax</code>：目前格子 <code>(i,j)</code> 能得到的最大乘積</li>
+          <li><code>nmin</code>：目前格子 <code>(i,j)</code> 能得到的最小乘積</li>
+          <li><code>a</code>：從某個前一格的 <code>max</code> 乘上目前格子的值後得到的候選值</li>
+          <li><code>b</code>：從某個前一格的 <code>min</code> 乘上目前格子的值後得到的候選值</li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+        <h3>1. 先定義 DP 狀態：每格同時記最大值和最小值</h3>
+        <p>我這裡讓每個位置 <code>(i, j)</code> 都存兩個值：</p>
+        <ul>
+          <li><code>dp[i][j][0]</code>：走到這格時可能得到的最大乘積</li>
+          <li><code>dp[i][j][1]</code>：走到這格時可能得到的最小乘積</li>
+        </ul>
+        <p>之所以要同時存這兩個，是因為負數會讓大小關係翻轉。</p>
+        <p>如果只記最大值，遇到負數時就會漏掉答案。</p>
+        <hr />
+
+        <h3>2. 起點 <code>(0,0)</code> 的最大值和最小值都等於自己</h3>
+        <pre><code class="language-cpp">dp[0][0][0] = grid[0][0];
+dp[0][0][1] = grid[0][0];
+</code></pre>
+        <p>一開始還沒走到別的地方，只有左上角這一格。</p>
+        <p>所以不管是最大乘積還是最小乘積，都只能是它自己。</p>
+        <hr />
+
+        <h3>3. 逐格做 DP，來源只會是上方或左方</h3>
+        <pre><code class="language-cpp">for (int i = 0; i &lt; m; i++) {
+    for (int j = 0; j &lt; n; j++) {
+</code></pre>
+        <p>因為題目規定每一步只能：</p>
+        <ul>
+          <li>往右</li>
+          <li>或往下</li>
+        </ul>
+        <p>所以走到 <code>(i, j)</code> 時，來源只可能是：</p>
+        <ul>
+          <li><code>(i - 1, j)</code>，也就是上方</li>
+          <li><code>(i, j - 1)</code>，也就是左方</li>
+        </ul>
+        <hr />
+
+        <h3>4. 每到一格時，先準備這格的候選最大值和最小值</h3>
+        <pre><code class="language-cpp">long long nmax = LLONG_MIN, nmin = LLONG_MAX;
+if (i == 0 &amp;&amp; j == 0)
+    continue;
+</code></pre>
+        <p>對於除了起點以外的每一格，我都先設：</p>
+        <ul>
+          <li><code>nmax = 很小</code></li>
+          <li><code>nmin = 很大</code></li>
+        </ul>
+        <p>表示我接下來要把所有可能來源算出來，更新這格真正的最大值和最小值。</p>
+        <p>起點 <code>(0,0)</code> 已經初始化過了，所以直接跳過。</p>
+        <hr />
+
+        <h3>5. 如果能從上面走下來，就把上面的 max / min 都乘進來試</h3>
+        <p>如果上面存在，那我就可以從上面走到目前這格。</p>
+        <p>但因為目前格子的值可能是正數、負數或零，所以我不能只拿上面的最大值來算，還要一起考慮上面的最小值：</p>
+        <ul>
+          <li><code>a = 目前值 × 上方最大乘積</code></li>
+          <li><code>b = 目前值 × 上方最小乘積</code></li>
+        </ul>
+        <p>然後從這兩個候選值裡更新：</p>
+        <ul>
+          <li>目前格子的 <code>nmax</code></li>
+          <li>目前格子的 <code>nmin</code></li>
+        </ul>
+        <hr />
+
+        <h3>6. 如果能從左邊走過來，也一樣把左邊的 max / min 都試一次</h3>
+        <p>這一步和上面完全一樣，只是來源改成左邊。</p>
+        <p>因為目前格子的答案可能來自：</p>
+        <ul>
+          <li>上方</li>
+          <li>左方</li>
+        </ul>
+        <p>所以我把兩邊所有可能都試過一次，最後保留：</p>
+        <ul>
+          <li>最大的乘積</li>
+          <li>最小的乘積</li>
+        </ul>
+        <hr />
+
+        <h3>7. 把這格真正的最大值和最小值存回 DP</h3>
+        <pre><code class="language-cpp">dp[i][j][0] = nmax;
+dp[i][j][1] = nmin;
+</code></pre>
+        <p>當上方和左方的所有候選值都考慮完後，</p>
+        <p>這格的狀態就確定了：</p>
+        <ul>
+          <li><code>dp[i][j][0] = nmax</code></li>
+          <li><code>dp[i][j][1] = nmin</code></li>
+        </ul>
+        <p>這樣之後下一格再來時，就能拿這裡的資訊繼續轉移。</p>
+        <hr />
+
+        <h3>8. 為什麼一定要同時記最大值和最小值</h3>
+        <p>這題最容易忽略的點就是這個。</p>
+        <p>如果目前格子值是負數，那：</p>
+        <ul>
+          <li>一個很大的正數乘上它，會變成很小的負數</li>
+          <li>一個很小的負數乘上它，反而會變成很大的正數</li>
+        </ul>
+        <p>所以真正的最大答案，不一定是從前一格的最大值轉過來的，</p>
+        <p>也有可能是從前一格的最小值轉過來的。</p>
+        <p>這就是為什麼這題一定要雙狀態 DP，而不能只記一個值。</p>
+        <hr />
+
+        <h3>9. 最後看右下角的最大值是不是非負</h3>
+        <pre><code class="language-cpp">return dp[m - 1][n - 1][0] &lt; 0 ? -1 : dp[m - 1][n - 1][0] % M;
+</code></pre>
+        <p>右下角的 <code>dp[m - 1][n - 1][0]</code>，就是所有路徑中最大的乘積。</p>
+        <p>如果它還是負數，表示根本不存在非負路徑答案，所以回傳 <code>-1</code>。</p>
+        <p>如果它是非負數，就照題目要求對 <code>10^9 + 7</code> 取模後回傳。</p>
+
+        <h2 id="complexity">⏱️ 複雜度</h2>
+        <p>設 <code>m = grid.length</code>，<code>n = grid[0].length</code>。</p>
+        <ul>
+          <li>時間複雜度：<code>O(mn)</code>
+            <ul>
+              <li>每個格子都只會被處理一次，每次轉移只看上方和左方。</li>
+            </ul>
+          </li>
+          <li>空間複雜度：<code>O(mn)</code>
+            <ul>
+              <li>需要一個 <code>m x n x 2</code> 的 DP 陣列來記錄最大值和最小值。</li>
+            </ul>
+          </li>
+        </ul>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    int maxProductPath(vector&lt;vector&lt;int&gt;&gt;&amp; grid) {
+        int m = grid.size();
+        int n = grid[0].size();
+        vector&lt;vector&lt;vector&lt;long long&gt;&gt;&gt; dp(
+            m, vector&lt;vector&lt;long long&gt;&gt;(
+                   n, vector&lt;long long&gt;(2))); // 0是max,1是min
+        const int M = 1e9 + 7;
+
+        dp[0][0][0] = grid[0][0];
+        dp[0][0][1] = grid[0][0];
+        for (int i = 0; i &lt; m; i++) {
+            for (int j = 0; j &lt; n; j++) {
+                long long nmax = LLONG_MIN, nmin = LLONG_MAX;
+                if (i == 0 &amp;&amp; j == 0)
+                    continue;
+                if (i &gt; 0) {
+                    long long a = 1LL * grid[i][j] * dp[i - 1][j][0];
+                    long long b = 1LL * grid[i][j] * dp[i - 1][j][1];
+                    nmax = max(nmax, a);
+                    nmax = max(nmax, b);
+                    nmin = min(nmin, a);
+                    nmin = min(nmin, b);
+                }
+                if (j &gt; 0) {
+                    long long a = 1LL * grid[i][j] * dp[i][j - 1][0];
+                    long long b = 1LL * grid[i][j] * dp[i][j - 1][1];
+                    nmax = max(nmax, a);
+                    nmax = max(nmax, b);
+                    nmin = min(nmin, a);
+                    nmin = min(nmin, b);
+                }
+                dp[i][j][0] = nmax;
+                dp[i][j][1] = nmin;
+            }
+        }
+        return dp[m - 1][n - 1][0] &lt; 0 ? -1 : dp[m - 1][n - 1][0] % M;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/maximum-non-negative-product-in-a-matrix/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-03-23</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value"><span class="post-tags">
+              <span class="post-tag">Array</span>
+              <span class="post-tag">Dynamic Programming</span>
+              <span class="post-tag">Matrix</span>
+              <span class="post-tag">Medium</span>
+            </span></span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/all%20problems/1594-maximum-non-negative-product-in-a-matrix.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
