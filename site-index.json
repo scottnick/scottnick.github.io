@@ -1,6 +1,6 @@
 {
-  "buildId": "20260323073409",
-  "generatedAt": "2026-03-23T07:34:09.500190Z",
+  "buildId": "20260323074359",
+  "generatedAt": "2026-03-23T07:43:59.210839Z",
   "posts": [
     {
       "path": "courses.html",
@@ -106,18 +106,6 @@
         "Array",
         "Matrix",
         "Easy"
-      ],
-      "folder": "cpp-notes/all problems"
-    },
-    {
-      "path": "cpp-notes/all%20problems/1594-maximum-non-negative-product-in-a-matrix.html",
-      "title": "1594. Maximum Non Negative Product in a Matrix",
-      "date": "2026-03-23",
-      "tags": [
-        "Array",
-        "Dynamic Programming",
-        "Matrix",
-        "Medium"
       ],
       "folder": "cpp-notes/all problems"
     },
@@ -1406,6 +1394,18 @@
         "Array",
         "Math",
         "Two Pointers",
+        "Medium"
+      ],
+      "folder": "cpp-notes/all problems"
+    },
+    {
+      "path": "cpp-notes/all%20problems/1594-maximum-non-negative-product-in-a-matrix.html",
+      "title": "1594. Maximum Non Negative Product in a Matrix",
+      "date": "2026-03-23",
+      "tags": [
+        "Array",
+        "Dynamic Programming",
+        "Matrix",
         "Medium"
       ],
       "folder": "cpp-notes/all problems"
