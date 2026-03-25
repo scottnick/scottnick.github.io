@@ -1,0 +1,277 @@
+<!-- all problems/84-largest-rectangle-in-histogram.html: All problems 文章 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>84. Largest Rectangle in Histogram</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+               width="18" height="18" aria-hidden="true" focusable="false"
+               style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="index.html">All problems</a>
+      <span aria-hidden="true">/</span>
+      <span>84. Largest Rectangle in Histogram</span>
+    </nav>
+
+    <section class="hero">
+      <h1>84. Largest Rectangle in Histogram</h1>
+      <p><strong>練習日期：</strong>2026-03-24</p>
+      <p><strong>難度：</strong>Hard</p>
+      <p><strong>類型：</strong>Array、Stack、Monotonic Stack</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#variables">所有變數</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#complexity">⏱️ 複雜度</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給你一個整數陣列 <code>heights</code>，表示直方圖中每個柱子的高度，其中每個柱子的寬度都是 <code>1</code>。</p>
+        <p>請回傳這個直方圖中，最大矩形的面積。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>1 &lt;= heights.length &lt;= 10^5</code></li>
+          <li><code>0 &lt;= heights[i] &lt;= 10^4</code></li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>這題的重點是：</p>
+        <p>如果我固定某一根柱子當作矩形的高度，那我就要知道它能往左延伸到哪裡、往右延伸到哪裡，直到遇到比它矮的柱子為止。</p>
+        <p>所以我會用單調 stack 來維護：</p>
+        <ul>
+          <li>還沒有找到右邊第一個更矮柱子的 index</li>
+        </ul>
+        <p>當我掃到一個比較矮的新柱子時，就代表 stack 裡某些比較高的柱子，它們的右邊界已經確定了。這時就可以把那些柱子拿出來算面積。</p>
+        <p>這份做法的核心就是：</p>
+        <ul>
+          <li>每一根柱子在被 pop 出 stack 的那一刻</li>
+          <li>它的高度固定</li>
+          <li>它左邊第一個更矮的位置也知道</li>
+          <li>它右邊第一個更矮的位置也知道</li>
+        </ul>
+        <p>所以就能直接算出以它為高度的最大矩形面積。</p>
+
+        <h2 id="variables">所有變數</h2>
+        <ul>
+          <li><code>s</code>：單調 stack，存柱子的 index</li>
+          <li><code>ans</code>：目前找到的最大矩形面積</li>
+          <li><code>n</code>：陣列長度</li>
+          <li><code>now</code>：剛從 stack pop 出來、要拿來算面積的柱子 index</li>
+          <li><code>left</code>：<code>now</code> 左邊第一個比它矮的柱子 index</li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+        <h3>1. 先在最後補一個高度 0</h3>
+        <pre><code class="language-cpp">heights.push_back(0);
+</code></pre>
+        <p>這一步很重要。</p>
+        <p>因為有些柱子一路到最後都沒有遇到右邊更矮的柱子，如果不補一個 <code>0</code>，它們就不會被 pop 出來，也就不會被計算到面積。</p>
+        <p>所以我在最後補一根高度為 <code>0</code> 的柱子，強迫 stack 裡剩下的柱子全部結算。</p>
+
+        <hr />
+
+        <h3>2. 用 stack 維護遞增高度的柱子 index</h3>
+        <pre><code class="language-cpp">stack&lt;int&gt; s;
+</code></pre>
+        <p>這個 stack 裡放的是 index，不是高度本身。</p>
+        <p>因為之後我要同時知道：</p>
+        <ul>
+          <li>這根柱子的高度 <code>heights[index]</code></li>
+          <li>它的位置</li>
+          <li>它左右能延伸到哪裡</li>
+        </ul>
+        <p>所以存 index 會比較方便。</p>
+        <p>而 stack 維持的性質是：</p>
+        <ul>
+          <li>從底到頂對應的高度是單調不下降的</li>
+        </ul>
+
+        <hr />
+
+        <h3>3. 從左到右掃每一根柱子</h3>
+        <pre><code class="language-cpp">for (int i = 0; i &lt; n; i++) {
+</code></pre>
+        <p>我會依序看每個位置 <code>i</code>。</p>
+        <p>如果目前這根柱子比 stack 頂端還矮，就代表 stack 頂端那根柱子的右邊界出現了，該結算面積了。</p>
+
+        <hr />
+
+        <h3>4. 當目前柱子比較矮時，不斷 pop 並計算面積</h3>
+        <pre><code class="language-cpp">while (!s.empty() &amp;&amp; heights[s.top()] &gt; heights[i]) {
+    int now = s.top();
+    s.pop();
+</code></pre>
+        <p>這裡的意思是：</p>
+        <p>如果目前高度 <code>heights[i]</code> 比 stack 頂端那根柱子還矮，那麼 stack 頂端這根柱子就不能再往右延伸到 <code>i</code> 了。</p>
+        <p>所以：</p>
+        <ul>
+          <li><code>i</code> 就是它右邊第一個更矮柱子的位置</li>
+          <li>這時可以把它拿出來算面積</li>
+        </ul>
+        <p><code>now</code> 就是那根被拿出來結算的柱子 index。</p>
+
+        <hr />
+
+        <h3>5. 找出 <code>now</code> 左邊第一個更矮的位置</h3>
+        <p>當 <code>now</code> 被 pop 掉之後，stack 新的頂端就是它左邊第一個比它矮的柱子。</p>
+        <p>如果 stack 已經空了，表示左邊根本沒有比它更矮的柱子，那我就把左邊界設成 <code>-1</code>。</p>
+        <p>所以這裡的 <code>left</code> 表示：</p>
+        <ul>
+          <li><code>now</code> 左邊第一個更矮柱子的 index</li>
+        </ul>
+        <p>而右邊第一個更矮柱子的 index 則是目前的 <code>i</code>。</p>
+
+        <hr />
+
+        <h3>6. 用高度 × 寬度算出以 <code>now</code> 為高的最大矩形</h3>
+        <pre><code class="language-cpp">ans = max(ans, (i - left - 1) * heights[now]);
+</code></pre>
+        <p>這一行是整題最核心的公式。</p>
+        <p>對柱子 <code>now</code> 來說：</p>
+        <ul>
+          <li>高度就是 <code>heights[now]</code></li>
+          <li>左邊第一個更矮的位置是 <code>left</code></li>
+          <li>右邊第一個更矮的位置是 <code>i</code></li>
+        </ul>
+        <p>所以它真正能延伸的寬度就是：</p>
+        <ul>
+          <li><code>i - left - 1</code></li>
+        </ul>
+        <p>因此面積就是：</p>
+        <ul>
+          <li><code>heights[now] * (i - left - 1)</code></li>
+        </ul>
+        <p>每次算完就更新最大值 <code>ans</code>。</p>
+
+        <hr />
+
+        <h3>7. 把目前柱子 push 進 stack</h3>
+        <pre><code class="language-cpp">s.push(i);
+</code></pre>
+        <p>當前面所有比目前柱子高的都結算完之後，就把目前這根柱子放進 stack。</p>
+        <p>表示它現在還沒找到右邊第一個更矮柱子，之後再等未來的柱子來幫它決定右邊界。</p>
+
+        <hr />
+
+        <h3>8. 最後回傳答案</h3>
+        <pre><code class="language-cpp">return ans;
+</code></pre>
+        <p>因為最後補了一個 <code>0</code>，所以所有柱子都一定會被正確結算到。整個迴圈結束後，<code>ans</code> 就是最大矩形面積。</p>
+
+        <h2 id="complexity">⏱️ 複雜度</h2>
+        <p>設 <code>n = heights.length</code>（原本長度，不含最後補的那個 <code>0</code>）。</p>
+        <ul>
+          <li>時間複雜度：<code>O(n)</code><br>每個 index 最多只會被 push 進 stack 一次、pop 出來一次。</li>
+          <li>空間複雜度：<code>O(n)</code><br>stack 最壞情況下可能存下所有柱子的 index。</li>
+        </ul>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    int largestRectangleArea(vector&lt;int&gt;&amp; heights) {
+        stack&lt;int&gt; s;
+        int ans = 0;
+        heights.push_back(0);
+        int n = heights.size();
+        for (int i = 0; i &lt; n; i++) {
+            while (!s.empty() &amp;&amp; heights[s.top()] &gt; heights[i]) {
+                int now = s.top();
+                s.pop();
+                int left;
+                if (s.empty()) {
+                    left = -1;
+                } else {
+                    left = s.top();
+                }
+                ans = max(ans, (i - left - 1) * heights[now]);
+            }
+            s.push(i);
+        }
+        return ans;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/largest-rectangle-in-histogram/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-03-24</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value"><span class="post-tags">
+              <span class="post-tag">Array</span>
+              <span class="post-tag">Stack</span>
+              <span class="post-tag">Monotonic Stack</span>
+              <span class="post-tag">Hard</span>
+            </span></span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/all%20problems/84-largest-rectangle-in-histogram.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
