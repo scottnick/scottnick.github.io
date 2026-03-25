@@ -1,0 +1,268 @@
+<!-- all problems/941-valid-mountain-array.html: 全部題單文章 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>941. Valid Mountain Array</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+               width="18" height="18" aria-hidden="true" focusable="false"
+               style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="index.html">All problems</a>
+      <span aria-hidden="true">/</span>
+      <span>941. Valid Mountain Array</span>
+    </nav>
+
+    <section class="hero">
+      <h1>941. Valid Mountain Array</h1>
+      <p><strong>練習日期：</strong>2026-03-24</p>
+      <p><strong>難度：</strong>Easy</p>
+      <p><strong>類型：</strong>Array</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#variables">所有變數</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#complexity">⏱️ 複雜度</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給你一個整數陣列 <code>arr</code>，請回傳它是否為合法的 mountain array。</p>
+        <p>如果一個陣列要是 mountain array，必須同時滿足：</p>
+        <ul>
+          <li><code>arr.length &gt;= 3</code></li>
+          <li>存在某個 <code>i</code>，滿足 <code>0 &lt; i &lt; arr.length - 1</code>，使得：
+            <ul>
+              <li><code>arr[0] &lt; arr[1] &lt; ... &lt; arr[i]</code></li>
+              <li><code>arr[i] &gt; arr[i + 1] &gt; ... &gt; arr[arr.length - 1]</code></li>
+            </ul>
+          </li>
+        </ul>
+        <p>也就是說，陣列必須先嚴格遞增，再嚴格遞減，而且山頂不能在最左邊或最右邊。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>1 &lt;= arr.length &lt;= 10^4</code></li>
+          <li><code>0 &lt;= arr[i] &lt;= 10^4</code></li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>這題的重點就是檢查整個陣列有沒有出現一段：</p>
+        <ul>
+          <li>先往上爬</li>
+          <li>再往下走</li>
+        </ul>
+        <p>而且這兩段都一定要真的存在，不能只有上坡，也不能只有下坡，更不能中間有平的地方。</p>
+        <p>我這份寫法用三個東西來記錄目前狀態：</p>
+        <ul>
+          <li><code>up</code>：有沒有出現過上升</li>
+          <li><code>down</code>：有沒有出現過下降</li>
+          <li><code>now</code>：前一個數字是什麼</li>
+        </ul>
+        <p>接著一路掃過陣列：</p>
+        <ul>
+          <li>如果遇到相等，直接失敗</li>
+          <li>如果目前還在上升，就繼續</li>
+          <li>如果已經開始下降後又再上升，直接失敗</li>
+          <li>最後只有在 <code>up</code> 和 <code>down</code> 都成立時，才是合法 mountain array</li>
+        </ul>
+
+        <h2 id="variables">所有變數</h2>
+        <ul>
+          <li><code>up</code>：是否曾經出現過嚴格上升</li>
+          <li><code>down</code>：是否曾經出現過嚴格下降</li>
+          <li><code>now</code>：前一個元素的值</li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+
+        <h3>1. 先準備三個狀態變數</h3>
+        <pre><code class="language-cpp">bool up = false, down = false;
+int now = -1;
+</code></pre>
+        <p>這裡：</p>
+        <ul>
+          <li><code>up</code> 用來記目前有沒有出現過上升段</li>
+          <li><code>down</code> 用來記目前有沒有出現過下降段</li>
+          <li><code>now</code> 用來記前一個數字</li>
+        </ul>
+        <p>因為題目保證 <code>arr[i] &gt;= 0</code>，所以我先把 <code>now</code> 設成 <code>-1</code>，這樣第一個數字進來時一定會比它大。</p>
+        <hr />
+
+        <h3>2. 一路掃過整個陣列</h3>
+        <pre><code class="language-cpp">for (int i : arr) {
+</code></pre>
+        <p>這裡直接依序讀每個元素，並和前一個數字 <code>now</code> 比較，判斷目前是在上升、下降，還是出錯。</p>
+        <hr />
+
+        <h3>3. 如果出現相等，直接回傳 false</h3>
+        <pre><code class="language-cpp">if (now == i) {
+    return false;
+}
+</code></pre>
+        <p>mountain array 要求的是<strong>嚴格</strong>遞增、嚴格遞減，所以不能有相等。</p>
+        <p>只要中間出現：</p>
+        <ul>
+          <li><code>... x, x ...</code></li>
+        </ul>
+        <p>那就一定不是 mountain array，直接回傳 <code>false</code>。</p>
+        <hr />
+
+        <h3>4. 如果目前是上升，就檢查是不是已經開始下降過</h3>
+        <p>如果現在 <code>i</code> 比前一個數字 <code>now</code> 大，表示目前是在往上爬。</p>
+        <p>但如果這時候 <code>down</code> 已經是 <code>true</code>，就代表前面明明已經開始下坡了，現在卻又重新上坡，這不符合 mountain array，直接失敗。</p>
+        <p>如果還沒開始下坡，那這次上升就是合法的，所以把 <code>up</code> 記成 <code>true</code>。
+不過第一個元素只是初始化比較，不算真正上升，所以這裡用：</p>
+        <pre><code class="language-cpp">if (now &gt;= 0) {
+    up = true;
+}
+</code></pre>
+        <p>來避免把一開始 <code>-1 -&gt; arr[0]</code> 當成上升段。</p>
+        <hr />
+
+        <h3>5. 如果不是上升也不是相等，那就是下降</h3>
+        <pre><code class="language-cpp">else {
+    down = true;
+}
+</code></pre>
+        <p>前面已經排除掉相等，再加上這裡不是上升，所以就只剩下降一種可能。</p>
+        <p>這表示陣列已經開始下坡了，因此把 <code>down</code> 設成 <code>true</code>。</p>
+        <hr />
+
+        <h3>6. 每次都更新 now</h3>
+        <pre><code class="language-cpp">now = i;
+</code></pre>
+        <p>目前這個元素處理完之後，就把它記成新的前一個數字，讓下一輪繼續比較。</p>
+        <hr />
+
+        <h3>7. 最後必須同時有上升和下降才算合法</h3>
+        <pre><code class="language-cpp">return (up &amp;&amp; down) ? true : false;
+</code></pre>
+        <p>最後如果：</p>
+        <ul>
+          <li><code>up == true</code></li>
+          <li><code>down == true</code></li>
+        </ul>
+        <p>代表整個陣列確實有先上升再下降，這才是合法 mountain array。</p>
+        <p>如果只有其中一個成立，就表示：</p>
+        <ul>
+          <li>只有上坡沒有下坡</li>
+          <li>或只有下坡沒有上坡</li>
+        </ul>
+        <p>都不符合題意。</p>
+
+        <h2 id="complexity">⏱️ 複雜度</h2>
+        <p>設 <code>n = arr.length</code>。</p>
+        <ul>
+          <li>時間複雜度：<code>O(n)</code><br />
+  整個陣列只掃一次。</li>
+          <li>空間複雜度：<code>O(1)</code><br />
+  只用了固定數量的變數。</li>
+        </ul>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    bool validMountainArray(vector&lt;int&gt;&amp; arr) {
+        bool up = false, down = false;
+        int now = -1;
+        for (int i : arr) {
+            if (now == i) {
+                return false;
+            }
+            if (now &lt; i) {
+                if (down) {
+                    return false;
+                }
+                if (now &gt;= 0) {
+                    up = true;
+                }
+            } else {
+                down = true;
+            }
+            now = i;
+        }
+        return (up &amp;&amp; down) ? true : false;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/valid-mountain-array/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-03-24</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value"><span class="post-tags">
+              <span class="post-tag">Array</span>
+              <span class="post-tag">Easy</span>
+            </span></span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/all%20problems/941-valid-mountain-array.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
