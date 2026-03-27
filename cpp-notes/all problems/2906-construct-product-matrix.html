@@ -1,0 +1,316 @@
+<!-- all problems/2906-construct-product-matrix.html: 2906. Construct Product Matrix -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2906. Construct Product Matrix</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+               width="18" height="18" aria-hidden="true" focusable="false"
+               style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="index.html">All problems</a>
+      <span aria-hidden="true">/</span>
+      <span>2906. Construct Product Matrix</span>
+    </nav>
+
+    <section class="hero">
+      <h1>2906. Construct Product Matrix</h1>
+      <p><strong>練習日期：</strong>2026-03-24</p>
+      <p><strong>難度：</strong>Medium</p>
+      <p><strong>類型：</strong>Array、Matrix、Prefix Sum</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#variables">所有變數</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#complexity">⏱️ 複雜度</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給你一個 0-indexed 的二維整數矩陣 <code>grid</code>，大小為 <code>n x m</code>。</p>
+
+        <p>如果一個同樣大小的矩陣 <code>p</code> 滿足以下條件，就稱它是 <code>grid</code> 的 product matrix：</p>
+
+        <ul>
+          <li><code>p[i][j]</code> 等於 <code>grid</code> 中除了 <code>grid[i][j]</code> 以外所有元素的乘積</li>
+          <li>最後再對 <code>12345</code> 取模</li>
+        </ul>
+
+        <p>請回傳 <code>grid</code> 的 product matrix。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>1 &lt;= n == grid.length &lt;= 10^5</code></li>
+          <li><code>1 &lt;= m == grid[i].length &lt;= 10^5</code></li>
+          <li><code>2 &lt;= n * m &lt;= 10^5</code></li>
+          <li><code>1 &lt;= grid[i][j] &lt;= 10^9</code></li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>這題的想法和一維陣列的「除了自己以外的乘積」很像。</p>
+
+        <p>我不直接對每個位置重新把其他所有數都乘一遍，因為那樣太慢。<br>
+        我改成先把整個矩陣依照 row-major 順序看成一條線，然後預先算好：</p>
+
+        <ul>
+          <li>每個位置前面的乘積</li>
+          <li>每個位置後面的乘積</li>
+        </ul>
+
+        <p>這樣對某個位置來說：</p>
+
+        <ul>
+          <li>它左邊全部元素的乘積</li>
+          <li>乘上它右邊全部元素的乘積</li>
+        </ul>
+
+        <p>就等於「除了自己以外所有元素的乘積」。</p>
+
+        <p>所以我用兩個陣列：</p>
+
+        <ul>
+          <li><code>f</code>：prefix product</li>
+          <li><code>b</code>：suffix product</li>
+        </ul>
+
+        <p>最後把兩邊乘起來，就能得到答案。</p>
+
+        <h2 id="variables">所有變數</h2>
+        <ul>
+          <li><code>m</code>：列數</li>
+          <li><code>n</code>：行數</li>
+          <li><code>f</code>：前綴乘積陣列，<code>f[pos]</code> 表示線性化後前 <code>pos</code> 個元素的乘積</li>
+          <li><code>b</code>：後綴乘積陣列，從後面往前累積的乘積</li>
+          <li><code>M</code>：模數 <code>12345</code></li>
+          <li><code>now</code>：目前累積乘積</li>
+          <li><code>ans</code>：答案矩陣</li>
+          <li><code>pos</code>：目前線性化後的位置索引</li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+
+        <h3>1. 先準備前綴乘積和後綴乘積陣列</h3>
+        <p>我這裡先讓 <code>f</code> 和 <code>b</code> 都從一個 <code>1</code> 開始。</p>
+
+        <p>這樣之後如果某個位置左邊沒有元素，那它左邊的乘積自然就是 <code>1</code>；<br>
+        右邊沒有元素時也是同樣概念。</p>
+
+        <hr />
+
+        <h3>2. 先照 row-major 順序算前綴乘積</h3>
+        <pre><code id="cjuxzm" class="language-cpp">for (int i = 0; i &lt; m; i++) {
+    for (int j = 0; j &lt; n; j++) {
+        now *= grid[i][j];
+        now %= M;
+        f.push_back(now);
+    }
+}
+</code></pre>
+
+        <p>這一步是在把矩陣攤平成一條線來看。</p>
+
+        <p>假設目前走到某個位置時，<code>f</code> 裡就會記住：</p>
+
+        <ul>
+          <li>從最前面開始到目前為止的累積乘積</li>
+        </ul>
+
+        <p>所以之後如果我想知道某個位置左邊所有元素的乘積，直接看對應的 <code>f[pos]</code> 就可以了。</p>
+
+        <hr />
+
+        <h3>3. 再從後往前算後綴乘積</h3>
+        <p>這一步和前面對稱，只是改成從矩陣最後一格往前掃。</p>
+
+        <p>這樣 <code>b</code> 裡就會記住：</p>
+
+        <ul>
+          <li>從最尾端開始往前的累積乘積</li>
+        </ul>
+
+        <p>之後某個位置右邊所有元素的乘積，就可以從 <code>b</code> 裡對應拿到。</p>
+
+        <hr />
+
+        <h3>4. 建立答案矩陣</h3>
+        <p>這裡我重新再走一次矩陣，並用 <code>pos</code> 表示目前這格在線性化後是第幾個位置。</p>
+
+        <hr />
+
+        <h3>5. 對每個位置，把左邊乘積和右邊乘積乘起來</h3>
+        <p>假設目前位置是 <code>pos</code>，那麼：</p>
+
+        <ul>
+          <li><code>f[pos]</code> 表示它前面所有元素的乘積</li>
+          <li><code>b[m * n - 1 - pos]</code> 表示它後面所有元素的乘積</li>
+        </ul>
+
+        <p>兩個相乘之後，就剛好是：</p>
+
+        <ul>
+          <li>除了自己以外，所有元素的乘積</li>
+        </ul>
+
+        <p>最後再 <code>% M</code>，存進答案矩陣。</p>
+
+        <hr />
+
+        <h3>6. 為什麼這樣剛好排除自己</h3>
+        <p>這裡的關鍵是 <code>f</code> 和 <code>b</code> 的設計方式。</p>
+
+        <p><code>f[pos]</code> 存的是：</p>
+
+        <ul>
+          <li>前 <code>pos</code> 個元素的乘積</li>
+        </ul>
+
+        <p>所以它不包含第 <code>pos</code> 個元素自己。</p>
+
+        <p>而 <code>b[m * n - 1 - pos]</code> 存的是：</p>
+
+        <ul>
+          <li>第 <code>pos</code> 個元素後面那些元素的乘積</li>
+        </ul>
+
+        <p>所以它也不包含自己。</p>
+
+        <p>這樣兩邊乘起來，剛好就是「除了自己以外」的所有元素乘積。</p>
+
+        <hr />
+
+        <h3>7. 最後回傳答案矩陣</h3>
+        <p>當每個位置都算完之後，<code>ans</code> 就是題目要的 product matrix。</p>
+
+        <h2 id="complexity">⏱️ 複雜度</h2>
+        <p>設 <code>N = m * n</code>。</p>
+
+        <ul>
+          <li>時間複雜度：<code>O(N)</code><br>
+          我總共掃矩陣三次，每次都是線性。</li>
+          <li>空間複雜度：<code>O(N)</code><br>
+          額外用了 <code>f</code>、<code>b</code> 和答案矩陣。</li>
+        </ul>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code id="gcnhuy" class="language-cpp">class Solution {
+public:
+    vector&lt;vector&lt;int&gt;&gt; constructProductMatrix(vector&lt;vector&lt;int&gt;&gt;&amp; grid) {
+        int m = grid.size();
+        int n = grid[0].size();
+        vector&lt;int&gt; f(1, 1);
+        vector&lt;int&gt; b(1, 1);
+        const int M = 12345;
+        long long now = 1;
+        for (int i = 0; i &lt; m; i++) {
+            for (int j = 0; j &lt; n; j++) {
+                now *= grid[i][j];
+                now %= M;
+                f.push_back(now);
+            }
+        }
+        now = 1;
+        for (int i = m - 1; i &gt;= 0; i--) {
+            for (int j = n - 1; j &gt;= 0; j--) {
+                now *= grid[i][j];
+                now %= M;
+                b.push_back(now);
+            }
+        }
+        vector&lt;vector&lt;int&gt;&gt; ans(m, vector&lt;int&gt;(n));
+        int pos = 0;
+        for (int i = 0; i &lt; m; i++) {
+            for (int j = 0; j &lt; n; j++) {
+                now = f[pos] * b[m * n - 1 - pos];
+                now %= M;
+                ans[i][j] = now;
+                pos++;
+            }
+        }
+        return ans;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/construct-product-matrix/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-03-24</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value">
+            <span class="post-tags">
+              <span class="post-tag">Array</span>
+              <span class="post-tag">Matrix</span>
+              <span class="post-tag">Prefix Sum</span>
+              <span class="post-tag">Medium</span>
+            </span>
+          </span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/all%20problems/2906-construct-product-matrix.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
