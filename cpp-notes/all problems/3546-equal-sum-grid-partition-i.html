@@ -1,0 +1,283 @@
+<!-- all problems/3546-equal-sum-grid-partition-i.html: All problems 文章 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3546. Equal Sum Grid Partition I</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+               width="18" height="18" aria-hidden="true" focusable="false"
+               style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="index.html">All problems</a>
+      <span aria-hidden="true">/</span>
+      <span>3546. Equal Sum Grid Partition I</span>
+    </nav>
+
+    <section class="hero">
+      <h1>3546. Equal Sum Grid Partition I</h1>
+      <p><strong>練習日期：</strong>2026-03-25</p>
+      <p><strong>難度：</strong>Medium</p>
+      <p><strong>類型：</strong>Array、Matrix、Enumeration、Prefix Sum</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#variables">所有變數</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#complexity">⏱️ 複雜度</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給你一個 <code>m x n</code> 的正整數矩陣 <code>grid</code>。我要判斷是否存在<strong>一刀水平切割</strong>或<strong>一刀垂直切割</strong>，使得：</p>
+        <ul>
+          <li>切完後的兩部分都非空</li>
+          <li>兩部分元素總和相等</li>
+        </ul>
+        <p>如果可以，回傳 <code>true</code>；否則回傳 <code>false</code>。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>1 &lt;= m == grid.length &lt;= 10^5</code></li>
+          <li><code>1 &lt;= n == grid[i].length &lt;= 10^5</code></li>
+          <li><code>2 &lt;= m * n &lt;= 10^5</code></li>
+          <li><code>1 &lt;= grid[i][j] &lt;= 10^5</code></li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>我這題的想法很直接：</p>
+        <ul>
+          <li>先算每一列的總和</li>
+          <li>先算每一行的總和</li>
+          <li>然後分別嘗試：</li>
+        </ul>
+        <ul>
+          <li>水平切一刀</li>
+          <li>垂直切一刀</li>
+        </ul>
+        <p>如果是水平切，那我其實只是在看：</p>
+        <ul>
+          <li>上半部列總和</li>
+          <li>下半部列總和</li>
+        </ul>
+        <p>有沒有哪個切點會讓這兩個值相等。</p>
+        <p>垂直切也是完全一樣的概念，只是改成看行總和。</p>
+        <p>因為題目保證所有數字都是正數，所以前綴和只會越加越大。
+        因此當某一邊已經大於另一邊時，後面就不可能再相等了，這時可以直接停止。</p>
+
+        <h2 id="variables">所有變數</h2>
+        <ul>
+          <li><code>m</code>：列數</li>
+          <li><code>n</code>：行數</li>
+          <li><code>h</code>：<code>h[i]</code> 表示第 <code>i</code> 列的總和</li>
+          <li><code>v</code>：<code>v[i]</code> 表示第 <code>i</code> 行的總和</li>
+          <li><code>hsum</code>：所有列總和加起來的值，也就是整個矩陣總和</li>
+          <li><code>vsum</code>：所有行總和加起來的值，也就是整個矩陣總和</li>
+          <li><code>sum</code>：暫時用來計算某一列或某一行的總和</li>
+          <li><code>check</code>：目前前綴部分的總和</li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+        <h3>1. 先算每一列的總和</h3>
+        <p>我先把每一列的總和存進 <code>h</code>。</p>
+        <p>這樣之後如果我要試某個<strong>水平切割</strong>，就不用重新掃整個子矩陣，
+        只要看前面幾列的總和和後面幾列的總和即可。</p>
+        <p>這裡的 <code>hsum</code> 其實就是整個矩陣總和。</p>
+        <hr />
+
+        <h3>2. 再算每一行的總和</h3>
+        <p>這一步和前面完全對稱，只是改成算每一行的總和。</p>
+        <p>這樣之後如果我要試<strong>垂直切割</strong>，就可以直接靠 <code>v</code> 來做前綴加總。</p>
+        <p>這裡的 <code>vsum</code> 也會等於整個矩陣總和。</p>
+        <hr />
+
+        <h3>3. 先枚舉每個可能的水平切割位置</h3>
+        <p>這裡我讓：</p>
+        <ul>
+          <li><code>check</code> 表示目前上半部的總和</li>
+          <li><code>hsum</code> 表示目前下半部的總和</li>
+        </ul>
+        <p>每次把第 <code>k</code> 列加到上半部後，就等於在考慮：</p>
+        <ul>
+          <li>上面包含 <code>0 ~ k</code> 列</li>
+          <li>下面包含 <code>k + 1 ~ m - 1</code> 列</li>
+        </ul>
+        <p>如果這時：</p>
+        <ul>
+          <li><code>check == hsum</code></li>
+        </ul>
+        <p>代表找到一個合法的水平切割，直接回傳 <code>true</code>。</p>
+        <hr />
+
+        <h3>4. 為什麼 <code>check &gt; hsum</code> 時可以直接停</h3>
+        <pre id="jeemzq"><code class="language-cpp">else if (check &gt; hsum) {
+    break;
+}</code></pre>
+        <p>這一點是因為題目保證矩陣元素全是正數。</p>
+        <p>所以當我繼續往下加列時：</p>
+        <ul>
+          <li><code>check</code> 只會越來越大</li>
+          <li><code>hsum</code> 只會越來越小</li>
+        </ul>
+        <p>因此如果某一刻已經有：</p>
+        <ul>
+          <li><code>check &gt; hsum</code></li>
+        </ul>
+        <p>那後面就不可能再回到相等了，可以直接停止，不用再繼續枚舉。</p>
+        <hr />
+
+        <h3>5. 如果水平切不到，再試垂直切割</h3>
+        <p>這裡完全就是把前面的水平切邏輯，改成用行總和做一次。</p>
+        <p>現在：</p>
+        <ul>
+          <li><code>check</code> 表示左半部總和</li>
+          <li><code>vsum</code> 表示右半部總和</li>
+        </ul>
+        <p>每次加上一整行之後，就等於在考慮某個垂直切點。</p>
+        <p>如果左右相等，就直接回傳 <code>true</code>。</p>
+        <p>如果左邊已經大於右邊，因為所有數字都為正，後面也不可能再相等，所以也可以直接停止。</p>
+        <hr />
+
+        <h3>6. 如果水平和垂直都找不到，就回傳 false</h3>
+        <pre id="oufqni"><code class="language-cpp">return false;</code></pre>
+        <p>如果兩種切法都試完，還是沒有任何一個切點能讓兩部分總和相等，
+        那答案就是 <code>false</code>。</p>
+
+        <h2 id="complexity">⏱️ 複雜度</h2>
+        <p>設 <code>m = grid.length</code>，<code>n = grid[0].length</code>。</p>
+        <ul>
+          <li>時間複雜度：<code>O(mn + m + n)</code>
+            先掃整個矩陣算列總和與行總和，再各掃一次列與行前綴。</li>
+          <li>空間複雜度：<code>O(m + n)</code>
+            額外用了 <code>h</code> 和 <code>v</code> 兩個陣列來存每列、每行總和。</li>
+        </ul>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre id="ocojwj"><code class="language-cpp">class Solution {
+public:
+    bool canPartitionGrid(vector&lt;vector&lt;int&gt;&gt;&amp; grid) {
+        int m = grid.size();
+        int n = grid[0].size();
+        vector&lt;long long&gt; h(m);
+        vector&lt;long long&gt; v(n);
+        long long hsum = 0, vsum = 0;
+        for (int i = 0; i &lt; m; i++) {
+            long long sum = 0;
+            for (int j = 0; j &lt; n; j++) {
+                sum += grid[i][j];
+                hsum += grid[i][j];
+            }
+            h[i] = sum;
+        }
+        for (int i = 0; i &lt; n; i++) {
+            long long sum = 0;
+            for (int j = 0; j &lt; m; j++) {
+                sum += grid[j][i];
+                vsum += grid[j][i];
+            }
+            v[i] = sum;
+        }
+        long long check = 0;
+        for (int k = 0; k &lt; m; k++) {
+            check += h[k];
+            hsum -= h[k];
+            if (check == hsum) {
+                return true;
+            } else if (check &gt; hsum) {
+                break;
+            }
+        }
+        check = 0;
+        for (int l = 0; l &lt; n; l++) {
+            check += v[l];
+            vsum -= v[l];
+            if (check == vsum) {
+                return true;
+            } else if (check &gt; vsum) {
+                break;
+            }
+        }
+        return false;
+    }
+};</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p><a href="https://leetcode.com/problems/equal-sum-grid-partition-i/">https://leetcode.com/problems/equal-sum-grid-partition-i/</a></p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-03-25</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value"><span class="post-tags">
+              <span class="post-tag">Array</span>
+              <span class="post-tag">Matrix</span>
+              <span class="post-tag">Enumeration</span>
+              <span class="post-tag">Prefix Sum</span>
+              <span class="post-tag">Medium</span>
+            </span></span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/all%20problems/3546-equal-sum-grid-partition-i.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
