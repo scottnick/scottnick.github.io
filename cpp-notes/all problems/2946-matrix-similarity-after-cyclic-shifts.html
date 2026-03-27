@@ -1,0 +1,249 @@
+<!-- all problems/2946-matrix-similarity-after-cyclic-shifts.html: 2946. Matrix Similarity After Cyclic Shifts -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2946. Matrix Similarity After Cyclic Shifts</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+               width="18" height="18" aria-hidden="true" focusable="false"
+               style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="index.html">All problems</a>
+      <span aria-hidden="true">/</span>
+      <span>2946. Matrix Similarity After Cyclic Shifts</span>
+    </nav>
+
+    <section class="hero">
+      <h1>2946. Matrix Similarity After Cyclic Shifts</h1>
+      <p><strong>練習日期：</strong>2026-03-27</p>
+      <p><strong>難度：</strong>Easy</p>
+      <p><strong>類型：</strong>Array、Math、Matrix、Simulation</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#complexity">⏱️ 複雜度</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給你一個 <code>m x n</code> 的整數矩陣 <code>mat</code> 和一個整數 <code>k</code>，矩陣的列是 0-indexed。</p>
+
+        <p>以下操作會進行 <code>k</code> 次：</p>
+        <ul>
+          <li>偶數列（<code>0, 2, 4, ...</code>）會做循環左移</li>
+          <li>奇數列（<code>1, 3, 5, ...</code>）會做循環右移</li>
+        </ul>
+
+        <p>如果經過這 <code>k</code> 次操作後，最後得到的矩陣和原本的矩陣完全一樣，請回傳 <code>true</code>；否則回傳 <code>false</code>。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>1 &lt;= mat.length &lt;= 25</code></li>
+          <li><code>1 &lt;= mat[i].length &lt;= 25</code></li>
+          <li><code>1 &lt;= mat[i][j] &lt;= 25</code></li>
+          <li><code>1 &lt;= k &lt;= 50</code></li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>這題的重點是：<br>我其實不用真的把矩陣移動 <code>k</code> 次，只要直接看做完 <code>k</code> 次之後，每個位置會對應回哪個位置就可以了。</p>
+
+        <p>因為一列長度是 <code>n</code>，不管左移還是右移，做很多次之後其實都只跟：</p>
+        <ul>
+          <li><code>k % n</code></li>
+        </ul>
+
+        <p>有關。</p>
+
+        <p>而我這份寫法抓到的一個想法是：</p>
+        <ul>
+          <li>不管原本題目說偶數列左移、奇數列右移</li>
+          <li>如果最後矩陣要和原本完全一樣</li>
+          <li>那每一列都必須滿足：每個位置的值和往後偏移 <code>k</code> 格的位置值一樣</li>
+        </ul>
+
+        <p>所以我直接檢查每一列是不是對這個循環位移保持不變。<br>如果所有列都符合，答案就是 <code>true</code>；只要有任何一格不符合，就是 <code>false</code>。</p>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>m</code>：矩陣列數</li>
+          <li><code>n</code>：矩陣行數</li>
+          <li><code>x</code>：第 <code>j</code> 格在循環位移後對應比較的位置</li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+
+        <h3>1. 先取得矩陣大小</h3>
+        <pre><code id="nwykqp" class="language-cpp">int m = mat.size();
+int n = mat[0].size();
+</code></pre>
+
+        <p>這裡先把列數和行數存起來，後面做雙層迴圈時會用到。</p>
+
+        <hr />
+
+        <h3>2. 逐列逐格檢查，這一格在位移後是否還和原本相同</h3>
+        <pre><code id="qojbmk" class="language-cpp">for (int i = 0; i &lt; m; i++) {
+    for (int j = 0; j &lt; n; j++) {
+</code></pre>
+
+        <p>我這裡直接枚舉矩陣裡每一個位置 <code>(i, j)</code>。</p>
+
+        <p>目標是檢查：</p>
+        <ul>
+          <li>如果這一列做完對應的循環位移</li>
+          <li>原本第 <code>j</code> 格的值，最後是不是還能對回自己</li>
+        </ul>
+
+        <hr />
+
+        <h3>3. 用 <code>(j + k) % n</code> 找到循環位移後對應的位置</h3>
+        <pre><code id="ywwjki" class="language-cpp">int x = (j + k) % n;
+</code></pre>
+
+        <p>這裡的 <code>x</code> 表示：</p>
+        <ul>
+          <li>從第 <code>j</code> 個位置往後移 <code>k</code> 格之後</li>
+          <li>會落到哪個位置</li>
+        </ul>
+
+        <p>因為是循環位移，所以要對 <code>n</code> 取模。</p>
+
+        <p>例如一列長度是 <code>5</code>：</p>
+        <ul>
+          <li>第 <code>3</code> 格往後移 <code>4</code> 格</li>
+          <li>就會變成 <code>(3 + 4) % 5 = 2</code></li>
+        </ul>
+
+        <p>所以這樣就能直接算出位移後的對應位置，不需要真的模擬每一步。</p>
+
+        <hr />
+
+        <h3>4. 如果原本位置和對應位置的值不同，代表最後不可能和原矩陣一樣</h3>
+        <pre><code id="shxhxu" class="language-cpp">if (mat[i][j] != mat[i][x]) return false;
+</code></pre>
+
+        <p>這一步就是直接檢查：</p>
+        <ul>
+          <li>原本第 <code>j</code> 格的值</li>
+          <li>和位移後對應到的第 <code>x</code> 格的值</li>
+        </ul>
+
+        <p>如果不一樣，表示這一列在做完 <code>k</code> 次循環位移後，至少這個位置已經對不起來了，所以最後矩陣不可能和原本完全相同，直接回傳 <code>false</code>。</p>
+
+        <hr />
+
+        <h3>5. 如果全部位置都檢查通過，就回傳 true</h3>
+        <pre><code id="bnyhjo" class="language-cpp">return true;
+</code></pre>
+
+        <p>如果整個矩陣所有位置都檢查完都沒有出現不相等，表示每一列在做完這樣的循環位移後，整體仍然保持和原本一樣，所以答案就是 <code>true</code>。</p>
+
+        <h2 id="complexity">⏱️ 複雜度</h2>
+        <p>設 <code>m = mat.length</code>，<code>n = mat[0].length</code>。</p>
+
+        <ul>
+          <li>時間複雜度：<code>O(mn)</code><br>每個位置都檢查一次。</li>
+          <li>空間複雜度：<code>O(1)</code><br>只用了固定數量的變數。</li>
+        </ul>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    bool areSimilar(vector&lt;vector&lt;int&gt;&gt;&amp; mat, int k) {
+        int m = mat.size();
+        int n = mat[0].size();
+        for (int i = 0; i &lt; m; i++) {
+            for (int j = 0; j &lt; n; j++) {
+                int x = (j + k) % n;
+                if (mat[i][j] != mat[i][x]) return false;
+            }
+        }
+        return true;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/matrix-similarity-after-cyclic-shifts/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-03-27</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value">
+            <span class="post-tags">
+              <span class="post-tag">Array</span>
+              <span class="post-tag">Math</span>
+              <span class="post-tag">Matrix</span>
+              <span class="post-tag">Simulation</span>
+              <span class="post-tag">Easy</span>
+            </span>
+          </span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/all%20problems/2946-matrix-similarity-after-cyclic-shifts.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
