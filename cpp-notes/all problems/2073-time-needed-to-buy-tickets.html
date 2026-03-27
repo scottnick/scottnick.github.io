@@ -1,0 +1,247 @@
+<!-- all problems/2073-time-needed-to-buy-tickets.html: 全部題單文章 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2073. Time Needed to Buy Tickets</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+               width="18" height="18" aria-hidden="true" focusable="false"
+               style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="index.html">All problems</a>
+      <span aria-hidden="true">/</span>
+      <span>2073. Time Needed to Buy Tickets</span>
+    </nav>
+
+    <section class="hero">
+      <h1>2073. Time Needed to Buy Tickets</h1>
+      <p><strong>練習日期：</strong>2026-03-26</p>
+      <p><strong>難度：</strong>Easy</p>
+      <p><strong>類型：</strong>Array、Queue、Simulation</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#complexity">⏱️ 複雜度</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>有 <code>n</code> 個人排成一列買票，第 <code>0</code> 個人在最前面，第 <code>(n - 1)</code> 個人在最後面。</p>
+        <p>給你一個 0-indexed 陣列 <code>tickets</code>，其中 <code>tickets[i]</code> 表示第 <code>i</code> 個人總共想買幾張票。</p>
+        <p>每個人每次買一張票剛好花 <code>1</code> 秒。
+如果某個人還有票要買，他買完一張後會立刻回到隊伍最後面；如果他已經不需要再買票，就會直接離開隊伍。</p>
+        <p>請回傳原本在位置 <code>k</code> 的那個人，完成買票總共需要多少時間。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>n == tickets.length</code></li>
+          <li><code>1 &lt;= n &lt;= 100</code></li>
+          <li><code>1 &lt;= tickets[i] &lt;= 100</code></li>
+          <li><code>0 &lt;= k &lt; n</code></li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>這題我沒有真的模擬整個 queue 的移動，而是直接去想：</p>
+        <ul>
+          <li>在第 <code>k</code> 個人買完之前</li>
+          <li>每個人最多會買幾次票</li>
+        </ul>
+        <p>關鍵在於 <code>tickets[k]</code>。</p>
+        <p>因為第 <code>k</code> 個人總共要買 <code>tickets[k]</code> 張，所以在他結束之前：</p>
+        <ul>
+          <li>在 <code>k</code> 前面或剛好是 <code>k</code> 的人，最多都可能買到 <code>tickets[k]</code> 次</li>
+          <li>在 <code>k</code> 後面的人，因為當第 <code>k</code> 個人買完最後一張時流程就停止了，所以他們最多只可能買到 <code>tickets[k] - 1</code> 次</li>
+        </ul>
+        <p>接著每個人真正貢獻多少秒，就看：</p>
+        <ul>
+          <li>他本來想買幾張</li>
+          <li>和他在第 <code>k</code> 個人結束前最多有機會買幾次</li>
+        </ul>
+        <p>兩者取最小值就可以。</p>
+        <p>所以這題的核心就是：</p>
+        <blockquote>
+          <p>不用真的模擬排隊，只要分成 <code>i &lt;= k</code> 和 <code>i &gt; k</code> 兩段，算每個人在第 <code>k</code> 個人結束前最多能買幾次票，再把這些次數加總起來。</p>
+        </blockquote>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>n</code>：陣列長度</li>
+          <li><code>t</code>：總時間，也就是最後答案</li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+        <h3>1. 先取得人數，並準備答案變數</h3>
+        <p>這裡：</p>
+        <ul>
+          <li><code>n</code> 是總共有幾個人</li>
+          <li><code>t</code> 用來累加總共花掉的秒數</li>
+        </ul>
+        <p>因為每買一張票就是 <code>1</code> 秒，所以最後其實就是把每個人在第 <code>k</code> 個人完成之前買到的票數加總起來。</p>
+        <hr />
+
+        <h3>2. 枚舉每一個人，計算他對答案的貢獻</h3>
+        <pre><code class="language-cpp">for (int i = 0; i &lt; n; i++) {
+</code></pre>
+        <p>我現在要看每個人 <code>i</code>，在第 <code>k</code> 個人完成買票之前，最多會買幾張票。</p>
+        <p>每個人的貢獻都算完後，加總起來就是總時間。</p>
+        <hr />
+
+        <h3>3. 如果這個人在 <code>k</code> 的前面或就是 <code>k</code>，他最多能買到 <code>tickets[k]</code> 次</h3>
+        <pre><code class="language-cpp">if (i &lt;= k) {
+    t += min(tickets[k], tickets[i]);
+}
+</code></pre>
+        <p>這裡的原因是：</p>
+        <ul>
+          <li>第 <code>k</code> 個人會真的買到第 <code>tickets[k]</code> 張才結束</li>
+          <li>所以在他之前的那些人，包含他自己，都有機會參與到第 <code>tickets[k]</code> 輪</li>
+        </ul>
+        <p>但某個人自己可能本來就只想買更少張，
+所以他真正能買幾次，要取：</p>
+        <ul>
+          <li><code>tickets[k]</code></li>
+          <li><code>tickets[i]</code></li>
+        </ul>
+        <p>兩者較小值</p>
+        <p>也就是：</p>
+        <pre><code class="language-cpp">min(tickets[k], tickets[i])
+</code></pre>
+        <hr />
+
+        <h3>4. 如果這個人在 <code>k</code> 的後面，他最多只能買到 <code>tickets[k] - 1</code> 次</h3>
+        <p>這裡是整題最關鍵的地方。</p>
+        <p>因為排在 <code>k</code> 後面的人，在第 <code>k</code> 個人買完最後一張票的那一輪裡，
+流程會在第 <code>k</code> 個人那裡就停止，所以這些人沒機會再輪到那一輪。</p>
+        <p>因此他們最多只能參與到前面 <code>tickets[k] - 1</code> 輪。</p>
+        <p>所以他們真正貢獻的秒數就是：</p>
+        <ul>
+          <li><code>tickets[k] - 1</code></li>
+          <li><code>tickets[i]</code></li>
+        </ul>
+        <p>取最小值。</p>
+        <hr />
+
+        <h3>5. 為什麼這樣加總就等於總秒數</h3>
+        <p>因為每買一張票就固定花 <code>1</code> 秒，
+所以整個過程的總時間，其實就等於：</p>
+        <ul>
+          <li>在第 <code>k</code> 個人完成之前</li>
+          <li>所有人總共買了幾張票</li>
+        </ul>
+        <p>而這份程式正是在逐一計算每個人會買幾張票，最後把它們全部加總起來。</p>
+        <p>所以不需要真的用 queue 模擬整個輪轉，也能直接得到答案。</p>
+        <hr />
+
+        <h3>6. 最後回傳總時間</h3>
+        <p>當所有人的貢獻都加完後，<code>t</code> 就是第 <code>k</code> 個人完成買票所需的總秒數。</p>
+
+        <h2 id="complexity">⏱️ 複雜度</h2>
+        <p>設 <code>n = tickets.length</code>。</p>
+        <ul>
+          <li>時間複雜度：<code>O(n)</code>
+            <br>只掃一次陣列。
+          </li>
+          <li>空間複雜度：<code>O(1)</code>
+            <br>只用了固定數量的變數。
+          </li>
+        </ul>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    int timeRequiredToBuy(vector&lt;int&gt;&amp; tickets, int k) {
+        int n = tickets.size();
+        int t = 0;
+        for (int i = 0; i &lt; n; i++) {
+            if (i &lt;= k) {
+                t += min(tickets[k], tickets[i]);
+            } else {
+                t += min(tickets[k] - 1, tickets[i]);
+            }
+        }
+        return t;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/time-needed-to-buy-tickets/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-03-26</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value"><span class="post-tags">
+              <span class="post-tag">Array</span>
+              <span class="post-tag">Queue</span>
+              <span class="post-tag">Simulation</span>
+              <span class="post-tag">Easy</span>
+            </span></span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/all%20problems/2073-time-needed-to-buy-tickets.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
