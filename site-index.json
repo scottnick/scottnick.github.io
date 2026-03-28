@@ -1,6 +1,6 @@
 {
-  "buildId": "20260328170813",
-  "generatedAt": "2026-03-28T17:08:13.202127Z",
+  "buildId": "20260328172303",
+  "generatedAt": "2026-03-28T17:23:03.551649Z",
   "posts": [
     {
       "path": "courses.html",
@@ -396,6 +396,9 @@
       "title": "Q1. First Unique Even Element",
       "date": "2026-03-14",
       "tags": [
+        "Array",
+        "Hash Table",
+        "Counting",
         "Biweekly Contest 178",
         "Easy"
       ],
@@ -406,6 +409,11 @@
       "title": "Q2. Sum of GCD of Formed Pairs",
       "date": "2026-03-14",
       "tags": [
+        "Array",
+        "Math",
+        "Two Pointers",
+        "Simulation",
+        "Number Theory",
         "Biweekly Contest 178",
         "Medium"
       ],
@@ -416,6 +424,9 @@
       "title": "Q2. First Element with Unique Frequency",
       "date": "2026-02-15",
       "tags": [
+        "Array",
+        "Hash Table",
+        "Counting",
         "Weekly Contest 489",
         "Medium"
       ],
@@ -426,6 +437,10 @@
       "title": "Q1. Toggle Light Bulbs",
       "date": "2026-02-15",
       "tags": [
+        "Array",
+        "Hash Table",
+        "Sorting",
+        "Simulation",
         "Weekly Contest 489",
         "Easy"
       ],
@@ -436,6 +451,8 @@
       "title": "Q1. Find the Score Difference in a Game",
       "date": "2026-02-22",
       "tags": [
+        "Array",
+        "Simulation",
         "Weekly Contest 490",
         "Easy"
       ],
@@ -446,6 +463,8 @@
       "title": "Q2. Check Digitorial Permutation",
       "date": "2026-02-22",
       "tags": [
+        "Math",
+        "Counting",
         "Weekly Contest 490",
         "Medium"
       ],
@@ -456,6 +475,9 @@
       "title": "Q3. Maximum Bitwise XOR After Rearrangement",
       "date": "2026-02-22",
       "tags": [
+        "String",
+        "Greedy",
+        "Bit Manipulation",
         "Weekly Contest 490",
         "Medium"
       ],
@@ -466,6 +488,7 @@
       "title": "Q1. Minimum Capacity Box",
       "date": "2026-03-08",
       "tags": [
+        "Array",
         "Weekly Contest 492",
         "Easy"
       ],
@@ -476,6 +499,8 @@
       "title": "Q2. Find the Smallest Balanced Index",
       "date": "2026-03-08",
       "tags": [
+        "Array",
+        "Prefix Sum",
         "Weekly Contest 492",
         "Medium"
       ],
@@ -486,6 +511,7 @@
       "title": "Q3. Minimum Operations to Sort a String",
       "date": "2026-03-08",
       "tags": [
+        "String",
         "Weekly Contest 492",
         "Medium"
       ],
@@ -496,6 +522,9 @@
       "title": "Q4. Minimum Cost to Partition a Binary String",
       "date": "2026-03-08",
       "tags": [
+        "String",
+        "Divide and Conquer",
+        "Prefix Sum",
         "Weekly Contest 492",
         "Hard"
       ],
@@ -551,6 +580,10 @@
       "title": "Q3. Minimum Bitwise OR From Grid",
       "date": "2026-03-01",
       "tags": [
+        "Array",
+        "Greedy",
+        "Bit Manipulation",
+        "Matrix",
         "Weekly Contest 491",
         "Medium"
       ],
@@ -561,6 +594,8 @@
       "title": "Q2. Minimum Cost to Split into Ones",
       "date": "2026-03-01",
       "tags": [
+        "Math",
+        "Dynamic Programming",
         "Weekly Contest 491",
         "Medium"
       ],
@@ -571,6 +606,7 @@
       "title": "Q1. Trim Trailing Vowels",
       "date": "2026-03-01",
       "tags": [
+        "String",
         "Weekly Contest 491",
         "Easy"
       ],
@@ -641,6 +677,8 @@
       "title": "Q2. Merge Close Characters",
       "date": "2026-02-28",
       "tags": [
+        "Hash Table",
+        "String",
         "Biweekly Contest 177",
         "Medium"
       ],
@@ -651,6 +689,9 @@
       "title": "Q1. Smallest Pair With Different Frequencies",
       "date": "2026-02-28",
       "tags": [
+        "Array",
+        "Hash Table",
+        "Counting",
         "Biweekly Contest 177",
         "Easy"
       ],
@@ -661,6 +702,10 @@
       "title": "Q4. Sum of K-Digit Numbers in a Range",
       "date": "2026-02-28",
       "tags": [
+        "Math",
+        "Divide and Conquer",
+        "Combinatorics",
+        "Number Theory",
         "Biweekly Contest 177",
         "Hard"
       ],
@@ -701,6 +746,8 @@
       "title": "Q1. Construct Uniform Parity Array I",
       "date": "2026-03-22",
       "tags": [
+        "Array",
+        "Math",
         "Weekly Contest 494",
         "Easy"
       ],
@@ -711,6 +758,9 @@
       "title": "Q3. Minimum Removals to Achieve Target XOR",
       "date": "2026-03-22",
       "tags": [
+        "Array",
+        "Dynamic Programming",
+        "Bit Manipulation",
         "Weekly Contest 494",
         "Medium"
       ],
@@ -721,6 +771,10 @@
       "title": "Q4. Count Good Subarrays",
       "date": "2026-03-22",
       "tags": [
+        "Array",
+        "Stack",
+        "Bit Manipulation",
+        "Monotonic Stack",
         "Weekly Contest 494",
         "Hard"
       ],
@@ -731,6 +785,8 @@
       "title": "Q2. Construct Uniform Parity Array II",
       "date": "2026-03-22",
       "tags": [
+        "Array",
+        "Math",
         "Weekly Contest 494",
         "Medium"
       ],
@@ -1682,6 +1738,8 @@
       "title": "3876. Construct Uniform Parity Array II",
       "date": "2026-03-22",
       "tags": [
+        "Array",
+        "Math",
         "Weekly Contest 494",
         "Medium"
       ],
@@ -1728,10 +1786,13 @@
       "title": "3858. Minimum Bitwise OR From Grid",
       "date": "2026-03-01",
       "tags": [
+        "Array",
+        "Greedy",
         "Bit Manipulation",
-        "Dynamic Programming",
+        "Matrix",
         "Weekly Contest 491",
-        "Medium"
+        "Medium",
+        "Dynamic Programming"
       ],
       "folder": "cpp-notes/all problems"
     },
@@ -1882,9 +1943,10 @@
       "date": "2026-03-01",
       "tags": [
         "Math",
-        "Recursion",
+        "Dynamic Programming",
         "Weekly Contest 491",
-        "Medium"
+        "Medium",
+        "Recursion"
       ],
       "folder": "cpp-notes/all problems"
     },
@@ -1894,10 +1956,12 @@
       "date": "2026-03-08",
       "tags": [
         "String",
-        "Recursion",
-        "Dynamic Programming",
+        "Divide and Conquer",
+        "Prefix Sum",
         "Weekly Contest 492",
-        "Hard"
+        "Hard",
+        "Recursion",
+        "Dynamic Programming"
       ],
       "folder": "cpp-notes/all problems"
     },
@@ -1919,11 +1983,13 @@
       "title": "3868. Minimum Cost to Equalize Arrays Using Swaps",
       "date": "2026-03-15",
       "tags": [
+        "Array",
+        "Hash Table",
         "Greedy",
         "Counting",
-        "Hash Map",
         "Biweekly Contest 178",
-        "Medium"
+        "Medium",
+        "Hash Map"
       ],
       "folder": "cpp-notes/all problems"
     },
@@ -2242,9 +2308,10 @@
       "date": "2026-03-08",
       "tags": [
         "Array",
-        "Math",
+        "Prefix Sum",
         "Weekly Contest 492",
-        "Medium"
+        "Medium",
+        "Math"
       ],
       "folder": "cpp-notes/all problems"
     },
@@ -2267,6 +2334,7 @@
       "tags": [
         "Array",
         "Hash Table",
+        "Counting",
         "Biweekly Contest 178",
         "Easy"
       ],
@@ -2360,7 +2428,9 @@
       "date": "2026-02-28",
       "tags": [
         "Math",
+        "Divide and Conquer",
         "Combinatorics",
+        "Number Theory",
         "Biweekly Contest 177",
         "Hard"
       ],
@@ -2436,8 +2506,9 @@
       "title": "3849. Maximum Bitwise XOR After Rearrangement",
       "date": "2026-02-22",
       "tags": [
-        "Greedy",
         "String",
+        "Greedy",
+        "Bit Manipulation",
         "Weekly Contest 490",
         "Medium"
       ],
@@ -2707,6 +2778,9 @@
       "title": "3877. Minimum Removals to Achieve Target XOR",
       "date": "2026-03-22",
       "tags": [
+        "Array",
+        "Dynamic Programming",
+        "Bit Manipulation",
         "Weekly Contest 494",
         "Medium"
       ],
@@ -2826,6 +2900,8 @@
       "title": "3875. Construct Uniform Parity Array I",
       "date": "2026-03-22",
       "tags": [
+        "Array",
+        "Math",
         "Weekly Contest 494",
         "Easy"
       ],
@@ -3026,9 +3102,12 @@
       "tags": [
         "Array",
         "Math",
-        "Sorting",
+        "Two Pointers",
+        "Simulation",
+        "Number Theory",
         "Biweekly Contest 178",
-        "Medium"
+        "Medium",
+        "Sorting"
       ],
       "folder": "cpp-notes/all problems"
     },
@@ -3061,10 +3140,11 @@
       "title": "3853. Merge Close Characters",
       "date": "2026-02-28",
       "tags": [
+        "Hash Table",
         "String",
-        "Simulation",
         "Biweekly Contest 177",
-        "Medium"
+        "Medium",
+        "Simulation"
       ],
       "folder": "cpp-notes/all problems"
     },
@@ -3592,9 +3672,9 @@
       "date": "2026-03-08",
       "tags": [
         "String",
-        "Sorting",
         "Weekly Contest 492",
-        "Medium"
+        "Medium",
+        "Sorting"
       ],
       "folder": "cpp-notes/all problems"
     },
@@ -3794,9 +3874,11 @@
       "date": "2026-02-28",
       "tags": [
         "Array",
-        "Sorting",
+        "Hash Table",
+        "Counting",
         "Biweekly Contest 177",
-        "Easy"
+        "Easy",
+        "Sorting"
       ],
       "folder": "cpp-notes/all problems"
     },
@@ -3921,6 +4003,10 @@
       "title": "3878. Count Good Subarrays",
       "date": "2026-03-22",
       "tags": [
+        "Array",
+        "Stack",
+        "Bit Manipulation",
+        "Monotonic Stack",
         "Weekly Contest 494",
         "Hard"
       ],
