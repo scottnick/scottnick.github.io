@@ -1,6 +1,6 @@
 {
-  "buildId": "20260328162306",
-  "generatedAt": "2026-03-28T16:23:06.252517Z",
+  "buildId": "20260328162510",
+  "generatedAt": "2026-03-28T16:25:10.954444Z",
   "posts": [
     {
       "path": "courses.html",
@@ -697,16 +697,6 @@
       "date": "2026-03-22",
       "tags": [
         "Weekly Contest 494"
-      ],
-      "folder": "cpp-notes/contests/weekly-contest-494"
-    },
-    {
-      "path": "cpp-notes/contests/weekly-contest-494/q2-direction-assignments-with-exactly-k-visible-people.html",
-      "title": "Q2. Direction Assignments with Exactly K Visible People",
-      "date": "2026-03-28",
-      "tags": [
-        "Biweekly Contest 179",
-        "Medium"
       ],
       "folder": "cpp-notes/contests/weekly-contest-494"
     },
@@ -4697,7 +4687,7 @@
   ],
   "folderCounts": {
     "cpp-notes/grind75/index.html": 17,
-    "cpp-notes/contests/index.html": 56,
+    "cpp-notes/contests/index.html": 55,
     "cpp-notes/top-interview-150/index.html": 25,
     "cpp-notes/neetcode150/index.html": 34,
     "cpp-notes/all%20problems/index.html": 212,
