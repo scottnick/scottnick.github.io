@@ -1,0 +1,140 @@
+<!-- all problems/3880-minimum-absolute-difference-between-two-values.html: Biweekly Contest 179 -->
+<!doctype html><html lang="zh-Hant"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>3880. Minimum Absolute Difference Between Two Values</title><link rel="stylesheet" href="../../styles.css" /></head><body class="page-article"><header><nav class="navbar"><a class="brand" href="../../personal.html">scottnick 個人網頁</a><button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button><div class="nav-links" id="nav-links"><a href="../../index.html">主頁</a><a href="../../courses.html">修課紀錄</a><a href="../../cpp.html" class="active">C++學習筆記</a><a href="../../profile.html">個人檔案</a></div><div class="nav-actions"><a class="nav-action-link" href="../../categories.html"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false" style="display:inline-block; vertical-align:-3px; margin-right:6px;"><rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect><rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect><rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect><rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect></svg>類別</a><button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題"><span id="theme-icon" aria-hidden="true">☀️</span></button></div></nav></header><main><nav class="breadcrumb" aria-label="文章路徑"><a href="../../cpp.html">C++學習筆記</a><span aria-hidden="true">/</span><a href="index.html">All problems</a><span aria-hidden="true">/</span><span>3880. Minimum Absolute Difference Between Two Values</span></nav><section class="hero"><h1>3880. Minimum Absolute Difference Between Two Values</h1><p><strong>練習日期：</strong>2026-03-28</p><p><strong>難度：</strong>Easy</p><p><strong>類型：</strong>Biweekly Contest 179</p></section><div class="article-layout"><aside class="article-toc" aria-label="文章目錄"><button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">目錄</button><strong>目錄</strong><ul><li><a href="#content">文章內容</a></li><li><a href="#link">🔗 題目連結</a></li></ul></aside><section class="term-block article-content"><h2 id="content">文章內容</h2><pre style="white-space: pre-wrap;"># Q1. Minimum Absolute Difference Between Two Values
+
+**練習日期：** 2026-03-28
+**難度：** Easy
+**類型：** Biweekly Contest 179
+
+## 📘 題目敘述
+
+給定一個整數陣列 `nums`，其中只會包含 `0`、`1`、`2`。
+
+如果一組索引 `(i, j)` 滿足：
+
+* `nums[i] == 1`
+* `nums[j] == 2`
+
+那麼這組 `(i, j)` 就叫做一組有效配對（valid pair）。
+
+請回傳所有有效配對中，`abs(i - j)` 的最小值。
+如果根本不存在任何有效配對，回傳 `-1`。
+
+
+### 條件限制
+
+* `1 &lt;= nums.length &lt;= 100`
+* `0 &lt;= nums[i] &lt;= 2`
+
+## 🧠 解題思路
+
+我這份寫法就是直接暴力枚舉所有 `(i, j)`。
+
+因為題目要找的是：
+
+* 一個位置放 `1`
+* 另一個位置放 `2`
+* 並且希望它們的索引距離最小
+
+所以我就直接把所有兩個位置都試一次。
+如果目前這組 `(i, j)` 剛好符合 `nums[i] == 1 &amp;&amp; nums[j] == 2`，我就用 `abs(i - j)` 去更新答案。
+
+由於 `nums.length &lt;= 100`，直接用雙迴圈把所有組合掃過一次也完全可以接受。
+
+### 所有變數
+
+* `n`：陣列長度
+* `ans`：目前找到的最小索引差，一開始先設成 `10000` 當作還沒找到答案的標記
+
+## 🪜 主要流程步驟
+
+### 1. 先準備陣列長度與初始答案
+
+我先用 `n` 記住陣列長度，這樣後面寫迴圈比較方便。
+
+接著我把 `ans` 設成 `10000`，意思是目前還沒有找到任何合法配對。
+因為題目長度最多只有 `100`，所以真正的索引距離不可能大到 `10000`，拿它來當初始值很安全。
+
+---
+
+### 2. 用雙層迴圈枚舉所有 `(i, j)`
+
+我用兩層 `for` 迴圈，把所有索引組合都掃過一次：
+
+* 外層固定 `i`
+* 內層枚舉所有 `j`
+
+這樣就能檢查每一組 `(i, j)` 是否為題目要的有效配對。
+
+---
+
+### 3. 只在 `nums[i] == 1 &amp;&amp; nums[j] == 2` 時更新答案
+
+如果目前這組索引滿足：
+
+```cpp
+nums[i] == 1 &amp;&amp; nums[j] == 2
+```
+
+就代表這是一組合法配對。
+
+這時候我就計算它們的索引距離：
+
+```cpp
+abs(i - j)
+```
+
+然後用：
+
+```cpp
+ans = min(ans, abs(i - j));
+```
+
+把目前最小答案更新掉。
+
+這樣整個掃描結束後，`ans` 裡面留下來的就是所有合法配對中最小的距離。
+
+---
+
+### 4. 最後判斷到底有沒有找到合法配對
+
+如果最後 `ans` 仍然是初始值 `10000`，就代表整個陣列裡根本沒有任何 `(i, j)` 使得：
+
+* `nums[i] == 1`
+* `nums[j] == 2`
+
+這時候題目要求回傳 `-1`。
+
+否則就直接回傳 `ans`。
+
+## ⏱️ 複雜度
+
+設 `n = nums.length`。
+
+* 時間複雜度：`O(n^2)`
+  我用雙層迴圈枚舉所有 `(i, j)` 組合。
+
+* 空間複雜度：`O(1)`
+  只用了固定數量的變數。
+
+## 💻 程式碼實作
+
+```cpp
+class Solution {
+public:
+    int minAbsoluteDifference(vector&lt;int&gt;&amp; nums) {
+        int n = nums.size();
+        int ans = 10000;
+        for (int i = 0; i &lt; n; i++) {
+            for (int j = 0; j &lt; n; j++) {
+                if (nums[i] == 1 &amp;&amp; nums[j] == 2) {
+                    ans = min(ans, abs(i - j));
+                }
+            }
+        }
+        return (ans == 10000) ? -1 : ans;
+    }
+};
+```
+
+## 🔗 題目連結
+https://leetcode.com/contest/biweekly-contest-179/problems/minimum-absolute-difference-between-two-values/</pre><h2 id="link">🔗 題目連結</h2><p><a href="https://leetcode.com/problems/minimum-absolute-difference-between-two-values/" target="_blank" rel="noopener noreferrer">https://leetcode.com/problems/minimum-absolute-difference-between-two-values/</a></p></section></div><section class="term-block article-footer"><h2 class="article-footer__title">文章資訊</h2><div class="meta-grid"><div class="meta-field"><span class="meta-label">作者：</span><span class="meta-value">scottnick</span></div><div class="meta-field meta-field--date"><span class="meta-label">撰寫日期：</span><span class="meta-value">2026-03-28</span></div><div class="meta-field meta-field--full"><span class="meta-label">類別：</span><span class="meta-value"><span class="post-tags"><span class="post-tag">Biweekly Contest 179</span><span class="post-tag">Easy</span></span></span></div><div class="meta-field meta-field--full"><span class="meta-label">原文連結：</span><span class="meta-value">https://scottnick.github.io/cpp-notes/all%20problems/3880-minimum-absolute-difference-between-two-values.html</span></div></div></section></main><script src="../../script.js"></script></body></html>

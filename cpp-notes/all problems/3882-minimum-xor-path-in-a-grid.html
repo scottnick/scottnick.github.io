@@ -1,0 +1,195 @@
+<!-- all problems/3882-minimum-xor-path-in-a-grid.html: Biweekly Contest 179 -->
+<!doctype html><html lang="zh-Hant"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>3882. Minimum XOR Path in a Grid</title><link rel="stylesheet" href="../../styles.css" /></head><body class="page-article"><header><nav class="navbar"><a class="brand" href="../../personal.html">scottnick 個人網頁</a><button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button><div class="nav-links" id="nav-links"><a href="../../index.html">主頁</a><a href="../../courses.html">修課紀錄</a><a href="../../cpp.html" class="active">C++學習筆記</a><a href="../../profile.html">個人檔案</a></div><div class="nav-actions"><a class="nav-action-link" href="../../categories.html"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false" style="display:inline-block; vertical-align:-3px; margin-right:6px;"><rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect><rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect><rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect><rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect></svg>類別</a><button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題"><span id="theme-icon" aria-hidden="true">☀️</span></button></div></nav></header><main><nav class="breadcrumb" aria-label="文章路徑"><a href="../../cpp.html">C++學習筆記</a><span aria-hidden="true">/</span><a href="index.html">All problems</a><span aria-hidden="true">/</span><span>3882. Minimum XOR Path in a Grid</span></nav><section class="hero"><h1>3882. Minimum XOR Path in a Grid</h1><p><strong>練習日期：</strong>2026-03-28</p><p><strong>難度：</strong>Medium</p><p><strong>類型：</strong>Biweekly Contest 179</p></section><div class="article-layout"><aside class="article-toc" aria-label="文章目錄"><button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">目錄</button><strong>目錄</strong><ul><li><a href="#content">文章內容</a></li><li><a href="#link">🔗 題目連結</a></li></ul></aside><section class="term-block article-content"><h2 id="content">文章內容</h2><pre style="white-space: pre-wrap;"># Q3. Minimum XOR Path in a Grid
+
+**練習日期：** 2026-03-28
+**難度：** Medium
+**類型：** Biweekly Contest 179
+
+## 📘 題目敘述
+
+給定一個 `m × n` 的整數矩陣 `grid`。
+
+你從左上角 `(0, 0)` 出發，目標是走到右下角 `(m - 1, n - 1)`。
+
+每一步只能：
+
+* 往右走
+* 往下走
+
+一條路徑的 cost 定義為：
+
+* 路徑上所有格子的數值做 bitwise XOR
+* 包含起點和終點
+
+請回傳所有合法路徑中，**最小 possible XOR value**。
+
+### 條件限制
+
+* `1 &lt;= m == grid.length &lt;= 1000`
+* `1 &lt;= n == grid[i].length &lt;= 1000`
+* `m * n &lt;= 1000`
+* `0 &lt;= grid[i][j] &lt;= 1023`
+
+## 🧠 解題思路
+
+我這題的想法是用 DP。
+
+因為每個位置 `(i, j)` 都只能從：
+
+* 上面 `(i - 1, j)`
+* 左邊 `(i, j - 1)`
+
+走過來，所以我可以把問題想成：
+
+&gt; 走到某個格子時，所有可能出現的 XOR 值有哪些？
+
+只要我知道前一格所有可能的 XOR 值，就能把目前格子的值 `grid[i][j]` 再 XOR 上去，得到走到這一格的新結果。
+
+所以我這份寫法用一個二維 DP，裡面的每一格都放一個 `unordered_set&lt;int&gt;`，用來記錄：
+
+* 走到這個位置時
+* 所有可能出現的 XOR 結果
+
+最後我只要看右下角那格的 set，把裡面最小的值找出來，就是答案。
+
+### 所有變數
+
+* `m`：矩陣列數
+* `n`：矩陣行數
+* `dp`：二維 DP，每個 `dp[i][j]` 都是一個 `unordered_set&lt;int&gt;`，記錄走到 `(i, j)` 時所有可能的 XOR 值
+* `ans`：最後答案，記錄右下角所有可能 XOR 值中的最小值
+
+## 🪜 主要流程步驟
+
+### 1. 先建立 DP 狀態
+
+我先建立 unordered_set 的 vector
+這表示 `dp[i][j]` 不是一個單一數值，而是一整個集合。
+
+因為這題不是一般那種「走到這格的最小值」就夠了。
+同一個位置可能會被不同路徑走到，而且不同路徑會產生不同的 XOR 結果，所以我不能只保留一個值，而是要把所有可能的 XOR 值都存下來。
+
+---
+
+### 2. 初始化起點
+
+起點 `(0, 0)` 只有一種走法，就是一開始站在那裡。
+所以走到起點的 XOR 值也只有一個，就是 `grid[0][0]` 本身。
+
+所以我先做：
+
+```cpp
+dp[0][0].insert(grid[0][0]);
+```
+
+這樣後面的轉移就可以從這個初始狀態開始擴展。
+
+---
+
+### 3. 逐格做 DP 轉移
+
+我用兩層迴圈把整個矩陣掃過一次。
+對每個位置 `(i, j)`，如果不是起點，就去看它能不能從上面或左邊走過來。
+
+如果可以從上面走過來，也就是 `i &gt; 0`，那我就把 `dp[i - 1][j]` 裡面的每個 XOR 值都拿出來，和目前格子的值做 XOR，然後放進 `dp[i][j]`。
+
+程式裡這段：
+
+```cpp
+if (i &gt; 0) {
+    for (int x : dp[i - 1][j]) {
+        dp[i][j].insert(x ^ grid[i][j]);
+    }
+}
+```
+
+意思就是：
+
+* `x` 是某條路徑走到上方格子時的 XOR 值
+* 如果現在再走一步到 `(i, j)`，那新的 XOR 值就會變成 `x ^ grid[i][j]`
+
+如果可以從左邊走過來，也就是 `j &gt; 0`，做法完全一樣：
+
+也就是把左邊所有可能的 XOR 值延伸到目前這格。
+
+這樣每一格最後存的，就是所有能走到那裡的路徑所產生的 XOR 結果。
+
+---
+
+### 4. 為什麼這裡用 `unordered_set`
+
+我這題直接用 `unordered_set&lt;int&gt;` 來存每格所有可能的 XOR 值。
+
+原因是：
+
+* 同一個位置可能由很多不同路徑走到
+* 但不同路徑有時候會算出一樣的 XOR 值
+* 如果我全部都存下來，會有很多重複資料
+
+所以用 set 的好處是：
+
+* 自動去重
+* 只保留「不同的 XOR 結果」
+* 後面轉移時也比較乾淨
+
+而且這題的 `grid[i][j] &lt;= 1023`，數值範圍不大，XOR 的可能結果數量也不會無限制爆掉，所以這種寫法是可行的。
+
+---
+
+### 5. 最後從右下角找最小值
+
+當整個 DP 都做完之後，`dp[m - 1][n - 1]` 裡面就放著：
+
+* 所有從左上走到右下的合法路徑
+* 對應可能得到的所有 XOR 值
+
+所以我最後只要把這個 set 掃過一次，找最小值就好：
+
+最後回傳 `ans`，就是答案。
+
+## ⏱️ 複雜度
+
+設每個 `dp[i][j]` 中最多有 `S` 種不同的 XOR 值。
+
+* 時間複雜度：`O(mnS)`
+  每個格子都要從上方和左方的 set 做轉移，每次轉移要枚舉裡面的 XOR 值。
+
+* 空間複雜度：`O(mnS)`
+  因為每個格子都存一個 set，裡面放這格所有可能的 XOR 值。
+
+## 💻 程式碼實作
+
+```cpp
+class Solution {
+public:
+    int minCost(vector&lt;vector&lt;int&gt;&gt;&amp; grid) {
+        int m = grid.size();
+        int n = grid[0].size();
+        vector&lt;vector&lt;unordered_set&lt;int&gt;&gt;&gt; dp(m, vector&lt;unordered_set&lt;int&gt;&gt;(n));
+        dp[0][0].insert(grid[0][0]);
+        for (int i = 0; i &lt; m; i++) {
+            for (int j = 0; j &lt; n; j++) {
+                if (i == 0 &amp;&amp; j == 0) continue;
+                if (i &gt; 0) {
+                    for (int x : dp[i - 1][j]) {
+                        dp[i][j].insert(x ^ grid[i][j]);
+                    }
+                }
+                if (j &gt; 0) {
+                    for (int x : dp[i][j - 1]) {
+                        dp[i][j].insert(x ^ grid[i][j]);
+                    }
+                }
+            }
+        }
+        int ans = INT_MAX;
+        for (int x : dp[m - 1][n - 1]) {
+            ans = min(ans, x);
+        }
+        return ans;
+    }
+};
+```
+
+## 🔗 題目連結
+https://leetcode.com/contest/biweekly-contest-179/problems/minimum-xor-path-in-a-grid/</pre><h2 id="link">🔗 題目連結</h2><p><a href="https://leetcode.com/problems/minimum-xor-path-in-a-grid/" target="_blank" rel="noopener noreferrer">https://leetcode.com/problems/minimum-xor-path-in-a-grid/</a></p></section></div><section class="term-block article-footer"><h2 class="article-footer__title">文章資訊</h2><div class="meta-grid"><div class="meta-field"><span class="meta-label">作者：</span><span class="meta-value">scottnick</span></div><div class="meta-field meta-field--date"><span class="meta-label">撰寫日期：</span><span class="meta-value">2026-03-28</span></div><div class="meta-field meta-field--full"><span class="meta-label">類別：</span><span class="meta-value"><span class="post-tags"><span class="post-tag">Biweekly Contest 179</span><span class="post-tag">Medium</span></span></span></div><div class="meta-field meta-field--full"><span class="meta-label">原文連結：</span><span class="meta-value">https://scottnick.github.io/cpp-notes/all%20problems/3882-minimum-xor-path-in-a-grid.html</span></div></div></section></main><script src="../../script.js"></script></body></html>
