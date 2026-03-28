@@ -1,0 +1,230 @@
+<!-- all problems/1046-last-stone-weight.html: 全部題單文章 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>1046. Last Stone Weight</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+               width="18" height="18" aria-hidden="true" focusable="false"
+               style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="index.html">All problems</a>
+      <span aria-hidden="true">/</span>
+      <span>1046. Last Stone Weight</span>
+    </nav>
+
+    <section class="hero">
+      <h1>1046. Last Stone Weight</h1>
+      <p><strong>練習日期：</strong>2026-03-29</p>
+      <p><strong>難度：</strong>Easy</p>
+      <p><strong>類型：</strong>Array、Heap (Priority Queue)</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#complexity">⏱️ 複雜度</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給定一個整數陣列 <code>stones</code>，其中 <code>stones[i]</code> 表示第 <code>i</code> 顆石頭的重量。</p>
+        <p>現在要進行一個遊戲。每一回合都會選出目前<strong>最重的兩顆石頭</strong>互相撞擊。</p>
+        <p>假設這兩顆石頭的重量分別是 <code>x</code> 和 <code>y</code>，且 <code>x &lt;= y</code>，撞擊後會有兩種情況：</p>
+        <ul>
+          <li>如果 <code>x == y</code>，那這兩顆石頭都會被摧毀</li>
+          <li>如果 <code>x != y</code>，那重量為 <code>x</code> 的石頭會被摧毀，而重量為 <code>y</code> 的石頭會變成新重量 <code>y - x</code></li>
+        </ul>
+        <p>最後最多只會剩下一顆石頭。</p>
+        <p>請回傳最後剩下那顆石頭的重量。</p>
+        <p>如果一顆都不剩，回傳 <code>0</code>。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>1 &lt;= stones.length &lt;= 30</code></li>
+          <li><code>1 &lt;= stones[i] &lt;= 1000</code></li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>我這題的想法就是直接模擬題目過程，然後用 <code>priority_queue</code> 快速拿到目前最重的兩顆石頭。</p>
+        <p>因為每一回合都要找「最大的兩個」，這種操作很適合用 max heap。</p>
+        <p>在 C++ 裡，<code>priority_queue&lt;int&gt;</code> 預設就是最大堆，所以我可以把所有石頭先丟進去。</p>
+        <p>之後每次：</p>
+        <ul>
+          <li>先拿出最重的兩顆</li>
+          <li>看它們相撞後會不會留下新石頭</li>
+          <li>如果有，就把新石頭再丟回 heap</li>
+        </ul>
+        <p>一直做到 heap 裡剩 0 顆或 1 顆石頭為止。</p>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>pq</code>：max heap，裡面放目前所有還存在的石頭重量</li>
+          <li><code>x</code>：這一回合取出的其中一顆石頭重量</li>
+          <li><code>y</code>：這一回合取出的另一顆石頭重量</li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+
+        <h3>1. 先把所有石頭放進 <code>priority_queue</code></h3>
+        <p>我先建立一個 <code>priority_queue&lt;int&gt;</code>，讓它幫我維護目前所有石頭中的最大值。</p>
+        <p>然後把 <code>stones</code> 裡的每顆石頭都放進去：</p>
+        <p>這樣之後每次都能直接從 <code>pq.top()</code> 拿到目前最重的石頭。</p>
+
+        <hr />
+
+        <h3>2. 每次取出最重的兩顆石頭來撞</h3>
+        <p>只要 <code>pq.size() &gt; 1</code>，就代表目前至少還有兩顆石頭可以互撞。</p>
+        <p>所以我在迴圈裡每次都做這件事：</p>
+        <ul>
+          <li>先取出第一顆最重的石頭 <code>x</code></li>
+          <li>再取出第二顆最重的石頭 <code>y</code></li>
+        </ul>
+        <p>因為 <code>priority_queue</code> 每次都會把目前最大的值放在頂端，所以這樣拿到的就是當前最重的兩顆石頭。</p>
+
+        <hr />
+
+        <h3>3. 如果兩顆一樣重，就直接消失</h3>
+        <p>如果 <code>x - y == 0</code>，代表兩顆石頭重量一樣。</p>
+        <p>按照題目規則，這兩顆都會被摧毀，所以這回合不用再做其他事情，直接進下一輪就可以。</p>
+        <p>也就是這回合拿出來的兩顆石頭都不會再放回去。</p>
+
+        <hr />
+
+        <h3>4. 如果兩顆不一樣重，就把差值丟回去</h3>
+        <p>如果兩顆石頭重量不同，那麼比較輕的那顆會消失，比較重的那顆則會變成它們重量差。</p>
+        <p>所以我就把：</p>
+        <pre><code class="language-cpp">abs(x - y)
+</code></pre>
+        <p>再放回 <code>pq</code> 裡</p>
+        <p>因為這顆新石頭之後還可能再和其他石頭互撞，所以要重新放回 heap 裡，讓後面的回合繼續使用。</p>
+
+        <hr />
+
+        <h3>5. 最後看 heap 裡還有沒有石頭</h3>
+        <p>當迴圈結束時，只會有兩種情況：</p>
+        <ul>
+          <li><code>pq</code> 是空的，表示所有石頭都撞完消失了</li>
+          <li><code>pq</code> 裡還剩一顆，表示那就是最後答案</li>
+        </ul>
+        <p>所以最後我先判斷：</p>
+        <pre><code class="language-cpp">if (pq.empty()) {
+    return 0;
+}
+</code></pre>
+        <p>如果是空的，就回傳 <code>0</code>。</p>
+        <p>否則直接回傳 <code>pq.top()</code>，也就是最後剩下的那顆石頭重量。</p>
+
+        <h2 id="complexity">⏱️ 複雜度</h2>
+        <p>設 <code>n = stones.length</code>。</p>
+        <ul>
+          <li><p>時間複雜度：<code>O(n log n)</code><br>
+  一開始把石頭放進 heap，後面每回合都會做 pop 和 push，而 heap 操作是 <code>O(log n)</code>。</p></li>
+          <li><p>空間複雜度：<code>O(n)</code><br>
+  <code>priority_queue</code> 需要存目前所有石頭。</p></li>
+        </ul>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    int lastStoneWeight(vector&lt;int&gt;&amp; stones) {
+        priority_queue&lt;int&gt; pq;
+        for (int i : stones) {
+            pq.push(i);
+        }
+        while (pq.size() &gt; 1) {
+            int x = pq.top();
+            pq.pop();
+            int y = pq.top();
+            pq.pop();
+            if ((x - y) == 0) {
+                continue;
+            }
+            pq.push(abs(x - y));
+        }
+        if (pq.empty()) {
+            return 0;
+        }
+        return pq.top();
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/last-stone-weight/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-03-29</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value"><span class="post-tags">
+              <span class="post-tag">Array</span>
+              <span class="post-tag">Heap (Priority Queue)</span>
+              <span class="post-tag">Easy</span>
+            </span></span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/all%20problems/1046-last-stone-weight.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
