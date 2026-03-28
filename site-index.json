@@ -1,6 +1,6 @@
 {
-  "buildId": "20260328161510",
-  "generatedAt": "2026-03-28T16:15:10.511269Z",
+  "buildId": "20260328162306",
+  "generatedAt": "2026-03-28T16:23:06.252517Z",
   "posts": [
     {
       "path": "courses.html",
@@ -679,16 +679,6 @@
       "date": "2026-03-22",
       "tags": [
         "Weekly Contest 494"
-      ],
-      "folder": "cpp-notes/contests/weekly-contest-494"
-    },
-    {
-      "path": "cpp-notes/contests/weekly-contest-494/q1-minimum-absolute-difference-between-two-values.html",
-      "title": "Q1. Minimum Absolute Difference Between Two Values",
-      "date": "2026-03-28",
-      "tags": [
-        "Biweekly Contest 179",
-        "Easy"
       ],
       "folder": "cpp-notes/contests/weekly-contest-494"
     },
@@ -4707,7 +4697,7 @@
   ],
   "folderCounts": {
     "cpp-notes/grind75/index.html": 17,
-    "cpp-notes/contests/index.html": 57,
+    "cpp-notes/contests/index.html": 56,
     "cpp-notes/top-interview-150/index.html": 25,
     "cpp-notes/neetcode150/index.html": 34,
     "cpp-notes/all%20problems/index.html": 212,
