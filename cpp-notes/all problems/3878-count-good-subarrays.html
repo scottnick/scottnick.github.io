@@ -175,8 +175,7 @@
           </ul>
           <h2 id="steps">🪜 主要流程步驟</h2>
           <h3>1. 先枚舉每個子陣列的起點 i</h3>
-          <pre><code class="language-cpp">
-for (int i = 0; i &lt; n; i++) {
+          <pre><code class="language-cpp">for (int i = 0; i &lt; n; i++) {
 </code></pre>
           <p>
             我先固定左邊界 <code>i</code>，接著去看所有從
@@ -184,8 +183,7 @@ for (int i = 0; i &lt; n; i++) {
           </p>
           <hr />
           <h3>2. 每次固定一個新起點時，重新準備集合和目前 OR 值</h3>
-          <pre><code class="language-cpp">
-set&lt;int&gt; s;
+          <pre><code class="language-cpp">set&lt;int&gt; s;
 int now = nums[i];
 </code></pre>
           <p>這裡：</p>
@@ -202,8 +200,7 @@ int now = nums[i];
             3. 枚舉終點 j，讓子陣列從 <code>[i..i]</code> 一路擴到
             <code>[i..n-1]</code>
           </h3>
-          <pre><code class="language-cpp">
-for (int j = i; j &lt; n; j++) {
+          <pre><code class="language-cpp">for (int j = i; j &lt; n; j++) {
 </code></pre>
           <p>這裡的意思是：</p>
           <ul>
@@ -215,8 +212,7 @@ for (int j = i; j &lt; n; j++) {
           <p>這樣就能把所有以 <code>i</code> 為左端點的子陣列都檢查到。</p>
           <hr />
           <h3>4. 更新目前子陣列的 OR 值，並把新元素放進集合</h3>
-          <pre><code class="language-cpp">
-now = now | nums[j];
+          <pre><code class="language-cpp">now = now | nums[j];
 s.insert(nums[j]);
 </code></pre>
           <p>每次把右端點擴到 <code>j</code> 時：</p>
@@ -239,8 +235,7 @@ s.insert(nums[j]);
           </ul>
           <hr />
           <h3>5. 如果目前 OR 值有出現在子陣列裡，這段就是 good subarray</h3>
-          <pre><code class="language-cpp">
-if (s.count(now)) {
+          <pre><code class="language-cpp">if (s.count(now)) {
     ans++;
 }
 </code></pre>
@@ -256,8 +251,7 @@ if (s.count(now)) {
           <p>如果有，代表這段子陣列符合題意，答案就加一。</p>
           <hr />
           <h3>6. 最後回傳 ans</h3>
-          <pre><code class="language-cpp">
-return ans;
+          <pre><code class="language-cpp">return ans;
 </code></pre>
           <p>
             當所有起點、終點都枚舉完後，<code>ans</code> 就是 good subarray
@@ -297,8 +291,7 @@ return ans;
             <code>O(n)</code> 個元素。
           </p>
           <h2 id="code">💻 程式碼實作</h2>
-          <pre><code class="language-cpp">
-class Solution {
+          <pre><code class="language-cpp">class Solution {
 public:
     long long countGoodSubarrays(vector&lt;int&gt;&amp; nums) {
         int n = nums.size();
