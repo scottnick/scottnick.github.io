@@ -1,6 +1,6 @@
 {
-  "buildId": "20260329115737",
-  "generatedAt": "2026-03-29T11:57:37.996010Z",
+  "buildId": "20260329122907",
+  "generatedAt": "2026-03-29T12:29:07.775062Z",
   "posts": [
     {
       "path": "courses.html",
@@ -232,7 +232,9 @@
       "title": "Biweekly Contest 175",
       "date": "",
       "tags": [
-        "Biweekly Contest 175"
+        "Biweekly Contest 175",
+        "Easy",
+        "Medium"
       ],
       "folder": "cpp-notes/contests"
     },
@@ -241,7 +243,9 @@
       "title": "Biweekly Contest 174",
       "date": "",
       "tags": [
-        "Biweekly Contest 174"
+        "Biweekly Contest 174",
+        "Easy",
+        "Medium"
       ],
       "folder": "cpp-notes/contests"
     },
@@ -426,7 +430,9 @@
       "title": "Biweekly Contest 176",
       "date": "",
       "tags": [
-        "Biweekly Contest 176"
+        "Biweekly Contest 176",
+        "Easy",
+        "Medium"
       ],
       "folder": "cpp-notes/contests"
     },
