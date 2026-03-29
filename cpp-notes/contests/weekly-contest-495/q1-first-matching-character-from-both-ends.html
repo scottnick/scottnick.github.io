@@ -1,0 +1,138 @@
+<!-- contests/weekly-contest-495/q1-first-matching-character-from-both-ends.html -->
+<!doctype html><html lang="zh-Hant"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>Q1. First Matching Character From Both Ends</title><link rel="stylesheet" href="../../../styles.css" /></head><body class="page-article"><header><nav class="navbar"><a class="brand" href="../../../personal.html">scottnick 個人網頁</a><button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button><div class="nav-links" id="nav-links"><a href="../../../index.html">主頁</a><a href="../../../courses.html">修課紀錄</a><a href="../../../cpp.html" class="active">C++學習筆記</a><a href="../../../profile.html">個人檔案</a></div><div class="nav-actions"><a class="nav-action-link" href="../../../categories.html"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false" style="display:inline-block; vertical-align:-3px; margin-right:6px;"><rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect><rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect><rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect><rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect></svg>類別</a><button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題"><span id="theme-icon" aria-hidden="true">☀️</span></button></div></nav></header><main><nav class="breadcrumb" aria-label="文章路徑"><a href="../../../cpp.html">C++學習筆記</a><span aria-hidden="true">/</span><a href="../index.html">Contests</a><span aria-hidden="true">/</span><a href="../weekly-contest-495.html">Weekly Contest 495</a><span aria-hidden="true">/</span><span>Q1. First Matching Character From Both Ends</span></nav><section class="hero"><h1>Q1. First Matching Character From Both Ends</h1><p><strong>練習日期：</strong>2026-03-29</p><p><strong>難度：</strong>Easy</p><p><strong>類型：</strong>Weekly Contest 495</p></section><div class="article-layout"><aside class="article-toc" aria-label="文章目錄"><button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">目錄</button><strong>目錄</strong><ul><li><a href="#content">文章內容</a></li><li><a href="#link">🔗 題目連結</a></li></ul></aside><section class="term-block article-content"><h2 id="content">文章內容</h2><pre style="white-space: pre-wrap;"># Q1. First Matching Character From Both Ends
+
+**練習日期：** 2026-03-29
+**難度：** Easy
+**類型：** Weekly Contest 495
+
+## 📘 題目敘述
+
+給定一個長度為 `n` 的字串 `s`，內容只包含小寫英文字母。
+
+請回傳最小的索引 `i`，使得：
+
+* `s[i] == s[n - i - 1]`
+
+如果不存在這樣的索引，回傳 `-1`。
+
+### 條件限制
+
+* `1 &lt;= n == s.length &lt;= 100`
+* `s` 只包含小寫英文字母
+
+## 🧠 解題思路
+
+我這題的想法很直接，就是從字串兩端往中間檢查。
+
+因為題目要找的是最小的 `i`，滿足：
+
+* 左邊是 `s[i]`
+* 右邊對應位置是 `s[n - i - 1]`
+
+所以我只要從小到大枚舉 `i`，每次檢查這兩個位置的字元有沒有一樣。
+只要第一次出現一樣，我就可以立刻回傳，因為那一定就是最小的答案。
+
+而且左右對稱的位置只需要檢查到中間附近就夠了，不需要把整個字串都掃完。
+
+### 所有變數
+
+* `m`：要檢查到的位置上限，我這裡設成 `(s.size() + 1) / 2`
+* `n`：字串長度
+
+## 🪜 主要流程步驟
+
+### 1. 先算出字串長度和檢查範圍
+
+我先用 `n` 記住字串長度，這樣後面比較容易寫右邊對應位置。
+
+接著我算出：
+
+```cpp
+int m = (s.size() + 1) / 2;
+```
+
+這代表我最多只需要檢查到中間附近。
+因為題目比較的是左右對稱位置，所以超過中間之後，其實就是在重複檢查前面做過的事情。
+
+---
+
+### 2. 從小到大枚舉每個可能的 `i`
+
+我用一個 `for` 迴圈，從 `0` 開始一路往後試：
+
+```cpp
+for (int i = 0; i &lt;= m; i++) {
+```
+
+因為題目要的是**最小**的符合條件的索引，
+所以這樣由小到大檢查，只要一找到答案，就可以直接回傳，不用再繼續往後看。
+
+---
+
+### 3. 檢查左右對稱位置的字元是否相同
+
+在每個 `i`，我都比較：
+
+```cpp
+s[i] == s[n - i - 1]
+```
+
+這個意思是：
+
+* 左邊第 `i` 個位置
+* 和右邊對稱過來的位置
+
+如果兩個字元一樣，就表示這個 `i` 已經符合題目要求。
+
+所以我直接：
+
+```cpp
+return i;
+```
+
+因為目前是從小到大掃過來的，第一個符合條件的 `i` 就一定是最小答案。
+
+---
+
+### 4. 如果整段都找不到，就回傳 `-1`
+
+如果迴圈跑完都沒有任何一次符合：
+
+```cpp
+s[i] == s[n - i - 1]
+```
+
+那就代表不存在合法的索引。
+所以最後直接回傳 `-1`。
+
+## ⏱️ 複雜度
+
+設 `n = s.length`。
+
+* 時間複雜度：`O(n)`
+  最多只會從兩端往中間檢查一半左右的位置，仍然可以記成 `O(n)`。
+
+* 空間複雜度：`O(1)`
+  只用了固定數量的變數。
+
+## 💻 程式碼實作
+
+```cpp
+class Solution {
+public:
+    int firstMatchingIndex(string s) {
+        int m = (s.size() + 1) / 2;
+        int n = s.size();
+        for (int i = 0; i &lt;= m; i++) {
+            if (s[i] == s[n - i - 1]) {
+                return i;
+            }
+        }
+        return -1;
+    }
+};
+```
+
+## 🔗 題目連結
+https://leetcode.com/contest/weekly-contest-495/problems/first-matching-character-from-both-ends/
+</pre><h2 id="link">🔗 題目連結</h2><p><a href="https://leetcode.com/problems/first-matching-character-from-both-ends/" target="_blank" rel="noopener noreferrer">https://leetcode.com/problems/first-matching-character-from-both-ends/</a></p></section></div><section class="term-block article-footer"><h2 class="article-footer__title">文章資訊</h2><div class="meta-grid"><div class="meta-field"><span class="meta-label">作者：</span><span class="meta-value">scottnick</span></div><div class="meta-field meta-field--date"><span class="meta-label">撰寫日期：</span><span class="meta-value">2026-03-29</span></div><div class="meta-field meta-field--full"><span class="meta-label">類別：</span><span class="meta-value"><span class="post-tags"><span class="post-tag">Weekly Contest 495</span><span class="post-tag">Easy</span></span></span></div><div class="meta-field meta-field--full"><span class="meta-label">原文連結：</span><span class="meta-value">https://scottnick.github.io/cpp-notes/contests/weekly-contest-495/q1-first-matching-character-from-both-ends.html</span></div></div></section></main><script src="../../../script.js"></script></body></html>

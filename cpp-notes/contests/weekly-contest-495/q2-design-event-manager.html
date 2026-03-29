@@ -1,0 +1,270 @@
+<!-- contests/weekly-contest-495/q2-design-event-manager.html -->
+<!doctype html><html lang="zh-Hant"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>Q2. Design Event Manager</title><link rel="stylesheet" href="../../../styles.css" /></head><body class="page-article"><header><nav class="navbar"><a class="brand" href="../../../personal.html">scottnick 個人網頁</a><button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button><div class="nav-links" id="nav-links"><a href="../../../index.html">主頁</a><a href="../../../courses.html">修課紀錄</a><a href="../../../cpp.html" class="active">C++學習筆記</a><a href="../../../profile.html">個人檔案</a></div><div class="nav-actions"><a class="nav-action-link" href="../../../categories.html"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false" style="display:inline-block; vertical-align:-3px; margin-right:6px;"><rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect><rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect><rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect><rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect></svg>類別</a><button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題"><span id="theme-icon" aria-hidden="true">☀️</span></button></div></nav></header><main><nav class="breadcrumb" aria-label="文章路徑"><a href="../../../cpp.html">C++學習筆記</a><span aria-hidden="true">/</span><a href="../index.html">Contests</a><span aria-hidden="true">/</span><a href="../weekly-contest-495.html">Weekly Contest 495</a><span aria-hidden="true">/</span><span>Q2. Design Event Manager</span></nav><section class="hero"><h1>Q2. Design Event Manager</h1><p><strong>練習日期：</strong>2026-03-29</p><p><strong>難度：</strong>Medium</p><p><strong>類型：</strong>Weekly Contest 495</p></section><div class="article-layout"><aside class="article-toc" aria-label="文章目錄"><button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">目錄</button><strong>目錄</strong><ul><li><a href="#content">文章內容</a></li><li><a href="#link">🔗 題目連結</a></li></ul></aside><section class="term-block article-content"><h2 id="content">文章內容</h2><pre style="white-space: pre-wrap;"># Q2. Design Event Manager
+
+**練習日期：** 2026-03-29
+**難度：** Medium
+**類型：** Weekly Contest 495
+
+## 📘 題目敘述
+
+給定一組初始事件 `events`，其中每個事件都有唯一的 `eventId` 和一個 `priority`。
+
+請實作 `EventManager` 類別：
+
+* `EventManager(int[][] events)`：用初始事件建立管理器，`events[i] = [eventIdi, priorityi]`
+* `void updatePriority(int eventId, int newPriority)`：把目前仍然 active 的事件 `eventId` 的優先級更新成 `newPriority`
+* `int pollHighest()`：移除並回傳目前 active 事件中，優先級最高的 `eventId`
+
+  * 如果有多個事件優先級相同，回傳 `eventId` 較小的那個
+  * 如果目前沒有 active 事件，回傳 `-1`
+
+一個事件如果還沒有被 `pollHighest()` 移除，就叫做 active。
+
+### 條件限制
+
+* `1 &lt;= events.length &lt;= 10^5`
+* `events[i] = [eventId, priority]`
+* `1 &lt;= eventId &lt;= 10^9`
+* `1 &lt;= priority &lt;= 10^9`
+* 初始 `events` 中的 `eventId` 都不相同
+* `1 &lt;= newPriority &lt;= 10^9`
+* 每次呼叫 `updatePriority` 時，`eventId` 一定對應到某個 active 事件
+* `updatePriority` 和 `pollHighest` 總呼叫次數最多為 `10^5`
+
+## 🧠 解題思路
+
+我這題的想法是用：
+
+* `priority_queue` 維護目前看起來優先級最高的事件
+* `unordered_map` 記錄每個 active event 目前真正的最新 priority
+
+因為題目有 `updatePriority`，如果我直接去 heap 裡面修改某個元素，會很麻煩。
+所以我這份寫法用的是 **lazy deletion** 的做法：
+
+* 更新優先級時，不去刪 heap 裡的舊資料
+* 直接把新的 `(priority, eventId)` 再丟進 heap
+* 等到之後 `pollHighest()` 真的取到某筆資料時，再檢查它是不是最新版本
+* 如果不是，就代表它是舊資料，直接丟掉繼續找下一個
+
+這樣就可以把更新操作維持得很乾淨。
+
+另外題目要求：
+
+* priority 越大越優先
+* 如果 priority 一樣，eventId 較小的要先出來
+
+所以我在 heap 裡放的是：
+
+* 前面放 `priority`
+* 後面放 `-eventId`
+
+這樣 `priority_queue` 會先比大的 priority，
+如果 priority 一樣，就會比大的 `-eventId`，也就是原本較小的 `eventId` 會先出來。
+
+### 所有變數
+
+* `pq`：max heap，裡面放 `{priority, -eventId}`，用來快速找到目前優先級最高、且同優先級下 id 最小的候選事件
+* `m`：`unordered_map`，記錄每個 active event 目前真正有效的 priority
+* `x`：在 `pollHighest()` 取出 heap 頂端時，代表這筆候選資料的 priority
+* `y`：在 `pollHighest()` 取出 heap 頂端時，代表這筆候選資料的 `-eventId`
+
+## 🪜 主要流程步驟
+
+### 1. 建構子先把所有初始事件放進 heap 和 map
+
+在建構子裡，我把每個初始事件都同時放進兩個地方：
+
+* 放進 `pq`，作為之後取最大優先級的候選資料
+* 放進 `m`，記錄這個事件目前真正的 priority
+
+程式裡這段：
+
+```cpp
+for (auto x : events) {
+    pq.push({x[1], -x[0]}); // 前面是new後面是ID
+    m[x[0]] = x[1];
+}
+```
+
+意思是：
+
+* `x[0]` 是 `eventId`
+* `x[1]` 是 `priority`
+
+而我在 heap 裡放 `{x[1], -x[0]}`，就是為了讓比較規則符合題目要求：
+
+* priority 大的先出來
+* priority 一樣時，id 小的先出來
+
+---
+
+### 2. `updatePriority` 不直接修改 heap，而是追加一筆新資料
+
+這題的關鍵就在這裡。
+
+因為 `priority_queue` 不適合直接修改裡面某個既有元素，
+所以我更新事件優先級時，不會去把舊資料找出來刪掉。
+
+我做的事情只有兩個：
+
+* 先把 `m[eventId]` 改成最新 priority
+* 再把新的 `{newPriority, -eventId}` 丟進 `pq`
+
+程式就是：
+
+```cpp
+m[eventId] = newPriority;
+pq.push({newPriority, -eventId});
+```
+
+這樣 heap 裡可能會同時存在：
+
+* 舊 priority 的版本
+* 新 priority 的版本
+
+但沒關係，因為我真正相信的資料是 `m`。
+heap 只是拿來提供候選值。
+
+這種做法就是 **lazy deletion**：
+先容忍舊資料留在 heap 裡，等真的拿到它時再判斷要不要丟掉。
+
+---
+
+### 3. `pollHighest` 先取 heap 頂端候選事件
+
+當我要刪除並回傳目前最高優先級事件時，
+我會先看 heap 頂端：
+
+```cpp
+auto [x, y] = pq.top();
+pq.pop();
+```
+
+這裡：
+
+* `x` 是 priority
+* `y` 是 `-eventId`
+
+所以真正的事件編號其實是 `-y`。
+
+這筆資料只是「目前 heap 認為最優先的候選事件」，
+但它不一定是最新有效的版本，因為它可能是之前更新前留下來的舊資料。
+
+---
+
+### 4. 用 map 檢查這筆 heap 資料是不是最新有效版本
+
+取出 heap 頂端後，我會立刻檢查：
+
+```cpp
+if (!m.count(-y) || m[-y] != x) {
+    return pollHighest();
+}
+```
+
+這段的意思是：
+
+* 如果 `m` 裡已經沒有這個 `eventId`，代表它早就被移除了
+* 或者 `m[-y] != x`，代表 heap 這筆 priority 不是最新值，而是舊版本
+
+這兩種情況都表示：
+
+&gt; 這筆 heap 資料是過期資料，不能當成真正答案
+
+所以我就直接遞迴呼叫 `pollHighest()`，繼續往下找下一筆。
+
+這就是 lazy deletion 真正發揮作用的地方。
+舊資料雖然還在 heap 裡，但只要拿到時發現它和 `m` 不一致，就直接略過。
+
+---
+
+### 5. 如果是有效資料，就把它從 active 集合中移除並回傳
+
+如果這筆 heap 頂端資料通過檢查，
+就代表它確實是目前 active 事件中優先級最高、而且 tie-break 也正確的那個事件。
+
+這時候我做兩件事：
+
+* `m.erase(-y)`：把它從 active 事件集合中移除
+* `return -y`：回傳它的 `eventId`
+
+程式就是：
+
+```cpp
+m.erase(-y);
+return -y;
+```
+
+這樣之後如果 heap 裡還有這個事件更舊的資料，
+下次再取到時就會因為 `!m.count(-y)` 而被自動丟掉。
+
+---
+
+### 6. 如果 heap 一開始就是空的，就回傳 `-1`
+
+如果 `pollHighest()` 一開始發現：
+
+```cpp
+if (pq.empty()) {
+    return -1;
+}
+```
+
+就表示目前根本沒有任何候選事件了，
+也就是沒有 active event 可以取出，直接回傳 `-1`。
+
+## ⏱️ 複雜度
+
+設總操作次數為 `Q`。
+
+* 時間複雜度：`O(Q log Q)`
+  每次 `updatePriority` 會往 heap push 一筆資料；每筆資料最多也只會被 `pollHighest` pop 掉一次，所以整體 heap 操作量是線性的，每次操作成本是 `O(log Q)`。
+
+* 空間複雜度：`O(Q)`
+  `pq` 會保留更新後留下來的舊版本資料，`m` 會記錄目前 active 事件，因此整體需要 `O(Q)` 空間。
+
+## 💻 程式碼實作
+
+```cpp
+class EventManager {
+public:
+    priority_queue&lt;pair&lt;int, int&gt;&gt; pq;
+    unordered_map&lt;int, int&gt; m;
+
+    EventManager(vector&lt;vector&lt;int&gt;&gt;&amp; events) {
+        for (auto x : events) {
+            pq.push({x[1], -x[0]}); // 前面是new後面是ID
+            m[x[0]] = x[1];
+        }
+    }
+
+    void updatePriority(int eventId, int newPriority) {
+        m[eventId] = newPriority;
+        pq.push({newPriority, -eventId});
+    }
+
+    int pollHighest() {
+        if (pq.empty()) {
+            return -1;
+        }
+        auto [x, y] = pq.top();
+        pq.pop();
+        if (!m.count(-y) || m[-y] != x) {
+            return pollHighest();
+        }
+        m.erase(-y);
+        return -y;
+    }
+};
+
+/**
+ * Your EventManager object will be instantiated and called as such:
+ * EventManager* obj = new EventManager(events);
+ * obj-&gt;updatePriority(eventId,newPriority);
+ * int param_2 = obj-&gt;pollHighest();
+ */
+```
+
+## 🔗 題目連結
+https://leetcode.com/contest/weekly-contest-495/problems/design-event-manager/
+</pre><h2 id="link">🔗 題目連結</h2><p><a href="https://leetcode.com/problems/design-event-manager/" target="_blank" rel="noopener noreferrer">https://leetcode.com/problems/design-event-manager/</a></p></section></div><section class="term-block article-footer"><h2 class="article-footer__title">文章資訊</h2><div class="meta-grid"><div class="meta-field"><span class="meta-label">作者：</span><span class="meta-value">scottnick</span></div><div class="meta-field meta-field--date"><span class="meta-label">撰寫日期：</span><span class="meta-value">2026-03-29</span></div><div class="meta-field meta-field--full"><span class="meta-label">類別：</span><span class="meta-value"><span class="post-tags"><span class="post-tag">Weekly Contest 495</span><span class="post-tag">Medium</span></span></span></div><div class="meta-field meta-field--full"><span class="meta-label">原文連結：</span><span class="meta-value">https://scottnick.github.io/cpp-notes/contests/weekly-contest-495/q2-design-event-manager.html</span></div></div></section></main><script src="../../../script.js"></script></body></html>
