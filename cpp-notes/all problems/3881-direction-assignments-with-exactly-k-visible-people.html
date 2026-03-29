@@ -1,274 +1,131 @@
 <!-- all problems/3881-direction-assignments-with-exactly-k-visible-people.html: Biweekly Contest 179 -->
-<!doctype html><html lang="zh-Hant"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>3881. Direction Assignments with Exactly K Visible People</title><link rel="stylesheet" href="../../styles.css" /></head><body class="page-article"><header><nav class="navbar"><a class="brand" href="../../personal.html">scottnick 個人網頁</a><button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button><div class="nav-links" id="nav-links"><a href="../../index.html">主頁</a><a href="../../courses.html">修課紀錄</a><a href="../../cpp.html" class="active">C++學習筆記</a><a href="../../profile.html">個人檔案</a></div><div class="nav-actions"><a class="nav-action-link" href="../../categories.html"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false" style="display:inline-block; vertical-align:-3px; margin-right:6px;"><rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect><rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect><rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect><rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect></svg>類別</a><button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題"><span id="theme-icon" aria-hidden="true">☀️</span></button></div></nav></header><main><nav class="breadcrumb" aria-label="文章路徑"><a href="../../cpp.html">C++學習筆記</a><span aria-hidden="true">/</span><a href="index.html">All problems</a><span aria-hidden="true">/</span><span>3881. Direction Assignments with Exactly K Visible People</span></nav><section class="hero"><h1>3881. Direction Assignments with Exactly K Visible People</h1><p><strong>練習日期：</strong>2026-03-28</p><p><strong>難度：</strong>Medium</p><p><strong>類型：</strong>Biweekly Contest 179</p></section><div class="article-layout"><aside class="article-toc" aria-label="文章目錄"><button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">目錄</button><strong>目錄</strong><ul><li><a href="#content">文章內容</a></li><li><a href="#link">🔗 題目連結</a></li></ul></aside><section class="term-block article-content"><h2 id="content">文章內容</h2><pre style="white-space: pre-wrap;"># Q2. Direction Assignments with Exactly K Visible People
-
-**練習日期：** 2026-03-28
-**難度：** Medium
-**類型：** Biweekly Contest 179
-
-## 📘 題目敘述
-
-給定三個整數 `n`、`pos`、`k`。
-
-現在有 `n` 個人站成一排，索引從 `0` 到 `n - 1`。
-每個人都會各自選擇一個方向：
-
-* `&#x27;L&#x27;`：只能被他右邊的人看到
-* `&#x27;R&#x27;`：只能被他左邊的人看到
-
-對於位置在 `pos` 的人來說，他看見其他人的規則如下：
-
-* 如果 `i &lt; pos`，那麼第 `i` 個人只有在選 `&#x27;L&#x27;` 時才看得到
-* 如果 `i &gt; pos`，那麼第 `i` 個人只有在選 `&#x27;R&#x27;` 時才看得到
-
-請回傳所有可能的方向指派方式中，讓位置 `pos` 的人**剛好看到 `k` 個人**的方法數。
-
-因為答案可能很大，所以要對 `10^9 + 7` 取模後回傳。
-
-### 條件限制
-
-* `1 &lt;= n &lt;= 10^5`
-* `0 &lt;= pos, k &lt;= n - 1`
-
-## 🧠 解題思路
-
-我這題的想法其實是把「看得到幾個人」轉成一個組合數問題。
-
-先看除了 `pos` 自己以外，總共有多少人會影響答案。
-其實就是其他 `n - 1` 個人，而且每個人對 `pos` 來說都只有兩種狀態：
-
-* 方向選對了，所以看得到
-* 方向選錯了，所以看不到
-
-左邊的人要選 `&#x27;L&#x27;` 才看得到，右邊的人要選 `&#x27;R&#x27;` 才看得到。
-所以不管這個人在左邊還右邊，本質上都是：
-
-&gt; 這個人有且只有一種方向會讓他被 `pos` 看見。
-
-因此題目就變成：
-
-* 在另外 `n - 1` 個人裡面
-* 選出剛好 `k` 個人當作「可見的人」
-* 其餘的人就自動是「不可見的人」
-
-這樣的方法數就是：
-
-`C(n - 1, k)`
-
-最後 `pos` 自己面向左或右都不影響他看到幾個人，所以還要再乘上 `2`。
-
-因此答案就是：
-
-`2 * C(n - 1, k)`
-
-而因為這題要在模數下算組合數，所以我這份寫法有用到：
-
-* **快速冪**：快速算 `a^b mod MOD`
-* **模逆元**：把「除法」改寫成乘上反元素，才能在模數下正確計算
-
-### 所有變數
-
-* `MOD`：取模用的質數 `1000000007`
-* `ans`：在快速冪或組合數計算過程中的累積結果
-
-## 🪜 主要流程步驟
-
-### 1. 先把題目化簡成組合數
-
-我先不去管每個人實際站在哪一邊，而是只看「對 `pos` 來說，這個人是否可見」。
-
-對於任意一個不是 `pos` 的位置：
-
-* 如果它在左邊，選 `&#x27;L&#x27;` 才可見
-* 如果它在右邊，選 `&#x27;R&#x27;` 才可見
-
-也就是說，每個人都剛好只有一種方向會讓他被看見。
-所以我只要決定：
-
-* 哪 `k` 個人是可見的
-* 其他人全部不可見
-
-這樣就夠了。
-
-因此其他 `n - 1` 個人中，選出 `k` 個可見的方法數是：
-
-```cpp
+<!doctype html><html lang="zh-Hant"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>3881. Direction Assignments with Exactly K Visible People</title><link rel="stylesheet" href="../../styles.css" /></head><body class="page-article"><header><nav class="navbar"><a class="brand" href="../../personal.html">scottnick 個人網頁</a><button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button><div class="nav-links" id="nav-links"><a href="../../index.html">主頁</a><a href="../../courses.html">修課紀錄</a><a href="../../cpp.html" class="active">C++學習筆記</a><a href="../../profile.html">個人檔案</a></div><div class="nav-actions"><a class="nav-action-link" href="../../categories.html"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false" style="display:inline-block; vertical-align:-3px; margin-right:6px;"><rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect><rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect><rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect><rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect></svg>類別</a><button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題"><span id="theme-icon" aria-hidden="true">☀️</span></button></div></nav></header><main><nav class="breadcrumb" aria-label="文章路徑"><a href="../../cpp.html">C++學習筆記</a><span aria-hidden="true">/</span><a href="index.html">All problems</a><span aria-hidden="true">/</span><span>3881. Direction Assignments with Exactly K Visible People</span></nav><section class="hero"><h1>3881. Direction Assignments with Exactly K Visible People</h1><p><strong>練習日期：</strong>2026-03-28</p><p><strong>難度：</strong>Medium</p><p><strong>類型：</strong>Biweekly Contest 179</p></section><div class="article-layout"><aside class="article-toc" aria-label="文章目錄"><button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">目錄</button><strong>目錄</strong><ul><li><a href="#-題目敘述">📘 題目敘述</a></li><li><a href="#-解題思路">🧠 解題思路</a></li><li><a href="#-主要流程步驟">🪜 主要流程步驟</a></li><li><a href="#-複雜度">⏱️ 複雜度</a></li><li><a href="#-程式碼實作">💻 程式碼實作</a></li><li><a href="#-題目連結">🔗 題目連結</a></li></ul></aside><section class="term-block article-content"><p><strong>練習日期：</strong> 2026-03-28 <strong>難度：</strong> Medium <strong>類型：</strong> Biweekly Contest 179</p>
+<h2 id="-題目敘述">📘 題目敘述</h2>
+<p>給定三個整數 <code>n</code>、<code>pos</code>、<code>k</code>。</p>
+<p>現在有 <code>n</code> 個人站成一排，索引從 <code>0</code> 到 <code>n - 1</code>。 每個人都會各自選擇一個方向：</p>
+<ul><li><code>'L'</code>：只能被他右邊的人看到</li><li><code>'R'</code>：只能被他左邊的人看到</li></ul>
+<p>對於位置在 <code>pos</code> 的人來說，他看見其他人的規則如下：</p>
+<ul><li>如果 <code>i &lt; pos</code>，那麼第 <code>i</code> 個人只有在選 <code>'L'</code> 時才看得到</li><li>如果 <code>i &gt; pos</code>，那麼第 <code>i</code> 個人只有在選 <code>'R'</code> 時才看得到</li></ul>
+<p>請回傳所有可能的方向指派方式中，讓位置 <code>pos</code> 的人<strong>剛好看到 <code>k</code> 個人</strong>的方法數。</p>
+<p>因為答案可能很大，所以要對 <code>10^9 + 7</code> 取模後回傳。</p>
+<h3 id="條件限制">條件限制</h3>
+<ul><li><code>1 &lt;= n &lt;= 10^5</code></li><li><code>0 &lt;= pos, k &lt;= n - 1</code></li></ul>
+<h2 id="-解題思路">🧠 解題思路</h2>
+<p>我這題的想法其實是把「看得到幾個人」轉成一個組合數問題。</p>
+<p>先看除了 <code>pos</code> 自己以外，總共有多少人會影響答案。 其實就是其他 <code>n - 1</code> 個人，而且每個人對 <code>pos</code> 來說都只有兩種狀態：</p>
+<ul><li>方向選對了，所以看得到</li><li>方向選錯了，所以看不到</li></ul>
+<p>左邊的人要選 <code>'L'</code> 才看得到，右邊的人要選 <code>'R'</code> 才看得到。 所以不管這個人在左邊還右邊，本質上都是：</p>
+<blockquote><p>這個人有且只有一種方向會讓他被 <code>pos</code> 看見。</p></blockquote>
+<p>因此題目就變成：</p>
+<ul><li>在另外 <code>n - 1</code> 個人裡面</li><li>選出剛好 <code>k</code> 個人當作「可見的人」</li><li>其餘的人就自動是「不可見的人」</li></ul>
+<p>這樣的方法數就是：</p>
+<p><code>C(n - 1, k)</code></p>
+<p>最後 <code>pos</code> 自己面向左或右都不影響他看到幾個人，所以還要再乘上 <code>2</code>。</p>
+<p>因此答案就是：</p>
+<p><code>2 * C(n - 1, k)</code></p>
+<p>而因為這題要在模數下算組合數，所以我這份寫法有用到：</p>
+<ul><li><strong>快速冪</strong>：快速算 <code>a^b mod MOD</code></li><li><strong>模逆元</strong>：把「除法」改寫成乘上反元素，才能在模數下正確計算</li></ul>
+<h3 id="所有變數">所有變數</h3>
+<ul><li><code>MOD</code>：取模用的質數 <code>1000000007</code></li><li><code>ans</code>：在快速冪或組合數計算過程中的累積結果</li></ul>
+<h2 id="-主要流程步驟">🪜 主要流程步驟</h2>
+<h3 id="1-先把題目化簡成組合數">1. 先把題目化簡成組合數</h3>
+<p>我先不去管每個人實際站在哪一邊，而是只看「對 <code>pos</code> 來說，這個人是否可見」。</p>
+<p>對於任意一個不是 <code>pos</code> 的位置：</p>
+<ul><li>如果它在左邊，選 <code>'L'</code> 才可見</li><li>如果它在右邊，選 <code>'R'</code> 才可見</li></ul>
+<p>也就是說，每個人都剛好只有一種方向會讓他被看見。 所以我只要決定：</p>
+<ul><li>哪 <code>k</code> 個人是可見的</li><li>其他人全部不可見</li></ul>
+<p>這樣就夠了。</p>
+<p>因此其他 <code>n - 1</code> 個人中，選出 <code>k</code> 個可見的方法數是：</p>
+<pre><code class="language-cpp">
 C(n - 1, k)
-```
-
-而 `pos` 自己選 `&#x27;L&#x27;` 或 `&#x27;R&#x27;` 都不影響可見人數，所以還要再乘上 `2`。
-
-最後答案就是：
-
-```cpp
+</code></pre>
+<p>而 <code>pos</code> 自己選 <code>'L'</code> 或 <code>'R'</code> 都不影響可見人數，所以還要再乘上 <code>2</code>。</p>
+<p>最後答案就是：</p>
+<pre><code class="language-cpp">
 2 * C(n - 1, k) % MOD
-```
-
----
-
-### 2. 用 `C(n, k)` 來算組合數
-
-我把組合數寫成一個函式 `C(n, k)`。
-
-組合數本來就是「從 `n` 個東西裡選 `k` 個」的方法數。
-一般最常見的寫法會用階乘來表示，但我這份程式沒有直接去算完整的階乘，而是改成一項一項乘上去。
-
-我用的想法是：
-
-* 分子依序乘上 `n`、`n - 1`、`n - 2`……一直到總共乘 `k` 項
-* 分母依序除以 `1`、`2`、`3`……一直到 `k`
-
-也就是每次迴圈都處理一組：
-
-* 先乘上一個新的分子
-* 再除以目前對應的分母
-
-這樣做的好處是：
-
-* 不用先把整個 `n!`、`k!`、`(n-k)!` 都算出來
-* 可以一邊乘一邊取模
-* 實作上比較直接
-
-所以程式裡這段：
-
-```cpp
+</code></pre>
+<hr>
+<h3 id="2-用-cn-k-來算組合數">2. 用 <code>C(n, k)</code> 來算組合數</h3>
+<p>我把組合數寫成一個函式 <code>C(n, k)</code>。</p>
+<p>組合數本來就是「從 <code>n</code> 個東西裡選 <code>k</code> 個」的方法數。 一般最常見的寫法會用階乘來表示，但我這份程式沒有直接去算完整的階乘，而是改成一項一項乘上去。</p>
+<p>我用的想法是：</p>
+<ul><li>分子依序乘上 <code>n</code>、<code>n - 1</code>、<code>n - 2</code>……一直到總共乘 <code>k</code> 項</li><li>分母依序除以 <code>1</code>、<code>2</code>、<code>3</code>……一直到 <code>k</code></li></ul>
+<p>也就是每次迴圈都處理一組：</p>
+<ul><li>先乘上一個新的分子</li><li>再除以目前對應的分母</li></ul>
+<p>這樣做的好處是：</p>
+<ul><li>不用先把整個 <code>n!</code>、<code>k!</code>、<code>(n-k)!</code> 都算出來</li><li>可以一邊乘一邊取模</li><li>實作上比較直接</li></ul>
+<p>所以程式裡這段：</p>
+<pre><code class="language-cpp">
 for (int i = 1; i &lt;= k; i++) {
     ans = ans * (n - i + 1) % MOD;
     ans = ans * modPow(i, MOD - 2) % MOD;
 }
-```
-
-意思就是：
-
-* 第一步先把目前這一項分子乘進去，也就是 `n - i + 1`
-* 第二步再把原本應該要除掉的 `i`，改成乘上它在模數下的逆元
-
-這樣最後算出來的結果，就等價於組合數。
-
-另外我也先做了兩個小處理：
-
-* 如果 `k &lt; 0 || k &gt; n`，表示根本不可能從 `n` 個東西裡選出 `k` 個，直接回傳 `0`
-* 如果 `k &gt; n - k`，就改成 `k = n - k`
-
-第二個處理是因為，選 `k` 個和留下 `n - k` 個，本質上是同一件事。
-所以我可以改用比較小的那一邊來算，這樣迴圈次數會更少。
-
----
-
-### 3. 為什麼模數下不能直接做除法
-
-這題最重要的技巧就在這裡。
-
-在一般整數運算裡，我們平常會直接做除法。
-可是這題所有運算都要在模 `MOD` 的情況下進行，所以不能直接把 `/ i` 當成普通除法來算。
-
-在模數世界裡，如果我想做「除以 `i`」這件事，實際上要做的是：
-
-* 找一個數 `x`
-* 讓 `i * x` 在對 `MOD` 取模之後，效果等於 `1`
-
-這個 `x` 就叫做 **模逆元**。
-
-所以在模數下：
-
-* 原本的除法
-* 會改寫成乘上一個模逆元
-
-也就是說，我在算組合數時，分母的 `i` 不能直接拿來除，
-而是要改成：
-
-```cpp
+</code></pre>
+<p>意思就是：</p>
+<ul><li>第一步先把目前這一項分子乘進去，也就是 <code>n - i + 1</code></li><li>第二步再把原本應該要除掉的 <code>i</code>，改成乘上它在模數下的逆元</li></ul>
+<p>這樣最後算出來的結果，就等價於組合數。</p>
+<p>另外我也先做了兩個小處理：</p>
+<ul><li>如果 <code>k &lt; 0 || k &gt; n</code>，表示根本不可能從 <code>n</code> 個東西裡選出 <code>k</code> 個，直接回傳 <code>0</code></li><li>如果 <code>k &gt; n - k</code>，就改成 <code>k = n - k</code></li></ul>
+<p>第二個處理是因為，選 <code>k</code> 個和留下 <code>n - k</code> 個，本質上是同一件事。 所以我可以改用比較小的那一邊來算，這樣迴圈次數會更少。</p>
+<hr>
+<h3 id="3-為什麼模數下不能直接做除法">3. 為什麼模數下不能直接做除法</h3>
+<p>這題最重要的技巧就在這裡。</p>
+<p>在一般整數運算裡，我們平常會直接做除法。 可是這題所有運算都要在模 <code>MOD</code> 的情況下進行，所以不能直接把 <code>/ i</code> 當成普通除法來算。</p>
+<p>在模數世界裡，如果我想做「除以 <code>i</code>」這件事，實際上要做的是：</p>
+<ul><li>找一個數 <code>x</code></li><li>讓 <code>i * x</code> 在對 <code>MOD</code> 取模之後，效果等於 <code>1</code></li></ul>
+<p>這個 <code>x</code> 就叫做 <strong>模逆元</strong>。</p>
+<p>所以在模數下：</p>
+<ul><li>原本的除法</li><li>會改寫成乘上一個模逆元</li></ul>
+<p>也就是說，我在算組合數時，分母的 <code>i</code> 不能直接拿來除， 而是要改成：</p>
+<pre><code class="language-cpp">
 modPow(i, MOD - 2)
-```
-
-這個值就是 `i` 在模 `MOD` 下對應的逆元。
-
----
-
-### 4. 為什麼 `modPow(i, MOD - 2)` 會是模逆元
-
-這是利用 **費馬小定理**。
-
-當 `MOD` 是質數，而且 `i` 不是 `MOD` 的倍數時，
-可以推出：
-
-* `i` 的模逆元，可以用 `i` 的 `MOD - 2` 次方來表示
-* 而且最後一樣要對 `MOD` 取模
-
-因為這題的 `MOD = 1000000007`，它是一個質數，
-所以我就可以安全地用：
-
-```cpp
+</code></pre>
+<p>這個值就是 <code>i</code> 在模 <code>MOD</code> 下對應的逆元。</p>
+<hr>
+<h3 id="4-為什麼-modpowi-mod---2-會是模逆元">4. 為什麼 <code>modPow(i, MOD - 2)</code> 會是模逆元</h3>
+<p>這是利用 <strong>費馬小定理</strong>。</p>
+<p>當 <code>MOD</code> 是質數，而且 <code>i</code> 不是 <code>MOD</code> 的倍數時， 可以推出：</p>
+<ul><li><code>i</code> 的模逆元，可以用 <code>i</code> 的 <code>MOD - 2</code> 次方來表示</li><li>而且最後一樣要對 <code>MOD</code> 取模</li></ul>
+<p>因為這題的 <code>MOD = 1000000007</code>，它是一個質數， 所以我就可以安全地用：</p>
+<pre><code class="language-cpp">
 modPow(i, MOD - 2)
-```
-
-來算出 `i` 的模逆元。
-
-也就是說，程式裡雖然看起來沒有真的寫 `/ i`，
-但其實這一行就是在做模數意義下的除法。
-
----
-
-### 5. `modPow` 是怎麼做到快速計算的
-
-如果我真的老實去乘 `a` 共 `b` 次，那會太慢。
-所以這裡用的是 **快速冪**。
-
-核心想法是把指數用二進位拆開。
-
-快速冪就是一邊把底數平方，一邊看目前這一位是不是 `1`：
-
-* 如果 `b` 這一位是 `1`，就把目前的 `a` 乘進答案
-* 每做完一輪，就把 `a` 平方
-* 再把 `b` 右移一位
-
-所以這段：
-
-```cpp
+</code></pre>
+<p>來算出 <code>i</code> 的模逆元。</p>
+<p>也就是說，程式裡雖然看起來沒有真的寫 <code>/ i</code>， 但其實這一行就是在做模數意義下的除法。</p>
+<hr>
+<h3 id="5-modpow-是怎麼做到快速計算的">5. <code>modPow</code> 是怎麼做到快速計算的</h3>
+<p>如果我真的老實去乘 <code>a</code> 共 <code>b</code> 次，那會太慢。 所以這裡用的是 <strong>快速冪</strong>。</p>
+<p>核心想法是把指數用二進位拆開。</p>
+<p>快速冪就是一邊把底數平方，一邊看目前這一位是不是 <code>1</code>：</p>
+<ul><li>如果 <code>b</code> 這一位是 <code>1</code>，就把目前的 <code>a</code> 乘進答案</li><li>每做完一輪，就把 <code>a</code> 平方</li><li>再把 <code>b</code> 右移一位</li></ul>
+<p>所以這段：</p>
+<pre><code class="language-cpp">
 while (b &gt; 0) {
     if (b &amp; 1) ans = ans * a % MOD;
     a = a * a % MOD;
     b &gt;&gt;= 1;
 }
-```
-
-意思就是：
-
-* `b &amp; 1`：檢查目前最低位是不是 `1`
-* `a = a * a % MOD`：把底數平方，準備對應下一個二進位位元
-* `b &gt;&gt;= 1`：把指數右移，處理下一位
-
-這樣時間複雜度就從 `O(b)` 變成 `O(log b)`。
-
----
-
-### 6. 最後把答案代回主函式
-
-在主函式裡，我最後直接回傳：
-
-```cpp
+</code></pre>
+<p>意思就是：</p>
+<ul><li><code>b &amp; 1</code>：檢查目前最低位是不是 <code>1</code></li><li><code>a = a * a % MOD</code>：把底數平方，準備對應下一個二進位位元</li><li><code>b &gt;&gt;= 1</code>：把指數右移，處理下一位</li></ul>
+<p>這樣時間複雜度就從 <code>O(b)</code> 變成 <code>O(log b)</code>。</p>
+<hr>
+<h3 id="6-最後把答案代回主函式">6. 最後把答案代回主函式</h3>
+<p>在主函式裡，我最後直接回傳：</p>
+<pre><code class="language-cpp">
 return 2 * C(n - 1, k) % MOD;
-```
-
-因為：
-
-* 另外 `n - 1` 個人裡，要剛好選 `k` 個可見：`C(n - 1, k)`
-* `pos` 自己有兩種方向可選：乘上 `2`
-
-這樣就得到最終答案。
-
-## ⏱️ 複雜度
-
-設組合數函式裡實際迴圈次數為 `min(k, n-k)`。
-
-* 時間複雜度：`O(min(k, n-k) \log MOD)`
-  組合數要做 `min(k, n-k)` 次迴圈，而每次都要用快速冪算一次模逆元。
-
-* 空間複雜度：`O(1)`
-  只用了固定數量的變數。
-
-## 💻 程式碼實作
-
-```cpp
+</code></pre>
+<p>因為：</p>
+<ul><li>另外 <code>n - 1</code> 個人裡，要剛好選 <code>k</code> 個可見：<code>C(n - 1, k)</code></li><li><code>pos</code> 自己有兩種方向可選：乘上 <code>2</code></li></ul>
+<p>這樣就得到最終答案。</p>
+<h2 id="-複雜度">⏱️ 複雜度</h2>
+<p>設組合數函式裡實際迴圈次數為 <code>min(k, n-k)</code>。</p>
+<ul><li>時間複雜度：<code>O(min(k, n-k) \log MOD)</code></li></ul>
+<p>組合數要做 <code>min(k, n-k)</code> 次迴圈，而每次都要用快速冪算一次模逆元。</p>
+<ul><li>空間複雜度：<code>O(1)</code></li></ul>
+<p>只用了固定數量的變數。</p>
+<h2 id="-程式碼實作">💻 程式碼實作</h2>
+<pre><code class="language-cpp">
 class Solution {
 public:
     const int MOD = 1000000007;
@@ -298,7 +155,6 @@ public:
         return 2 * C(n - 1, k) % MOD; 
     }
 };
-```
-
-## 🔗 題目連結
-https://leetcode.com/contest/biweekly-contest-179/problems/direction-assignments-with-exactly-k-visible-people/</pre><h2 id="link">🔗 題目連結</h2><p><a href="https://leetcode.com/problems/direction-assignments-with-exactly-k-visible-people/" target="_blank" rel="noopener noreferrer">https://leetcode.com/problems/direction-assignments-with-exactly-k-visible-people/</a></p></section></div><section class="term-block article-footer"><h2 class="article-footer__title">文章資訊</h2><div class="meta-grid"><div class="meta-field"><span class="meta-label">作者：</span><span class="meta-value">scottnick</span></div><div class="meta-field meta-field--date"><span class="meta-label">撰寫日期：</span><span class="meta-value">2026-03-28</span></div><div class="meta-field meta-field--full"><span class="meta-label">類別：</span><span class="meta-value"><span class="post-tags"><span class="post-tag">Biweekly Contest 179</span><span class="post-tag">Medium</span></span></span></div><div class="meta-field meta-field--full"><span class="meta-label">原文連結：</span><span class="meta-value">https://scottnick.github.io/cpp-notes/all%20problems/3881-direction-assignments-with-exactly-k-visible-people.html</span></div></div></section></main><script src="../../script.js"></script></body></html>
+</code></pre>
+<h2 id="-題目連結">🔗 題目連結</h2>
+<p><a href="https://leetcode.com/problems/direction-assignments-with-exactly-k-visible-people/">https://leetcode.com/problems/direction-assignments-with-exactly-k-visible-people/</a></p></section></div><section class="term-block article-footer"><h2 class="article-footer__title">文章資訊</h2><div class="meta-grid"><div class="meta-field"><span class="meta-label">作者：</span><span class="meta-value">scottnick</span></div><div class="meta-field meta-field--date"><span class="meta-label">撰寫日期：</span><span class="meta-value">2026-03-28</span></div><div class="meta-field meta-field--full"><span class="meta-label">類別：</span><span class="meta-value"><span class="post-tags"><span class="post-tag">Biweekly Contest 179</span><span class="post-tag">Medium</span></span></span></div><div class="meta-field meta-field--full"><span class="meta-label">原文連結：</span><span class="meta-value">https://scottnick.github.io/cpp-notes/all%20problems/3881-direction-assignments-with-exactly-k-visible-people.html</span></div></div></section></main><script src="../../script.js"></script></body></html>
