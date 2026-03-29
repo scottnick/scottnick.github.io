@@ -1,6 +1,6 @@
 {
-  "buildId": "20260328172303",
-  "generatedAt": "2026-03-28T17:23:03.551649Z",
+  "buildId": "20260329021412",
+  "generatedAt": "2026-03-29T02:14:12.751992Z",
   "posts": [
     {
       "path": "courses.html",
@@ -261,8 +261,15 @@
       "title": "Biweekly Contest 178",
       "date": "",
       "tags": [
+        "Array",
+        "Hash Table",
+        "Counting",
         "Biweekly Contest 178",
         "Easy",
+        "Math",
+        "Two Pointers",
+        "Simulation",
+        "Number Theory",
         "Medium"
       ],
       "folder": "cpp-notes/contests"
@@ -272,9 +279,17 @@
       "title": "Biweekly Contest 177",
       "date": "",
       "tags": [
+        "Array",
+        "Hash Table",
+        "Counting",
         "Biweekly Contest 177",
         "Easy",
+        "String",
         "Medium",
+        "Math",
+        "Divide and Conquer",
+        "Combinatorics",
+        "Number Theory",
         "Hard"
       ],
       "folder": "cpp-notes/contests"
@@ -284,9 +299,16 @@
       "title": "Weekly Contest 491",
       "date": "",
       "tags": [
+        "String",
         "Weekly Contest 491",
         "Easy",
-        "Medium"
+        "Math",
+        "Dynamic Programming",
+        "Medium",
+        "Array",
+        "Greedy",
+        "Bit Manipulation",
+        "Matrix"
       ],
       "folder": "cpp-notes/contests"
     },
@@ -295,9 +317,15 @@
       "title": "Weekly Contest 494",
       "date": "",
       "tags": [
+        "Array",
+        "Math",
         "Weekly Contest 494",
         "Easy",
         "Medium",
+        "Dynamic Programming",
+        "Bit Manipulation",
+        "Stack",
+        "Monotonic Stack",
         "Hard"
       ],
       "folder": "cpp-notes/contests"
@@ -318,9 +346,16 @@
       "title": "Weekly Contest 490",
       "date": "",
       "tags": [
+        "Array",
+        "Simulation",
         "Weekly Contest 490",
         "Easy",
-        "Medium"
+        "Math",
+        "Counting",
+        "Medium",
+        "String",
+        "Greedy",
+        "Bit Manipulation"
       ],
       "folder": "cpp-notes/contests"
     },
@@ -352,8 +387,13 @@
       "title": "Weekly Contest 489",
       "date": "",
       "tags": [
+        "Array",
+        "Hash Table",
+        "Sorting",
+        "Simulation",
         "Weekly Contest 489",
         "Easy",
+        "Counting",
         "Medium"
       ],
       "folder": "cpp-notes/contests"
@@ -384,9 +424,13 @@
       "title": "Weekly Contest 492",
       "date": "",
       "tags": [
+        "Array",
         "Weekly Contest 492",
         "Easy",
+        "Prefix Sum",
         "Medium",
+        "String",
+        "Divide and Conquer",
         "Hard"
       ],
       "folder": "cpp-notes/contests"
@@ -1791,8 +1835,7 @@
         "Bit Manipulation",
         "Matrix",
         "Weekly Contest 491",
-        "Medium",
-        "Dynamic Programming"
+        "Medium"
       ],
       "folder": "cpp-notes/all problems"
     },
@@ -1945,8 +1988,7 @@
         "Math",
         "Dynamic Programming",
         "Weekly Contest 491",
-        "Medium",
-        "Recursion"
+        "Medium"
       ],
       "folder": "cpp-notes/all problems"
     },
@@ -1959,9 +2001,7 @@
         "Divide and Conquer",
         "Prefix Sum",
         "Weekly Contest 492",
-        "Hard",
-        "Recursion",
-        "Dynamic Programming"
+        "Hard"
       ],
       "folder": "cpp-notes/all problems"
     },
@@ -1988,8 +2028,7 @@
         "Greedy",
         "Counting",
         "Biweekly Contest 178",
-        "Medium",
-        "Hash Map"
+        "Medium"
       ],
       "folder": "cpp-notes/all problems"
     },
@@ -2310,8 +2349,7 @@
         "Array",
         "Prefix Sum",
         "Weekly Contest 492",
-        "Medium",
-        "Math"
+        "Medium"
       ],
       "folder": "cpp-notes/all problems"
     },
@@ -3106,8 +3144,7 @@
         "Simulation",
         "Number Theory",
         "Biweekly Contest 178",
-        "Medium",
-        "Sorting"
+        "Medium"
       ],
       "folder": "cpp-notes/all problems"
     },
@@ -3143,8 +3180,7 @@
         "Hash Table",
         "String",
         "Biweekly Contest 177",
-        "Medium",
-        "Simulation"
+        "Medium"
       ],
       "folder": "cpp-notes/all problems"
     },
@@ -3673,8 +3709,7 @@
       "tags": [
         "String",
         "Weekly Contest 492",
-        "Medium",
-        "Sorting"
+        "Medium"
       ],
       "folder": "cpp-notes/all problems"
     },
@@ -3877,8 +3912,7 @@
         "Hash Table",
         "Counting",
         "Biweekly Contest 177",
-        "Easy",
-        "Sorting"
+        "Easy"
       ],
       "folder": "cpp-notes/all problems"
     },
