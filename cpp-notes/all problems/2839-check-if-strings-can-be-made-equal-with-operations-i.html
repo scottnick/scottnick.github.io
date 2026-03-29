@@ -1,0 +1,273 @@
+<!-- all problems/2839-check-if-strings-can-be-made-equal-with-operations-i.html: 2839. Check if Strings Can be Made Equal With Operations I -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2839. Check if Strings Can be Made Equal With Operations I</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+               width="18" height="18" aria-hidden="true" focusable="false"
+               style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="index.html">All problems</a>
+      <span aria-hidden="true">/</span>
+      <span>2839. Check if Strings Can be Made Equal With Operations I</span>
+    </nav>
+
+    <section class="hero">
+      <h1>2839. Check if Strings Can be Made Equal With Operations I</h1>
+      <p><strong>練習日期：</strong>2026-03-29</p>
+      <p><strong>難度：</strong>Easy</p>
+      <p><strong>類型：</strong>String</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#variables">所有變數</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#complexity">⏱️ 複雜度</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+
+        <p>給定兩個字串 <code>s1</code> 和 <code>s2</code>，它們的長度都剛好是 <code>4</code>，並且只包含小寫英文字母。</p>
+
+        <p>你可以對其中任一個字串做任意次以下操作：</p>
+
+        <ul>
+          <li>選兩個索引 <code>i</code> 和 <code>j</code></li>
+          <li>滿足 <code>j - i = 2</code></li>
+          <li>然後交換這兩個位置的字元</li>
+        </ul>
+
+        <p>請判斷是否可以透過這些操作，讓 <code>s1</code> 和 <code>s2</code> 變成一樣。
+如果可以，回傳 <code>true</code>；否則回傳 <code>false</code>。</p>
+
+        <h3>條件限制</h3>
+
+        <ul>
+          <li><code>s1.length == s2.length == 4</code></li>
+          <li><code>s1</code> 和 <code>s2</code> 只包含小寫英文字母</li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+
+        <p>我這題的想法就是直接把所有可能情況列出來。</p>
+
+        <p>因為字串長度固定只有 <code>4</code>，而且能交換的位置也固定只有：</p>
+
+        <ul>
+          <li><code>0</code> 和 <code>2</code></li>
+          <li><code>1</code> 和 <code>3</code></li>
+        </ul>
+
+        <p>所以本質上可以調動的只有兩組：</p>
+
+        <ul>
+          <li>偶數位置那一組：<code>0</code>、<code>2</code></li>
+          <li>奇數位置那一組：<code>1</code>、<code>3</code></li>
+        </ul>
+
+        <p>也就是說，我只要檢查：</p>
+
+        <ul>
+          <li><code>s1</code> 的第 <code>0</code>、<code>2</code> 個字元，能不能對上 <code>s2</code> 的第 <code>0</code>、<code>2</code> 個字元</li>
+          <li>同時 <code>s1</code> 的第 <code>1</code>、<code>3</code> 個字元，能不能對上 <code>s2</code> 的第 <code>1</code>、<code>3</code> 個字元</li>
+        </ul>
+
+        <p>因為每組都只有兩個位置，所以每組其實就只有「不換」或「交換」兩種可能。
+這樣直接把所有組合情況列出來判斷就可以了。</p>
+
+        <h2 id="variables">所有變數</h2>
+
+        <p>這題不需要😄</p>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+
+        <h3>1. 先檢查兩個字串本來是不是就一樣</h3>
+
+        <p>我一開始先判斷：</p>
+
+        <pre><code class="language-cpp">if (s1 == s2) {
+    return true;
+}
+</code></pre>
+
+        <p>如果兩個字串本來就完全相同，那就不需要做任何操作，直接回傳 <code>true</code>。</p>
+
+        <hr />
+
+        <h3>2. 先處理偶數位置 <code>0</code> 和 <code>2</code> 不交換的情況</h3>
+
+        <p>因為題目允許交換的只有距離為 <code>2</code> 的位置，所以對長度 <code>4</code> 的字串來說，偶數位置只會是 <code>0</code> 和 <code>2</code> 互換。</p>
+
+        <p>我先檢查 <code>s1[0]</code> 和 <code>s1[2]</code> 是否剛好可以對上 <code>s2[0]</code> 和 <code>s2[2]</code>，也就是：</p>
+
+        <pre><code class="language-cpp">if (s1[0] == s2[0] &amp;&amp; s1[2] == s2[2]) {
+</code></pre>
+
+        <p>這代表偶數位置這一組不用交換，就已經對上了。</p>
+
+        <p>在這種情況下，我再去看奇數位置 <code>1</code> 和 <code>3</code> 有沒有辦法對上。</p>
+
+        <hr />
+
+        <h3>3. 在偶數位置固定的情況下，再檢查奇數位置的兩種可能</h3>
+
+        <p>當偶數位置已經對上之後，奇數位置 <code>1</code> 和 <code>3</code> 只剩兩種可能：</p>
+
+        <ul>
+          <li>不交換：<code>s1[1] == s2[1]</code> 且 <code>s1[3] == s2[3]</code></li>
+          <li>交換：<code>s1[1] == s2[3]</code> 且 <code>s1[3] == s2[1]</code></li>
+        </ul>
+
+        <p>所以我就直接把這兩種情況都列出來。
+只要其中一種成立，就表示可以透過合法操作把字串變成一樣，直接回傳 <code>true</code>。</p>
+
+        <hr />
+
+        <h3>4. 再處理偶數位置 <code>0</code> 和 <code>2</code> 交換的情況</h3>
+
+        <p>如果前面那種情況不成立，我就再檢查另一種可能，也就是偶數位置其實需要交換：</p>
+
+        <pre><code class="language-cpp">if (s1[0] == s2[2] &amp;&amp; s1[2] == s2[0]) {
+</code></pre>
+
+        <p>這代表 <code>s1</code> 的第 <code>0</code> 和第 <code>2</code> 個字元，要互換之後才會和 <code>s2</code> 的偶數位置對上。</p>
+
+        <p>接著和前面一樣，我再去檢查奇數位置是不是：</p>
+
+        <ul>
+          <li>不交換就能對上</li>
+          <li>或交換後能對上</li>
+        </ul>
+
+        <p>只要成立其中一種，就回傳 <code>true</code>。</p>
+
+        <hr />
+
+        <h3>5. 如果所有情況都不成立，就回傳 <code>false</code></h3>
+
+        <p>如果前面列出的所有可能都不符合，
+就代表即使把 <code>(0, 2)</code> 和 <code>(1, 3)</code> 的交換情況全部試過，還是沒辦法讓 <code>s1</code> 變成 <code>s2</code>。</p>
+
+        <p>那最後就只能回傳：</p>
+
+        <pre><code class="language-cpp">return false;
+</code></pre>
+
+        <h2 id="complexity">⏱️ 複雜度</h2>
+
+        <ul>
+          <li>時間複雜度：<code>O(1)</code>
+  因為字串長度固定是 <code>4</code>，我只是在檢查固定數量的情況。</li>
+          <li>空間複雜度：<code>O(1)</code>
+  只用了固定數量的額外空間。</li>
+        </ul>
+
+        <h2 id="code">💻 程式碼實作</h2>
+
+        <pre><code class="language-cpp">class Solution {
+public:
+    bool canBeEqual(string s1, string s2) {
+        if (s1 == s2) {
+            return true;
+        }
+        if (s1[0] == s2[0] &amp;&amp; s1[2] == s2[2]) {
+            if (s1[1] == s2[1] &amp;&amp; s1[3] == s2[3]) {
+                return true;
+            }
+            if (s1[1] == s2[3] &amp;&amp; s1[3] == s2[1]) {
+                return true;
+            }
+        }
+        if (s1[0] == s2[2] &amp;&amp; s1[2] == s2[0]) {
+            if (s1[1] == s2[1] &amp;&amp; s1[3] == s2[3]) {
+                return true;
+            }
+            if (s1[1] == s2[3] &amp;&amp; s1[3] == s2[1]) {
+                return true;
+            }
+        }
+        return false;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/check-if-strings-can-be-made-equal-with-operations-i/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-03-29</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value"><span class="post-tags">
+              <span class="post-tag">String</span>
+              <span class="post-tag">Easy</span>
+            </span></span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/all%20problems/2839-check-if-strings-can-be-made-equal-with-operations-i.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
