@@ -178,8 +178,7 @@
           </ul>
           <h2 id="steps">🪜 主要流程步驟</h2>
           <h3>1. 先把陣列排序</h3>
-          <pre><code class="language-cpp">
-sort(nums1.begin(), nums1.end());
+          <pre><code class="language-cpp">sort(nums1.begin(), nums1.end());
 </code></pre>
           <p>我先排序，因為這題多了一個條件：</p>
           <ul>
@@ -192,8 +191,7 @@ sort(nums1.begin(), nums1.end());
           </p>
           <hr />
           <h3>2. 如果最小值是奇數，答案一定是 true</h3>
-          <pre><code class="language-cpp">
-if (nums1[0] % 2 == 1) {
+          <pre><code class="language-cpp">if (nums1[0] % 2 == 1) {
     return true;
 }
 </code></pre>
@@ -233,8 +231,7 @@ if (nums1[0] % 2 == 1) {
           </ul>
           <hr />
           <h3>4. 如果最小值是偶數，那只要出現奇數就失敗</h3>
-          <pre><code class="language-cpp">
-for (int i : nums1) {
+          <pre><code class="language-cpp">for (int i : nums1) {
     if (i % 2 == 1) {
         return false;
     }
@@ -254,8 +251,7 @@ for (int i : nums1) {
           <p>因此只要看到奇數，就直接回傳 <code>false</code>。</p>
           <hr />
           <h3>5. 如果一路都沒看到奇數，代表全偶數，答案就是 true</h3>
-          <pre><code class="language-cpp">
-return true;
+          <pre><code class="language-cpp">return true;
 </code></pre>
           <p>如果程式能走到這裡，表示：</p>
           <ul>
@@ -278,8 +274,7 @@ return true;
           </ul>
           <p>如果不計排序內部使用的額外空間，額外只用了固定變數。</p>
           <h2 id="code">💻 程式碼實作</h2>
-          <pre><code class="language-cpp">
-class Solution {
+          <pre><code class="language-cpp">class Solution {
 public:
     bool uniformArray(vector&lt;int&gt;&amp; nums1) {
         sort(nums1.begin(), nums1.end());

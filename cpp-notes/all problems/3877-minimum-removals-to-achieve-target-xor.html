@@ -68,8 +68,7 @@
 </ul>
 <h2 id="steps">🪜 主要流程步驟</h2>
 <h3>1. 先定義 DP 的意義</h3>
-<pre><code class="language-cpp">
-const int M = 16384;
+<pre><code class="language-cpp">const int M = 16384;
 vector&lt;int&gt; dp(M, -1);
 dp[0] = 0;
 </code></pre>
@@ -85,14 +84,12 @@ dp[0] = 0;
 <li>保留元素數量 = <code>0</code></li>
 </ul>
 <p>所以：</p>
-<pre><code class="language-cpp">
-dp[0] = 0;
+<pre><code class="language-cpp">dp[0] = 0;
 </code></pre>
 <p>這就是整個 DP 的起點。</p>
 <hr>
 <h3>2. 依序處理 nums 裡的每個元素</h3>
-<pre><code class="language-cpp">
-for (int i : nums) {
+<pre><code class="language-cpp">for (int i : nums) {
     vector&lt;int&gt; ndp = dp;
 </code></pre>
 <p>這裡我一個一個看 <code>nums</code> 裡的數字 <code>i</code>。</p>
@@ -104,8 +101,7 @@ for (int i : nums) {
 <p>所以 <code>ndp = dp</code> 代表「不選這個數字」的情況先全部繼承下來。</p>
 <hr>
 <h3>3. 嘗試把目前這個數字選進來</h3>
-<pre><code class="language-cpp">
-for (int x = 0; x &lt; M; x++) {
+<pre><code class="language-cpp">for (int x = 0; x &lt; M; x++) {
     if (ndp[x] != -1) {
         ndp[x ^ i] = max(ndp[x ^ i], dp[x] + 1);
     }
@@ -129,8 +125,7 @@ for (int x = 0; x &lt; M; x++) {
 <hr>
 <h3>4. 這裡為什麼要用 <code>dp[x]</code> 而不是 <code>ndp[x]</code></h3>
 <p>更新時你寫的是：</p>
-<pre><code class="language-cpp">
-ndp[x ^ i] = max(ndp[x ^ i], dp[x] + 1);
+<pre><code class="language-cpp">ndp[x ^ i] = max(ndp[x ^ i], dp[x] + 1);
 </code></pre>
 <p>不是用 <code>ndp[x] + 1</code>。</p>
 <p>這很重要，因為我希望：</p>
@@ -141,15 +136,13 @@ ndp[x ^ i] = max(ndp[x ^ i], dp[x] + 1);
 <p>所以這裡一定要從「上一輪的 <code>dp</code>」轉移到「這一輪的 <code>ndp</code>」，這樣才是正確的 0/1 選或不選。</p>
 <hr>
 <h3>5. 每輪更新完後，把結果存回 dp</h3>
-<pre><code class="language-cpp">
-dp = ndp;
+<pre><code class="language-cpp">dp = ndp;
 </code></pre>
 <p>當前這個數字 <code>i</code> 的所有轉移都做完後，</p>
 <p>就把這一輪的新結果正式存回 <code>dp</code>，讓下一個數字繼續接著做。</p>
 <hr>
 <h3>6. 最後看 target 能不能做到</h3>
-<pre><code class="language-cpp">
-return dp[target] &lt; 0 ? -1 : nums.size() - dp[target];
+<pre><code class="language-cpp">return dp[target] &lt; 0 ? -1 : nums.size() - dp[target];
 </code></pre>
 <p>最後我只要檢查：</p>
 <ul>
@@ -191,8 +184,7 @@ return dp[target] &lt; 0 ? -1 : nums.size() - dp[target];
 </ul>
 <p>  使用了 <code>dp</code> 和 <code>ndp</code> 兩個長度為 <code>M</code> 的陣列。</p>
 <h2 id="code">💻 程式碼實作</h2>
-<pre><code class="language-cpp">
-class Solution {
+<pre><code class="language-cpp">class Solution {
 public:
     int minRemovals(vector&lt;int&gt;&amp; nums, int target) {
         const int M = 16384;
