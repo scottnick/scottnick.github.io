@@ -1,0 +1,268 @@
+<!-- all problems/316-remove-duplicate-letters.html: 全部題單文章 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>316. Remove Duplicate Letters</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+               width="18" height="18" aria-hidden="true" focusable="false"
+               style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="../all problems/index.html">All problems</a>
+      <span aria-hidden="true">/</span>
+      <span>316. Remove Duplicate Letters</span>
+    </nav>
+
+    <section class="hero">
+      <h1>316. Remove Duplicate Letters</h1>
+      <p><strong>練習日期：</strong>2026-03-28</p>
+      <p><strong>難度：</strong>Medium</p>
+      <p><strong>類型：</strong>String、Stack、Greedy、Monotonic Stack</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#complexity">⏱️ 複雜度</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給定一個字串 <code>s</code>，請移除重複字母，讓每個字母都只出現一次。</p>
+        <p>同時還要保證最後得到的結果，在所有可能答案中，字典序最小。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>1 &lt;= s.length &lt;= 10^4</code></li>
+          <li><code>s</code> 只包含小寫英文字母</li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>我這題的想法是用 greedy 搭配 monotonic stack。</p>
+        <p>因為題目不只是要把重複字母刪掉，還要求最後答案的字典序最小，所以我在掃字串時，會盡量讓前面的字元小一點。</p>
+        <p>如果目前要放進答案的字元 <code>c</code> 比 stack 頂端更小，而且 stack 頂端那個字元後面還會再出現，那我就可以先把頂端彈掉，等之後再放回來。
+這樣可以讓比較小的字元更早出現在答案裡，字典序就會更小。</p>
+        <p>所以整體做法是：</p>
+        <ul>
+          <li>用 <code>count</code> 記錄每個字元後面還剩幾次</li>
+          <li>用 <code>check</code> 記錄某個字元目前是不是已經在 stack 裡了</li>
+          <li>用 <code>stack</code> 維護目前建出來的答案</li>
+        </ul>
+        <p>每次處理新字元時：</p>
+        <ul>
+          <li>先更新它剩餘次數</li>
+          <li>如果它已經在 stack 裡，就跳過</li>
+          <li>否則就檢查能不能把 stack 頂端較大的字元彈掉</li>
+          <li>最後再把目前字元放進 stack</li>
+        </ul>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>count</code>：記錄每個字母目前還剩幾次還沒處理到</li>
+          <li><code>check</code>：記錄每個字母目前是否已經在 stack 裡</li>
+          <li><code>st</code>：monotonic stack，維護目前答案的字元順序</li>
+          <li><code>ans</code>：最後從 stack 還原出來的答案字串</li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+        <h3>1. 先統計每個字元總共出現幾次</h3>
+        <p>我先用 <code>count</code> 把整個字串裡每個字母的出現次數都統計起來：</p>
+        <pre><code class="language-cpp">vector&lt;int&gt; count(26, 0);
+for (char c : s) {
+    count[c - 'a']++;
+}
+</code></pre>
+        <p>這一步很重要，因為後面我在決定要不要把 stack 頂端字元彈掉時，
+要知道那個字元未來還會不會再出現。</p>
+        <p>如果後面不會再出現，那就不能亂彈，不然答案就會少掉那個字母。</p>
+        <hr />
+
+        <h3>2. 用 <code>check</code> 記錄哪些字元已經在答案裡</h3>
+        <p>我另外開一個 <code>check</code> 陣列：</p>
+        <pre><code class="language-cpp">vector&lt;bool&gt; check(26, false);
+</code></pre>
+        <p>它的用途是記錄某個字母目前是不是已經放進 stack 裡了。</p>
+        <p>因為題目要求每個字母最後只能出現一次，
+所以如果某個字元已經在 stack 裡，後面再遇到同樣字元時，就可以直接跳過，不需要重複放進去。</p>
+        <hr />
+
+        <h3>3. 逐個掃描字串，決定每個字元要不要放進 stack</h3>
+        <p>接著我開始從左到右掃字串中的每個字元 <code>c</code>。</p>
+        <p>每次先做：</p>
+        <pre><code class="language-cpp">count[c - 'a']--;
+</code></pre>
+        <p>這表示目前這個字元已經被我處理到了，所以它「後面還剩幾個」的數量要先扣掉一。</p>
+        <p>接著如果這個字元已經在 stack 裡，也就是：</p>
+        <pre><code class="language-cpp">if (check[c - 'a']) continue;
+</code></pre>
+        <p>那我就直接跳過。
+因為它已經存在答案中了，不需要再放一次。</p>
+        <hr />
+
+        <h3>4. 如果 stack 頂端比較大，而且之後還會再出現，就把它彈掉</h3>
+        <p>這題最核心的地方就在這個 <code>while</code>：</p>
+        <pre><code class="language-cpp">while (!st.empty() &amp;&amp; st.top() &gt; c &amp;&amp; count[st.top() - 'a'] &gt; 0) {
+    check[st.top() - 'a'] = false;
+    st.pop();
+}
+</code></pre>
+        <p>這段意思是：</p>
+        <ul>
+          <li><code>!st.empty()</code>：stack 不能是空的</li>
+          <li><code>st.top() &gt; c</code>：目前 stack 頂端字元比現在這個字元大</li>
+          <li><code>count[st.top() - 'a'] &gt; 0</code>：而且那個頂端字元後面還會再出現</li>
+        </ul>
+        <p>如果這三個條件都成立，我就可以放心把頂端字元先彈掉。</p>
+        <p>原因是：</p>
+        <ul>
+          <li>目前有一個更小的字元 <code>c</code> 可以提早放進答案</li>
+          <li>被彈掉的字元之後還找得到，不會真的消失</li>
+        </ul>
+        <p>所以這樣做可以讓答案的字典序變得更小，而且又不會漏掉任何必須保留的字母。</p>
+        <p>另外在彈掉之前，我也要先把：</p>
+        <pre><code class="language-cpp">check[st.top() - 'a'] = false;
+</code></pre>
+        <p>設回去，表示這個字元現在已經不在 stack 裡了，之後如果再遇到它，還可以重新放回來。</p>
+        <hr />
+
+        <h3>5. 把目前字元放進 stack，並標記已出現</h3>
+        <p>當前面的彈出動作都做完之後，就代表目前這個字元 <code>c</code> 已經找到它現在最適合放的位置了。</p>
+        <p>所以我就把它 push 進 stack：</p>
+        <pre><code class="language-cpp">st.push(c);
+check[c - 'a'] = true;
+</code></pre>
+        <p>這代表：</p>
+        <ul>
+          <li>目前答案尾端加入了這個字元</li>
+          <li>而且它已經存在於 stack 中，之後再遇到相同字元時就不能重複加入</li>
+        </ul>
+        <hr />
+
+        <h3>6. 最後把 stack 還原成字串答案</h3>
+        <p>當整個字串都掃完之後，stack 裡就放著最後答案的字元，只是順序是由底到頂。</p>
+        <p>所以我最後用一個字串 <code>ans</code> 把它倒回來</p>
+        <p>因為 stack 是後進先出，所以我每次把頂端字元接到 <code>ans</code> 前面，
+這樣最後組出來的字串順序才會正確。</p>
+        <p>最後回傳 <code>ans</code> 就可以了。</p>
+
+        <h2 id="complexity">⏱️ 複雜度</h2>
+        <p>設 <code>n = s.length</code>。</p>
+        <ul>
+          <li>時間複雜度：<code>O(n)</code>
+            每個字元最多只會被 push 進 stack 一次、pop 出來一次，所以整體還是線性時間。</li>
+          <li>空間複雜度：<code>O(n)</code>
+            stack 最多會放進 <code>n</code> 個字元；另外 <code>count</code> 和 <code>check</code> 是固定大小。</li>
+        </ul>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    string removeDuplicateLetters(string s) {
+        vector&lt;int&gt; count(26, 0);
+        vector&lt;bool&gt; check(26, false);
+        for (char c : s) {
+            count[c - 'a']++;
+        }
+
+        stack&lt;char&gt; st;
+        for (char c : s) {
+            count[c - 'a']--;
+            if (check[c - 'a']) continue;
+            while (!st.empty() &amp;&amp; st.top() &gt; c &amp;&amp; count[st.top() - 'a'] &gt; 0) {
+                check[st.top() - 'a'] = false;
+                st.pop();
+            }
+            st.push(c);
+            check[c - 'a'] = true;
+        }
+
+        string ans = "";
+        while (!st.empty()) {
+            ans = st.top() + ans;
+            st.pop();
+        }
+        return ans;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p><a href="https://leetcode.com/problems/remove-duplicate-letters/">https://leetcode.com/problems/remove-duplicate-letters/</a></p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-03-28</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value"><span class="post-tags">
+              <span class="post-tag">String</span>
+              <span class="post-tag">Stack</span>
+              <span class="post-tag">Greedy</span>
+              <span class="post-tag">Monotonic Stack</span>
+              <span class="post-tag">Medium</span>
+            </span></span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/all%20problems/316-remove-duplicate-letters.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
