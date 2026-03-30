@@ -1,0 +1,239 @@
+<!-- all problems/60-permutation-sequence.html: 60. Permutation Sequence -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>60. Permutation Sequence</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+               width="18" height="18" aria-hidden="true" focusable="false"
+               style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="index.html">All problems</a>
+      <span aria-hidden="true">/</span>
+      <span>60. Permutation Sequence</span>
+    </nav>
+
+    <section class="hero">
+      <h1>60. Permutation Sequence</h1>
+      <p><strong>練習日期：</strong>2026-03-28</p>
+      <p><strong>難度：</strong>Hard</p>
+      <p><strong>類型：</strong>Math、Recursion</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">目錄</button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#complexity">⏱️ 複雜度</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給定整數 <code>n</code> 和 <code>k</code>。</p>
+        <p>集合 <code>[1, 2, 3, ..., n]</code> 總共有 <code>n!</code> 種不同排列。<br>
+        如果把這些排列按照字典序全部列出來，請回傳第 <code>k</code> 個排列字串。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>1 &lt;= n &lt;= 9</code></li>
+          <li><code>1 &lt;= k &lt;= n!</code></li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>我這題的想法不是把所有排列真的列出來，而是直接判斷第 <code>k</code> 個排列在每一位應該放什麼數字。</p>
+        <p>關鍵在於：<br>
+        如果第一位固定之後，後面剩下的排列數量會是固定的。</p>
+        <p>例如剩下 <code>n - 1</code> 個數字時，後面總共有 <code>(n - 1)!</code> 種排法。<br>
+        所以我可以用 <code>(k - 1) / (n - 1)!</code> 判斷：</p>
+        <ul>
+          <li>這一位應該選目前還沒用過的第幾小數字</li>
+        </ul>
+        <p>接著把前面那一整塊排列數量扣掉，再繼續處理下一位。</p>
+        <p>這樣每次決定一個位置，最後就能直接組出第 <code>k</code> 個排列。</p>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>s</code>：最後要組出來的答案字串</li>
+          <li><code>a</code>：預先存好的階乘表，<code>a[i]</code> 代表 <code>i!</code></li>
+          <li><code>b</code>：記錄哪些數字已經被使用過</li>
+          <li><code>m</code>：目前這一位要選「第幾個還沒用過的數字」</li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+        <h3>1. 先準備階乘表和使用狀態</h3>
+        <p>我先準備一個階乘陣列 <code>a</code>：</p>
+        <pre><code class="language-cpp">int a[10] = {1, 1, 2, 6, 24, 120, 720, 5040, 40320};
+</code></pre>
+        <p>這裡的意思是：</p>
+        <ul>
+          <li><code>a[0] = 1</code></li>
+          <li><code>a[1] = 1</code></li>
+          <li><code>a[2] = 2</code></li>
+          <li><code>a[3] = 6</code></li>
+          <li>...</li>
+        </ul>
+        <p>也就是把 <code>0!</code> 到 <code>8!</code> 先存好，後面就能直接拿來用。</p>
+        <p>我也準備一個布林陣列 <code>b</code>：</p>
+        <pre><code class="language-cpp">bool b[9] = {false};
+</code></pre>
+        <p>它用來記錄 <code>1</code> 到 <code>9</code> 這些數字目前有沒有被選過。<br>
+        如果 <code>b[i] == true</code>，就表示數字 <code>i + 1</code> 已經放進答案裡了，不能再用。</p>
+        <hr>
+
+        <h3>2. 每次先決定目前這一位要選第幾個可用數字</h3>
+        <p>當還有 <code>n</code> 個位置沒填時，固定目前這一位之後，後面還會剩 <code>n - 1</code> 個數字可以排列。<br>
+        所以每一大塊的大小就是 <code>(n - 1)!</code>，也就是 <code>a[n - 1]</code>。</p>
+        <p>因此我用：</p>
+        <pre><code class="language-cpp">int m = (k - 1) / a[n - 1];
+</code></pre>
+        <p>來判斷這一位應該選哪一個數字。</p>
+        <p>這裡要特別注意我用的是 <code>k - 1</code>，原因是：</p>
+        <ul>
+          <li>題目的 <code>k</code> 是從 <code>1</code> 開始編號</li>
+          <li>但這種分塊判斷比較適合用從 <code>0</code> 開始的想法</li>
+        </ul>
+        <p>所以先減一之後，<code>m</code> 就會表示：</p>
+        <ul>
+          <li>目前這一位要選「第 <code>m</code> 個還沒被使用的數字」</li>
+        </ul>
+        <hr>
+
+        <h3>3. 扣掉前面整塊排列數量，更新下一輪的 <code>k</code></h3>
+        <p>決定完目前這一位要落在哪一塊之後，<br>
+        我就把前面那些整塊的排列數量扣掉：</p>
+        <pre><code class="language-cpp">k -= m * a[n - 1];
+</code></pre>
+        <p>這一步的意思是：</p>
+        <ul>
+          <li>前面 <code>m</code> 塊都已經被跳過了</li>
+          <li>接下來我要在目前選中的這一塊裡，繼續找下一位</li>
+        </ul>
+        <p>所以更新完之後的 <code>k</code>，就是「在這一小塊裡面」的第幾個排列。</p>
+        <hr>
+
+        <h3>4. 從還沒用過的數字裡，找到第 <code>m</code> 個</h3>
+        <p>接著我就從小到大掃過所有數字，找目前還沒被使用過的那些數字。</p>
+        <ul>
+          <li>如果這個數字還沒被用過，才有資格被選</li>
+          <li>如果 <code>m &gt; 0</code>，表示還沒走到我要的那一個可用數字，所以先略過，並把 <code>m</code> 減一</li>
+          <li>當 <code>m == 0</code> 時，表示現在這個就是我要選的那個數字</li>
+        </ul>
+        <p>這時候我就把 <code>i + 1</code> 加到答案字串 <code>s</code> 裡，<br>
+        並且把 <code>b[i]</code> 設成 <code>true</code>，表示這個數字之後不能再用了。</p>
+        <hr>
+
+        <h3>5. 選完一位之後，繼續處理下一位</h3>
+        <p>每成功選完一個數字之後，我就把 <code>n</code> 減一</p>
+        <p>這代表：</p>
+        <ul>
+          <li>已經少了一個位置要填</li>
+          <li>也少了一個數字可以用</li>
+        </ul>
+        <p>接著再進下一輪，重新根據新的 <code>n</code> 和新的 <code>k</code> 去決定下一位。</p>
+        <p>這樣一路做下去，直到所有位置都填完為止。</p>
+        <hr>
+
+        <h3>6. 最後回傳組好的排列字串</h3>
+        <p>當 <code>while (n &gt; 0)</code> 結束時，表示每一位都已經選好了。<br>
+        這時候 <code>s</code> 裡面就是第 <code>k</code> 個排列，直接回傳即可。</p>
+
+        <h2 id="complexity">⏱️ 複雜度</h2>
+        <p>設原本輸入的數字為 <code>n</code>。</p>
+        <ul>
+          <li>時間複雜度：<code>O(n^2)</code><br>
+          一共要決定 <code>n</code> 個位置，而每次都可能掃一遍尚未使用的數字。</li>
+          <li>空間複雜度：<code>O(n)</code><br>
+          答案字串和使用狀態都會隨著 <code>n</code> 增加。</li>
+        </ul>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    string getPermutation(int n, int k) {
+        string s;
+        int a[10] = {1, 1, 2, 6, 24, 120, 720, 5040, 40320};
+        bool b[9] = {false};
+        while (n &gt; 0) {
+            int m = (k - 1) / a[n - 1];
+            k -= m * a[n - 1];
+            for (int i = 0; i &lt; 9; i++) {
+                if (!b[i]) {
+                    if (m &gt; 0) {
+                        m--;
+                        continue;
+                    }
+                    s += to_string(i + 1);
+                    b[i] = true;
+                    break;
+                }
+            }
+            n--;
+        }
+        return s;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/permutation-sequence/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field"><span class="meta-label">作者：</span><span class="meta-value">scottnick</span></div>
+        <div class="meta-field meta-field--date"><span class="meta-label">撰寫日期：</span><span class="meta-value">2026-03-28</span></div>
+        <div class="meta-field meta-field--full"><span class="meta-label">類別：</span><span class="meta-value"><span class="post-tags">
+              <span class="post-tag">Math</span>
+              <span class="post-tag">Recursion</span>
+              <span class="post-tag">Hard</span>
+            </span></span></div>
+        <div class="meta-field meta-field--full"><span class="meta-label">原文連結：</span><span class="meta-value">https://scottnick.github.io/cpp-notes/all%20problems/60-permutation-sequence.html</span></div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
