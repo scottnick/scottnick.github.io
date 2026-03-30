@@ -63,6 +63,7 @@
           <li><a href="#statement">📘 題目敘述</a></li>
           <li><a href="#approach">🧠 解題思路</a></li>
           <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#dp">為什麼這是一題動態規劃（DP）</a></li>
           <li><a href="#code">💻 程式碼實作</a></li>
           <li><a href="#link">🔗 題目連結</a></li>
         </ul>
@@ -70,7 +71,7 @@
 
       <section class="term-block article-content">
         <h2 id="statement">📘 題目敘述</h2>
-        <p>你正在爬一個有 <code>n</code> 階的樓梯。每一次你可以選擇爬 <strong>1 階</strong> 或 <strong>2 階</strong>。</p>
+        <p>你正在爬一個有 <code>n</code> 階的樓梯。每一次你可以選擇爬<strong>1 階</strong> 或 <strong>2 階</strong>。</p>
         <p>請問總共有多少種不同的方法可以爬到樓梯頂端？</p>
 
         <h3>條件限制</h3>
@@ -80,7 +81,9 @@
 
         <h2 id="approach">🧠 解題思路</h2>
         <p>我在思考這題時，並不是直接想「要怎麼算最快」，而是先問自己一個最根本的問題：</p>
-        <p><strong>如果我要走到第 <code>n</code> 階，最後一步是怎麼來的？</strong></p>
+        <blockquote>
+          <p><strong>如果我要走到第 <code>n</code> 階，最後一步是怎麼來的？</strong></p>
+        </blockquote>
         <p>這個問題一想清楚，整題的結構其實就已經出來了。</p>
 
         <h3>所有變數</h3>
@@ -98,16 +101,16 @@
           <li>從第 <code>n-1</code> 階走 <strong>1 步</strong> 上來</li>
           <li>從第 <code>n-2</code> 階走 <strong>2 步</strong> 上來</li>
         </ol>
+        <p>除此之外，不存在第三種可能。</p>
         <p>也就是說：</p>
         <ul>
           <li>所有「能走到第 <code>n-1</code> 階的方法」，最後再走 1 步，都可以到 <code>n</code></li>
           <li>所有「能走到第 <code>n-2</code> 階的方法」，最後再走 2 步，也可以到 <code>n</code></li>
         </ul>
-        <p>而這兩種來源互不重疊，剛好涵蓋所有走法。</p>
+        <p>而這兩種來源 <strong>互不重疊</strong>，剛好涵蓋所有走法。</p>
         <hr />
 
         <h3>核心遞推關係</h3>
-        <p>因此我在腦中建立了一個非常清楚的關係：</p>
         <p>走到第 <code>n</code> 階的方法數 = 走到第 <code>n-1</code> 階的方法數 + 走到第 <code>n-2</code> 階的方法數</p>
         <p>用符號表示就是：</p>
         <p><code>step[n] = step[n-1] + step[n-2]</code></p>
@@ -115,10 +118,19 @@
 
         <h3>為什麼要先處理最小情況</h3>
         <p>在正式往上推之前，我會先確認最小的階數狀況：</p>
+
+        <h4><code>n = 0</code></h4>
         <ul>
-          <li><strong><code>n = 0</code></strong>：沒有階梯要爬，什麼都不做，也算是一種方法</li>
-          <li><strong><code>n = 1</code></strong>：只能走 1 階，也只有一種方法</li>
+          <li>沒有階梯要爬</li>
+          <li>什麼都不做，也算是一種方法</li>
         </ul>
+
+        <h4><code>n = 1</code></h4>
+        <ul>
+          <li>只能走 1 階</li>
+          <li>也只有一種方法</li>
+        </ul>
+
         <p>因此在我的邏輯中：</p>
         <ul>
           <li><code>step[0] = 1</code></li>
@@ -126,7 +138,7 @@
         </ul>
         <p>這兩個值就是整個推導的起點。</p>
 
-        <h3>為什麼這是一題動態規劃（DP）</h3>
+        <h2 id="dp">為什麼這是一題動態規劃（DP）</h2>
         <p>整理完整體想法後，我發現這題完全符合 DP 的特徵：</p>
         <ul>
           <li>大問題（走到第 <code>n</code> 階）可以拆成小問題（<code>n-1</code>、<code>n-2</code>）</li>
@@ -141,7 +153,7 @@
         </ul>
         <hr />
 
-        <h3>和費波那契數列的關係</h3>
+        <h3 id="fibonacci">和費波那契數列的關係</h3>
         <p>在寫完這題後，我也意識到：</p>
         <ul>
           <li>這個遞推關係</li>
@@ -170,7 +182,7 @@ public:
 </code></pre>
 
         <h2 id="link">🔗 題目連結</h2>
-        <p>https://leetcode.com/problems/climbing-stairs/</p>
+        <p><a href="https://leetcode.com/problems/climbing-stairs/">https://leetcode.com/problems/climbing-stairs/</a></p>
       </section>
     </div>
 

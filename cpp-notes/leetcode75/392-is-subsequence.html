@@ -72,11 +72,7 @@
       <section class="term-block article-content">
         <h2 id="statement">📘 題目敘述</h2>
         <p>給定兩個字串 <code>s</code> 與 <code>t</code>，請判斷 <code>s</code> 是否為 <code>t</code> 的子序列（subsequence）。</p>
-        <p>子序列的定義是：</p>
-        <ul>
-          <li>可以從 <code>t</code> 中刪除某些（或不刪除）字元，而不改變剩餘字元的相對順序</li>
-          <li>若能得到字串 <code>s</code>，則稱 <code>s</code> 是 <code>t</code> 的子序列</li>
-        </ul>
+        <p>子序列的定義是：可以從 <code>t</code> 中刪除某些（或不刪除）字元，而不改變剩餘字元的相對順序，若能得到字串 <code>s</code>，則稱 <code>s</code> 是 <code>t</code> 的子序列。</p>
 
         <h3>條件限制</h3>
         <ul>
@@ -100,7 +96,7 @@
           <li>如果最後能把 <code>s</code> 的所有字元都配對完成，就代表 <code>s</code> 是 <code>t</code> 的子序列</li>
         </ul>
 
-        <h3>所有變數</h3>
+        <h3 id="variables">所有變數</h3>
         <ul>
           <li><code>s</code>：目標子序列</li>
           <li><code>t</code>：被檢查的原始字串</li>
@@ -118,8 +114,9 @@
         <hr />
 
         <h3>掃描字串 <code>t</code></h3>
-        <p>我用一個 for 迴圈，從左到右掃描整個 <code>t</code>。</p>
+        <p>我用一個 for 迴圈，從左到右掃描整個 <code>t</code>：</p>
         <p>對於每一個 <code>t[i]</code>：</p>
+
         <h4>情況一：<code>t[i] == s[pos]</code></h4>
         <ul>
           <li>代表成功找到 <code>s</code> 的下一個需要的字元</li>
@@ -141,8 +138,18 @@
         <h3>判斷結果</h3>
         <p>當整個 <code>t</code> 掃描完後：</p>
         <ul>
-          <li>如果 <code>pos == n1</code>，代表 <code>s</code> 的所有字元都已經依序配對完成，回傳 <code>true</code></li>
-          <li>否則表示中途配對失敗，回傳 <code>false</code></li>
+          <li>如果 <code>pos == n1</code>
+            <ul>
+              <li>代表 <code>s</code> 的所有字元都已經依序配對完成</li>
+              <li>回傳 <code>true</code></li>
+            </ul>
+          </li>
+          <li>否則
+            <ul>
+              <li>表示中途配對失敗</li>
+              <li>回傳 <code>false</code></li>
+            </ul>
+          </li>
         </ul>
 
         <h2 id="summary">💡 整體邏輯總結</h2>

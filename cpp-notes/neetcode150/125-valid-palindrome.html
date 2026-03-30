@@ -96,10 +96,10 @@
         </ul>
         <p>因為偶數長度與奇數長度的「中心點」處理不同，所以我用 <code>n</code> 的奇偶分開處理。</p>
 
-        <h3>所有變數</h3>
+        <h3 id="variables">所有變數</h3>
         <ul>
-          <li><code>trans</code>：第一階段用來掃描字串的位置指標</li>
-          <li><code>pal</code>：第二階段用來存反轉後半段的字串</li>
+          <li><code>trans</code>：第一階段用來掃描字串的位置指標（逐字處理、同時可能刪字元）</li>
+          <li><code>pal</code>：第二階段用來存「反轉後半段」的字串，最後用來和前半段比較</li>
           <li><code>n</code>：整理完後的字串長度，用來判斷奇偶與切割範圍</li>
         </ul>
 
@@ -129,8 +129,10 @@
         <ul>
           <li>這些字元不應該參與回文判斷</li>
           <li>所以我把它從字串中刪掉</li>
-          <li><strong>刪掉後不做 <code>trans++</code></strong>，因為刪除會讓後面的字元往前補上來</li>
+          <li><strong>刪掉後不做 <code>trans++</code></strong>，因為刪除會讓後面的字元往前補上來，需要繼續檢查同一個索引位置</li>
         </ul>
+        <p>整理完後，字串 <code>s</code> 就變成只含英數的乾淨版本。</p>
+        <hr />
 
         <h3>第二階段：判斷是否迴文（用字串切半比較）</h3>
         <p>整理完後我令 <code>n = s.size()</code>，接著看長度是偶數還是奇數：</p>
@@ -138,14 +140,26 @@
         <h4>情況一：<code>n</code> 是偶數</h4>
         <ul>
           <li>我把後半段反過來接成 <code>pal</code></li>
-          <li>然後比較前半段 <code>s.substr(0, n / 2)</code> 是否等於 <code>pal</code></li>
+          <li>然後比較：
+            <ul>
+              <li>前半段 <code>s.substr(0, n / 2)</code></li>
+              <li>是否等於 <code>pal</code></li>
+            </ul>
+          </li>
           <li>相等就回傳 <code>true</code>，否則 <code>false</code></li>
         </ul>
 
         <h4>情況二：<code>n</code> 是奇數</h4>
         <ul>
-          <li>我把後半段反過來接成 <code>pal</code></li>
-          <li>然後比較 <code>s.substr(0, n / 2 + 1)</code> 是否等於 <code>pal</code></li>
+          <li>這時中間那個字元左右對稱時會自己對到自己</li>
+          <li>我的做法是把「包含中間字元的那一半」也一起放進比較</li>
+          <li>所以我同樣把後半段反過來接成 <code>pal</code></li>
+          <li>然後比較：
+            <ul>
+              <li><code>s.substr(0, n / 2 + 1)</code></li>
+              <li>是否等於 <code>pal</code></li>
+            </ul>
+          </li>
           <li>相等就回傳 <code>true</code>，否則 <code>false</code></li>
         </ul>
 
@@ -170,7 +184,6 @@ public:
 
         int n = s.size();
         if (n % 2 == 0) {
-            // n是偶數
             for (int i = n - 1; i &gt;= n / 2; i--) {
                 pal += s[i];
             }
@@ -180,7 +193,6 @@ public:
                 return false;
             }
         } else {
-            // n是奇數
             for (int i = n - 1; i &gt;= n / 2; i--) {
                 pal += s[i];
             }
@@ -195,7 +207,7 @@ public:
 </code></pre>
 
         <h2 id="link">🔗 題目連結</h2>
-        <p><a href="https://leetcode.com/problems/valid-palindrome/">https://leetcode.com/problems/valid-palindrome/</a></p>
+        <p>https://leetcode.com/problems/valid-palindrome/</p>
       </section>
     </div>
 

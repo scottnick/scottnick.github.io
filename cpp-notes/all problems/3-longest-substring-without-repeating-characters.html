@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>3. Longest Substring Without Repeating Characters</title>
+  <title>Longest Substring Without Repeating Characters</title>
   <link rel="stylesheet" href="../../styles.css">
 </head>
 <body class="page-article">
@@ -62,7 +62,6 @@
         <ul>
           <li><a href="#statement">📘 題目敘述</a></li>
           <li><a href="#approach">🧠 解題思路</a></li>
-          <li><a href="#steps">🪜 主要流程步驟</a></li>
           <li><a href="#code">💻 程式碼實作</a></li>
           <li><a href="#link">🔗 題目連結</a></li>
         </ul>
@@ -71,7 +70,6 @@
       <section class="term-block article-content">
         <h2 id="statement">📘 題目敘述</h2>
         <p>給定一個字串 <code>s</code>，請找出其中「不包含重複字元」的最長子字串長度。</p>
-
         <h3>條件限制</h3>
         <ul>
           <li><code>0 ≤ s.length ≤ 5 × 10^4</code></li>
@@ -82,14 +80,13 @@
         <p>我把這題想成一個「從左到右掃描字串，同時維持一段目前不重複的連續區間」的過程。</p>
         <p>在掃描的同時，我會隨時記錄目前這段區間的長度，並更新目前看過的最大值。</p>
 
-        <h3>所有變數</h3>
+        <h3 id="variables">所有變數</h3>
         <ul>
           <li><code>sub</code>：目前維持的「不包含重複字元」的子字串，可以視為一個直覺版的滑動視窗</li>
           <li><code>ans</code>：目前為止找到的最長不重複子字串長度</li>
           <li><code>check</code>：用來標記「這一輪是否已經處理過重複字元」</li>
         </ul>
-
-        <h2 id="steps">🪜 主要流程步驟</h2>
+        <hr />
         <p>一開始的處理方式是：</p>
         <ul>
           <li>若字串為空，直接回傳 0</li>
@@ -97,7 +94,6 @@
           <li>接著從第二個字元開始，逐一往右掃描</li>
         </ul>
         <hr />
-
         <p>接下來我依序處理每一個 <code>s[i]</code>，會出現以下幾種情況：</p>
 
         <h3>情況一：<code>s[i]</code> 沒有出現在 <code>sub</code> 中（沒有重複）</h3>
@@ -107,7 +103,6 @@
           <li>視窗向右擴張一格</li>
         </ul>
         <hr />
-
         <h3>情況二：<code>s[i]</code> 出現在 <code>sub</code> 中（發生重複）</h3>
         <ul>
           <li>代表若直接加入 <code>s[i]</code>，子字串中會出現重複字元</li>
@@ -115,13 +110,16 @@
         </ul>
         <p>當在 <code>sub[j]</code> 找到與 <code>s[i]</code> 相同的字元時：</p>
         <ul>
-          <li>將 <code>sub</code> 改成 <code>sub.substr(j + 1)</code></li>
+          <li>將 <code>sub</code> 改成 <code>sub.substr(j + 1)</code>
+            <ul>
+              <li>也就是捨棄重複字元以及它之前的所有字元</li>
+            </ul>
+          </li>
           <li>再將目前的 <code>s[i]</code> 加入新的 <code>sub</code></li>
           <li>並將 <code>check</code> 設為 <code>true</code>，表示這一輪已經處理過重複情況</li>
         </ul>
         <p>這樣可以確保新的 <code>sub</code> 仍然是不包含重複字元的連續子字串。</p>
         <hr />
-
         <h3>為什麼要在內層迴圈中更新 <code>ans</code>？</h3>
         <p>在掃描 <code>sub</code> 的過程中：</p>
         <ul>
@@ -134,7 +132,6 @@
           <li>再額外比較一次最後的 <code>sub.size()</code>，避免漏掉最後一段子字串</li>
         </ul>
         <hr />
-
         <h3>最後回傳</h3>
         <ul>
           <li>回傳 <code>ans</code></li>

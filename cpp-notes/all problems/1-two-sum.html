@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Two Sum</title>
+  <title>1. Two Sum</title>
   <link rel="stylesheet" href="../../styles.css">
 </head>
 <body class="page-article">
@@ -70,6 +70,7 @@
       <section class="term-block article-content">
         <h2 id="statement">📘 題目敘述</h2>
         <p>給定一個整數陣列 <code>nums</code> 與一個整數 <code>target</code>，請回傳兩個數字的索引，使得它們相加的結果等於 <code>target</code>。</p>
+
         <h3>條件限制</h3>
         <ul>
           <li><code>2 ≤ nums.length ≤ 10^4</code></li>
@@ -83,11 +84,10 @@
         <p>只要找到陣列中<strong>任意兩個不同位置的數字</strong>，它們相加等於 <code>target</code> 即可。</p>
         <p>因此我把問題拆成兩個步驟來思考：</p>
         <ul>
-          <li>1. 先固定第一個數字的位置 <code>i</code></li>
-          <li>2. 再從後面的元素中，尋找是否存在另一個位置 <code>j</code>，使得 <code>nums[i] + nums[j] == target</code></li>
+          <li>先固定第一個數字的位置 <code>i</code></li>
+          <li>再從後面的元素中，尋找是否存在另一個位置 <code>j</code>，使得 <code>nums[i] + nums[j] == target</code></li>
         </ul>
-        <p>只要找到一組符合條件的索引，就可以直接回傳答案，</p>
-        <p>因為題目已經保證 <strong>恰好只有一組解</strong>。</p>
+        <p>只要找到一組符合條件的索引，就可以直接回傳答案，因為題目已經保證 <strong>恰好只有一組解</strong>。</p>
         <hr />
         <p>在固定 <code>i</code> 之後，對應的第二層搜尋會出現以下幾種情況：</p>
 
@@ -104,6 +104,7 @@
           <li>此時改固定下一個 <code>i</code>，重複相同的搜尋流程</li>
         </ul>
         <hr />
+
         <h3>為什麼第二層迴圈從 <code>j = i + 1</code> 開始？</h3>
         <p>第二層迴圈從 <code>j = i + 1</code> 開始，主要是為了避免兩種不合理的情況：</p>
         <ul>
@@ -134,7 +135,7 @@ public:
 </code></pre>
 
         <h2 id="link">🔗 題目連結</h2>
-        <p>https://leetcode.com/problems/two-sum/</p>
+        <p><a href="https://leetcode.com/problems/two-sum/">https://leetcode.com/problems/two-sum/</a></p>
       </section>
     </div>
 
