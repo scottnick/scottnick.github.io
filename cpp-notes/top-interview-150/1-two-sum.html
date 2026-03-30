@@ -62,7 +62,7 @@
         <ul>
           <li><a href="#statement">📘 題目敘述</a></li>
           <li><a href="#approach">🧠 解題思路</a></li>
-          <li><a href="#code">💻 程式碼實作（暴力解）</a></li>
+          <li><a href="#brute-force">💻 程式碼實作（暴力解）</a></li>
           <li><a href="#link">🔗 題目連結</a></li>
         </ul>
       </aside>
@@ -80,15 +80,15 @@
         </ul>
 
         <h2 id="approach">🧠 解題思路</h2>
-        <p>在看這題時，我的直覺想法是：只要找到陣列中<strong>任意兩個不同位置的數字</strong>，它們相加等於 <code>target</code> 即可。</p>
+        <p>在看這題時，我的直覺想法是：</p>
+        <p>只要找到陣列中<strong>任意兩個不同位置的數字</strong>，它們相加等於 <code>target</code> 即可。</p>
         <p>因此我把問題拆成兩個步驟來思考：</p>
-        <ol>
+        <ul>
           <li>先固定第一個數字的位置 <code>i</code></li>
           <li>再從後面的元素中，尋找是否存在另一個位置 <code>j</code>，使得 <code>nums[i] + nums[j] == target</code></li>
-        </ol>
-        <p>只要找到一組符合條件的索引，就可以直接回傳答案，因為題目已經保證<strong>恰好只有一組解</strong>。</p>
+        </ul>
+        <p>只要找到一組符合條件的索引，就可以直接回傳答案，因為題目已經保證 <strong>恰好只有一組解</strong>。</p>
         <hr />
-
         <p>在固定 <code>i</code> 之後，對應的第二層搜尋會出現以下幾種情況：</p>
 
         <h3>情況一：找到符合條件的配對</h3>
@@ -118,7 +118,7 @@
         </ul>
         <p>也讓整個搜尋流程保持最直觀、最容易理解。</p>
 
-        <h2 id="code">💻 程式碼實作（暴力解）</h2>
+        <h2 id="brute-force">💻 程式碼實作（暴力解）</h2>
         <pre><code class="language-cpp">class Solution {
 public:
     vector&lt;int&gt; twoSum(vector&lt;int&gt;&amp; nums, int target) {
@@ -135,7 +135,7 @@ public:
 </code></pre>
 
         <h2 id="link">🔗 題目連結</h2>
-        <p>https://leetcode.com/problems/two-sum/</p>
+        <p><a href="https://leetcode.com/problems/two-sum/">https://leetcode.com/problems/two-sum/</a></p>
       </section>
     </div>
 

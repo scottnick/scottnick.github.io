@@ -63,7 +63,7 @@
           <li><a href="#statement">📘 題目敘述</a></li>
           <li><a href="#approach">🧠 解題思路</a></li>
           <li><a href="#steps">🪜 主要流程步驟</a></li>
-          <li><a href="#summary">💡 整體邏輯總結</a></li>
+          <li><a href="#summary">💡 為什麼這樣一定正確？</a></li>
           <li><a href="#code">💻 程式碼實作</a></li>
           <li><a href="#link">🔗 題目連結</a></li>
         </ul>
@@ -114,8 +114,12 @@
           <li>因為 majority element 的數量超過一半，所以它一定佔到中間這格</li>
         </ul>
 
-        <h2 id="summary">💡 整體邏輯總結</h2>
-        <p>排序後，相同元素會排在一起，而出現次數超過一半的元素必定覆蓋中間位置，所以直接回傳排序後的中位數即可。</p>
+        <h2 id="summary">💡 為什麼這樣一定正確？</h2>
+        <ul>
+          <li>排序後相同元素一定連續排列</li>
+          <li>majority element 的數量 <code>&gt; n/2</code>，因此它佔據的區間必定包含中位數位置</li>
+          <li>所以取排序後的 <code>nums[n/2]</code> 一定是 majority element</li>
+        </ul>
         <p>時間複雜度為 <code>O(n log n)</code>，空間複雜度為 <code>O(1)</code>（忽略排序所需額外空間）。</p>
 
         <h2 id="code">💻 程式碼實作</h2>

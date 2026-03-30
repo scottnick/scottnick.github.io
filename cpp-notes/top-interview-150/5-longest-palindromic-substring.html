@@ -61,11 +61,10 @@
         <strong>目錄</strong>
         <ul>
           <li><a href="#statement">📘 題目敘述</a></li>
-          <li><a href="#approach-1">🧠 解題思路 (一) 直覺想法</a></li>
-          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#approach">🧠 解題思路 (一) 直覺想法</a></li>
           <li><a href="#code">💻 程式碼實作</a></li>
-          <li><a href="#approach-2">🧠 解題思路（二）：DP（動態規劃）</a></li>
-          <li><a href="#code-2">💻 程式碼實作（DP 版本）</a></li>
+          <li><a href="#dp">🧠 解題思路（二）：DP（動態規劃）</a></li>
+          <li><a href="#dp-code">💻 程式碼實作（DP 版本）</a></li>
           <li><a href="#link">🔗 題目連結</a></li>
         </ul>
       </aside>
@@ -81,8 +80,9 @@
           <li><code>s</code> 只包含英文字母與數字</li>
         </ul>
 
-        <h2 id="approach-1">🧠 解題思路 (一) 直覺想法</h2>
-        <p>我把這題想成「找迴文的中心，然後往外擴張」的過程。因為迴文一定是左右對稱，所以只要先確定中心位置，就能往外一層一層比對。</p>
+        <h2 id="approach">🧠 解題思路 (一) 直覺想法</h2>
+        <p>我把這題想成「找迴文的中心，然後往外擴張」的過程。</p>
+        <p>因為迴文一定是左右對稱，所以只要先確定中心位置，就能往外一層一層比對。</p>
         <p>我的做法分成三大步：</p>
         <ol>
           <li>先處理字串長度很小的邊界情況（長度 1 或 2）</li>
@@ -92,13 +92,13 @@
         <p>這樣做的原因是：迴文的中心型態只有兩種（偶數中心 / 奇數中心），把它們分開處理會比較直覺。</p>
         <hr />
 
-        <h3>所有變數</h3>
+        <h3 id="variables">所有變數</h3>
         <ul>
-          <li><code>best</code>：目前找到的最長迴文子字串，一開始先設為第一個字元（至少長度 1 的迴文一定存在）</li>
+          <li><code>best</code>：目前找到的最長迴文子字串，一開始先設為第一個字元</li>
           <li><code>now</code>：在某個中心展開時，目前正在形成的迴文子字串（暫存用）</li>
         </ul>
+        <hr />
 
-        <h2 id="steps">🪜 主要流程步驟</h2>
         <h3>步驟一：先處理長度 1 或 2 的情況</h3>
         <ul>
           <li>若 <code>s.size() == 1</code>：答案就是整個字串本身</li>
@@ -154,33 +154,33 @@ public:
                 return best;
             }
         }
-        for (int i = 0; i &lt; s.size() - 1; i++) {
+        for (int i = 0; i < s.size() - 1; i++) {
             if (s[i] == s[(i + 1)]) {
                 string now = "";
-                for (int j = i; (j &gt;= 0) &amp;&amp; (2 * i + 1 - j &lt; s.size()); j--) {
+                for (int j = i; (j >= 0) && (2 * i + 1 - j < s.size()); j--) {
                     if (s[j] == s[2 * i + 1 - j]) {
                         now = s[j] + now;
                         now.push_back(s[2 * i + 1 - j]);
                     } else {
                         break;
                     }
-                    if (now.size() &gt; best.size()) {
+                    if (now.size() > best.size()) {
                         best = now;
                     }
                 }
             }
         }
-        for (int i = 0; i &lt; s.size() - 2; i++) {
+        for (int i = 0; i < s.size() - 2; i++) {
             if (s[i] == s[(i + 2)]) {
                 string now = s.substr(i + 1, 1);
-                for (int j = i; (j &gt;= 0) &amp;&amp; (2 * i + 2 - j &lt; s.size()); j--) {
+                for (int j = i; (j >= 0) && (2 * i + 2 - j < s.size()); j--) {
                     if (s[j] == s[2 * i + 2 - j]) {
                         now = s[j] + now;
                         now.push_back(s[2 * i + 2 - j]);
                     } else {
                         break;
                     }
-                    if (now.size() &gt; best.size()) {
+                    if (now.size() > best.size()) {
                         best = now;
                     }
                 }
@@ -191,8 +191,9 @@ public:
 };
 </code></pre>
 
-        <h2 id="approach-2">🧠 解題思路（二）：DP（動態規劃）</h2>
-        <p>參考了一下官方提供解法，利用 Dynamic programming 解題。先用一個表格記錄「某一段子字串是不是迴文」，之後就能用更小的區間推導更大的區間。</p>
+        <h2 id="dp">🧠 解題思路（二）：DP（動態規劃）</h2>
+        <p>參考了一下官方提供解法，利用 Dynamic programming 解題。</p>
+        <p>先用一個表格記錄「某一段子字串是不是迴文」，之後就能用更小的區間推導更大的區間。</p>
         <hr />
 
         <h3>DP 的想法</h3>
@@ -202,7 +203,11 @@ public:
           <li><code>dp[i][j] = false</code> 表示不是迴文</li>
         </ul>
         <p>核心轉移關係是：</p>
-        <p><code>dp[i][j] = (s[i] == s[j]) &amp;&amp; dp[i+1][j-1]</code></p>
+        <ul>
+          <li>如果 <code>s[i] == s[j]</code>，且內層的子字串 <code>s[i+1..j-1]</code> 是迴文，那麼 <code>s[i..j]</code> 也是迴文</li>
+        </ul>
+        <p>也就是：</p>
+        <p><code>dp[i][j] = (s[i] == s[j]) && dp[i+1][j-1]</code></p>
         <hr />
 
         <h3>所有變數</h3>
@@ -215,9 +220,15 @@ public:
 
         <h3>初始化（先處理長度 1 與 2）</h3>
         <p>因為 DP 需要從小區間開始建立：</p>
+        <h4>長度 1</h4>
+        <p>任何單一字元一定是迴文：</p>
         <ul>
-          <li><strong>長度 1</strong>：任何單一字元一定是迴文，<code>dp[i][i] = true</code></li>
-          <li><strong>長度 2</strong>：只要相鄰兩字元相同，就是迴文，若 <code>s[j] == s[j+1]</code>，則 <code>dp[j][j+1] = true</code>，同時更新 <code>start = j</code>、<code>len = 2</code></li>
+          <li><code>dp[i][i] = true</code></li>
+        </ul>
+        <h4>長度 2</h4>
+        <ul>
+          <li>若 <code>s[j] == s[j+1]</code>，則 <code>dp[j][j+1] = true</code></li>
+          <li>同時更新 <code>start = j</code>、<code>len = 2</code></li>
         </ul>
         <hr />
 
@@ -234,37 +245,44 @@ public:
           </li>
           <li>就能推出 <code>dp[l][r] = true</code></li>
         </ul>
-        <p>並且每次找到更長的迴文，就更新 <code>start = l</code>、<code>len = k</code>。</p>
+        <p>並且每次找到更長的迴文，就更新：</p>
+        <ul>
+          <li><code>start = l</code></li>
+          <li><code>len = k</code></li>
+        </ul>
         <hr />
 
         <h3>最後回傳</h3>
-        <p>回傳 <code>s.substr(start, len)</code>，就是最長迴文子字串。</p>
+        <ul>
+          <li>回傳 <code>s.substr(start, len)</code>，就是最長迴文子字串</li>
+        </ul>
 
-        <h2 id="code-2">💻 程式碼實作（DP 版本）</h2>
+        <h2 id="dp-code">💻 程式碼實作（DP 版本）</h2>
         <pre><code class="language-cpp">class Solution {
 public:
     string longestPalindrome(string s) {
         int n = s.size();
         int start = 0;
         int len = 1;
-        if (n &lt;= 1) {
+        if (n <= 1) {
             return s;
         }
         vector&lt;vector&lt;bool&gt;&gt; dp(n, vector&lt;bool&gt;(n, false));
+        // dp[i][j]：看 s[i] 到 s[j] 是否為迴文
 
-        for (int i = 0; i &lt; n; i++) {
+        for (int i = 0; i < n; i++) {
             dp[i][i] = true;
         }
-        for (int j = 0; j &lt; n - 1; j++) {
+        for (int j = 0; j < n - 1; j++) {
             if (s[j] == s[j + 1]) {
                 dp[j][j + 1] = true;
                 start = j;
                 len = 2;
             }
         }
-        for (int k = 3; k &lt;= n; k++) {
-            for (int l = 0; l &lt; n - k + 1; l++) {
-                if ((s[l] == s[l + k - 1]) &amp;&amp; dp[l + 1][l + k - 2]) {
+        for (int k = 3; k <= n; k++) {
+            for (int l = 0; l < n - k + 1; l++) {
+                if ((s[l] == s[l + k - 1]) && dp[l + 1][l + k - 2]) {
                     dp[l][l + k - 1] = true;
                     start = l;
                     len = k;

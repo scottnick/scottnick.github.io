@@ -71,7 +71,7 @@
       <section class="term-block article-content">
         <h2 id="statement">📘 題目敘述</h2>
         <p>給定一個由整數組成的陣列 <code>digits</code>，其中每一個元素代表一個數字的一位，整個陣列代表一個<strong>非負整數</strong>。</p>
-        <p>請將這個整數<strong>加一</strong>，並回傳加一後的結果（仍以陣列形式表示）。</p>
+        <p>請將這個整數 <strong>加一</strong>，並回傳加一後的結果（仍以陣列形式表示）。</p>
 
         <h3>條件限制</h3>
         <ul>
@@ -114,7 +114,12 @@
         <h3>第二步：處理可能的進位（從後往前）</h3>
         <p>接下來檢查是否發生進位：</p>
         <ul>
-          <li>只要某一位數字大於 9，就減去 10，並把進位加到前一位</li>
+          <li>只要某一位數字大於 9
+            <ul>
+              <li>就減去 10</li>
+              <li>並把進位加到前一位</li>
+            </ul>
+          </li>
           <li>然後把指標往前移，繼續檢查</li>
         </ul>
         <p>這個過程會一路往前傳遞進位，直到：</p>
@@ -125,7 +130,18 @@
         <hr />
 
         <h3>第三步：處理最前面的特殊情況</h3>
-        <p>如果最後發現最前面那一位仍然大於 9，代表原本的數字是像 <code>999</code>、<code>99</code>、<code>9</code> 這種情況，加一後會多出一位數。</p>
+        <p>如果最後發現：</p>
+        <ul>
+          <li><strong>最前面那一位仍然大於 9</strong></li>
+        </ul>
+        <p>代表原本的數字是像：</p>
+        <ul>
+          <li><code>999</code></li>
+          <li><code>99</code></li>
+          <li><code>9</code></li>
+        </ul>
+        <p>這種情況下，加一後會多出一位數。</p>
+        <p>我的做法是：</p>
         <ul>
           <li>把最前面那一位修正成 0</li>
           <li>再在陣列最前面插入一個 <code>1</code></li>
@@ -134,6 +150,7 @@
         <hr />
 
         <h3>整體邏輯總結</h3>
+        <p>這題的核心就是「模擬加法」：</p>
         <ol>
           <li>從最後一位開始加一</li>
           <li>有進位就往前傳</li>
@@ -167,7 +184,7 @@ public:
 </code></pre>
 
         <h2 id="link">🔗 題目連結</h2>
-        <p><a href="https://leetcode.com/problems/plus-one/">https://leetcode.com/problems/plus-one/</a></p>
+        <p>https://leetcode.com/problems/plus-one/</p>
       </section>
     </div>
 
