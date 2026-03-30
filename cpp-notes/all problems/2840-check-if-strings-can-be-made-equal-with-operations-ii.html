@@ -1,0 +1,295 @@
+<!-- all problems/2840-check-if-strings-can-be-made-equal-with-operations-ii.html: 2840. Check if Strings Can be Made Equal With Operations II -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2840. Check if Strings Can be Made Equal With Operations II</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+               width="18" height="18" aria-hidden="true" focusable="false"
+               style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="index.html">All problems</a>
+      <span aria-hidden="true">/</span>
+      <span>2840. Check if Strings Can be Made Equal With Operations II</span>
+    </nav>
+
+    <section class="hero">
+      <h1>2840. Check if Strings Can be Made Equal With Operations II</h1>
+      <p><strong>練習日期：</strong>2026-03-30</p>
+      <p><strong>難度：</strong>Medium</p>
+      <p><strong>類型：</strong>Hash Table、String、Sorting</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#variables">所有變數</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#complexity">⏱️ 複雜度</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+
+        <p>給定兩個字串 <code>s1</code> 和 <code>s2</code>，它們長度都為 <code>n</code>，並且只包含小寫英文字母。</p>
+
+        <p>你可以對任一個字串做任意次以下操作：</p>
+
+        <ul>
+          <li>選兩個索引 <code>i</code> 和 <code>j</code></li>
+          <li>滿足 <code>i &lt; j</code></li>
+          <li>且 <code>j - i</code> 是偶數</li>
+          <li>然後交換這兩個位置的字元</li>
+        </ul>
+
+        <p>請判斷是否可以透過這些操作，讓 <code>s1</code> 和 <code>s2</code> 變成相同字串。
+如果可以，回傳 <code>true</code>；否則回傳 <code>false</code>。</p>
+
+        <h3>條件限制</h3>
+
+        <ul>
+          <li><code>n == s1.length == s2.length</code></li>
+          <li><code>1 &lt;= n &lt;= 10^5</code></li>
+          <li><code>s1</code> 和 <code>s2</code> 只包含小寫英文字母</li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+
+        <p>我這題的想法是把字串拆成：</p>
+
+        <ul>
+          <li>偶數位置那一組</li>
+          <li>奇數位置那一組</li>
+        </ul>
+
+        <p>因為題目只允許交換距離為偶數的兩個位置，這代表被交換的兩個位置一定同奇偶。
+也就是說：</p>
+
+        <ul>
+          <li>偶數位置的字元只能和偶數位置互換</li>
+          <li>奇數位置的字元只能和奇數位置互換</li>
+        </ul>
+
+        <p>所以一個字串經過任意次操作之後，本質上只能做到：</p>
+
+        <ul>
+          <li>偶數位置那一組裡面的字元重新排列</li>
+          <li>奇數位置那一組裡面的字元重新排列</li>
+        </ul>
+
+        <p>因此我只要分別比較：</p>
+
+        <ul>
+          <li><code>s1</code> 和 <code>s2</code> 的偶數位置字元 multiset 是否相同</li>
+          <li><code>s1</code> 和 <code>s2</code> 的奇數位置字元 multiset 是否相同</li>
+        </ul>
+
+        <p>我這份寫法是直接把兩組字串拆出來後排序。
+如果排序後都一樣，就代表可以透過交換把它們變成相同字串。</p>
+
+        <h2 id="variables">所有變數</h2>
+
+        <ul>
+          <li><code>es1</code>：<code>s1</code> 奇數位置的所有字元組成的字串</li>
+          <li><code>es2</code>：<code>s2</code> 奇數位置的所有字元組成的字串</li>
+          <li><code>os1</code>：<code>s1</code> 偶數位置的所有字元組成的字串</li>
+          <li><code>os2</code>：<code>s2</code> 偶數位置的所有字元組成的字串</li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+
+        <h3>1. 先檢查兩個字串長度是否相同</h3>
+
+        <p>我先判斷：</p>
+
+        <pre><code class="language-cpp">if (s1.size() != s2.size()) {
+    return false;
+}
+</code></pre>
+
+        <p>如果長度不同，那不可能透過題目允許的交換操作把它們變成同一個字串，所以直接回傳 <code>false</code>。</p>
+
+        <hr />
+
+        <h3>2. 把兩個字串分成奇數位置和偶數位置兩組</h3>
+
+        <p>接著我準備四個字串：</p>
+
+        <pre><code class="language-cpp">string es1 = "", es2 = ""; // 奇數位置
+string os1 = "", os2 = ""; // 偶數位置
+</code></pre>
+
+        <p>然後掃過每個索引位置：</p>
+
+        <ul>
+          <li>如果 <code>i % 2 == 0</code>，就把這個位置的字元放進偶數組</li>
+          <li>否則就放進奇數組</li>
+        </ul>
+
+        <p>意思就是把 <code>s1</code> 和 <code>s2</code> 的字元各自拆成兩個部分。</p>
+
+        <p>這一步很重要，因為題目的操作不會改變字元所在位置的奇偶性。
+所以最後能不能變一樣，關鍵就在於這兩組字元各自能不能配對起來。</p>
+
+        <hr />
+
+        <h3>3. 分別排序四個拆出來的字串</h3>
+
+        <p>拆完之後，我就把這四個字串各自排序：</p>
+
+        <p>這樣做的目的，是把「能不能透過重排變成一樣」轉成「排序後是否相同」。</p>
+
+        <p>因為同一組內可以任意透過合法交換去調整順序，
+所以真正要比的不是原本順序，而是：</p>
+
+        <ul>
+          <li>這一組裡有哪些字元</li>
+          <li>每個字元各出現幾次</li>
+        </ul>
+
+        <p>排序之後，如果兩個字串相同，就代表它們包含完全一樣的字元 multiset。</p>
+
+        <hr />
+
+        <h3>4. 最後同時比較偶數組和奇數組</h3>
+
+        <p>最後我回傳：</p>
+
+        <pre><code class="language-cpp">return (os1 == os2 &amp;&amp; es1 == es2) ? true : false;
+</code></pre>
+
+        <p>也就是同時檢查：</p>
+
+        <ul>
+          <li>偶數位置這一組排序後是否相同</li>
+          <li>奇數位置這一組排序後是否相同</li>
+        </ul>
+
+        <p>只有兩組都相同，才代表：</p>
+
+        <ul>
+          <li>偶數位置可以靠重排對上</li>
+          <li>奇數位置也可以靠重排對上</li>
+        </ul>
+
+        <p>這樣整個字串才有可能透過合法操作變成一樣。</p>
+
+        <p>如果其中任一組不同，就代表至少有某些字元被困在錯誤的奇偶位置，無法透過操作修正，所以答案就是 <code>false</code>。</p>
+
+        <h2 id="complexity">⏱️ 複雜度</h2>
+
+        <p>設 <code>n = s1.length</code>。</p>
+
+        <ul>
+          <li>時間複雜度：<code>O(n log n)</code>
+  我先掃一次字串做分組，之後對奇數組和偶數組排序，整體是 <code>O(n log n)</code>。</li>
+          <li>空間複雜度：<code>O(n)</code>
+  我另外開了四個字串來存拆出來的奇數位置與偶數位置字元。</li>
+        </ul>
+
+        <h2 id="code">💻 程式碼實作</h2>
+
+        <pre><code class="language-cpp">class Solution {
+public:
+    bool checkStrings(string s1, string s2) {
+        if (s1.size() != s2.size()) {
+            return false;
+        }
+        string es1 = "", es2 = ""; // 奇數位置
+        string os1 = "", os2 = ""; // 偶數位置
+        for (int i = 0; i < s1.size(); i++) {
+            if (i % 2 == 0) {
+                os1 += s1[i];
+                os2 += s2[i];
+            } else {
+                es1 += s1[i];
+                es2 += s2[i];
+            }
+        }
+        sort(os1.begin(), os1.end());
+        sort(os2.begin(), os2.end());
+        sort(es1.begin(), es1.end());
+        sort(es2.begin(), es2.end());
+        return (os1 == os2 && es1 == es2) ? true : false;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/check-if-strings-can-be-made-equal-with-operations-ii/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-03-30</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value"><span class="post-tags">
+              <span class="post-tag">Hash Table</span>
+              <span class="post-tag">String</span>
+              <span class="post-tag">Sorting</span>
+              <span class="post-tag">Medium</span>
+            </span></span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/all%20problems/2840-check-if-strings-can-be-made-equal-with-operations-ii.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
