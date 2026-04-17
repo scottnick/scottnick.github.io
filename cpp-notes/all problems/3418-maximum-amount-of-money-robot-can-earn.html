@@ -1,0 +1,324 @@
+<!-- all problems/3418-maximum-amount-of-money-robot-can-earn.html: 全部題單文章 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3418. Maximum Amount of Money Robot Can Earn</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+               width="18" height="18" aria-hidden="true" focusable="false"
+               style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="index.html">All problems</a>
+      <span aria-hidden="true">/</span>
+      <span>3418. Maximum Amount of Money Robot Can Earn</span>
+    </nav>
+
+    <section class="hero">
+      <h1>3418. Maximum Amount of Money Robot Can Earn</h1>
+      <p><strong>練習日期：</strong>2026-04-02</p>
+      <p><strong>難度：</strong>Medium</p>
+      <p><strong>類型：</strong>Array、Dynamic Programming、Matrix</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#complexity">⏱️ 複雜度</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給定一個 <code>m × n</code> 的矩陣 <code>coins</code>。</p>
+        <p>機器人一開始位在左上角 <code>(0, 0)</code>，目標是走到右下角 <code>(m - 1, n - 1)</code>。<br>
+        在移動過程中，每一步只能：</p>
+        <ul>
+          <li>往右走</li>
+          <li>往下走</li>
+        </ul>
+        <p>每個格子都有一個數值 <code>coins[i][j]</code>：</p>
+        <ul>
+          <li>如果 <code>coins[i][j] &gt;= 0</code>，代表機器人可以拿到這麼多金幣</li>
+          <li>如果 <code>coins[i][j] &lt; 0</code>，代表遇到 robber，機器人會被搶走 <code>abs(coins[i][j])</code> 枚金幣</li>
+        </ul>
+        <p>另外，機器人有一個特殊能力：</p>
+        <ul>
+          <li>最多可以在路徑上的 <code>2</code> 個格子中 neutralize robber</li>
+          <li>如果在某個負數格使用這個能力，就不會被扣金幣</li>
+        </ul>
+        <p>注意：機器人最後的總金幣數可能是負的。</p>
+        <p>請回傳從左上走到右下時，機器人最多可以拿到多少金幣。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>m == coins.length</code></li>
+          <li><code>n == coins[i].length</code></li>
+          <li><code>1 &lt;= m, n &lt;= 500</code></li>
+          <li><code>-1000 &lt;= coins[i][j] &lt;= 1000</code></li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>我這題的想法是用三維 DP。</p>
+        <p>因為一般走格子 DP 只需要記：</p>
+        <ul>
+          <li>目前走到哪個位置</li>
+        </ul>
+        <p>但這題還多了一個狀態：</p>
+        <ul>
+          <li>到目前為止已經用了幾次 neutralization</li>
+        </ul>
+        <p>所以我把 DP 狀態設成：</p>
+        <ul>
+          <li><code>dp[i][j][k]</code></li>
+          <li>代表走到 <code>(i, j)</code> 時，已經用了 <code>k</code> 次 neutralization 的最大金幣數</li>
+        </ul>
+        <p>這樣每次轉移時，就分成兩種情況：</p>
+        <ul>
+          <li>不使用 neutralization，那就直接把 <code>coins[i][j]</code> 加上去</li>
+          <li>如果目前格子是負數，而且還能用 neutralization，那就可以選擇「不扣這格的錢」，改從 <code>k - 1</code> 的狀態轉過來</li>
+        </ul>
+        <p>最後右下角可能有用了 <code>0</code>、<code>1</code>、<code>2</code> 次 neutralization 三種情況，所以把三者最大值取出來就是答案。</p>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>m</code>：矩陣列數</li>
+          <li><code>n</code>：矩陣行數</li>
+          <li><code>dp</code>：三維 DP，<code>dp[i][j][k]</code> 代表走到 <code>(i, j)</code> 且已經用了 <code>k</code> 次 neutralization 時，最多能拿到的金幣數</li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+        <h3>1. 先定義 DP 狀態</h3>
+        <p>我先建立一個三維 DP：</p>
+        <p>這裡第三維大小是 <code>3</code>，因為 neutralization 最多只能用 <code>2</code> 次，<br>
+        所以狀態會是：</p>
+        <ul>
+          <li><code>0</code>：目前一次都還沒用</li>
+          <li><code>1</code>：目前已經用了 <code>1</code> 次</li>
+          <li><code>2</code>：目前已經用了 <code>2</code> 次</li>
+        </ul>
+        <p>初始值我先設成一個很小的負數，表示這個狀態目前還到不了。</p>
+        <hr />
+
+        <h3>2. 先初始化起點 <code>(0, 0)</code></h3>
+        <p>起點一定會經過，所以要先處理它。</p>
+        <p>如果起點是一般非負數格，那很直接：</p>
+        <pre><code class="language-cpp">dp[0][0][0] = coins[0][0];
+</code></pre>
+        <p>代表：</p>
+        <ul>
+          <li>走到起點</li>
+          <li>還沒用任何 neutralization</li>
+          <li>總金幣就是起點那格的值</li>
+        </ul>
+        <p>如果起點本身是負數，我這份寫法還多處理了一種情況：</p>
+        <pre><code class="language-cpp">if (coins[0][0] &lt; 0) {
+    dp[0][0][1] = 0;
+}
+</code></pre>
+        <p>意思是可以直接在起點就用一次 neutralization，<br>
+        這樣起點這格雖然是 robber，但不會扣錢，所以總金幣會變成 <code>0</code>。</p>
+        <hr />
+
+        <h3>3. 枚舉每個格子，從上方或左方轉移過來</h3>
+        <p>接著我用兩層迴圈掃整個矩陣。<br>
+        每個位置 <code>(i, j)</code> 都只可能從：</p>
+        <ul>
+          <li>上方 <code>(i - 1, j)</code></li>
+          <li>左方 <code>(i, j - 1)</code></li>
+        </ul>
+        <p>走過來。</p>
+        <p>所以對每個 <code>k</code>，我都先考慮「這格不使用 neutralization」的轉移。</p>
+        <p>如果可以從上方來，就更新：</p>
+        <pre><code class="language-cpp">dp[i][j][k] =
+    max(dp[i][j][k], dp[i - 1][j][k] + coins[i][j]);
+</code></pre>
+        <p>如果可以從左方來，就更新：</p>
+        <pre><code class="language-cpp">dp[i][j][k] =
+    max(dp[i][j][k], dp[i][j - 1][k] + coins[i][j]);
+</code></pre>
+        <p>這兩段的意思都一樣：</p>
+        <ul>
+          <li>前一格已經用了 <code>k</code> 次 neutralization</li>
+          <li>這一格我不額外使用能力</li>
+          <li>所以直接把目前格子的值 <code>coins[i][j]</code> 加上去</li>
+        </ul>
+        <hr />
+
+        <h3>4. 如果目前格子是負數，也可以選擇在這格使用 neutralization</h3>
+        <p>這題最重要的地方就是這個額外轉移。</p>
+        <p>如果目前這格是負數，而且 <code>k &gt; 0</code>，<br>
+        表示我現在可以考慮把其中一次 neutralization 用在這一格。</p>
+        <p>這樣的話，這一格就不會扣錢，<br>
+        所以我不需要加上 <code>coins[i][j]</code>，而是直接從「前一格用了 <code>k - 1</code> 次」的狀態轉過來。</p>
+        <p>這段意思是：</p>
+        <ul>
+          <li>原本到前一格時只用了 <code>k - 1</code> 次能力</li>
+          <li>現在走進這格，剛好多用一次</li>
+          <li>因為這格 robber 被 neutralize 了，所以這格不扣錢</li>
+        </ul>
+        <p>也就是把「正常吃下這格負數」和「在這格開能力跳過扣分」這兩種情況一起比較，取比較大的那個。</p>
+        <hr />
+
+        <h3>5. 起點以外的每個格子，都要把三種 <code>k</code> 狀態都更新完</h3>
+        <p>我在每個 <code>(i, j)</code> 都跑：</p>
+        <p>這表示我不是只記一個最佳值，<br>
+        而是分開記：</p>
+        <ul>
+          <li>走到這格、用了 <code>0</code> 次能力的最佳值</li>
+          <li>走到這格、用了 <code>1</code> 次能力的最佳值</li>
+          <li>走到這格、用了 <code>2</code> 次能力的最佳值</li>
+        </ul>
+        <p>這樣後面才不會把不同能力使用次數的情況混在一起。</p>
+        <p>因為「目前金幣較大」不一定代表未來就比較好，<br>
+        有時候現在少拿一點，但保留更多 neutralization，之後反而更有利。<br>
+        所以第三維狀態一定要獨立記。</p>
+        <hr />
+
+        <h3>6. 最後在右下角三種狀態中取最大值</h3>
+        <p>當整個 DP 做完之後，右下角 <code>(m - 1, n - 1)</code> 會有三個狀態：</p>
+        <ul>
+          <li><code>dp[m - 1][n - 1][0]</code></li>
+          <li><code>dp[m - 1][n - 1][1]</code></li>
+          <li><code>dp[m - 1][n - 1][2]</code></li>
+        </ul>
+        <p>它們分別代表走到終點時，總共用了 <code>0</code>、<code>1</code>、<code>2</code> 次 neutralization 的最大金幣數。</p>
+        <p>所以最後直接取三者最大值：</p>
+        <pre><code class="language-cpp">return (int)max(
+    {dp[m - 1][n - 1][0], dp[m - 1][n - 1][1], dp[m - 1][n - 1][2]});
+</code></pre>
+        <p>這就是答案。</p>
+
+        <h2 id="complexity">⏱️ 複雜度</h2>
+        <p>設 <code>m = coins.length</code>，<code>n = coins[0].length</code>。</p>
+        <ul>
+          <li>時間複雜度：<code>O(mn)</code><br>
+            每個格子都只會處理固定 <code>3</code> 種 neutralization 狀態，而且每次只看上方和左方。</li>
+          <li>空間複雜度：<code>O(mn)</code><br>
+            我用了 <code>m × n × 3</code> 的 DP 陣列，常數 <code>3</code> 可以忽略，所以記成 <code>O(mn)</code>。</li>
+        </ul>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    int maximumAmount(vector&lt;vector&lt;int&gt;&gt;&amp; coins) {
+        int m = coins.size();
+        int n = coins[0].size();
+        vector&lt;vector&lt;vector&lt;long long&gt;&gt;&gt; dp(
+            m, vector&lt;vector&lt;long long&gt;&gt;(n, vector&lt;long long&gt;(3, -1e8)));
+        dp[0][0][0] = coins[0][0];
+        if (coins[0][0] &lt; 0) {
+            dp[0][0][1] = 0;
+        }
+        for (int i = 0; i &lt; m; i++) {
+            for (int j = 0; j &lt; n; j++) {
+                if (i == 0 &amp;&amp; j == 0) {
+                    continue;
+                }
+                for (int k = 0; k &lt;= 2; k++) {
+                    if (i &gt; 0) {
+                        dp[i][j][k] =
+                            max(dp[i][j][k], dp[i - 1][j][k] + coins[i][j]);
+                    }
+                    if (j &gt; 0) {
+                        dp[i][j][k] =
+                            max(dp[i][j][k], dp[i][j - 1][k] + coins[i][j]);
+                    }
+                    if (coins[i][j] &lt; 0 &amp;&amp; k &gt; 0) {
+                        if (i &gt; 0) {
+                            dp[i][j][k] = max(dp[i][j][k], dp[i - 1][j][k - 1]);
+                        }
+                        if (j &gt; 0) {
+                            dp[i][j][k] = max(dp[i][j][k], dp[i][j - 1][k - 1]);
+                        }
+                    }
+                }
+            }
+        }
+        return (int)max(
+            {dp[m - 1][n - 1][0], dp[m - 1][n - 1][1], dp[m - 1][n - 1][2]});
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>
+          <a href="https://leetcode.com/problems/maximum-amount-of-money-robot-can-earn/" target="_blank" rel="noopener noreferrer">https://leetcode.com/problems/maximum-amount-of-money-robot-can-earn/</a>
+        </p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-04-02</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value">
+            <span class="post-tags">
+              <span class="post-tag">Array</span>
+              <span class="post-tag">Dynamic Programming</span>
+              <span class="post-tag">Matrix</span>
+              <span class="post-tag">Medium</span>
+            </span>
+          </span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/all%20problems/3418-maximum-amount-of-money-robot-can-earn.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
