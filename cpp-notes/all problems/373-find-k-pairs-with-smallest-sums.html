@@ -1,0 +1,253 @@
+<!-- all problems/373-find-k-pairs-with-smallest-sums.html: all problems 文章 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>373. Find K Pairs with Smallest Sums</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+               width="18" height="18" aria-hidden="true" focusable="false"
+               style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="index.html">All problems</a>
+      <span aria-hidden="true">/</span>
+      <span>373. Find K Pairs with Smallest Sums</span>
+    </nav>
+
+    <section class="hero">
+      <h1>373. Find K Pairs with Smallest Sums</h1>
+      <p><strong>練習日期：</strong>2026-04-17</p>
+      <p><strong>難度：</strong>Medium</p>
+      <p><strong>類型：</strong>Array、Heap (Priority Queue)</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#complexity">⏱️ 複雜度</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給定兩個已經按照非遞減順序排序好的整數陣列 <code>nums1</code> 和 <code>nums2</code>，以及一個整數 <code>k</code>。</p>
+        <p>定義一組 pair <code>(u, v)</code>：</p>
+        <ul>
+          <li><code>u</code> 來自 <code>nums1</code></li>
+          <li><code>v</code> 來自 <code>nums2</code></li>
+        </ul>
+        <p>請回傳總和最小的前 <code>k</code> 組 pair。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>1 &lt;= nums1.length, nums2.length &lt;= 10^5</code></li>
+          <li><code>-10^9 &lt;= nums1[i], nums2[i] &lt;= 10^9</code></li>
+          <li><code>nums1</code> 和 <code>nums2</code> 都已經按照非遞減順序排列</li>
+          <li><code>1 &lt;= k &lt;= 10^4</code></li>
+          <li><code>k &lt;= nums1.length * nums2.length</code></li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>我這題的想法是把整個配對空間想成一個二維表格。</p>
+        <p>如果我固定：</p>
+        <ul>
+          <li>第 <code>i</code> 列代表 <code>nums1[i]</code></li>
+          <li>第 <code>j</code> 行代表 <code>nums2[j]</code></li>
+        </ul>
+        <p>那每個位置 <code>(i, j)</code> 就對應到一組 pair：</p>
+        <ul>
+          <li><code>(nums1[i], nums2[j])</code></li>
+        </ul>
+        <p>而且因為兩個陣列都已經排序好了，所以：</p>
+        <ul>
+          <li>往下走，pair sum 只會不變或變大</li>
+          <li>往右走，pair sum 也只會不變或變大</li>
+        </ul>
+        <p>所以我可以從最小的 <code>(0, 0)</code> 開始，用 min heap 每次取出目前最小的 pair。當我取出 <code>(i, j)</code> 之後，再把它的「下方 <code>(i + 1, j)</code>」和「右方 <code>(i, j + 1)</code>」當成新的候選人丟進 heap。</p>
+        <p>這樣就像是在一個遞增的表格中做 best-first search，逐步找出前 <code>k</code> 小的 pair。</p>
+        <p>另外因為同一個位置可能會從不同路徑被推進 heap，所以我再用一個 <code>set</code> 來避免重複加入相同座標。</p>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>n1</code>：<code>nums1</code> 的長度</li>
+          <li><code>n2</code>：<code>nums2</code> 的長度</li>
+          <li><code>check</code>：記錄哪些座標 <code>(i, j)</code> 已經進過 heap，避免重複加入</li>
+          <li><code>pq</code>：min heap，裡面放 <code>{pair sum, i, j}</code>，用來每次取出目前總和最小的候選 pair</li>
+          <li><code>ans</code>：最後要回傳的前 <code>k</code> 組 pair</li>
+          <li><code>x</code>：從 heap 取出的目前最小候選資料</li>
+          <li><code>i</code>：目前取出的 pair 在 <code>nums1</code> 中的索引</li>
+          <li><code>j</code>：目前取出的 pair 在 <code>nums2</code> 中的索引</li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+
+        <h3>1. 先建立最小候選起點 <code>(0, 0)</code></h3>
+        <p>因為兩個陣列都已經排序好，所以整個表格中最小的 pair 一定是：</p>
+        <ul>
+          <li><code>nums1[0] + nums2[0]</code></li>
+        </ul>
+        <p>所以我先把 <code>(0, 0)</code> 放進 min heap：</p>
+        <pre><code class="language-cpp">pq.push({nums1[0] + nums2[0], 0, 0});
+</code></pre>
+        <p>這代表我的搜尋會從整張表格左上角，也就是最小的起點開始。</p>
+        <hr />
+
+        <h3>2. 每次從 heap 取出目前總和最小的 pair</h3>
+        <p>我接著一直做，直到已經取出 <code>k</code> 組 pair 為止。</p>
+        <p>每次先從 heap 取出最小的候選：</p>
+        <pre><code class="language-cpp">auto x = pq.top();
+pq.pop();
+int i = x[1];
+int j = x[2];
+</code></pre>
+        <p>因為 <code>pq</code> 裡放的是 <code>{總和, i, j}</code>，而且用的是 <code>greater&lt;vector&lt;int&gt;&gt;</code>，所以 heap 頂端就是目前總和最小的那組 pair。</p>
+        <p>取出後，我就把對應的實際數值加入答案</p>
+        <hr />
+
+        <h3>3. 取出 <code>(i, j)</code> 之後，往下擴展 <code>(i + 1, j)</code></h3>
+        <p>如果目前位置是 <code>(i, j)</code>，那麼它下面那格 <code>(i + 1, j)</code> 也是一個合理的下一個候選。</p>
+        <p>因為 <code>nums1</code> 已經排序好，所以從 <code>(i, j)</code> 往下走時，pair sum 不會變小。這表示它有可能成為之後的最小值，所以要把它丟進 heap。</p>
+        <p>這裡除了檢查邊界，也要確認這個座標之前沒有進過 heap，避免重複。</p>
+        <hr />
+
+        <h3>4. 取出 <code>(i, j)</code> 之後，往右擴展 <code>(i, j + 1)</code></h3>
+        <p>同樣地，右邊那格 <code>(i, j + 1)</code> 也是下一個可能的候選。</p>
+        <p>因為 <code>nums2</code> 也已經排序好，所以往右走時，pair sum 也不會變小。所以它也應該加入 heap：</p>
+        <p>這樣一來，每次從當前最小位置往右和往下擴展，就能逐漸把整張表格中比較小的區域探索出來。</p>
+        <hr />
+
+        <h3>5. 用 <code>check</code> 避免同一個座標重複進 heap</h3>
+        <p>這題如果不做去重，某些位置可能會被重複加入。</p>
+        <p>例如某個 <code>(i, j)</code> 可能同時從：</p>
+        <ul>
+          <li><code>(i - 1, j)</code> 往下走過來</li>
+          <li><code>(i, j - 1)</code> 往右走過來</li>
+        </ul>
+        <p>如果不擋掉，這個位置就會進 heap 兩次。所以我用：</p>
+        <pre><code class="language-cpp">set&lt;pair&lt;int, int&gt;&gt; check;
+</code></pre>
+        <p>來記錄哪些座標已經進過 heap。</p>
+        <p>只要某個位置已經被加入過，就不再重複 push。這樣才能保證每個位置最多只進 heap 一次。</p>
+        <hr />
+
+        <h3>6. 重複取出 <code>k</code> 次後回傳答案</h3>
+        <p>每次從 heap 取出一組最小 pair，就把 <code>k</code> 減一：</p>
+        <pre><code class="language-cpp">k--;
+</code></pre>
+        <p>當 <code>k</code> 變成 <code>0</code>，表示前 <code>k</code> 小的 pair 都已經收集完了，這時直接回傳 <code>ans</code> 就可以。</p>
+
+        <h2 id="complexity">⏱️ 複雜度</h2>
+        <p>設實際加入 heap 的座標數量為 <code>K</code>，其中 <code>K &lt;= k + 1</code> 的同階量級。</p>
+        <ul>
+          <li>時間複雜度：<code>O(k log k)</code> 每次取出一組 pair，都最多新增兩個新候選，而 heap 與 <code>set</code> 操作都是對數時間。</li>
+          <li>空間複雜度：<code>O(k)</code> <code>pq</code>、<code>check</code> 和 <code>ans</code> 都最多只會存和前 <code>k</code> 組答案同階數量的資料。</li>
+        </ul>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    vector&lt;vector&lt;int&gt;&gt; kSmallestPairs(vector&lt;int&gt;&amp; nums1, vector&lt;int&gt;&amp; nums2, int k) {
+        int n1 = nums1.size();
+        int n2 = nums2.size();
+        set&lt;pair&lt;int, int&gt;&gt; check;
+        priority_queue&lt;vector&lt;int&gt;, vector&lt;vector&lt;int&gt;&gt;, greater&lt;vector&lt;int&gt;&gt;&gt; pq;
+        pq.push({nums1[0] + nums2[0], 0, 0});
+        vector&lt;vector&lt;int&gt;&gt; ans;
+
+        while (k &gt; 0) {
+            auto x = pq.top();
+            pq.pop();
+            int i = x[1];
+            int j = x[2];
+            ans.push_back({nums1[i], nums2[j]});
+            if (i + 1 &lt; n1 &amp;&amp; !check.count({i + 1, j})) {
+                pq.push({nums1[i + 1] + nums2[j], i + 1, j});
+                check.insert({i + 1, j});
+            }
+            if (j + 1 &lt; n2 &amp;&amp; !check.count({i, j + 1})) {
+                pq.push({nums1[i] + nums2[j + 1], i, j + 1});
+                check.insert({i, j + 1});
+            }
+            k--;
+        }
+        return ans;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/find-k-pairs-with-smallest-sums/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-04-17</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value"><span class="post-tags">
+              <span class="post-tag">Array</span>
+              <span class="post-tag">Heap (Priority Queue)</span>
+              <span class="post-tag">Medium</span>
+            </span></span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/all%20problems/373-find-k-pairs-with-smallest-sums.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
