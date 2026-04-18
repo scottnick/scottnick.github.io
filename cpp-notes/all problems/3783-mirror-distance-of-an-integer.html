@@ -1,0 +1,196 @@
+<!-- all problems/3783-mirror-distance-of-an-integer.html: 全部題單文章 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3783. Mirror Distance of an Integer</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+               width="18" height="18" aria-hidden="true" focusable="false"
+               style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="index.html">All problems</a>
+      <span aria-hidden="true">/</span>
+      <span>3783. Mirror Distance of an Integer</span>
+    </nav>
+
+    <section class="hero">
+      <h1>3783. Mirror Distance of an Integer</h1>
+      <p><strong>練習日期：</strong>2026-04-18</p>
+      <p><strong>難度：</strong>Easy</p>
+      <p><strong>類型：</strong>Math</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#complexity">⏱️ 複雜度</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給定一個整數 <code>n</code>。</p>
+        <p>定義它的 mirror distance 為：</p>
+        <ul>
+          <li><code>abs(n - reverse(n))</code></li>
+        </ul>
+        <p>其中 <code>reverse(n)</code> 表示把 <code>n</code> 的十進位數字反轉後所形成的整數。</p>
+        <p>請回傳 <code>n</code> 的 mirror distance。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>1 &lt;= n &lt;= 10^9</code></li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>我這題的想法很直接，就是先把整數的數字反轉，得到 <code>reverse(n)</code>，然後再算它和原本 <code>n</code> 的絕對差。</p>
+        <p>反轉數字的方法也很標準：</p>
+        <ul>
+          <li>每次取出目前最後一位 <code>now % 10</code></li>
+          <li>接到新數字 <code>rev</code> 的後面</li>
+          <li>再把 <code>now</code> 除以 <code>10</code>，繼續處理下一位</li>
+        </ul>
+        <p>最後把反轉後的數字和原本的 <code>n</code> 做差，取絕對值就是答案。</p>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>rev</code>：反轉後得到的整數</li>
+          <li><code>now</code>：目前還沒處理完的數字</li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+        <h3>1. 先準備反轉數字要用的變數</h3>
+        <p>我先開兩個 <code>long long</code> 變數：</p>
+        <ul>
+          <li><code>rev</code>：用來慢慢組出反轉後的數字</li>
+          <li><code>now</code>：一開始存原本的 <code>n</code>，之後每輪把最後一位去掉</li>
+        </ul>
+        <p>這裡把 <code>n</code> 轉成 <code>long long</code>，是想讓後面做數字操作時更安全。</p>
+        <hr />
+
+        <h3>2. 每次取出最後一位，加到 <code>rev</code> 後面</h3>
+        <p>接著我用一個 <code>while (now &gt; 0)</code> 迴圈，反覆處理目前數字的最後一位。</p>
+        <p>核心這行是：</p>
+        <pre><code class="language-cpp">rev = rev * 10 + now % 10;
+</code></pre>
+        <p>意思是：</p>
+        <ul>
+          <li>先把原本的 <code>rev</code> 往左移一位，也就是乘上 <code>10</code></li>
+          <li>再把 <code>now</code> 的最後一位接上去</li>
+        </ul>
+        <p>這樣就能一位一位把反轉數字組起來。</p>
+        <hr />
+
+        <h3>3. 把 <code>now</code> 最後一位去掉，繼續下一輪</h3>
+        <p>每次拿完最後一位之後，我再做：</p>
+        <pre><code class="language-cpp">now /= 10;
+</code></pre>
+        <p>這樣 <code>now</code> 的最後一位就被去掉了。</p>
+        <p>接著下一輪就能繼續處理新的最後一位，直到整個數字都處理完為止。</p>
+        <hr />
+
+        <h3>4. 最後回傳反轉數字和原數字的絕對差</h3>
+        <p>當迴圈結束後，<code>rev</code> 就是反轉後的整數。</p>
+        <p>所以最後直接回傳：</p>
+        <pre><code class="language-cpp">return abs(rev - n);
+</code></pre>
+        <p>也就是 mirror distance 的定義。</p>
+
+        <h2 id="complexity">⏱️ 複雜度</h2>
+        <p>設 <code>d</code> 為 <code>n</code> 的位數。</p>
+        <ul>
+          <li>時間複雜度：<code>O(d)</code><br>每次迴圈處理一位數字。</li>
+          <li>空間複雜度：<code>O(1)</code><br>只用了固定數量的變數。</li>
+        </ul>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    int mirrorDistance(int n) {
+        long long rev;
+        long long now = 1LL * n;
+        while (now &gt; 0) {
+            rev = rev * 10 + now % 10;
+            now /= 10;
+        }
+        return abs(rev - n);
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/mirror-distance-of-an-integer/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-04-18</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value"><span class="post-tags">
+              <span class="post-tag">Math</span>
+              <span class="post-tag">Easy</span>
+            </span></span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/all%20problems/3783-mirror-distance-of-an-integer.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
