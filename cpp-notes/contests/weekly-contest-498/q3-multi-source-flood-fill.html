@@ -1,0 +1,182 @@
+<!-- contests/weekly-contest-498/q3-multi-source-flood-fill.html: Weekly Contest 498 -->
+<!doctype html>
+<html lang="zh-Hant"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>Q3. Multi Source Flood Fill</title><link rel="stylesheet" href="../../../styles.css" /></head>
+<body class="page-article"><header><nav class="navbar"><a class="brand" href="../../../personal.html">scottnick 個人網頁</a><button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button><div class="nav-links" id="nav-links"><a href="../../../index.html">主頁</a><a href="../../../courses.html">修課紀錄</a><a href="../../../cpp.html" class="active">C++學習筆記</a><a href="../../../profile.html">個人檔案</a></div><div class="nav-actions"><a class="nav-action-link" href="../../../categories.html"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false" style="display:inline-block; vertical-align:-3px; margin-right:6px;"><rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect><rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect><rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect><rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect></svg>類別</a><button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題"><span id="theme-icon" aria-hidden="true">☀️</span></button></div></nav></header>
+<main><nav class="breadcrumb" aria-label="文章路徑"><a href="../../../cpp.html">C++學習筆記</a><span aria-hidden="true">/</span><a href="../index.html">Contests</a><span aria-hidden="true">/</span><a href="../weekly-contest-498.html">Weekly Contest 498</a><span aria-hidden="true">/</span><span>Q3. Multi Source Flood Fill</span></nav><section class="hero"><h1>Q3. Multi Source Flood Fill</h1><p><strong>練習日期：</strong>2026-04-19</p><p><strong>難度：</strong>Medium</p><p><strong>類型：</strong>Weekly Contest 498</p></section><div class="article-layout"><aside class="article-toc" aria-label="文章目錄"><button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">目錄</button><strong>目錄</strong><ul><li><a href="#statement">📘 題目敘述</a></li><li><a href="#approach">🧠 解題思路</a></li><li><a href="#steps">🪜 主要流程步驟</a></li><li><a href="#complexity">⏱️ 複雜度</a></li><li><a href="#code">💻 程式碼實作</a></li><li><a href="#link">🔗 題目連結</a></li></ul></aside><section class="term-block article-content"><h1>Q3. Multi Source Flood Fill</h1>
+          <p>練習日期： 2026-04-19</p>
+          <p>難度： Medium</p>
+          <p>類型： Weekly Contest 498</p>
+          <h2 id="statement">📘 題目敘述</h2>
+          <p>給定兩個整數 <code>n</code> 和 <code>m</code>，分別代表網格的列數和行數。</p>
+          <p>另外給定一個二維陣列 <code>sources</code>，其中 <code>sources[i] = [ri, ci, colori]</code> 表示格子 <code>(ri, ci)</code> 一開始就被染成 <code>colori</code>。</p>
+          <p>其他所有格子一開始都還沒有上色，用 <code>0</code> 表示。</p>
+          <p>每一個時間步，所有目前已經上色的格子，都會同時把自己的顏色擴散到上下左右四個方向中，尚未上色 的相鄰格子。</p>
+          <p>如果同一個時間步有多個顏色同時擴散到同一個尚未上色格子，</p>
+          <p>那這個格子會選擇其中數值最大的顏色。</p>
+          <p>整個過程會一直持續到沒有新的格子可以再被染色為止。</p>
+          <p>請回傳最後整個網格的顏色狀態。</p>
+          <h3>條件限制</h3>
+          <ul>
+          <li><code>1 &lt;= n, m &lt;= 10^5</code></li>
+          <li><code>1 &lt;= n * m &lt;= 10^5</code></li>
+          <li><code>1 &lt;= sources.length &lt;= n * m</code></li>
+          <li><code>sources[i] = [ri, ci, colori]</code></li>
+          <li><code>0 &lt;= ri &lt;= n - 1</code></li>
+          <li><code>0 &lt;= ci &lt;= m - 1</code></li>
+          <li><code>1 &lt;= colori &lt;= 10^6</code></li>
+          <li>所有 <code>(ri, ci)</code> 都互不相同</li>
+          </ul>
+          <h2 id="approach">🧠 解題思路</h2>
+          <p>我這題的想法是用 multi-source BFS。</p>
+          <p>因為一開始就可能有很多個已經上色的起點，而且題目說每個時間步都是同時擴散，</p>
+          <p>這種「一層一層往外擴張」的感覺就很適合用 BFS 來做。</p>
+          <p>不過這題和一般 BFS 不太一樣的地方是：</p>
+          <ul>
+          <li>同一層的不同顏色，可能同時碰到同一個新格子</li>
+          <li>如果真的同時碰到，要選顏色最大的那個</li>
+          </ul>
+          <p>所以我這份寫法不是一看到鄰居就立刻染色，</p>
+          <p>而是先把「下一層準備被染到的格子」全部收集起來，並記錄它們這一層能拿到的最大顏色。</p>
+          <p>等這一層全部處理完之後，再一起把那些格子正式上色並丟進 queue。</p>
+          <p>這樣就能正確模擬「同一時間步同時擴散」這件事。</p>
+          <h3>所有變數</h3>
+          <ul>
+          <li><code>v</code>：最後要回傳的網格，<code>v[i][j]</code> 表示目前這格的顏色，<code>0</code> 代表還沒上色</li>
+          <li><code>q</code>：BFS 用的 queue，裡面放目前這一層已經上色、接下來要往外擴散的格子</li>
+          <li><code>dx</code>：四個方向在列上的位移</li>
+          <li><code>dy</code>：四個方向在行上的位移</li>
+          <li><code>cur</code>：目前這一層 queue 裡的節點數量</li>
+          <li><code>next</code>：記錄下一層哪些格子會被染到，以及它們在同一時間步中應該拿到的最大顏色</li>
+          <li><code>key</code>：把二維座標 <code>(x, y)</code> 壓成一個整數，方便拿來當 <code>unordered_map</code> 的 key</li>
+          <li><code>color</code>：某個來源格子本身的顏色，或某個下一層格子最後決定採用的顏色</li>
+          </ul>
+          <h2 id="steps">🪜 主要流程步驟</h2>
+          <h3>1. 先建立初始網格和 BFS 起點</h3>
+          <p>我先建立一個 <code>n × m</code> 的網格 <code>v</code>，一開始全部填 <code>0</code>，表示都還沒上色：</p>
+          <pre><code class="language-cpp">vector&lt;vector&lt;int&gt;&gt; v(n, vector&lt;int&gt;(m, 0));</code></pre>
+          <p>接著我把所有 <code>sources</code> 提供的起點都先放進去：</p>
+          <ul>
+          <li>把對應位置染成指定顏色</li>
+          <li>再把那個位置丟進 queue</li>
+          </ul>
+          <p>這樣一開始 queue 裡裝的，就是第 <code>0</code> 層已經上色、接下來要往外擴散的所有來源點。</p>
+          <hr />
+          <h3>2. 準備四個方向，之後做 BFS 擴散</h3>
+          <p>因為題目只允許往上下左右四個方向擴散，所以我先準備：</p>
+          <pre><code class="language-cpp">int dx[4] = {0, 0, 1, -1};
+int dy[4] = {1, -1, 0, 0};</code></pre>
+          <p>之後每次從某個格子 <code>(x, y)</code> 出發，只要枚舉這四個方向，就能找到所有相鄰格子。</p>
+          <hr />
+          <h3>3. BFS 一層一層處理，確保同一時間步同時擴散</h3>
+          <p>這題最重要的地方就是「同一時間步要同時擴散」，</p>
+          <p>所以我每次都先記下目前 queue 的大小：</p>
+          <pre><code class="language-cpp">int cur = q.size();</code></pre>
+          <p>這表示這一輪 BFS 只處理目前這一層的格子。</p>
+          <p>而這些格子擴散出去的結果，都屬於下一個時間步。</p>
+          <p>所以我不會立刻把鄰居直接染色，</p>
+          <p>而是先開一個 <code>next</code>：</p>
+          <pre><code class="language-cpp">unordered_map&lt;int, int&gt; next;</code></pre>
+          <p>它的用途是記錄：</p>
+          <ul>
+          <li>下一層有哪些格子會被碰到</li>
+          <li>如果同一格被多個顏色同時碰到，最後該選哪個顏色</li>
+          </ul>
+          <p>這樣就能把「同一層所有來源的影響」先收集完，再統一更新。</p>
+          <hr />
+          <h3>4. 掃目前這一層的所有格子，把下一層候選格子收集起來</h3>
+          <p>對於這一層 queue 裡的每一個格子 <code>(x, y)</code>，</p>
+          <p>我都去看它上下左右四個方向的鄰居 <code>(nx, ny)</code>。</p>
+          <p>只有當這個鄰居：</p>
+          <ul>
+          <li>還在邊界內</li>
+          <li>而且目前還沒上色，也就是 <code>v[nx][ny] == 0</code></li>
+          </ul>
+          <p>我才把它視為「下一層候選格子」。</p>
+          <p>這裡我把 <code>(nx, ny)</code> 壓成：</p>
+          <pre><code class="language-cpp">key = nx * m + ny</code></pre>
+          <p>這樣就能用一個整數當 key，方便存進 <code>unordered_map</code>。</p>
+          <p>而：</p>
+          <pre><code class="language-cpp">next[key] = max(next[key], v[x][y]);</code></pre>
+          <p>的意思是：</p>
+          <ul>
+          <li>如果這格在這一時間步被很多不同顏色同時碰到</li>
+          <li>那我就保留最大的那個顏色</li>
+          </ul>
+          <p>這正好符合題目規則。</p>
+          <hr />
+          <h3>5. 當前一層全部掃完後，再一起把下一層正式染色</h3>
+          <p>等目前這一層全部處理完之後，<code>next</code> 裡就已經完整記錄了：</p>
+          <ul>
+          <li>下一個時間步哪些格子會被染到</li>
+          <li>它們最後應該拿到的顏色是什麼</li>
+          </ul>
+          <p>這時我才統一把它們正式寫進 <code>v</code>：</p>
+          <p>這一步有兩個作用：</p>
+          <ul>
+          <li>把下一層格子真正染色</li>
+          <li>把它們放進 queue，讓它們在下一輪 BFS 中繼續往外擴散</li>
+          </ul>
+          <p>這樣就能正確模擬出「先同時擴散，再一起進入下一時間步」的過程。</p>
+          <hr />
+          <h3>6. 全部染完之後回傳最後網格</h3>
+          <p>當 queue 變空時，表示已經沒有新的格子可以再被染色了。</p>
+          <p>這時整個網格就是最後答案，直接回傳 <code>v</code>。</p>
+          <h2 id="complexity">⏱️ 複雜度</h2>
+          <p>設 <code>N = n × m</code>。</p>
+          <ul>
+          <li>時間複雜度：<code>O(N)</code></li>
+          </ul>
+          <p>  每個格子最多只會真正被染色一次，並且每次只檢查固定四個方向，所以整體是線性時間。</p>
+          <ul>
+          <li>空間複雜度：<code>O(N)</code></li>
+          </ul>
+          <p>  網格 <code>v</code>、queue，以及每一輪暫存下一層的 <code>next</code>，整體都和格子數量同階。</p>
+          <h2 id="code">💻 程式碼實作</h2>
+          <pre><code class="language-cpp">class Solution {
+public:
+    vector&lt;vector&lt;int&gt;&gt; colorGrid(int n, int m, vector&lt;vector&lt;int&gt;&gt;&amp; sources) {
+        vector&lt;vector&lt;int&gt;&gt; v(n, vector&lt;int&gt;(m, 0));
+        queue&lt;pair&lt;int, int&gt;&gt; q;
+        for (auto now : sources) {
+            int x = now[0], y = now[1];
+            int color = now[2];
+            v[x][y] = color;
+            q.push({x, y});
+        }
+
+        int dx[4] = {0, 0, 1, -1};
+        int dy[4] = {1, -1, 0, 0};
+        while (!q.empty()) {
+            int cur = q.size();
+            unordered_map&lt;int, int&gt; next;
+            for (int i = 0; i &lt; cur; i++) {
+                auto p = q.front();
+                int x = p.first, y = p.second;
+                q.pop();
+                for (int j = 0; j &lt; 4; j++) {
+                    int nx = x + dx[j];
+                    int ny = y + dy[j];
+                    if (0 &lt;= nx &amp;&amp; nx &lt; n &amp;&amp; 0 &lt;= ny &amp;&amp; ny &lt; m &amp;&amp;
+                        v[nx][ny] == 0) {
+                        int key = nx * m + ny;
+                        next[key] = max(next[key], v[x][y]);
+                    }
+                }
+            }
+            for (auto it : next) {
+                int key = it.first;
+                int color = it.second;
+                int x = key / m;
+                int y = key % m;
+
+                v[x][y] = color;
+                q.push({x, y});
+            }
+        }
+        return v;
+    }
+};</code></pre>
+          <h2 id="link">🔗 題目連結</h2>
+          <p>https://leetcode.com/contest/weekly-contest-498/problems/multi-source-flood-fill/</p></section></div>
+<section class="term-block article-footer"><h2 class="article-footer__title">文章資訊</h2><div class="meta-grid"><div class="meta-field"><span class="meta-label">作者：</span><span class="meta-value">scottnick</span></div><div class="meta-field meta-field--date"><span class="meta-label">撰寫日期：</span><span class="meta-value">2026-04-19</span></div><div class="meta-field meta-field--full"><span class="meta-label">類別：</span><span class="meta-value"><span class="post-tags"><span class="post-tag">Weekly Contest 498</span><span class="post-tag">Medium</span></span></span></div><div class="meta-field meta-field--full"><span class="meta-label">原文連結：</span><span class="meta-value">https://scottnick.github.io/cpp-notes/contests/weekly-contest-498/q3-multi-source-flood-fill.html</span></div></div></section>
+</main><script src="../../../script.js"></script></body></html>

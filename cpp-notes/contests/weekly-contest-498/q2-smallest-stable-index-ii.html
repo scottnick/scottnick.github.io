@@ -1,0 +1,144 @@
+<!-- contests/weekly-contest-498/q2-smallest-stable-index-ii.html: Weekly Contest 498 -->
+<!doctype html>
+<html lang="zh-Hant"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>Q2. Smallest Stable Index II</title><link rel="stylesheet" href="../../../styles.css" /></head>
+<body class="page-article"><header><nav class="navbar"><a class="brand" href="../../../personal.html">scottnick 個人網頁</a><button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button><div class="nav-links" id="nav-links"><a href="../../../index.html">主頁</a><a href="../../../courses.html">修課紀錄</a><a href="../../../cpp.html" class="active">C++學習筆記</a><a href="../../../profile.html">個人檔案</a></div><div class="nav-actions"><a class="nav-action-link" href="../../../categories.html"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false" style="display:inline-block; vertical-align:-3px; margin-right:6px;"><rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect><rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect><rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect><rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect></svg>類別</a><button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題"><span id="theme-icon" aria-hidden="true">☀️</span></button></div></nav></header>
+<main><nav class="breadcrumb" aria-label="文章路徑"><a href="../../../cpp.html">C++學習筆記</a><span aria-hidden="true">/</span><a href="../index.html">Contests</a><span aria-hidden="true">/</span><a href="../weekly-contest-498.html">Weekly Contest 498</a><span aria-hidden="true">/</span><span>Q2. Smallest Stable Index II</span></nav><section class="hero"><h1>Q2. Smallest Stable Index II</h1><p><strong>練習日期：</strong>2026-03-29</p><p><strong>難度：</strong>Medium</p><p><strong>類型：</strong>Weekly Contest 498</p></section><div class="article-layout"><aside class="article-toc" aria-label="文章目錄"><button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">目錄</button><strong>目錄</strong><ul><li><a href="#statement">📘 題目敘述</a></li><li><a href="#approach">🧠 解題思路</a></li><li><a href="#steps">🪜 主要流程步驟</a></li><li><a href="#complexity">⏱️ 複雜度</a></li><li><a href="#code">💻 程式碼實作</a></li><li><a href="#link">🔗 題目連結</a></li></ul></aside><section class="term-block article-content"><h1>Q2. Smallest Stable Index II</h1>
+          <p>練習日期： 2026-03-29</p>
+          <p>難度： Medium</p>
+          <p>類型： Weekly Contest 498</p>
+          <h2 id="statement">📘 題目敘述</h2>
+          <p>給定一個整數陣列 <code>nums</code>，長度為 <code>n</code>，以及一個整數 <code>k</code>。</p>
+          <p>對每個索引 <code>i</code>，定義它的 instability score 為：</p>
+          <ul>
+          <li><code>max(nums[0..i]) - min(nums[i..n - 1])</code></li>
+          </ul>
+          <p>也就是說：</p>
+          <ul>
+          <li><code>max(nums[0..i])</code> 是從索引 <code>0</code> 到 <code>i</code> 之間的最大值</li>
+          <li><code>min(nums[i..n - 1])</code> 是從索引 <code>i</code> 到 <code>n - 1</code> 之間的最小值</li>
+          </ul>
+          <p>如果某個索引 <code>i</code> 的 instability score 小於等於 <code>k</code>，那麼這個索引就叫做 stable。</p>
+          <p>請回傳最小的 stable index。</p>
+          <p>如果不存在，回傳 <code>-1</code>。</p>
+          <h3>條件限制</h3>
+          <ul>
+          <li><code>1 &lt;= nums.length &lt;= 10^5</code></li>
+          <li><code>0 &lt;= nums[i] &lt;= 10^9</code></li>
+          <li><code>0 &lt;= k &lt;= 10^9</code></li>
+          </ul>
+          <h2 id="approach">🧠 解題思路</h2>
+          <p>這題的概念和上一題完全一樣，只是這題的資料範圍變大了。</p>
+          <p>因為題目對每個位置都要算：</p>
+          <ul>
+          <li>* 左邊到目前為止的最大值</li>
+          <li>右邊到結尾的最小值</li>
+          </ul>
+          <p>所以我一樣先做預處理，把這兩種資訊先存起來。</p>
+          <p>這樣後面每個索引就可以直接用 <code>O(1)</code> 的方式算出 instability score。</p>
+          <p>我這份寫法開了兩個陣列：</p>
+          <p>所以我開了兩個陣列：</p>
+          <ul>
+          <li><code>nmax[i]</code>：表示 <code>nums[0..i]</code> 的最大值</li>
+          <li><code>nmin[i]</code>：表示 <code>nums[i..n - 1]</code> 的最小值</li>
+          </ul>
+          <p>之後從左到右掃一次，第一個滿足：</p>
+          <ul>
+          <li><code>nmax[j] - nmin[j] &lt;= k</code></li>
+          </ul>
+          <p>的位置，就是答案。</p>
+          <p>但因為第一題解法複雜度可以解這題，所以根本賺到XD</p>
+          <h3>所有變數</h3>
+          <ul>
+          <li><code>n</code>：陣列長度</li>
+          <li><code>nmax</code>：prefix maximum，<code>nmax[i]</code> 表示從 <code>0</code> 到 <code>i</code> 的最大值</li>
+          <li><code>nmin</code>：suffix minimum，<code>nmin[i]</code> 表示從 <code>i</code> 到 <code>n - 1</code> 的最小值</li>
+          </ul>
+          <h2 id="steps">🪜 主要流程步驟</h2>
+          <h3>1. 先建立 prefix maximum 和 suffix minimum 陣列</h3>
+          <p>我先開兩個陣列，它們分別拿來記錄：</p>
+          <ul>
+          <li>每個位置往左看到的最大值</li>
+          <li>每個位置往右看到的最小值</li>
+          </ul>
+          <p>這樣後面每個索引的 instability score 就可以直接查表，不用重算。</p>
+          <hr />
+          <h3>2. 初始化最左邊和最右邊的基準值</h3>
+          <p>因為 prefix maximum 是從左往右推，所以最左邊先設成：</p>
+          <pre><code class="language-cpp">nmax[0] = nums[0];</code></pre>
+          <p>而 suffix minimum 是從右往左推，所以最右邊先設成：</p>
+          <pre><code class="language-cpp">nmin[n - 1] = nums[n - 1];</code></pre>
+          <p>這兩個位置都是各自方向上的起點。</p>
+          <hr />
+          <h3>3. 一次迴圈同時更新 prefix maximum 和 suffix minimum</h3>
+          <p>接著我用一個迴圈，同時更新這兩個陣列：</p>
+          <p>前半段：</p>
+          <pre><code class="language-cpp">nmax[i] = max(nmax[i - 1], nums[i]);</code></pre>
+          <p>意思是：</p>
+          <ul>
+          <li><code>nmax[i - 1]</code> 已經知道 <code>0..i-1</code> 的最大值</li>
+          <li>再跟 <code>nums[i]</code> 比一下</li>
+          <li>就能得到 <code>0..i</code> 的最大值</li>
+          </ul>
+          <p>後半段：</p>
+          <pre><code class="language-cpp">nmin[n - 1 - i] = min(nmin[n - i], nums[n - 1 - i]);</code></pre>
+          <p>則是在倒著更新 suffix minimum。</p>
+          <p>意思是：</p>
+          <ul>
+          <li><code>nmin[n - i]</code> 已經知道右邊那段的最小值</li>
+          <li>再和目前這格 <code>nums[n - 1 - i]</code> 比較</li>
+          <li>就能得到從目前位置到最右邊的最小值</li>
+          </ul>
+          <p>所以這一輪做完後，<code>nmax</code> 和 <code>nmin</code> 兩個陣列都會完整建立起來。</p>
+          <hr />
+          <h3>4. 從左到右找第一個 stable index</h3>
+          <p>當 <code>nmax</code> 和 <code>nmin</code> 都準備好之後，</p>
+          <p>我就從左到右掃每個索引 <code>j</code>，直接檢查這裡的：</p>
+          <ul>
+          <li><code>nmax[j]</code> 就是 <code>max(nums[0..j])</code></li>
+          <li><code>nmin[j]</code> 就是 <code>min(nums[j..n-1])</code></li>
+          </ul>
+          <p>所以兩者相減，就是題目定義的 instability score。</p>
+          <p>而題目要的是最小的 stable index，</p>
+          <p>所以我只要從左到右第一個找到符合條件的位置，就可以立刻回傳。</p>
+          <hr />
+          <h3>5. 如果全部都不符合，就回傳 `-1`</h3>
+          <p>如果整個掃完都沒有任何索引滿足：</p>
+          <pre><code class="language-cpp">nmax[j] - nmin[j] &lt;= k</code></pre>
+          <p>那就代表根本不存在 stable index。</p>
+          <p>最後直接回傳 <code>-1</code>。</p>
+          <h2 id="complexity">⏱️ 複雜度</h2>
+          <p>設 <code>n = nums.length</code>。</p>
+          <ul>
+          <li>時間複雜度：<code>O(n)</code></li>
+          </ul>
+          <p>  我先掃一次建立 <code>nmax</code> 和 <code>nmin</code>，再掃一次找答案。</p>
+          <ul>
+          <li>空間複雜度：<code>O(n)</code></li>
+          </ul>
+          <p>  我另外使用了兩個長度為 <code>n</code> 的陣列。</p>
+          <h2 id="code">💻 程式碼實作</h2>
+          <pre><code class="language-cpp">class Solution {
+public:
+    int firstStableIndex(vector&lt;int&gt;&amp; nums, int k) {
+        int n = nums.size();
+        vector&lt;int&gt; nmax(n);
+        vector&lt;int&gt; nmin(n);
+        nmax[0] = nums[0];
+        nmin[n - 1] = nums[n - 1];
+        for (int i = 1; i &lt; n; i++) {
+            nmax[i] = max(nmax[i - 1], nums[i]);
+            nmin[n - 1 - i] = min(nmin[n - i], nums[n - 1 - i]);
+        }
+
+        for (int j = 0; j &lt; n; j++) {
+            if (nmax[j] - nmin[j] &lt;= k) {
+                return j;
+            }
+        }
+        return -1;
+    }
+};</code></pre>
+          <h2 id="link">🔗 題目連結</h2>
+          <p>https://leetcode.com/contest/weekly-contest-498/problems/smallest-stable-index-ii/</p></section></div>
+<section class="term-block article-footer"><h2 class="article-footer__title">文章資訊</h2><div class="meta-grid"><div class="meta-field"><span class="meta-label">作者：</span><span class="meta-value">scottnick</span></div><div class="meta-field meta-field--date"><span class="meta-label">撰寫日期：</span><span class="meta-value">2026-03-29</span></div><div class="meta-field meta-field--full"><span class="meta-label">類別：</span><span class="meta-value"><span class="post-tags"><span class="post-tag">Weekly Contest 498</span><span class="post-tag">Medium</span></span></span></div><div class="meta-field meta-field--full"><span class="meta-label">原文連結：</span><span class="meta-value">https://scottnick.github.io/cpp-notes/contests/weekly-contest-498/q2-smallest-stable-index-ii.html</span></div></div></section>
+</main><script src="../../../script.js"></script></body></html>
