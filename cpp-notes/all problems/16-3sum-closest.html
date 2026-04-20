@@ -1,0 +1,240 @@
+<!-- all problems/16-3sum-closest.html: 全部題單文章 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>16. 3Sum Closest</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+               width="18" height="18" aria-hidden="true" focusable="false"
+               style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="index.html">All problems</a>
+      <span aria-hidden="true">/</span>
+      <span>16. 3Sum Closest</span>
+    </nav>
+
+    <section class="hero">
+      <h1>16. 3Sum Closest</h1>
+      <p><strong>練習日期：</strong>2026-04-20</p>
+      <p><strong>難度：</strong>Medium</p>
+      <p><strong>類型：</strong>Array、Two Pointers、Sorting</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#complexity">⏱️ 複雜度</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給定一個整數陣列 <code>nums</code>，以及一個整數 <code>target</code>。</p>
+        <p>請找出三個索引互不相同的數，使它們的總和最接近 <code>target</code>。</p>
+        <p>最後回傳這三個數的總和。</p>
+        <p>題目保證每組輸入都剛好有唯一答案。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>3 &lt;= nums.length &lt;= 500</code></li>
+          <li><code>-1000 &lt;= nums[i] &lt;= 1000</code></li>
+          <li><code>-10^4 &lt;= target &lt;= 10^4</code></li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>我這題的想法和 3Sum 很像，先排序，再固定一個數，剩下兩個數用 two pointers 去找。</p>
+        <p>因為排序之後，如果目前三數總和太大，我就可以把右指標往左移；如果總和太小，我就把左指標往右移。
+這樣可以在每個固定的 <code>i</code> 下，有效率地找出更接近 <code>target</code> 的三數總和。</p>
+        <p>我在過程中用 <code>ans</code> 記錄目前最接近 <code>target</code> 的答案。</p>
+        <p>每次算出新的三數總和 <code>sum</code>，就比較：</p>
+        <ul>
+          <li>目前答案和 <code>target</code> 的距離</li>
+          <li>新總和和 <code>target</code> 的距離</li>
+        </ul>
+        <p>如果新的比較近，就更新 <code>ans</code>。</p>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>ans</code>：目前找到最接近 <code>target</code> 的三數總和</li>
+          <li><code>n</code>：陣列長度</li>
+          <li><code>l</code>：左指標</li>
+          <li><code>r</code>：右指標</li>
+          <li><code>sum</code>：目前這組三個數的總和</li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+        <h3>1. 先初始化答案，並把陣列排序</h3>
+        <p>我先把答案 <code>ans</code> 設成前三個數的總和：</p>
+        <pre><code class="language-cpp">int ans = nums[0] + nums[1] + nums[2];
+</code></pre>
+        <p>這樣後面在比較時，一定已經有一個合法初始答案可以參考。</p>
+        <p>接著我把整個陣列排序：</p>
+        <pre><code class="language-cpp">sort(nums.begin(), nums.end());
+</code></pre>
+        <p>排序之後，才能利用 two pointers 的性質來調整總和大小。</p>
+
+        <hr>
+
+        <h3>2. 固定第一個數，剩下兩個數用 two pointers 尋找</h3>
+        <p>我用外層迴圈固定第一個位置 <code>i</code>：</p>
+        <pre><code class="language-cpp">for (int i = 0; i &lt; n - 2; i++) {
+</code></pre>
+        <p>因為總共要選三個數，所以 <code>i</code> 最多只需要跑到 <code>n - 3</code>。</p>
+        <p>接著在每個 <code>i</code> 底下，我設：</p>
+        <ul>
+          <li><code>l = i + 1</code></li>
+          <li><code>r = n - 1</code></li>
+        </ul>
+        <p>也就是在 <code>i</code> 右邊那段區間裡，用左右指標去找另外兩個數。</p>
+
+        <hr>
+
+        <h3>3. 計算目前三數總和，必要時更新答案</h3>
+        <p>在 <code>l &lt; r</code> 的時候，我先算出目前這組三數總和：</p>
+        <pre><code class="language-cpp">int sum = nums[i] + nums[l] + nums[r];
+</code></pre>
+        <p>然後比較它和 <code>target</code> 的距離，看看有沒有比目前的 <code>ans</code> 更接近：</p>
+        <pre><code class="language-cpp">if (abs(ans - target) &gt; abs(sum - target)) {
+    ans = sum;
+}
+</code></pre>
+        <p>如果新的 <code>sum</code> 更接近 <code>target</code>，我就把答案更新成 <code>sum</code>。</p>
+
+        <hr>
+
+        <h3>4. 根據目前總和和 <code>target</code> 的關係移動指標</h3>
+        <p>更新完答案後，我就看目前的 <code>sum</code> 和 <code>target</code> 的大小關係。</p>
+        <p>如果：</p>
+        <pre><code class="language-cpp">if (sum &gt; target) {
+    r--;
+}
+</code></pre>
+        <p>表示現在總和太大了。
+因為陣列已經排序好，所以我要讓總和變小，就把右指標左移。</p>
+        <p>否則：</p>
+        <pre><code class="language-cpp">else {
+    l++;
+}
+</code></pre>
+        <p>表示目前總和小於等於 <code>target</code>。
+這時要讓總和變大，就把左指標右移。</p>
+        <p>這樣每次都能朝著更接近 <code>target</code> 的方向繼續找。</p>
+
+        <hr>
+
+        <h3>5. 全部掃完後回傳最接近的總和</h3>
+        <p>當所有 <code>i</code> 都處理完之後，<code>ans</code> 裡面記錄的就是整個陣列中最接近 <code>target</code> 的三數總和，直接回傳即可。</p>
+
+        <h2 id="complexity">⏱️ 複雜度</h2>
+        <p>設 <code>n = nums.length</code>。</p>
+        <ul>
+          <li>時間複雜度：<code>O(n^2)</code>
+            排序是 <code>O(n log n)</code>，外層固定一個數之後，內層 two pointers 總共是 <code>O(n)</code>，所以整體是 <code>O(n^2)</code>。</li>
+          <li>空間複雜度：<code>O(1)</code>
+            如果不計排序所需的額外空間，這份寫法只用了固定數量的變數。</li>
+        </ul>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    int threeSumClosest(vector&lt;int&gt;&amp; nums, int target) {
+        int ans = nums[0] + nums[1] + nums[2];
+        int n = nums.size();
+        sort(nums.begin(), nums.end());
+        for (int i = 0; i &lt; n - 2; i++) {
+            int l = i + 1, r = n - 1;
+            while (l &lt; r) {
+                int sum = nums[i] + nums[l] + nums[r];
+                if (abs(ans - target) &gt; abs(sum - target)) {
+                    ans = sum;
+                }
+                if (sum &gt; target) {
+                    r--;
+                } else {
+                    l++;
+                }
+            }
+        }
+        return ans;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/3sum-closest/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-04-20</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value"><span class="post-tags">
+              <span class="post-tag">Array</span>
+              <span class="post-tag">Two Pointers</span>
+              <span class="post-tag">Sorting</span>
+              <span class="post-tag">Medium</span>
+            </span></span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/all%20problems/16-3sum-closest.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
