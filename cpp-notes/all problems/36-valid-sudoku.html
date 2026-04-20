@@ -1,0 +1,266 @@
+<!-- all problems/36-valid-sudoku.html: All problems 文章 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>36. Valid Sudoku</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+               width="18" height="18" aria-hidden="true" focusable="false"
+               style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="index.html">All problems</a>
+      <span aria-hidden="true">/</span>
+      <span>36. Valid Sudoku</span>
+    </nav>
+
+    <section class="hero">
+      <h1>36. Valid Sudoku</h1>
+      <p><strong>練習日期：</strong>2026-04-20</p>
+      <p><strong>難度：</strong>Medium</p>
+      <p><strong>類型：</strong>Array、Hash Table、Matrix</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#complexity">⏱️ 複雜度</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給定一個 <code>9 x 9</code> 的數獨棋盤 <code>board</code>，請判斷它目前是不是一個有效的 Sudoku 盤面。</p>
+        <p>只需要檢查目前已經填入的格子是否符合以下規則：</p>
+        <ul>
+          <li>每一列不能有重複的 <code>1</code> 到 <code>9</code></li>
+          <li>每一行不能有重複的 <code>1</code> 到 <code>9</code></li>
+          <li>每一個 <code>3 x 3</code> 小區塊不能有重複的 <code>1</code> 到 <code>9</code></li>
+        </ul>
+        <p>注意：</p>
+        <ul>
+          <li>一個盤面就算目前有效，也不代表它一定有解</li>
+          <li>只需要檢查已經填入的數字</li>
+          <li><code>'.'</code> 表示空格，不需要拿來檢查</li>
+        </ul>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>board.length == 9</code></li>
+          <li><code>board[i].length == 9</code></li>
+          <li><code>board[i][j]</code> 是 <code>'1'</code> 到 <code>'9'</code> 或 <code>'.'</code></li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>我這題的做法就是直接檢查。</p>
+        <p>題目要求合法的條件只有三種：</p>
+        <ul>
+          <li>每一列不能重複</li>
+          <li>每一行不能重複</li>
+          <li>每一個 <code>3 x 3</code> 小方格不能重複</li>
+        </ul>
+        <p>所以我就把這三件事分開做。<br>
+        每次檢查某一列、某一行、或某一個 <code>3 x 3</code> 區塊時，都開一個 <code>unordered_set&lt;char&gt;</code> 來記錄目前看過哪些數字。</p>
+        <p>如果遇到某個數字已經出現過，代表重複了，就直接回傳 <code>false</code>。<br>
+        如果全部檢查完都沒有問題，那就是合法盤面，回傳 <code>true</code>。</p>
+
+        <h3>所有變數</h3>
+        <p>這題不用令變數</p>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+        <h3>1. 先逐列檢查有沒有重複數字</h3>
+        <p>我先把每一列獨立檢查一次。</p>
+        <p>對每一列 <code>i</code>，我都新開一個 <code>unordered_set&lt;char&gt; s</code>，<br>
+        然後把這一列從左到右掃過去。</p>
+        <p>如果某個位置是數字 <code>'1'</code> 到 <code>'9'</code>，我才拿來檢查；<br>
+        如果是 <code>'.'</code>，代表空格，直接跳過。</p>
+        <ul>
+          <li>同一列裡每出現一個數字，就先看 set 裡有沒有</li>
+          <li>如果已經有了，代表這一列重複，直接回傳 <code>false</code></li>
+          <li>否則就把它放進 set</li>
+        </ul>
+        <hr>
+
+        <h3>2. 再逐行檢查有沒有重複數字</h3>
+        <p>接著我再把每一行也獨立檢查一次。</p>
+        <p>做法和檢查列完全一樣，只是這次固定的是欄位 <code>j</code>，<br>
+        然後往下掃每個 <code>i</code>。</p>
+
+        <p>如果某一行中同一個數字出現兩次，也會立刻回傳 <code>false</code>。</p>
+        <hr>
+
+        <h3>3. 最後檢查九個 <code>3 x 3</code> 小區塊</h3>
+        <p>除了列和行之外，數獨還要求每個 <code>3 x 3</code> 小區塊內不能重複。<br>
+        所以我最後再把九個區塊都檢查一遍。</p>
+        <p>我用外面兩層迴圈：</p>
+        <pre><code class="language-cpp">for (int i = 0; i &lt; 3; i++) {
+    for (int j = 0; j &lt; 3; j++) {
+</code></pre>
+        <p>來枚舉每個 <code>3 x 3</code> 區塊的左上角區塊編號。</p>
+        <p>然後再用裡面兩層迴圈：</p>
+        <pre><code class="language-cpp">for (int k = 0; k &lt; 3; k++) {
+    for (int l = 0; l &lt; 3; l++) {
+</code></pre>
+        <p>去掃那個區塊內的九個位置。</p>
+        <p>實際座標是：</p>
+        <pre><code class="language-cpp">char c = board[i * 3 + k][j * 3 + l];
+</code></pre>
+        <p>這樣就能把第 <code>(i, j)</code> 個小區塊中的所有格子都走到。</p>
+        <p>如果某個數字在同一個區塊裡出現兩次，就回傳 <code>false</code>：</p>
+        <pre><code class="language-cpp">if (c &gt;= '1' &amp;&amp; c &lt;= '9') {
+    if (s.count(c)) {
+        return false;
+    }
+    s.insert(c);
+}
+</code></pre>
+        <hr>
+
+        <h3>4. 只要任何一種檢查失敗，就立刻回傳 <code>false</code></h3>
+        <p>這份寫法的特點就是直接檢查、直接結束。</p>
+        <p>不管是：</p>
+        <ul>
+          <li>某一列重複</li>
+          <li>某一行重複</li>
+          <li>某一個 <code>3 x 3</code> 區塊重複</li>
+        </ul>
+        <p>只要發現其中一個違規，就不用再看後面了，直接回傳 <code>false</code>。</p>
+        <p>這樣邏輯很直，也很符合題目要求。</p>
+        <hr>
+
+        <h3>5. 如果全部檢查完都沒問題，就回傳 <code>true</code></h3>
+        <p>如果三種檢查都跑完，沒有遇到任何重複數字，<br>
+        就代表這個盤面目前是合法的，所以最後回傳 <code>true</code>。</p>
+
+        <h2 id="complexity">⏱️ 複雜度</h2>
+        <ul>
+          <li>時間複雜度：<code>O(1)</code><br>
+          棋盤固定是 <code>9 x 9</code>，所以不管怎麼掃，總操作量都是固定常數。</li>
+          <li>空間複雜度：<code>O(1)</code><br>
+          每次檢查只會用到固定大小的 <code>unordered_set</code>。</li>
+        </ul>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    bool isValidSudoku(vector&lt;vector&lt;char&gt;&gt;&amp; board) {
+        for (int i = 0; i &lt; 9; i++) {
+            unordered_set&lt;char&gt; s;
+            for (int j = 0; j &lt; 9; j++) {
+                if (board[i][j] &gt;= '1' &amp;&amp; board[i][j] &lt;= '9') {
+                    if (s.count(board[i][j])) {
+                        return false;
+                    }
+                    s.insert(board[i][j]);
+                }
+            }
+        }
+        for (int j = 0; j &lt; 9; j++) {
+            unordered_set&lt;char&gt; s;
+            for (int i = 0; i &lt; 9; i++) {
+                if (board[i][j] &gt;= '1' &amp;&amp; board[i][j] &lt;= '9') {
+                    if (s.count(board[i][j])) {
+                        return false;
+                    }
+                    s.insert(board[i][j]);
+                }
+            }
+        }
+        for (int i = 0; i &lt; 3; i++) {
+            for (int j = 0; j &lt; 3; j++) {
+                unordered_set&lt;char&gt; s;
+                for (int k = 0; k &lt; 3; k++) {
+                    for (int l = 0; l &lt; 3; l++) {
+                        char c = board[i * 3 + k][j * 3 + l];
+                        if (c &gt;= '1' &amp;&amp; c &lt;= '9') {
+                            if (s.count(c)) {
+                                return false;
+                            }
+                            s.insert(c);
+                        }
+                    }
+                }
+            }
+        }
+        return true;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/valid-sudoku/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-04-20</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value"><span class="post-tags">
+              <span class="post-tag">Array</span>
+              <span class="post-tag">Hash Table</span>
+              <span class="post-tag">Matrix</span>
+              <span class="post-tag">Medium</span>
+            </span></span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/all%20problems/36-valid-sudoku.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
