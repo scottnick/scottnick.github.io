@@ -1,0 +1,232 @@
+<!-- all problems/2833-furthest-point-from-origin.html: All problems 文章 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2833. Furthest Point From Origin</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+               width="18" height="18" aria-hidden="true" focusable="false"
+               style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="index.html">All problems</a>
+      <span aria-hidden="true">/</span>
+      <span>2833. Furthest Point From Origin</span>
+    </nav>
+
+    <section class="hero">
+      <h1>2833. Furthest Point From Origin</h1>
+      <p><strong>練習日期：</strong>2026-04-24</p>
+      <p><strong>難度：</strong>Easy</p>
+      <p><strong>類型：</strong>String、Counting</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#complexity">⏱️ 複雜度</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給定一個字串 <code>moves</code>，長度為 <code>n</code>，只會包含 <code>'L'</code>、<code>'R'</code>、<code>'_'</code> 三種字元。</p>
+        <p>你一開始站在數線上的原點 <code>0</code>。</p>
+        <p>第 <code>i</code> 次移動時：</p>
+        <ul>
+          <li>如果 <code>moves[i] = 'L'</code>，就一定往左走</li>
+          <li>如果 <code>moves[i] = 'R'</code>，就一定往右走</li>
+          <li>如果 <code>moves[i] = '_'</code>，則可以自由選擇往左或往右走</li>
+        </ul>
+        <p>請回傳做完全部 <code>n</code> 次移動後，離原點最遠可以到多遠。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>1 &lt;= moves.length == n &lt;= 50</code></li>
+          <li><code>moves</code> 只包含 <code>'L'</code>、<code>'R'</code> 和 <code>'_'</code></li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>我這題的想法是先統計：</p>
+        <ul>
+          <li>一共有幾個 <code>'L'</code></li>
+          <li>一共有幾個 <code>'R'</code></li>
+          <li>一共有幾個 <code>'_'</code></li>
+        </ul>
+        <p>如果先不管 <code>'_'</code>，那目前位置只會由 <code>L</code> 和 <code>R</code> 的差決定，也就是左右固定步數的淨位移。</p>
+        <p>而 <code>'_'</code> 最自由的地方在於：<br>
+           我可以把它們全部往同一個方向選，讓最後位置盡量遠離原點。</p>
+        <p>所以做法就是：</p>
+        <ul>
+          <li>先算固定的左右差距 <code>abs(l - r)</code></li>
+          <li>再把所有 <code>'_'</code> 全部補到同一邊</li>
+        </ul>
+        <p>最後答案就是：</p>
+        <ul>
+          <li><code>abs(l - r) + sp</code></li>
+        </ul>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>l</code>：字串中 <code>'L'</code> 的數量</li>
+          <li><code>r</code>：字串中 <code>'R'</code> 的數量</li>
+          <li><code>sp</code>：字串中 <code>'_'</code> 的數量</li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+
+        <h3>1. 先統計三種字元各出現幾次</h3>
+        <p>我先掃過整個字串，分別統計：</p>
+        <ul>
+          <li><code>'L'</code> 出現幾次</li>
+          <li><code>'R'</code> 出現幾次</li>
+          <li><code>'_'</code> 出現幾次</li>
+        </ul>
+        <p>這樣掃完之後，我就知道固定往左、固定往右，以及可自由選方向的步數各有多少。</p>
+
+        <hr />
+
+        <h3>2. 先看固定的 <code>'L'</code> 和 <code>'R'</code> 會造成多少淨位移</h3>
+        <p>如果只看已經確定方向的移動，那最後位置其實只跟：</p>
+        <ul>
+          <li>左走幾步</li>
+          <li>右走幾步</li>
+        </ul>
+        <p>的差有關。</p>
+        <p>所以固定部分造成的距離就是：</p>
+        <pre><code class="language-cpp">abs(l - r)
+</code></pre>
+        <p>例如：</p>
+        <ul>
+          <li>如果 <code>L</code> 比 <code>R</code> 多 2 次，那固定部分最後會在左邊 2 格</li>
+          <li>如果 <code>R</code> 比 <code>L</code> 多 3 次，那固定部分最後會在右邊 3 格</li>
+        </ul>
+        <p>總之先取絕對值，就得到目前已經形成的距離。</p>
+
+        <hr />
+
+        <h3>3. 把所有 <code>'_'</code> 全部往同一個方向選</h3>
+        <p>這題最關鍵的是 <code>'_'</code> 可以自由決定方向。</p>
+        <p>既然題目要的是離原點最遠的位置，<br>
+           那最好的做法一定是把所有 <code>'_'</code> 都往同一邊補，讓原本的距離變得更大。</p>
+        <p>也就是說：</p>
+        <ul>
+          <li>如果目前偏左，就把 <code>'_'</code> 全部也當成往左</li>
+          <li>如果目前偏右，就把 <code>'_'</code> 全部也當成往右</li>
+          <li>就算目前左右一樣多，也可以把 <code>'_'</code> 全部選成同一邊</li>
+        </ul>
+        <p>所以這些 <code>'_'</code> 每一個都能再多貢獻 <code>1</code> 的距離，總共就是 sp</p>
+
+        <hr />
+
+        <h3>4. 最後把兩部分加起來</h3>
+        <p>因此最後答案就是：</p>
+        <pre><code class="language-cpp">abs(l - r) + sp
+</code></pre>
+        <p>前半段是固定方向造成的淨距離，<br>
+           後半段是所有可自由選擇的步數全部往同一邊帶來的額外距離。</p>
+
+        <h2 id="complexity">⏱️ 複雜度</h2>
+        <p>設 <code>n = moves.length</code>。</p>
+        <ul>
+          <li>時間複雜度：<code>O(n)</code><br>
+              我只掃過字串一次。</li>
+          <li>空間複雜度：<code>O(1)</code><br>
+              只用了固定數量的變數。</li>
+        </ul>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    int furthestDistanceFromOrigin(string moves) {
+        int l = 0, r = 0, sp = 0;
+        for (char c : moves) {
+            if (c == 'L') {
+                l++;
+            } else if (c == 'R') {
+                r++;
+            } else {
+                sp++;
+            }
+        }
+        return abs(l - r) + sp;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/furthest-point-from-origin/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-04-24</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value"><span class="post-tags">
+              <span class="post-tag">String</span>
+              <span class="post-tag">Counting</span>
+              <span class="post-tag">Easy</span>
+            </span></span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/all%20problems/2833-furthest-point-from-origin.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
