@@ -1,0 +1,399 @@
+<!-- all problems/46-permutations.html: LeetCode 文章 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>46. Permutations</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+               width="18" height="18" aria-hidden="true" focusable="false"
+               style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="index.html">All problems</a>
+      <span aria-hidden="true">/</span>
+      <span>46. Permutations</span>
+    </nav>
+
+    <section class="hero">
+      <h1>46. Permutations</h1>
+      <p><strong>練習日期：</strong>2026-04-24</p>
+      <p><strong>難度：</strong>Medium</p>
+      <p><strong>類型：</strong>Array、Backtracking</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">目錄</button>
+        <strong>目錄</strong>
+        <ul></ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2>📘 題目敘述</h2>
+        <p>給定一個由<strong>互不相同整數</strong>組成的陣列 <code>nums</code>，請回傳它的所有排列。</p>
+        <p>答案可以用任意順序回傳。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>1 &lt;= nums.length &lt;= 6</code></li>
+          <li><code>-10 &lt;= nums[i] &lt;= 10</code></li>
+          <li><code>nums</code> 中所有整數都互不相同</li>
+        </ul>
+
+        <h2>🧠 解題思路（一）直接遞迴</h2>
+        <p>我這題是直接寫遞迴函數。</p>
+        <p>我的想法是先假設：</p>
+        <ul>
+          <li>前 <code>n - 1</code> 個數字的所有排列我都已經知道了</li>
+        </ul>
+        <p>那我現在只要把第 <code>n</code> 個數字，插進這些排列的每一個可能位置，就能得到前 <code>n</code> 個數字的所有排列。</p>
+        <p>所以這題的遞迴核心就是：</p>
+        <ul>
+          <li>先遞迴求出 <code>n - 1</code> 個數字的所有排列</li>
+          <li>再把第 <code>n</code> 個數字插入每個排列的每個位置</li>
+        </ul>
+        <p>這樣一路往上組回來，就能得到全部答案。</p>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>ans</code>：目前這一層遞迴要回傳的所有排列</li>
+          <li><code>v</code>：遞迴求出來的 <code>n - 1</code> 個數字的所有排列</li>
+          <li><code>now</code>：目前這一層要插入進去的新數字</li>
+          <li><code>x</code>：某一個較小規模的排列</li>
+          <li><code>y</code>：把 <code>now</code> 插入某個位置之後形成的新排列</li>
+        </ul>
+
+        <h2>🪜 主要流程步驟（一）</h2>
+        <h3>1. 先定義遞迴函式的意義</h3>
+        <p>我把遞迴函式 <code>f(n, nums)</code> 定義成：</p>
+        <ul>
+          <li>回傳 <code>nums</code> 前 <code>n</code> 個元素所形成的所有排列</li>
+        </ul>
+        <p>也就是說：</p>
+        <ul>
+          <li><code>f(1, nums)</code> 會回傳只有一個數字時的排列</li>
+          <li><code>f(2, nums)</code> 會回傳前兩個數字的所有排列</li>
+          <li>...</li>
+          <li><code>f(n, nums)</code> 就是我要的完整答案</li>
+        </ul>
+        <p>這樣整個遞迴結構會很清楚。</p>
+
+        <hr />
+
+        <h3>2. 先處理遞迴的 base case</h3>
+        <p>如果 <code>n == 1</code>，那就代表目前只剩一個數字。</p>
+        <p>只有一個數字時，排列就只有一種，所以我直接回傳：</p>
+        <pre><code class="language-cpp">return {{nums[0]}};
+</code></pre>
+        <p>這就是整個遞迴往上展開時的最基本起點。</p>
+
+        <hr />
+
+        <h3>3. 先遞迴求出前 <code>n - 1</code> 個數字的所有排列</h3>
+        <p>如果 <code>n</code> 不等於 <code>1</code>，我就先遞迴去算：</p>
+        <pre><code class="language-cpp">v = f(n - 1, nums);
+</code></pre>
+        <p>這代表我先拿到前 <code>n - 1</code> 個數字的所有排列結果。</p>
+        <p>接著我再把第 <code>n</code> 個數字加進去。</p>
+        <p>我這裡用：</p>
+        <pre><code class="language-cpp">int now = nums[n - 1];
+</code></pre>
+        <p>把這一層要新加入的數字記下來。</p>
+
+        <hr />
+
+        <h3>4. 把 <code>now</code> 插進每個舊排列的每一個位置</h3>
+        <p>這題最核心的地方就是這一步。</p>
+        <p>對於 <code>v</code> 裡面的每一個排列 <code>x</code>，我都把 <code>now</code> 插進去所有可能的位置：</p>
+        <ul>
+          <li>插在最前面</li>
+          <li>插在中間</li>
+          <li>插在最後面</li>
+        </ul>
+        <p>這段意思是：</p>
+        <ul>
+          <li><code>x</code> 是某個已經排好的 <code>n - 1</code> 長度排列</li>
+          <li>我複製一份成 <code>y</code></li>
+          <li>再把 <code>now</code> 插入第 <code>i</code> 個位置</li>
+          <li>這樣就會得到一個新的長度 <code>n</code> 排列</li>
+          <li>最後把它放進 <code>ans</code></li>
+        </ul>
+        <p>因為一個長度 <code>n - 1</code> 的排列，總共有 <code>n</code> 個位置可以插入新數字，
+        所以每個舊排列都能產生 <code>n</code> 個新排列。</p>
+
+        <hr />
+
+        <h3>5. 把這一層組好的所有排列回傳</h3>
+        <p>當我把 <code>now</code> 插進所有舊排列的所有位置之後，<code>ans</code> 裡面就會放著前 <code>n</code> 個數字的全部排列。</p>
+        <p>這樣就能把結果回傳給上一層遞迴。</p>
+
+        <hr />
+
+        <h3>6. 主函式只要呼叫完整規模的遞迴</h3>
+        <p>在主函式 <code>permute</code> 裡，我先取出陣列長度 <code>n</code>，然後直接回傳：</p>
+        <pre><code class="language-cpp">return f(n, nums);
+</code></pre>
+        <p>因為 <code>f(n, nums)</code> 的定義本來就是「前 <code>n</code> 個數字的所有排列」，
+        所以這裡就剛好是整題答案。</p>
+
+        <h2>⏱️ 複雜度</h2>
+        <p>設 <code>n = nums.length</code>。</p>
+        <ul>
+          <li>時間複雜度：<code>O(n \cdot n!)</code><br>
+          共有 <code>n!</code> 個排列，而每次建立新排列時還會有插入與複製成本，所以整體可以記成 <code>O(n \cdot n!)</code>。</li>
+          <li>空間複雜度：<code>O(n \cdot n!)</code><br>
+          需要儲存所有排列結果。</li>
+        </ul>
+
+        <h2>💻 程式碼實作（一）</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    vector&lt;vector&lt;int&gt;&gt; f(int n, vector&lt;int&gt;&amp; nums) {
+        if (n == 1) {
+            return {{nums[0]}};
+        }
+        vector&lt;vector&lt;int&gt;&gt; ans;
+        vector&lt;vector&lt;int&gt;&gt; v = f(n - 1, nums);
+        int now = nums[n - 1];
+        for (auto&amp; x : v) {
+            for (int i = 0; i &lt; n; i++) {
+                auto y = x;
+                y.insert(y.begin() + i, now);
+                ans.push_back(y);
+            }
+        }
+        return ans;
+    }
+
+    vector&lt;vector&lt;int&gt;&gt; permute(vector&lt;int&gt;&amp; nums) {
+        int n = nums.size();
+        return f(n, nums);
+    }
+};
+</code></pre>
+
+        <h2>🧠 解題思路（二）回溯寫法</h2>
+        <p>我這份寫法是用標準 backtracking。</p>
+        <p>我的想法是從空的排列開始，一個位置一個位置往下填。
+        每次都去找目前還沒用過的數字，把它加進 <code>now</code>，然後遞迴處理下一層。</p>
+        <p>當 <code>now</code> 的長度已經等於 <code>n</code> 時，就代表已經湊出一個完整排列了，直接放進答案。</p>
+        <p>這種寫法的重點就是：</p>
+        <ul>
+          <li><code>now</code> 記目前正在組的排列</li>
+          <li><code>check[i]</code> 記 <code>nums[i]</code> 有沒有用過</li>
+          <li>每次遞迴結束後要把狀態還原，讓下一個選擇可以繼續試</li>
+        </ul>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>ans</code>：最後要回傳的所有排列</li>
+          <li><code>now</code>：目前正在組的排列</li>
+          <li><code>check</code>：記錄每個位置的數字是否已經被使用過</li>
+          <li><code>n</code>：陣列長度</li>
+        </ul>
+
+        <h2>🪜 主要流程步驟（二）</h2>
+        <h3>1. 先把遞迴要用的狀態準備好</h3>
+        <p>我把幾個會在整個 backtracking 過程中一直用到的東西直接寫成成員變數：</p>
+        <ul>
+          <li><code>ans</code>：存所有答案</li>
+          <li><code>now</code>：存目前路徑</li>
+          <li><code>check</code>：存使用狀態</li>
+          <li><code>n</code>：存陣列長度</li>
+        </ul>
+        <p>這樣遞迴函式 <code>f</code> 裡面就不用每次都一直傳很多參數，寫起來會比較直接。</p>
+
+        <hr />
+
+        <h3>2. 遞迴函式的目標是把目前排列一路填滿</h3>
+        <p>我寫的 <code>f(nums)</code>，它的意思是：</p>
+        <ul>
+          <li>以目前 <code>now</code> 的狀態為基礎</li>
+          <li>繼續往下填還沒選過的數字</li>
+          <li>直到形成一個完整排列</li>
+        </ul>
+        <p>所以每一層遞迴，其實都在做同一件事：</p>
+        <ul>
+          <li>枚舉還沒用過的數字</li>
+          <li>選一個放進 <code>now</code></li>
+          <li>然後繼續遞迴</li>
+        </ul>
+
+        <hr />
+
+        <h3>3. 如果 <code>now.size() == n</code>，代表已經得到一組完整排列</h3>
+        <p>這是遞迴的終止條件：</p>
+        <pre><code class="language-cpp">if(now.size()==n){
+    ans.push_back(now);
+    return;
+}
+</code></pre>
+        <p>當 <code>now</code> 的長度已經和 <code>n</code> 一樣時，就表示：</p>
+        <ul>
+          <li>每個位置都填好了</li>
+          <li>而且每個數字都只用了一次</li>
+        </ul>
+        <p>所以這時候 <code>now</code> 就是一組合法排列，直接放進 <code>ans</code> 裡即可。</p>
+
+        <hr />
+
+        <h3>4. 每一層都去枚舉所有還沒被使用的數字</h3>
+        <p>如果目前排列還沒填滿，我就用一個迴圈把所有數字都試一遍：</p>
+        <ul>
+          <li>如果 <code>check[i]</code> 已經是 <code>true</code>，代表 <code>nums[i]</code> 之前已經被放進 <code>now</code> 了</li>
+          <li>那這一層就不能再用它，所以直接跳過</li>
+          <li>只有還沒用過的數字，才可以拿來當目前這一格的候選答案</li>
+        </ul>
+
+        <hr />
+
+        <h3>5. 選一個數字放進去，遞迴完再還原狀態</h3>
+        <p>當我決定要選 <code>nums[i]</code> 時，就先做三件事：</p>
+        <pre><code class="language-cpp">check[i]=true;
+now.push_back(nums[i]);
+f(nums);
+</code></pre>
+        <p>也就是：</p>
+        <ul>
+          <li>先標記這個數字已經使用過</li>
+          <li>把它加到目前排列 <code>now</code> 的尾端</li>
+          <li>然後遞迴去處理下一層</li>
+        </ul>
+        <p>等遞迴回來之後，還要把剛剛的選擇取消掉：</p>
+        <pre><code class="language-cpp">now.pop_back();
+check[i]=false;
+</code></pre>
+        <p>這一步很重要，因為 backtracking 的核心就是：</p>
+        <ul>
+          <li>試一個選擇</li>
+          <li>做到底</li>
+          <li>回來之後把現場恢復</li>
+          <li>再試下一個選擇</li>
+        </ul>
+        <p>如果不把狀態還原，後面的分支就會被前面做過的選擇污染。</p>
+
+        <hr />
+
+        <h3>6. 主函式先初始化，再呼叫遞迴</h3>
+        <p>在 <code>permute</code> 裡，我先把 <code>n</code> 記下來，然後把 <code>check</code> 開成長度 <code>n</code>、初始值全是 <code>false</code>：</p>
+        <pre><code class="language-cpp">n=nums.size();
+check.resize(n,false);
+</code></pre>
+        <p>這表示一開始所有數字都還沒被用過。</p>
+        <p>接著直接呼叫：</p>
+        <pre><code class="language-cpp">f(nums);
+</code></pre>
+        <p>讓遞迴從空排列開始慢慢展開。</p>
+        <p>最後回傳 <code>ans</code>，就是所有排列。</p>
+
+        <h2>⏱️ 複雜度</h2>
+        <p>設 <code>n = nums.length</code>。</p>
+        <ul>
+          <li>時間複雜度：<code>O(n \cdot n!)</code><br>
+          總共有 <code>n!</code> 種排列，而每一組排列建立過程都和長度 <code>n</code> 有關。</li>
+          <li>空間複雜度：<code>O(n \cdot n!)</code><br>
+          需要儲存所有排列結果；另外遞迴深度和暫存路徑是 <code>O(n)</code>。</li>
+        </ul>
+
+        <h2>💻 程式碼實作（二）</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    vector&lt;vector&lt;int&gt;&gt; ans;
+    vector&lt;int&gt; now;
+    vector&lt;bool&gt; check;
+    int n;
+    
+    void f(vector&lt;int&gt;&amp; nums) {
+        if(now.size()==n){
+            ans.push_back(now);
+            return;
+        }
+        for(int i=0;i&lt;n;i++){
+            if(check[i]){
+                continue;
+            }
+            check[i]=true;
+            now.push_back(nums[i]);
+            f(nums);
+            
+            now.pop_back();
+            check[i]=false;
+        }
+    }
+    
+    vector&lt;vector&lt;int&gt;&gt; permute(vector&lt;int&gt;&amp; nums) {
+        n=nums.size();
+        check.resize(n,false);
+        f(nums);
+        return ans;
+    }
+};
+</code></pre>
+
+        <h2>🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/permutations/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-04-24</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value"><span class="post-tags">
+            <span class="post-tag">Array</span>
+            <span class="post-tag">Backtracking</span>
+            <span class="post-tag">Medium</span>
+          </span></span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/all%20problems/46-permutations.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
