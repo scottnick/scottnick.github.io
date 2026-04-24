@@ -1,0 +1,230 @@
+<!-- all problems/35-search-insert-position.html: 全部題單文章 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>35. Search Insert Position</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+               width="18" height="18" aria-hidden="true" focusable="false"
+               style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="../all%20problems/index.html">All problems</a>
+      <span aria-hidden="true">/</span>
+      <span>35. Search Insert Position</span>
+    </nav>
+
+    <section class="hero">
+      <h1>35. Search Insert Position</h1>
+      <p><strong>練習日期：</strong>2026-04-24</p>
+      <p><strong>難度：</strong>Easy</p>
+      <p><strong>類型：</strong>Array、Binary Search</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#complexity">⏱️ 複雜度</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給定一個已經依照遞增順序排序、且元素彼此不同的整數陣列 <code>nums</code>，以及一個整數 <code>target</code>。</p>
+        <p>如果 <code>target</code> 已經在陣列中，請回傳它的索引。<br>
+        如果不在，請回傳它<strong>應該插入的位置</strong>，使得插入後陣列仍然保持排序。</p>
+        <p>而且題目要求演算法時間複雜度必須是 <code>O(log n)</code>。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>1 &lt;= nums.length &lt;= 10^4</code></li>
+          <li><code>-10^4 &lt;= nums[i] &lt;= 10^4</code></li>
+          <li><code>nums</code> 中的值彼此不同，且已依遞增順序排列</li>
+          <li><code>-10^4 &lt;= target &lt;= 10^4</code></li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>我這題的想法就是標準 binary search。</p>
+        <p>因為陣列本來就已經排序好了，所以我可以用二分搜去找：</p>
+        <ul>
+          <li><code>target</code> 是不是存在</li>
+          <li>如果不存在，那它應該落在哪個位置</li>
+        </ul>
+        <p>我這份寫法維護一個搜尋區間 <code>[l, r)</code>，也就是：</p>
+        <ul>
+          <li><code>l</code> 會指向目前可能答案的左邊界</li>
+          <li><code>r</code> 會指向目前可能答案的右邊界外一格</li>
+        </ul>
+        <p>每次取中間位置 <code>m</code>：</p>
+        <ul>
+          <li>如果 <code>nums[m] &gt; target</code>，代表答案在左半邊</li>
+          <li>如果 <code>nums[m] &lt; target</code>，代表答案在右半邊</li>
+          <li>如果剛好相等，就直接回傳 <code>m</code></li>
+        </ul>
+        <p>如果最後都沒找到，<code>l</code> 停下來的位置，就是 <code>target</code> 應該插入的位置。</p>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>l</code>：binary search 的左邊界</li>
+          <li><code>r</code>：binary search 的右邊界外一格</li>
+          <li><code>m</code>：目前區間的中間位置</li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+        <h3>1. 先設定 binary search 的搜尋區間</h3>
+        <p>我先把左邊界設成 <code>0</code>，右邊界設成 <code>nums.size()</code>：</p>
+        <pre><code class="language-cpp">int l = 0, r = nums.size();</code></pre>
+        <p>這代表我搜尋的是一個左閉右開區間 <code>[l, r)</code>。</p>
+        <p>這樣寫的好處是：</p>
+        <ul>
+          <li>如果 <code>target</code> 比所有元素都大，最後答案可以自然停在 <code>nums.size()</code></li>
+          <li>也就是插在陣列最後面</li>
+        </ul>
+        <hr>
+
+        <h3>2. 只要區間還有範圍，就一直取中間位置</h3>
+        <p>接著我用：</p>
+        <pre><code class="language-cpp">while (l &lt; r) {</code></pre>
+        <p>表示只要目前區間還沒縮到空，就繼續做 binary search。</p>
+        <p>中間位置用：</p>
+        <pre><code class="language-cpp">int m = (l + r) / 2;</code></pre>
+        <p>來取得。</p>
+        <p>這樣每次都能把搜尋範圍大約砍半。</p>
+        <hr>
+
+        <h3>3. 根據 <code>nums[m]</code> 和 <code>target</code> 的大小關係縮小區間</h3>
+        <p>接著我比較 <code>nums[m]</code> 和 <code>target</code>。</p>
+        <p>如果：</p>
+        <pre><code class="language-cpp">if (nums[m] &gt; target) {
+    r = m;
+}</code></pre>
+        <p>表示中間值太大了，<br>
+        那 <code>target</code> 如果存在，或者它應該插入的位置，都一定在左半邊，所以把右邊界縮成 <code>m</code>。</p>
+        <p>如果：</p>
+        <pre><code class="language-cpp">else if (nums[m] &lt; target) {
+    l = m + 1;
+}</code></pre>
+        <p>表示中間值太小了，<br>
+        那答案一定在右半邊，所以把左邊界移到 <code>m + 1</code>。</p>
+        <p>如果剛好：</p>
+        <pre><code class="language-cpp">else {
+    return m;
+}</code></pre>
+        <p>表示真的找到 <code>target</code>，直接回傳它的索引。</p>
+        <hr>
+
+        <h3>4. 如果最後沒找到，<code>l</code> 就是應該插入的位置</h3>
+        <p>如果 <code>while</code> 結束，表示整個搜尋區間已經縮到空，而且過程中沒有找到 <code>target</code>。</p>
+        <p>這時候 <code>l</code> 停下來的位置，就是 <code>target</code> 應該插入的位置，所以直接：</p>
+        <pre><code class="language-cpp">return l;</code></pre>
+        <p>這點可以這樣理解：</p>
+        <ul>
+          <li><code>l</code> 前面的數都小於 <code>target</code></li>
+          <li><code>l</code> 以及後面的數都大於等於 <code>target</code></li>
+        </ul>
+        <p>所以把 <code>target</code> 插在 <code>l</code>，剛好可以維持排序。</p>
+
+        <h2 id="complexity">⏱️ 複雜度</h2>
+        <p>設 <code>n = nums.length</code>。</p>
+        <ul>
+          <li>時間複雜度：<code>O(log n)</code><br>
+          每次 binary search 都把搜尋範圍縮小一半。</li>
+          <li>空間複雜度：<code>O(1)</code><br>
+          只用了固定數量的變數。</li>
+        </ul>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    int searchInsert(vector&lt;int&gt;&amp; nums, int target) {
+        int l = 0, r = nums.size();
+        while (l &lt; r) {
+            int m = (l + r) / 2;
+            if (nums[m] &gt; target) {
+                r = m;
+            } else if (nums[m] &lt; target) {
+                l = m + 1;
+            } else {
+                return m;
+            }
+        }
+        return l;
+    }
+};</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/search-insert-position/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-04-24</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value"><span class="post-tags">
+              <span class="post-tag">Array</span>
+              <span class="post-tag">Binary Search</span>
+              <span class="post-tag">Easy</span>
+            </span></span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/all%20problems/35-search-insert-position.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
