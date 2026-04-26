@@ -1,0 +1,98 @@
+<!-- contests/biweekly-contest-181/q1-valid-digit-number.html: Biweekly Contest 181 -->
+<!doctype html>
+<html lang="zh-Hant"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>Q1. Valid Digit Number</title><link rel="stylesheet" href="../../../styles.css" /></head>
+<body class="page-article"><header><nav class="navbar"><a class="brand" href="../../../personal.html">scottnick 個人網頁</a><button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button><div class="nav-links" id="nav-links"><a href="../../../index.html">主頁</a><a href="../../../courses.html">修課紀錄</a><a href="../../../cpp.html" class="active">C++學習筆記</a><a href="../../../profile.html">個人檔案</a></div><div class="nav-actions"><a class="nav-action-link" href="../../../categories.html"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false" style="display:inline-block; vertical-align:-3px; margin-right:6px;"><rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect><rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect><rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect><rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect></svg>類別</a><button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題"><span id="theme-icon" aria-hidden="true">☀️</span></button></div></nav></header>
+<main><nav class="breadcrumb" aria-label="文章路徑"><a href="../../../cpp.html">C++學習筆記</a><span aria-hidden="true">/</span><a href="../index.html">Contests</a><span aria-hidden="true">/</span><a href="../biweekly-contest-181.html">Biweekly Contest 181</a><span aria-hidden="true">/</span><span>Q1. Valid Digit Number</span></nav><section class="hero"><h1>Q1. Valid Digit Number</h1><p><strong>練習日期：</strong>2026-04-25</p><p><strong>難度：</strong>Easy</p><p><strong>類型：</strong>Biweekly Contest 181</p></section><div class="article-layout"><aside class="article-toc" aria-label="文章目錄"><button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">目錄</button><strong>目錄</strong><ul><li><a href="#statement">📘 題目敘述</a></li><li><a href="#approach">🧠 解題思路</a></li><li><a href="#steps">🪜 主要流程步驟</a></li><li><a href="#complexity">⏱️ 複雜度</a></li><li><a href="#code">💻 程式碼實作</a></li><li><a href="#link">🔗 題目連結</a></li></ul></aside><section class="term-block article-content">
+<h2 id="statement">📘 題目敘述</h2>
+<p>給定一個整數 <code>n</code> 和一個數字 <code>x</code>。</p>
+<p>如果一個數字同時滿足以下兩個條件，就算是 valid：</p>
+<ul>
+<li>它至少包含一次數字 <code>x</code></li>
+<li>它的第一位數不能是 <code>x</code></li>
+</ul>
+<p>請判斷 <code>n</code> 是否為 valid。</p>
+<p>如果是，回傳 <code>true</code>；否則回傳 <code>false</code>。</p>
+<h3>條件限制</h3>
+<ul>
+<li><code>0 &lt;= n &lt;= 10^5</code></li>
+<li><code>0 &lt;= x &lt;= 9</code></li>
+</ul>
+<h2 id="approach">🧠 解題思路</h2>
+<p>我這題的做法就是直接照題意檢查兩件事：</p>
+<ul>
+<li>第一位數是不是 <code>x</code></li>
+<li>其他位數裡有沒有出現 <code>x</code></li>
+</ul>
+<p>如果第一位數就是 <code>x</code>，那一定不合法，可以直接回傳 <code>false</code>。</p>
+<p>否則我再去檢查剩下的位數，只要有任何一位等於 <code>x</code>，就回傳 <code>true</code>。</p>
+<p>這份寫法的重點是把「第一位數」和「後面其他位數」分開處理。</p>
+<h3>所有變數</h3>
+<ul>
+<li><code>f</code>：<code>n</code> 的第一位數</li>
+</ul>
+<h2 id="steps">🪜 主要流程步驟</h2>
+<h3>1. 先找出 <code>n</code> 的第一位數</h3>
+<p>我先用一個變數 <code>f</code> 複製 <code>n</code>：</p>
+<pre><code class="language-cpp">int f = n;
+</code></pre>
+<p>然後一直除以 <code>10</code>，直到它變成個位數為止：</p>
+<pre><code class="language-cpp">while (f &gt; 9) {
+    f /= 10;
+}
+</code></pre>
+<p>這樣最後留下來的 <code>f</code>，就是 <code>n</code> 的第一位數。</p>
+<hr />
+<h3>2. 如果第一位數就是 <code>x</code>，直接回傳 <code>false</code></h3>
+<p>題目規定 valid number 不能以 <code>x</code> 開頭。</p>
+<p>所以如果：</p>
+<pre><code class="language-cpp">if (f == x) {
+    return false;
+}
+</code></pre>
+<p>那就直接不合法，不需要再往後檢查。</p>
+<hr />
+<h3>3. 再檢查後面的位數有沒有出現 <code>x</code></h3>
+<p>如果第一位數不是 <code>x</code>，我就開始檢查其他位數。</p>
+<ul>
+<li>每次先看目前最後一位 <code>n % 10</code></li>
+<li>如果它剛好等於 <code>x</code>，就代表數字裡有出現 <code>x</code>，而且不是第一位，所以符合條件，直接回傳 <code>true</code></li>
+<li>否則就把最後一位去掉，繼續檢查前一位</li>
+</ul>
+<p>這裡用 <code>while (n &gt; 9)</code>，代表最後不會檢查到最前面那一位。</p>
+<p>因為最前面那位前面已經單獨檢查過，而且如果它等於 <code>x</code>，早就直接回傳 <code>false</code> 了。</p>
+<hr />
+<h3>4. 如果都沒找到，就回傳 <code>false</code></h3>
+<p>如果後面所有位數都掃完，還是沒有看到 <code>x</code>，</p>
+<p>那就代表這個數字雖然不是以 <code>x</code> 開頭，但也沒有包含任何 <code>x</code>，所以不合法。</p>
+<p>最後回傳 <code>false</code>。</p>
+<h2 id="complexity">⏱️ 複雜度</h2>
+<p>設 <code>d</code> 為 <code>n</code> 的位數。</p>
+<ul>
+<li>時間複雜度：<code>O(d)</code><br />我最多掃過數字的每一位一次。</li>
+<li>空間複雜度：<code>O(1)</code><br />只用了固定數量的變數。</li>
+</ul>
+<h2 id="code">💻 程式碼實作</h2>
+<pre><code class="language-cpp">class Solution {
+public:
+    bool validDigit(int n, int x) {
+        int f = n;
+        while (f &gt; 9) {
+            f /= 10;
+        }
+        if (f == x) {
+            return false;
+        }
+        while (n &gt; 9) {
+            if (n % 10 == x) {
+                return true;
+            }
+            n /= 10;
+        }
+        return false;
+    }
+};
+</code></pre>
+<h2 id="link">🔗 題目連結</h2>
+<p>https://leetcode.com/contest/biweekly-contest-181/problems/valid-digit-number/</p></section></div>
+<section class="term-block article-footer"><h2 class="article-footer__title">文章資訊</h2><div class="meta-grid"><div class="meta-field"><span class="meta-label">作者：</span><span class="meta-value">scottnick</span></div><div class="meta-field meta-field--date"><span class="meta-label">撰寫日期：</span><span class="meta-value">2026-04-25</span></div><div class="meta-field meta-field--full"><span class="meta-label">類別：</span><span class="meta-value"><span class="post-tags"><span class="post-tag">Biweekly Contest 181</span><span class="post-tag">Easy</span></span></span></div><div class="meta-field meta-field--full"><span class="meta-label">原文連結：</span><span class="meta-value">https://scottnick.github.io/cpp-notes/contests/biweekly-contest-181/q1-valid-digit-number.html</span></div></div></section>
+</main><script src="../../../script.js"></script></body></html>
