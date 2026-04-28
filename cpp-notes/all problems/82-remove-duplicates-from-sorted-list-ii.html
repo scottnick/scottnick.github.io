@@ -1,0 +1,257 @@
+<!-- all problems/82-remove-duplicates-from-sorted-list-ii.html: 全部題單文章 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>82. Remove Duplicates from Sorted List II</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html" class="active">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+               width="18" height="18" aria-hidden="true" focusable="false"
+               style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="../all%20problems/index.html">All problems</a>
+      <span aria-hidden="true">/</span>
+      <span>82. Remove Duplicates from Sorted List II</span>
+    </nav>
+
+    <section class="hero">
+      <h1>82. Remove Duplicates from Sorted List II</h1>
+      <p><strong>練習日期：</strong>2026-04-28</p>
+      <p><strong>難度：</strong>Medium</p>
+      <p><strong>類型：</strong>Linked List、Two Pointers</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul></ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h2>📘 題目敘述</h2>
+        <p>給定一個已經按照遞增順序排序好的 linked list <code>head</code>。</p>
+        <p>請把所有<strong>有重複出現的數字節點全部刪掉</strong>，只保留原本 linked list 中那些只出現一次的數字。</p>
+        <p>最後回傳刪除後的 linked list，並且仍然保持排序。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li>linked list 的節點數量範圍是 <code>[0, 300]</code></li>
+          <li><code>-100 &lt;= Node.val &lt;= 100</code></li>
+          <li>linked list 保證已經按照遞增順序排列</li>
+        </ul>
+
+        <h2>🧠 解題思路</h2>
+        <p>我這題的想法是用一個 <code>dummy</code> 節點，讓我可以統一處理「開頭就出現重複」這種情況。</p>
+        <p>因為題目不是只把重複的多餘節點刪掉，而是要把<strong>整段重複值全部刪掉</strong>。<br>
+        所以當我看到某個數字開始重複時，我要做的不是只跳過一個，而是要整段都略過，直接把前面的指標接到下一個不同的數字。</p>
+        <p>我這份寫法裡：</p>
+        <ul>
+          <li><code>p</code> 會停在目前已經確定保留區段的最後一個位置</li>
+          <li><code>now</code> 會拿來往前掃，看看 <code>p-&gt;next</code> 開頭這一段有沒有重複</li>
+          <li>如果有重複，就把整段都跳過</li>
+          <li>如果沒有重複，就讓 <code>p</code> 正常往前走一格</li>
+        </ul>
+        <p>因為 linked list 已經排序好，所以相同的數字一定會連在一起，這樣就可以一次判斷一整段。</p>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>dummy</code>：額外建立的假頭節點，讓刪除開頭重複節點時也能統一處理</li>
+          <li><code>p</code>：目前保留鏈結串列中的前一個節點，負責接到下一段該保留的位置</li>
+          <li><code>now</code>：從 <code>p-&gt;next</code> 開始往後掃描，用來檢查某個數值是不是有重複</li>
+          <li><code>num</code>：目前正在檢查的數值</li>
+          <li><code>check</code>：記錄目前這段數值是否有出現重複</li>
+        </ul>
+
+        <h2>🪜 主要流程步驟</h2>
+        <h3>1. 先建立 <code>dummy</code> 節點，方便處理開頭被刪掉的情況</h3>
+        <p>我先建立一個 <code>dummy</code>，讓它指向原本的 <code>head</code>：</p>
+        <pre><code class="language-cpp">ListNode dummy(0, head);
+ListNode* p = &amp;dummy;
+</code></pre>
+        <p>這樣做的好處是，如果原本 linked list 的前面幾個節點就全部要被刪掉，<br>
+        我也不需要特別分情況處理，最後只要回傳 <code>dummy.next</code> 就可以。</p>
+        <hr>
+
+        <h3>2. 每次從 <code>p-&gt;next</code> 開始檢查下一段數字</h3>
+        <p>在迴圈裡，我先拿：</p>
+        <pre><code class="language-cpp">ListNode* now = p-&gt;next;
+</code></pre>
+        <p>這表示我要檢查的是 <code>p</code> 後面那一段。</p>
+        <p>如果 <code>now</code> 已經是空指標，就代表後面沒有節點了，直接結束：</p>
+        <p>接著我把目前這段要檢查的數值記成：</p>
+        <pre><code class="language-cpp">int num = now-&gt;val;
+bool check = false;
+</code></pre>
+        <p>其中：</p>
+        <ul>
+          <li><code>num</code> 是目前這一段的值</li>
+          <li><code>check</code> 用來記錄這個值是不是有重複出現</li>
+        </ul>
+        <hr>
+
+        <h3>3. 往後掃這一整段相同數值，看它是不是重複段</h3>
+        <p>接著我用 <code>while (now)</code> 一直往後掃：</p>
+        <ul>
+          <li>我先把 <code>now</code> 往後移一格</li>
+          <li>如果下一格還存在，而且值跟 <code>num</code> 一樣，表示這個數字至少重複了，於是把 <code>check</code> 設成 <code>true</code></li>
+          <li>一旦遇到不同值，或走到尾端，就代表這一整段 <code>num</code> 已經掃完了</li>
+        </ul>
+        <p>因為 linked list 已經排序，所以相同數字一定是連續出現的。<br>
+        所以只要這樣一路往後掃，就能知道目前這段是不是重複段。</p>
+        <hr>
+
+        <h3>4. 如果這段有重複，就整段跳過</h3>
+        <p>如果 <code>check == true</code>，就表示目前這個值不是只出現一次，而是重複值。</p>
+        <p>題目要求這種值要<strong>全部刪掉</strong>，所以我做的是：</p>
+        <pre><code class="language-cpp">if (check) {
+    p-&gt;next = now;
+}
+</code></pre>
+        <p>這裡的 <code>now</code> 已經停在：</p>
+        <ul>
+          <li>第一個不同值的節點</li>
+          <li>或者 <code>nullptr</code></li>
+        </ul>
+        <p>所以把 <code>p-&gt;next</code> 直接接到 <code>now</code>，<br>
+        就等於把中間那整段重複值全部跳過了。</p>
+        <hr>
+
+        <h3>5. 如果這段沒有重複，就把 <code>p</code> 往前移</h3>
+        <p>如果 <code>check == false</code>，代表 <code>p-&gt;next</code> 這個節點的值只出現一次，應該保留下來。</p>
+        <p>所以這時候我就讓 <code>p</code> 往前移一格：</p>
+        <pre><code class="language-cpp">else {
+    p = p-&gt;next;
+}
+</code></pre>
+        <p>這表示我正式把這個節點納入保留答案中，<br>
+        接著再去檢查它後面的下一段。</p>
+        <hr>
+
+        <h3>6. 最後回傳 <code>dummy.next</code></h3>
+        <p>當整個 linked list 都處理完之後，<br>
+        真正的新 head 可能不是原本的 <code>head</code>，所以最後要回傳的是：</p>
+        <pre><code class="language-cpp">return dummy.next;
+</code></pre>
+        <p>這樣不管原本開頭有沒有被刪掉，都能正確回傳新的 linked list。</p>
+
+        <h2>⏱️ 複雜度</h2>
+        <p>設 linked list 長度為 <code>n</code>。</p>
+        <ul>
+          <li>時間複雜度：<code>O(n)</code><br>
+          每個節點最多只會被掃過一次。</li>
+          <li>空間複雜度：<code>O(1)</code><br>
+          只用了固定數量的額外指標與變數。</li>
+        </ul>
+
+        <h2>💻 程式碼實作</h2>
+        <pre><code class="language-cpp">/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* deleteDuplicates(ListNode* head) {
+        ListNode dummy(0, head);
+        ListNode* p = &dummy;
+        while (p) {
+            ListNode* now = p->next;
+            if (!now) {
+                break;
+            }
+            int num = now->val;
+            bool check = false;
+            while (now) {
+                now = now->next;
+                if (now && now->val == num) {
+                    check = true;
+                } else {
+                    break;
+                }
+            }
+            if (check) {
+                p->next = now;
+            } else {
+                p = p->next;
+            }
+        }
+        return dummy.next;
+    }
+};
+</code></pre>
+
+        <h2>🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/remove-duplicates-from-sorted-list-ii/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-04-28</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value"><span class="post-tags">
+              <span class="post-tag">Linked List</span>
+              <span class="post-tag">Two Pointers</span>
+              <span class="post-tag">Medium</span>
+            </span></span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/all%20problems/82-remove-duplicates-from-sorted-list-ii.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
