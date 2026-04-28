@@ -1,0 +1,223 @@
+<!-- all problems/2033-minimum-operations-to-make-a-uni-value-grid.html: 全部題單文章 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2033. Minimum Operations to Make a Uni-Value Grid</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="page-article">
+  <header>
+    <nav class="navbar">
+      <a class="brand" href="../../personal.html">scottnick 個人網頁</a>
+      <button class="menu-btn" id="menu-btn" aria-label="開啟選單" aria-expanded="false">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="../../index.html">主頁</a>
+        <a href="../../courses.html">修課紀錄</a>
+        <a href="../../cpp.html">C++學習筆記</a>
+        <a href="../../profile.html">個人檔案</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-action-link" href="../../categories.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+               width="18" height="18" aria-hidden="true" focusable="false"
+               style="display:inline-block; vertical-align:-3px; margin-right:6px;">
+            <rect x="4" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="4" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="4" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+            <rect x="13" y="13" width="7" height="7" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+          </svg>
+          類別
+        </a>
+        <button class="icon-btn toggle-btn" id="theme-toggle" aria-label="切換主題">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="文章路徑">
+      <a href="../../cpp.html">C++學習筆記</a>
+      <span aria-hidden="true">/</span>
+      <a href="index.html">All problems</a>
+      <span aria-hidden="true">/</span>
+      <span>2033. Minimum Operations to Make a Uni-Value Grid</span>
+    </nav>
+
+    <section class="hero">
+      <h1>2033. Minimum Operations to Make a Uni-Value Grid</h1>
+      <p><strong>練習日期：</strong>2026-04-28</p>
+      <p><strong>難度：</strong>Medium</p>
+      <p><strong>類型：</strong>Array、Math、Sorting、Matrix</p>
+    </section>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="文章目錄">
+        <button class="toc-toggle" id="article-toc-toggle" type="button" aria-expanded="false">
+          目錄
+        </button>
+        <strong>目錄</strong>
+        <ul>
+          <li><a href="#statement">📘 題目敘述</a></li>
+          <li><a href="#approach">🧠 解題思路</a></li>
+          <li><a href="#steps">🪜 主要流程步驟</a></li>
+          <li><a href="#complexity">⏱️ 複雜度</a></li>
+          <li><a href="#code">💻 程式碼實作</a></li>
+          <li><a href="#link">🔗 題目連結</a></li>
+        </ul>
+      </aside>
+
+      <section class="term-block article-content">
+        <h1>2033. Minimum Operations to Make a Uni-Value Grid</h1>
+
+        <p><strong>練習日期：</strong> 2026-04-28<br><strong>難度：</strong> Medium<br><strong>類型：</strong> Array、Math、Sorting、Matrix</p>
+
+        <h2 id="statement">📘 題目敘述</h2>
+        <p>給定一個 <code>m x n</code> 的整數矩陣 <code>grid</code>，以及一個整數 <code>x</code>。</p>
+        <p>一次操作中，你可以對任意一個元素：</p>
+        <ul>
+          <li>加上 <code>x</code></li>
+          <li>或減去 <code>x</code></li>
+        </ul>
+        <p>如果一個 grid 裡所有元素都相等，就叫做 uni-value grid。</p>
+        <p>請回傳最少需要幾次操作，才能把整個 grid 變成 uni-value grid。<br>如果根本做不到，回傳 <code>-1</code>。</p>
+
+        <h3>條件限制</h3>
+        <ul>
+          <li><code>m == grid.length</code></li>
+          <li><code>n == grid[i].length</code></li>
+          <li><code>1 &lt;= m, n &lt;= 10^5</code></li>
+          <li><code>1 &lt;= m * n &lt;= 10^5</code></li>
+          <li><code>1 &lt;= x, grid[i][j] &lt;= 10^4</code></li>
+        </ul>
+
+        <h2 id="approach">🧠 解題思路</h2>
+        <p>我這題的想法是先把整個 grid 攤平成一個一維陣列，然後找一個最適合當目標值的數。</p>
+        <p>因為每次操作只能加減 <code>x</code>，所以如果兩個數之間的差不是 <code>x</code> 的倍數，那它永遠不可能透過這種操作變成同一個值。<br>所以我先選一個目標值 <code>goal</code>，然後檢查每個元素和 <code>goal</code> 的差能不能被 <code>x</code> 整除。</p>
+        <p>而在所有可行的目標值裡，要讓總操作次數最少，最佳選擇會是中位數。<br>所以我先把所有數字排序，取中間那個值當作 <code>goal</code>。</p>
+        <p>接著把每個元素變成 <code>goal</code> 所需的操作次數加總起來，就是答案。</p>
+
+        <h3>所有變數</h3>
+        <ul>
+          <li><code>m</code>：grid 的列數</li>
+          <li><code>n</code>：grid 的行數</li>
+          <li><code>ans</code>：最後最少操作次數</li>
+          <li><code>goal</code>：最後要把所有元素變成的目標值</li>
+          <li><code>v</code>：把整個 grid 攤平成一維後的陣列</li>
+        </ul>
+
+        <h2 id="steps">🪜 主要流程步驟</h2>
+        <h3>1. 先把整個 grid 攤平成一維陣列</h3>
+        <p>我先把 <code>grid</code> 裡所有元素都放進一個一維陣列 <code>v</code>：</p>
+        <p>這樣做的目的是把二維問題轉成一維問題，後面比較方便排序和選中位數。</p>
+        <hr />
+
+        <h3>2. 把所有數字排序，選中位數當目標值</h3>
+        <p>接著我把 <code>v</code> 排序：</p>
+        <pre><code class="language-cpp">sort(v.begin(), v.end());
+</code></pre>
+        <p>然後取中間那個值當成 <code>goal</code>。</p>
+        <p>這是因為如果要最小化所有元素到目標值的絕對差總和，最好的選擇就是中位數。<br>而這題每次操作的成本其實就是差值除以 <code>x</code>，所以本質上仍然是在最小化總差距。</p>
+        <hr />
+
+        <h3>3. 檢查每個元素能不能變成 <code>goal</code></h3>
+        <p>對每個元素 <code>grid[i][j]</code>，我先算它和 <code>goal</code> 的差距：</p>
+        <pre><code class="language-cpp">int now = abs(grid[i][j] - goal);
+</code></pre>
+        <p>如果這個差距不是 <code>x</code> 的倍數：</p>
+        <pre><code class="language-cpp">if (now % x != 0) {
+    return -1;
+}
+</code></pre>
+        <p>那就代表這個元素不可能透過反覆加減 <code>x</code> 變成 <code>goal</code>，<br>整題就直接無解，回傳 <code>-1</code>。</p>
+        <hr />
+
+        <h3>4. 如果可以變成 <code>goal</code>，就把需要的操作次數加進答案</h3>
+        <p>如果差距 <code>now</code> 可以被 <code>x</code> 整除，<br>那把這個元素變成 <code>goal</code> 需要的操作次數就是：</p>
+        <pre><code class="language-cpp">now / x
+</code></pre>
+        <p>所以我直接累加到 <code>ans</code>：</p>
+        <pre><code class="language-cpp">ans += now / x;
+</code></pre>
+        <p>把所有元素的操作次數都加總起來之後，就是最少總操作數。</p>
+        <hr />
+
+        <h3>5. 全部處理完後回傳答案</h3>
+        <p>如果整個 grid 都檢查完，而且每個元素都能變成 <code>goal</code>，<br>那最後 <code>ans</code> 就是最小操作次數，直接回傳即可。</p>
+
+        <h2 id="complexity">⏱️ 複雜度</h2>
+        <p>設 <code>N = m * n</code>。</p>
+        <ul>
+          <li>時間複雜度：<code>O(N log N)</code><br>先把所有元素攤平，再排序，最後再掃一次計算答案。</li>
+          <li>空間複雜度：<code>O(N)</code><br>我另外用了一個一維陣列 <code>v</code> 來存所有元素。</li>
+        </ul>
+
+        <h2 id="code">💻 程式碼實作</h2>
+        <pre><code class="language-cpp">class Solution {
+public:
+    int minOperations(vector&lt;vector&lt;int&gt;&gt;&amp; grid, int x) {
+        int m = grid.size();
+        int n = grid[0].size();
+        int ans = 0;
+        int goal;
+        vector&lt;int&gt; v;
+        for (int i = 0; i &lt; m; i++) {
+            for (int j = 0; j &lt; n; j++) {
+                v.push_back(grid[i][j]);
+            }
+        }
+        sort(v.begin(), v.end());
+        goal = v[(m * n) / 2];
+        for (int i = 0; i &lt; m; i++) {
+            for (int j = 0; j &lt; n; j++) {
+                int now = abs(grid[i][j] - goal);
+                if (now % x != 0) {
+                    return -1;
+                }
+                ans += now / x;
+            }
+        }
+        return ans;
+    }
+};
+</code></pre>
+
+        <h2 id="link">🔗 題目連結</h2>
+        <p>https://leetcode.com/problems/minimum-operations-to-make-a-uni-value-grid/</p>
+      </section>
+    </div>
+
+    <section class="term-block article-footer">
+      <h2 class="article-footer__title">文章資訊</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <span class="meta-label">作者：</span>
+          <span class="meta-value">scottnick</span>
+        </div>
+        <div class="meta-field meta-field--date">
+          <span class="meta-label">撰寫日期：</span>
+          <span class="meta-value">2026-04-28</span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">類別：</span>
+          <span class="meta-value"><span class="post-tags">
+              <span class="post-tag">Array</span>
+              <span class="post-tag">Math</span>
+              <span class="post-tag">Sorting</span>
+              <span class="post-tag">Matrix</span>
+              <span class="post-tag">Medium</span>
+            </span></span>
+        </div>
+        <div class="meta-field meta-field--full">
+          <span class="meta-label">原文連結：</span>
+          <span class="meta-value">https://scottnick.github.io/cpp-notes/all%20problems/2033-minimum-operations-to-make-a-uni-value-grid.html</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
